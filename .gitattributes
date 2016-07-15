@@ -1,0 +1,41 @@
+# Autodetect text files
+* text=auto
+
+# ...Unless the name matches the following overriding patterns
+
+# Definitively text files
+.* text eol=lf
+*.php text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+*.less text eol=lf
+*.scss text eol=lf
+*.sass text eol=lf
+*.txt text eol=lf
+*.md text eol=lf
+*.xml text eol=lf
+*.json text eol=lf
+*.bat text eol=lf
+*.svg text eol=lf
+*.sql text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+
+# Ensure those won't be messed up with
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.eot binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.mp3 binary
+*.m4a binary
+*.mp4 binary
+*.m4p binary
+*.acc binary

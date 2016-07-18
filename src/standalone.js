@@ -105,6 +105,7 @@ export default function ({
         css: false,
         // Add support specify css or scss or less
         cssTemplate: null,
+        cssTemplateFormat: 'css',
         cssTemplateOptions: {
             className: null,
             fontPath: './',
@@ -182,10 +183,10 @@ export default function ({
                 return Promise.resolve(result);
             }
 
-            nunjucks.configure(__dirname);
-
             if (!options.cssTemplate) {
-                options.cssTemplate = path.join(__dirname, 'templates/template.scss.tpl');
+                nunjucks.configure(__dirname);
+
+                options.cssTemplate = path.join(__dirname, `templates/template.${options.cssTemplateFormat}.tpl`);
             }
 
             if (!options.cssTemplateOptions.className) {
@@ -205,7 +206,7 @@ export default function ({
                 options
             );
 
-            result.css = nunjucks.render(options.cssTemplate, nunjucksOptions);
+            result.css = nunjucks.render(path.resolve(options.cssTemplate), nunjucksOptions);
 
             return result;
         })
@@ -217,8 +218,6 @@ export default function ({
             if (options.formats.indexOf('ttf') === -1) {
                 delete result.ttf;
             }
-
-            result.options = options;
 
             return Promise.resolve(result);
         })

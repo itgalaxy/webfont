@@ -96,3 +96,19 @@ test('generate fonts with options css', (t) => {
     }).catch(logError);
 });
 
+test('generate fonts with options `css` and `css-template`', (t) => {
+    t.plan(1);
+
+    return standalone({
+        files: `${fixturesPath}/svg-icons/**/*`,
+        opts: {
+            css: true,
+            cssTemplate: '../templates/template.css.tpl'
+        }
+    }).then((result) => {
+        t.true(typeof result.css !== 'undefined');
+
+        return result;
+    }).catch(logError);
+});
+

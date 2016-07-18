@@ -10,36 +10,38 @@ const cli = meow(`
         $ webfont <path|glob> ... [options]
     Options
         General:
-            -f, --font-name [value]      The font family name you want, default: "webfont".
-            -h, --help                   Output usage information.
-            -v, --version                Output the version number.
-            --dest                       Destination for generated fonts.
-            --formats                    Only this formats generate.
-            --css                        Generate css template (get build-in template).
-            --css-template               Path to custom template.
-            --css-template-options       Accept "className", "fontPath", "fontName".
-            --css-template-dest          Destination for generated css template.
-            --verbose                    Tell me everything!.
+            -f, --font-name            The font family name you want, default: "webfont".
+            -h, --help                 Output usage information.
+            -v, --version              Output the version number.
+            --dest                     Destination for generated fonts.
+            --formats                  Only this formats generate.
+            --css                      Generate css template (get build-in template).
+            --css-template             Path to custom template.
+            --css-template-format      Format css template "css" or "scss".
+            --css-template-options     Accept "className", "fontPath", "fontName".
+            --css-template-dest        Destination for generated css template.
+            --verbose                  Tell me everything!.
 
         For "svgicons2svgfont":
-            -i, --font-id [value]        The font id you want, default as "--font-name".
-            -t, --style [value]          The font style you want.
-            -g, --weight [value]         The font weight you want.
-            -w, --fixed-width            Creates a monospace font of the width of the largest input icon.
-            -c, --center-horizontally    Calculate the bounds of a glyph and center it horizontally.
-            -n, --normalize              Normalize icons by scaling them to the height of the highest icon.
-            -e, --height [value]         The outputted font height [MAX(icons.height)].
-            -r, --round [value]          Setup the SVG path rounding [10e12].
-            -d, --descent [value]        The font descent [0].
-            -a, --ascent [value]         The font ascent [height - descent].
-            -s, --start-unicode [value]  The start unicode codepoint for unprefixed files [0xEA01].
-            -p, --prepend-unicode        Prefix files with their automatically allocated unicode codepoint.
-            -m, --metadata               Content of the metadata tag.
+            -i, --font-id              The font id you want, default as "--font-name".
+            -t, --style                The font style you want.
+            -g, --weight               The font weight you want.
+            -w, --fixed-width          Creates a monospace font of the width of the largest input icon.
+            -c, --center-horizontally  Calculate the bounds of a glyph and center it horizontally.
+            -n, --normalize            Normalize icons by scaling them to the height of the highest icon.
+            -e, --height               The outputted font height [MAX(icons.height)].
+            -r, --round                Setup the SVG path rounding [10e12].
+            -d, --descent              The font descent [0].
+            -a, --ascent               The font ascent [height - descent].
+            -s, --start-unicode        The start unicode codepoint for unprefixed files [0xEA01].
+            -p, --prepend-unicode      Prefix files with their automatically allocated unicode codepoint.
+            -m, --metadata             Content of the metadata tag.
 `, {
     string: [
         'font-name',
         'dest',
         'css-template',
+        'css-template-format',
         'css-template-dest',
         'font-id',
         'style',
@@ -114,7 +116,7 @@ Promise.resolve().then(() => {
             });
     })
     .then((result) => {
-        const dest = result.options.dest;
+        const fontName = cli.flags.fontName;
 
         return Promise.all(Object.keys(result).map((type) => {
             if (type === 'options') {
@@ -124,7 +126,13 @@ Promise.resolve().then(() => {
             const content = result[type];
 
             return new Promise((resolve, reject) => {
-                const destFilename = path.join(dest, `${result.options.fontName}.${type}`);
+                let destFilename = null;
+
+                if (type !== 'css') {
+                    destFilename = path.join(cli.flags.dest, `${fontName}.${type}`);
+                } else {
+                    destFilename = path.join(cli.flags.cssTemplateDest, `${fontName}.${type}`);
+                }
 
                 fs.writeFile(destFilename, content, (error) => {
                     if (error) {

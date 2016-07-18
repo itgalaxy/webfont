@@ -90,7 +90,7 @@ export default function ({
     opts
 } = {}) {
     if (!files) {
-        return Promise.reject(new Error('You must pass stylelint a `files` glob'));
+        return Promise.reject(new Error('You must pass webfont a `files` glob'));
     }
 
     const options = Object.assign({}, {

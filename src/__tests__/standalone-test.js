@@ -9,7 +9,7 @@ function logError(error) {
 }
 
 test('generate fonts without files', (t) => {
-    t.throws(standalone(), 'You must pass stylelint a `files` glob');
+    t.throws(standalone(), 'You must pass webfont a `files` glob');
 });
 
 test('generate fonts if `files`glob patterns specified did not match any files', (t) => {

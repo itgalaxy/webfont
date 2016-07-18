@@ -1,6 +1,6 @@
 {
     "name": "webfont",
-    "version": "0.0.2",
+    "version": "1.0.0",
     "description": "Generator of webfonts from svg icons",
     "license": "MIT",
     "author": "itgalaxy <development@itgalaxy.company>",

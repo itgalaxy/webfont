@@ -47,7 +47,7 @@
             "no-inline-padding": true,
             "no-literal-urls": true,
             "no-missing-blank-lines": true,
-            "no-multiple-toplevel-headings": 2,
+            "no-multiple-toplevel-headings": false,
             "no-shell-dollars": true,
             "no-shortcut-reference-image": true,
             "no-shortcut-reference-link": true,

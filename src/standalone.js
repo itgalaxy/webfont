@@ -138,7 +138,7 @@ export default function ({
         options.log = () => {}; // eslint-disable-line
     }
 
-    if (options.fontId) {
+    if (!options.fontId) {
         options.fontId = options.fontName;
     }
 

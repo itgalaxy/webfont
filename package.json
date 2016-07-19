@@ -1,6 +1,6 @@
 {
     "name": "webfont",
-    "version": "1.0.1",
+    "version": "2.0.0",
     "description": "Generator of webfonts from svg icons",
     "license": "MIT",
     "author": "itgalaxy <development@itgalaxy.company>",
@@ -36,11 +36,13 @@
         "CHANGELOG.md",
         "LICENSE",
         "dist",
+        "templates",
         "!**/__tests__"
     ],
     "dependencies": {
         "globby": "^5.0.0",
         "meow": "^3.3.0",
+        "mkdirp": "^0.5.1",
         "svgicons2svgfont": "^5.0.0",
         "svg2ttf": "^4.0.0",
         "ttf2eot": "^2.0.0",

@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import meow from 'meow';
+import mkdirp from 'mkdirp';
 import path from 'path';
 import standalone from './standalone';
 
@@ -13,13 +14,13 @@ const cli = meow(`
             -f, --font-name            The font family name you want, default: "webfont".
             -h, --help                 Output usage information.
             -v, --version              Output the version number.
-            --dest                     Destination for generated fonts.
             --formats                  Only this formats generate.
-            --css                      Generate css template (get build-in template).
-            --css-template             Path to custom template.
-            --css-template-format      Format css template "css" or "scss".
-            --css-template-options     Accept "className", "fontPath", "fontName".
-            --css-template-dest        Destination for generated css template.
+            --dest                     Destination for generated fonts.
+            --src-css-template         Path to custom template.
+            --css-template-class-name  Class name in css template.
+            --css-template-font-path   Font path in css template.
+            --css-template-font-name   Font name in css template.
+            --dest-css-template        Destination for generated css template.
             --verbose                  Tell me everything!.
 
         For "svgicons2svgfont":
@@ -40,9 +41,11 @@ const cli = meow(`
     string: [
         'font-name',
         'dest',
-        'css-template',
-        'css-template-format',
-        'css-template-dest',
+        'src-css-template',
+        'css-template-class-name',
+        'css-template-font-path',
+        'css-template-font-name',
+        'dest-css-template',
         'font-id',
         'style',
         'weight',
@@ -86,7 +89,9 @@ const cli = meow(`
 
 Promise.resolve().then(() => {
     if (cli.input.length) {
-        return Object.assign({}, cli.flags, {
+        return Object.assign({}, {
+            config: cli.flags
+        }, {
             files: cli.input
         });
     }
@@ -99,50 +104,75 @@ Promise.resolve().then(() => {
             cli.showHelp();
         }
 
-        if (!options.dest) {
+        if (!options.config.dest) {
             return Promise.reject('Require `--dest` options');
         }
 
-        if (options.css && !options.cssTemplateDest) {
-            return Promise.reject('Require `--css-template-dest` when `css` passed');
+        if (options.config.destCssTemplate) {
+            options.config.css = true;
+
+            const extname = path.extname(options.config.destCssTemplate);
+
+            options.config.cssFormat = extname ? extname.slice(1, extname.length) : 'css';
         }
 
         return standalone(options)
             .then((result) => Promise.resolve(result))
             .then((result) => {
-                result.options = Object.assign({}, result.options, options);
+                result.config = Object.assign({}, options.config);
 
                 return Promise.resolve(result);
             });
     })
     .then((result) => {
-        const fontName = cli.flags.fontName;
+        const fontName = result.config.fontName;
 
-        return Promise.all(Object.keys(result).map((type) => {
-            if (type === 'options') {
-                return Promise.resolve();
-            }
+        return new Promise((resolve, reject) => {
+            mkdirp(path.resolve(result.config.dest), (error) => {
+                if (error) {
+                    return reject(error);
+                }
 
-            const content = result[type];
+                return resolve();
+            });
+        })
+            .then(() => {
+                const cssTemplateDirectory = path.resolve(path.dirname(result.config.destCssTemplate));
 
-            return new Promise((resolve, reject) => {
+                return new Promise((resolve, reject) => {
+                    mkdirp(cssTemplateDirectory, (error) => {
+                        if (error) {
+                            return reject(error);
+                        }
+
+                        return resolve();
+                    });
+                });
+            })
+            .then(() => Promise.all(Object.keys(result).map((type) => {
+                if (type === 'config') {
+                    return Promise.resolve();
+                }
+
+                const content = result[type];
                 let destFilename = null;
 
                 if (type !== 'css') {
-                    destFilename = path.join(cli.flags.dest, `${fontName}.${type}`);
+                    destFilename = path.resolve(path.join(result.config.dest, `${fontName}.${type}`));
                 } else {
-                    destFilename = path.join(cli.flags.cssTemplateDest, `${fontName}.${type}`);
+                    destFilename = path.resolve(result.config.destCssTemplate);
                 }
 
-                fs.writeFile(destFilename, content, (error) => {
-                    if (error) {
-                        return reject(new Error(error));
-                    }
+                return new Promise((resolve, reject) => {
+                    fs.writeFile(destFilename, content, (error) => {
+                        if (error) {
+                            return reject(new Error(error));
+                        }
 
-                    return resolve();
+                        return resolve();
+                    });
                 });
-            });
-        }))
+            })))
             .then(() => Promise.resolve(result));
     })
     .catch((error) => {

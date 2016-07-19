@@ -42,7 +42,7 @@ test('generate fonts with options formats `[\'svg\', \'ttf\', \'eot\']`', (t) =>
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
-        opts: {
+        config: {
             formats: ['svg', 'ttf', 'eot']
         }
     }).then((result) => {
@@ -64,7 +64,7 @@ test('generate fonts with options formats `[\'woff2\']`', (t) => {
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
-        opts: {
+        config: {
             formats: ['woff2']
         }
     }).then((result) => {
@@ -86,7 +86,7 @@ test('generate fonts with options css', (t) => {
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
-        opts: {
+        config: {
             css: true
         }
     }).then((result) => {
@@ -101,9 +101,9 @@ test('generate fonts with options `css` and `css-template`', (t) => {
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
-        opts: {
+        config: {
             css: true,
-            cssTemplate: `${fixturesPath}/templates/template.css.tpl`
+            srcCssTemplate: path.join(__dirname, '../../templates/template.css.tpl')
         }
     }).then((result) => {
         t.true(typeof result.css !== 'undefined');

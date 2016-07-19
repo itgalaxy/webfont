@@ -87,7 +87,7 @@ function ttf2woff2Fn(result, options) {
 
 export default function ({
     files,
-    opts
+    config
 } = {}) {
     if (!files) {
         return Promise.reject(new Error('You must pass webfont a `files` glob'));
@@ -103,14 +103,11 @@ export default function ({
             'woff2'
         ],
         css: false,
-        // Add support specify css or scss or less
-        cssTemplate: null,
-        cssTemplateFormat: 'css',
-        cssTemplateOptions: {
-            className: null,
-            fontPath: './',
-            fontName: null
-        },
+        srcCssTemplate: null,
+        cssFormat: 'css',
+        cssTemplateClassName: null,
+        cssTemplateFontPath: './',
+        cssTemplateFontName: null,
         formatOptions: {
             ttf: {
                 copyright: null,
@@ -132,7 +129,7 @@ export default function ({
         prependUnicode: false,
         metadata: null,
         log: console.log, // eslint-disable-line
-    }, opts);
+    }, config);
 
     if (!options.verbose) {
         options.log = () => {}; // eslint-disable-line
@@ -183,30 +180,34 @@ export default function ({
                 return Promise.resolve(result);
             }
 
-            if (!options.cssTemplate) {
-                nunjucks.configure(__dirname);
+            if (!options.srcCssTemplate) {
+                nunjucks.configure(path.join(__dirname, '../'));
 
-                options.cssTemplate = path.join(__dirname, `templates/template.${options.cssTemplateFormat}.tpl`);
+                options.srcCssTemplate = path.join(__dirname, `../templates/template.${options.cssFormat}.tpl`);
             }
 
-            if (!options.cssTemplateOptions.className) {
-                options.cssTemplateOptions.className = options.fontName;
+            if (!options.cssTemplateClassName) {
+                options.cssTemplateClassName = options.fontName;
             }
 
-            if (!options.cssTemplateOptions.fontName) {
-                options.cssTemplateOptions.fontName = options.fontName;
+            if (!options.cssTemplateFontName) {
+                options.cssTemplateFontName = options.fontName;
             }
 
             const nunjucksOptions = Object.assign(
                 {},
-                options.cssTemplateOptions,
                 {
                     glyphs
                 },
-                options
+                options,
+                {
+                    className: options.cssTemplateClassName,
+                    fontPath: options.cssTemplateFontPath,
+                    fontName: options.cssTemplateFontName
+                }
             );
 
-            result.css = nunjucks.render(path.resolve(options.cssTemplate), nunjucksOptions);
+            result.css = nunjucks.render(path.resolve(options.srcCssTemplate), nunjucksOptions);
 
             return result;
         })

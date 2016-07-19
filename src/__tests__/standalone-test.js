@@ -103,7 +103,7 @@ test('generate fonts with options `css` and `css-template`', (t) => {
         files: `${fixturesPath}/svg-icons/**/*`,
         opts: {
             css: true,
-            cssTemplate: '../templates/template.css.tpl'
+            cssTemplate: `${fixturesPath}/templates/template.css.tpl`
         }
     }).then((result) => {
         t.true(typeof result.css !== 'undefined');

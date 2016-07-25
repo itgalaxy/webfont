@@ -124,15 +124,15 @@ export default function ({
         fontHeight: null,
         round: 10e12,
         descent: 0,
-        ascent: undefined, // eslint-disable-line
+        ascent: undefined, // eslint-disable-line no-undefined
         startUnicode: 0xEA01,
         prependUnicode: false,
         metadata: null,
-        log: console.log, // eslint-disable-line
+        log: console.log // eslint-disable-line no-console
     }, config);
 
     if (!options.verbose) {
-        options.log = () => {}; // eslint-disable-line
+        options.log = () => {}; // eslint-disable-line no-empty-function
     }
 
     if (!options.fontId) {

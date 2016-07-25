@@ -1,5 +1,5 @@
 import path from 'path';
-import standalone from '../standalone';
+import standalone from '../index';
 import test from 'ava';
 
 const fixturesPath = path.join(__dirname, 'fixtures');

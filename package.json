@@ -78,7 +78,7 @@
     "scripts": {
         "coveralls": "nyc report --reporter=text-lcov | coveralls",
         "lint:eslint": "eslint . --ignore-path .gitignore  --color",
-        "lint:remark": "remark . --ignore-path .gitignore --frail --quiet --color",
+        "lint:remark": "remark '{**/,}*.md' --ignore-path .gitignore --frail --quiet --color",
         "lint": "npm-run-all -l --parallel lint:*",
         "pretest": "npm run lint",
         "ava": "nyc ava --verbose \"src/**/__tests__/*.js\"",

@@ -1,3 +1,12 @@
+# 2.0.2
+
+- Fixed: `svg2ttf` now correctly generates `ttf` font.
+- Fixed: `ttf2eot` now correctly generates `eot` font.
+- Fixed: `ttf2woff` now correctly generates `woff` font.
+- Fixed: `svg2ttf` now correctly accepts option.
+- Chore: more readable name tests.
+- Chore: rename extension `templates`.
+
 # 2.0.1
 
 - Chore: update `globby` to `6.0.0`.

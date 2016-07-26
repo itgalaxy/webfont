@@ -55,7 +55,8 @@ function svgIcons2svgFontFn(files, options, glyphs = []) {
 
 function svg2ttfFn(result, options) {
     return new Promise((resolve) => {
-        result.ttf = svg2ttf(result.svg, options.ttf);
+        // eslint-disable-next-line node/no-deprecated-api
+        result.ttf = new Buffer(svg2ttf(result.svg.toString(), options.formatsOptions.ttf).buffer);
 
         return resolve(result);
     });
@@ -63,7 +64,8 @@ function svg2ttfFn(result, options) {
 
 function ttf2eotFn(result) {
     return new Promise((resolve) => {
-        result.eot = ttf2eot(result.ttf.buffer);
+        // eslint-disable-next-line node/no-deprecated-api
+        result.eot = new Buffer(ttf2eot(new Uint8Array(result.ttf)).buffer);
 
         return resolve(result);
     });
@@ -71,7 +73,8 @@ function ttf2eotFn(result) {
 
 function ttf2woffFn(result, options) {
     return new Promise((resolve) => {
-        result.woff = ttf2woff(result.ttf.buffer, options);
+        // eslint-disable-next-line node/no-deprecated-api
+        result.woff = new Buffer(ttf2woff(new Uint8Array(result.ttf), options).buffer);
 
         return resolve(result);
     });
@@ -79,7 +82,7 @@ function ttf2woffFn(result, options) {
 
 function ttf2woff2Fn(result, options) {
     return new Promise((resolve) => {
-        result.woff2 = ttf2woff2(result.ttf.buffer, options);
+        result.woff2 = ttf2woff2(result.ttf, options);
 
         return resolve(result);
     });
@@ -108,7 +111,7 @@ export default function ({
         cssTemplateClassName: null,
         cssTemplateFontPath: './',
         cssTemplateFontName: null,
-        formatOptions: {
+        formatsOptions: {
             ttf: {
                 copyright: null,
                 ts: Math.round(Date.now() / 1000)
@@ -183,7 +186,7 @@ export default function ({
             if (!options.srcCssTemplate) {
                 nunjucks.configure(path.join(__dirname, '../'));
 
-                options.srcCssTemplate = path.join(__dirname, `../templates/template.${options.cssFormat}.tpl`);
+                options.srcCssTemplate = path.join(__dirname, `../templates/template.${options.cssFormat}`);
             }
 
             if (!options.cssTemplateClassName) {

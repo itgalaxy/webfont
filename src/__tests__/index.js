@@ -8,17 +8,17 @@ function logError(error) {
     console.log(error.stack); // eslint-disable-line no-console
 }
 
-test('generate fonts without files', (t) => {
+test('should throw error if `files` not passed', (t) => {
     t.throws(standalone(), 'You must pass webfont a `files` glob');
 });
 
-test('generate fonts if `files`glob patterns specified did not match any files', (t) => {
+test('should throw error `files glob patterns specified did not match any files` if not found files', (t) => {
     t.throws(standalone({
         files: `${fixturesPath}/not-found-svg-icons/**/*`
     }), 'Files glob patterns specified did not match any files');
 });
 
-test('generate fonts', (t) => {
+test('should generated all fonts', (t) => {
     t.plan(6);
 
     return standalone({
@@ -37,7 +37,7 @@ test('generate fonts', (t) => {
     }).catch(logError);
 });
 
-test('generate fonts with options formats `[\'svg\', \'ttf\', \'eot\']`', (t) => {
+test('should generated only `svg`, `ttf` and `eot` fonts', (t) => {
     t.plan(6);
 
     return standalone({
@@ -59,7 +59,7 @@ test('generate fonts with options formats `[\'svg\', \'ttf\', \'eot\']`', (t) =>
     }).catch(logError);
 });
 
-test('generate fonts with options formats `[\'woff2\']`', (t) => {
+test('should generated only `woff2` font', (t) => {
     t.plan(6);
 
     return standalone({
@@ -81,7 +81,7 @@ test('generate fonts with options formats `[\'woff2\']`', (t) => {
     }).catch(logError);
 });
 
-test('generate fonts with options css', (t) => {
+test('should generated all fonts and css', (t) => {
     t.plan(1);
 
     return standalone({
@@ -96,14 +96,14 @@ test('generate fonts with options css', (t) => {
     }).catch(logError);
 });
 
-test('generate fonts with options `css` and `css-template`', (t) => {
+test('should generated all fonts with `css` by passed template', (t) => {
     t.plan(1);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         config: {
             css: true,
-            srcCssTemplate: path.join(__dirname, '../../templates/template.css.tpl')
+            srcCssTemplate: path.join(__dirname, '../../templates/template.css')
         }
     }).then((result) => {
         t.true(typeof result.css !== 'undefined');

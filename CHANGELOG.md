@@ -1,3 +1,7 @@
+# Head
+
+- Chore: improved `description` and `keywords` in `package.json`.
+
 # 2.0.2
 
 - Fixed: `svg2ttf` now correctly generates `ttf` font.

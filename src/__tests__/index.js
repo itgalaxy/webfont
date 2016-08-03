@@ -1,3 +1,8 @@
+import isEot from 'is-eot';
+import isSvg from 'is-svg';
+import isTtf from 'is-ttf';
+import isWoff from 'is-woff';
+import isWoff2 from 'is-woff2';
 import path from 'path';
 import standalone from '../index';
 import test from 'ava';
@@ -26,11 +31,11 @@ test('should generated all fonts', (t) => {
     }).then((result) => {
         /* eslint-disable ava/max-asserts */
         t.deepEqual(['svg', 'ttf', 'eot', 'woff', 'woff2'], Object.keys(result));
-        t.true(result.svg.length > 0);
-        t.true(result.ttf.length > 0);
-        t.true(result.eot.length > 0);
-        t.true(result.woff.length > 0);
-        t.true(result.woff2.length > 0);
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
         /* eslint-enable ava/max-asserts */
 
         return result;
@@ -48,9 +53,9 @@ test('should generated only `svg`, `ttf` and `eot` fonts', (t) => {
     }).then((result) => {
         /* eslint-disable ava/max-asserts */
         t.deepEqual(['svg', 'ttf', 'eot'], Object.keys(result));
-        t.true(result.svg.length > 0);
-        t.true(result.ttf.length > 0);
-        t.true(result.eot.length > 0);
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
         t.true(typeof result.woff === 'undefined');
         t.true(typeof result.woff2 === 'undefined');
         /* eslint-enable ava/max-asserts */
@@ -74,7 +79,7 @@ test('should generated only `woff2` font', (t) => {
         t.true(typeof result.ttf === 'undefined');
         t.true(typeof result.eot === 'undefined');
         t.true(typeof result.woff === 'undefined');
-        t.true(result.woff2.length > 0);
+        t.true(isWoff2(result.woff2));
         /* eslint-enable ava/max-asserts */
 
         return result;
@@ -82,7 +87,7 @@ test('should generated only `woff2` font', (t) => {
 });
 
 test('should generated all fonts and css', (t) => {
-    t.plan(1);
+    t.plan(7);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
@@ -90,23 +95,39 @@ test('should generated all fonts and css', (t) => {
             css: true
         }
     }).then((result) => {
-        t.true(typeof result.css !== 'undefined');
+        /* eslint-disable ava/max-asserts */
+        t.deepEqual(['svg', 'ttf', 'eot', 'woff', 'woff2', 'css'], Object.keys(result));
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
+        t.true(result.css.length > 0);
+        /* eslint-enable ava/max-asserts */
 
         return result;
     }).catch(logError);
 });
 
 test('should generated all fonts with `css` by passed template', (t) => {
-    t.plan(1);
+    t.plan(7);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         config: {
             css: true,
-            srcCssTemplate: path.join(__dirname, '../../templates/template.css')
+            srcCssTemplate: `${fixturesPath}/templates/template.css`
         }
     }).then((result) => {
-        t.true(typeof result.css !== 'undefined');
+        /* eslint-disable ava/max-asserts */
+        t.deepEqual(['svg', 'ttf', 'eot', 'woff', 'woff2', 'css'], Object.keys(result));
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
+        t.is(result.css.slice(0, 21), '/* custom template */');
+        /* eslint-enable ava/max-asserts */
 
         return result;
     }).catch(logError);

@@ -1,3 +1,11 @@
+# Head
+
+- Chore: sorting alphabetically `dependencies` and `devDependencies`.
+- Chore: remove unused `eslint-*` plugins from `devDependencies`.
+- Chore: update minimal version `eslint-plugin-itgalaxy` to `8.0.0`.
+- Chore: check is valid fonts in tests.
+- Chore: add more tests.
+
 # 2.0.3
 
 - Chore: improved `description` and `keywords` in `package.json`.

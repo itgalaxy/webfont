@@ -9,6 +9,7 @@
 - Chore: check is valid fonts in tests.
 - Chore: add more tests.
 - Chore: sharable config for `remark-lint`.
+- Chore: add `nodejs` v5 to `.travis.yml`.
 
 # 2.0.3
 

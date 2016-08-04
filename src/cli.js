@@ -4,40 +4,59 @@ import fs from 'fs';
 import meow from 'meow';
 import mkdirp from 'mkdirp';
 import path from 'path';
+import resolveFrom from 'resolve-from';
 import standalone from './standalone';
 
 const cli = meow(`
     Usage
-        $ webfont <path|glob> ... [options]
-    Options
-        General:
-            -f, --font-name            The font family name you want, default: "webfont".
-            -h, --help                 Output usage information.
-            -v, --version              Output the version number.
-            --formats                  Only this formats generate.
-            --dest                     Destination for generated fonts.
-            --src-css-template         Path to custom template.
-            --css-template-class-name  Class name in css template.
-            --css-template-font-path   Font path in css template.
-            --css-template-font-name   Font name in css template.
-            --dest-css-template        Destination for generated css template.
-            --verbose                  Tell me everything!.
+        $ webfont [input] [options]
 
-        For "svgicons2svgfont":
-            -i, --font-id              The font id you want, default as "--font-name".
-            -t, --style                The font style you want.
-            -g, --weight               The font weight you want.
-            -w, --fixed-width          Creates a monospace font of the width of the largest input icon.
-            -c, --center-horizontally  Calculate the bounds of a glyph and center it horizontally.
-            -n, --normalize            Normalize icons by scaling them to the height of the highest icon.
-            -e, --height               The outputted font height [MAX(icons.height)].
-            -r, --round                Setup the SVG path rounding [10e12].
-            -d, --descent              The font descent [0].
-            -a, --ascent               The font ascent [height - descent].
-            -s, --start-unicode        The start unicode codepoint for unprefixed files [0xEA01].
-            -p, --prepend-unicode      Prefix files with their automatically allocated unicode codepoint.
-            -m, --metadata             Content of the metadata tag.
+    Input
+      Files(s) or glob(s).
+      If an input argument is wrapped in quotation marks, it will be passed to node-glob
+      for cross-platform glob support.
+
+    Options
+      --config                       Path to a specific configuration file (JSON, YAML, or CommonJS)
+                                     or the name of a module in \`node_modules\` that points to one.
+                                     If no \`--config\` argument is provided, stylelint will search for
+                                     configuration  files in the following places, in this order:
+                                       - a \`stylelint\` property in \`package.json\`
+                                       - a \`.stylelintrc\` file (with or without filename extension:
+                                         \`.json\`, \`.yaml\`, and \`.js\` are available)
+                                       - a \`stylelint.config.js\` file exporting a JS object
+                                     The search will begin in the working directory and move up the
+                                     directory tree until a configuration file is found.
+      -f, --font-name                The font family name you want, default: "webfont".
+      -h, --help                     Output usage information.
+      -v, --version                  Output the version number.
+      -r, --formats                  Only this formats generate.
+      -d, --dest                     Destination for generated fonts.
+      -t, --src-css-template         Path to custom template.
+      -c, --css-template-class-name  Class name in css template.
+      -p, --css-template-font-path   Font path in css template.
+      -n, --css-template-font-name   Font name in css template.
+      -s, --dest-css-template        Destination for generated css template.
+      --quite                        Tell me everything!.
+
+    For "svgicons2svgfont":
+      --font-id                      The font id you want, default as "--font-name".
+      --style                        The font style you want.
+      --weight                       The font weight you want.
+      --fixed-width                  Creates a monospace font of the width of the largest input icon.
+      --center-horizontally          Calculate the bounds of a glyph and center it horizontally.
+      --normalize                    Normalize icons by scaling them to the height of the highest icon.
+      --height                       The outputted font height [MAX(icons.height)].
+      --round                        Setup the SVG path rounding [10e12].
+      --descent                      The font descent [0].
+      --ascent                       The font ascent [height - descent].
+      --start-unicode                The start unicode codepoint for unprefixed files [0xEA01].
+      --prepend-unicode              Prefix files with their automatically allocated unicode codepoint.
+      --metadata                     Content of the metadata tag.
 `, {
+    default: {
+        config: false
+    },
     string: [
         'font-name',
         'dest',
@@ -59,67 +78,158 @@ const cli = meow(`
         'css',
         'help',
         'version',
-        'verbose',
+        'quite',
         'fixed-width',
         'center-horizontally',
         'normalize',
         'prepend-unicode'
     ],
-    /* eslint-disable id-length */
     alias: {
-        h: 'help',
-        v: 'version',
+        /* eslint-disable id-length */
+        c: 'css-template-class-name',
+        d: 'dest',
         f: 'font-name',
-        i: 'font-id',
-        t: 'style',
-        g: 'weight',
-        w: 'fixed-width',
-        c: 'center-horizontally',
-        n: 'normalize',
-        e: 'height',
-        r: 'round',
-        d: 'descent',
-        a: 'ascent',
-        s: 'start-unicode',
-        p: 'prepend-unicode',
-        m: 'metadata'
+        h: 'help',
+        n: 'css-template-font-name',
+        p: 'css-template-font-path',
+        r: 'formats',
+        s: 'dest-css-template',
+        t: 'src-css-template',
+        v: 'version'
+        /* eslint-enable id-length */
     }
-    /* eslint-enable id-length */
 });
 
-Promise.resolve().then(() => {
-    if (cli.input.length) {
-        return Object.assign({}, {
-            config: cli.flags
-        }, {
-            files: cli.input
-        });
-    }
+const optionsBase = {};
 
-    // For stdin
-    return Promise.resolve({});
-})
+if (cli.flags.config) {
+    // Should check these possibilities:
+    //   a. name of a node_module
+    //   b. absolute path
+    //   c. relative path relative to `process.cwd()`.
+    // If none of the above work, we'll try a relative path starting
+    // in `process.cwd()`.
+    optionsBase.configFile = resolveFrom(process.cwd(), cli.flags.config)
+        || path.join(process.cwd(), cli.flags.config);
+}
+
+if (cli.flags.fontName) {
+    optionsBase.syntax = cli.flags.fontName;
+}
+
+if (cli.flags.formats) {
+    optionsBase.syntax = cli.flags.formats;
+}
+
+if (cli.flags.dest) {
+    optionsBase.dest = cli.flags.dest;
+}
+
+if (cli.flags.srcCssTemplate) {
+    optionsBase.srcCssTemplate = cli.flags.srcCssTemplate;
+}
+
+if (cli.flags.cssTemplateClassName) {
+    optionsBase.cssTemplateClassName = cli.flags.cssTemplateClassName;
+}
+
+if (cli.flags.cssTemplateFontPath) {
+    optionsBase.cssTemplateFontPath = cli.flags.cssTemplateFontPath;
+}
+
+if (cli.flags.cssTemplateFontName) {
+    optionsBase.cssTemplateFontName = cli.flags.cssTemplateFontName;
+}
+
+if (cli.flags.destCssTemplate) {
+    optionsBase.destCssTemplate = cli.flags.destCssTemplate;
+}
+
+if (cli.flags.fontId) {
+    optionsBase.fontId = cli.flags.fontId;
+}
+
+if (cli.flags.style) {
+    optionsBase.style = cli.flags.style;
+}
+
+if (cli.flags.weight) {
+    optionsBase.weight = cli.flags.weight;
+}
+
+if (cli.flags.fixedWidth) {
+    optionsBase.fixedWidth = cli.flags.fixedWidth;
+}
+
+if (cli.flags.centerHorizontally) {
+    optionsBase.centerHorizontally = cli.flags.centerHorizontally;
+}
+
+if (cli.flags.normalize) {
+    optionsBase.normalize = cli.flags.normalize;
+}
+
+if (cli.flags.height) {
+    optionsBase.height = cli.flags.height;
+}
+
+if (cli.flags.round) {
+    optionsBase.round = cli.flags.round;
+}
+
+if (cli.flags.descent) {
+    optionsBase.descent = cli.flags.descent;
+}
+
+if (cli.flags.ascent) {
+    optionsBase.ascent = cli.flags.ascent;
+}
+
+if (cli.flags.startUnicode) {
+    optionsBase.startUnicode = cli.flags.startUnicode;
+}
+
+if (cli.flags.prependUnicode) {
+    optionsBase.prependUnicode = cli.flags.prependUnicode;
+}
+
+if (cli.flags.metadata) {
+    optionsBase.metadata = cli.flags.metadata;
+}
+
+Promise.resolve().then(
+    () => Object.assign({}, optionsBase, {
+        files: cli.input
+    })
+)
     .then((options) => {
-        if (!options.files) {
+        if (!options.files.length) {
             cli.showHelp();
         }
 
-        if (!options.config.dest) {
-            return Promise.reject('Require `--dest` options');
+        if (!options.dest) {
+            return Promise.reject(new Error('Require `--dest` options'));
         }
 
-        if (options.config.destCssTemplate) {
-            options.config.css = true;
+        if (options.srcCssTemplate && !options.destCssTemplate) {
+            return Promise.reject(new Error('Require `--dest-css-template` options'));
+        }
 
-            const extname = path.extname(options.config.destCssTemplate);
+        if (options.destCssTemplate) {
+            options.css = true;
 
-            options.config.cssFormat = extname ? extname.slice(1, extname.length) : 'css';
+            const extname = path.extname(options.destCssTemplate);
+
+            options.cssFormat = extname ? extname.slice(1, extname.length) : 'css';
         }
 
         return standalone(options)
             .then((result) => Promise.resolve(result))
             .then((result) => {
-                result.config = Object.assign({}, options.config);
+                result.config = Object.assign({}, {
+                    dest: options.dest,
+                    destCssTemplate: options.destCssTemplate
+                }, result.config);
 
                 return Promise.resolve(result);
             });
@@ -137,6 +247,10 @@ Promise.resolve().then(() => {
             });
         })
             .then(() => {
+                if (!result.css) {
+                    return Promise.resolve();
+                }
+
                 const cssTemplateDirectory = path.resolve(path.dirname(result.config.destCssTemplate));
 
                 return new Promise((resolve, reject) => {

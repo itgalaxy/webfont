@@ -1,6 +1,6 @@
 {
     "name": "webfont",
-    "version": "2.0.3",
+    "version": "3.0.0",
     "description": "Generator of webfonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
     "license": "MIT",
     "author": "itgalaxy <development@itgalaxy.company>",
@@ -44,16 +44,19 @@
     "bin": "dist/cli.js",
     "files": [
         "CHANGELOG.md",
-        "LICENSE",
+        "LICENSE.md",
+        "README.md",
         "dist",
         "templates",
         "!**/__tests__"
     ],
     "dependencies": {
+        "cosmiconfig": "^1.0.0",
         "globby": "^6.0.0",
         "meow": "^3.3.0",
         "mkdirp": "^0.5.1",
         "nunjucks": "^2.0.0",
+        "resolve-from": "2.0.0",
         "svg2ttf": "^4.0.0",
         "svgicons2svgfont": "^5.0.0",
         "ttf2eot": "^2.0.0",
@@ -85,12 +88,13 @@
         "nyc": "^7.0.0",
         "remark-cli": "^1.0.0",
         "remark-lint": "^4.0.0",
+        "remark-lint-config-itgalaxy": "~1.0.1",
         "rimraf": "^2.5.2"
     },
     "scripts": {
         "coveralls": "nyc report --reporter=text-lcov | coveralls",
         "lint:eslint": "eslint . --ignore-path .gitignore  --color",
-        "lint:remark": "remark '{**/,}*.md' --ignore-path .gitignore --frail --quiet --color",
+        "lint:remark": "remark '{**/,}*.md' -r ./node_modules/remark-lint-config-itgalaxy/index.js -i .gitignore -f -q",
         "lint": "npm-run-all -l --parallel lint:*",
         "pretest": "npm run lint",
         "ava": "nyc ava --verbose \"src/**/__tests__/*.js\"",

@@ -1,10 +1,14 @@
-# Head
+# 3.0.0
 
+- Added: support `cosmiconfig`.
+- Changed: change function arguments in `standalone`.
+- Chore: refactoring.
 - Chore: sorting alphabetically `dependencies` and `devDependencies`.
 - Chore: remove unused `eslint-*` plugins from `devDependencies`.
 - Chore: update minimal version `eslint-plugin-itgalaxy` to `8.0.0`.
 - Chore: check is valid fonts in tests.
 - Chore: add more tests.
+- Chore: sharable config for `remark-lint`.
 
 # 2.0.3
 

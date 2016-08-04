@@ -134,3 +134,14 @@ test('should load config', (t) => {
     }).catch(logError);
 });
 
+test('should throw error of config file not found', (t) => {
+    t.plan(1);
+
+    return standalone({
+        files: `${fixturesPath}/svg-icons/**/*`,
+        configFile: `${fixturesPath}/configs/.not-exist-webfontrc`,
+        quite: true
+    }).catch((error) => {
+        t.true(error.code === 'ENOENT');
+    });
+});

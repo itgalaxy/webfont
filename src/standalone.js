@@ -117,10 +117,6 @@ function buildConfig(options) {
     }
 
     const cosmiconfigOptions = {
-        // Turn off argv option to avoid hijacking the all-too-common
-        // `--config` argument when stylelint is used in conjunction with other CLI's
-        // (e.g. webpack)
-        argv: false,
         // Allow extensions on rc filenames
         rcExtensions: true
     };

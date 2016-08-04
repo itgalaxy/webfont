@@ -1,4 +1,4 @@
-# Head
+# 3.0.1
 
 - Fixed: `--css-template-font-path` now get also from `cosmiconfig`.
 

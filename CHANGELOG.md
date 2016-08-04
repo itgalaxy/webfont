@@ -1,3 +1,7 @@
+# Head
+
+- Fixed: `--css-template-font-path` now get also from `cosmiconfig`.
+
 # 3.0.0
 
 - Added: support `cosmiconfig`.

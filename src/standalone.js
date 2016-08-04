@@ -275,7 +275,7 @@ export default function ({
                             className: options.cssTemplateClassName
                                 ? options.cssTemplateClassName
                                 : options.fontName,
-                            fontPath: cssTemplateFontPath,
+                            fontPath: options.cssTemplateFontPath,
                             fontName: options.cssTemplateFontName
                                 ? options.cssTemplateFontName
                                 : options.fontName

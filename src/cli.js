@@ -54,6 +54,30 @@ const cli = meow(`
       --prepend-unicode              Prefix files with their automatically allocated unicode codepoint.
       --metadata                     Content of the metadata tag.
 `, {
+    alias: {
+        /* eslint-disable id-length */
+        c: 'css-template-class-name',
+        d: 'dest',
+        f: 'font-name',
+        h: 'help',
+        n: 'css-template-font-name',
+        p: 'css-template-font-path',
+        r: 'formats',
+        s: 'dest-css-template',
+        t: 'src-css-template',
+        v: 'version'
+        /* eslint-enable id-length */
+    },
+    boolean: [
+        'css',
+        'help',
+        'version',
+        'quite',
+        'fixed-width',
+        'center-horizontally',
+        'normalize',
+        'prepend-unicode'
+    ],
     default: {
         config: false
     },
@@ -73,31 +97,7 @@ const cli = meow(`
         'descent',
         'ascent',
         'start-unicode'
-    ],
-    boolean: [
-        'css',
-        'help',
-        'version',
-        'quite',
-        'fixed-width',
-        'center-horizontally',
-        'normalize',
-        'prepend-unicode'
-    ],
-    alias: {
-        /* eslint-disable id-length */
-        c: 'css-template-class-name',
-        d: 'dest',
-        f: 'font-name',
-        h: 'help',
-        n: 'css-template-font-name',
-        p: 'css-template-font-path',
-        r: 'formats',
-        s: 'dest-css-template',
-        t: 'src-css-template',
-        v: 'version'
-        /* eslint-enable id-length */
-    }
+    ]
 });
 
 const optionsBase = {};

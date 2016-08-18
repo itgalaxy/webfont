@@ -1,3 +1,16 @@
+# Head
+
+- Chore(package): remove extra `files` from `package.json`.
+- Chore(package): change semver for `remark-lint-config-itgalaxy` from `~` to `^`.
+- Chore(package): install all `peerDependencies` for `eslint-plugin-itgalaxy`.
+- Chore(package): update a minimal version `ava` from `0.15.0` to `0.16.0`.
+- Chore(package): update a minimal version `eslint-plugin-ava` from `2.5.0` to `3.0.0`.
+- Chore(package): update a minimal version `npm-run-all` from `2.3.0` to `3.0.0`.
+- Chore(package): update a minimal version `eslint-plugin-itgalaxy` from `8.0.0` to `11.0.0`.
+- Chore(package): update a minimal version `nyc` from `7.0.0` to `8.0.0`.
+- Chore(package): remove `nyc` settings, now fine works without their.
+- Chore: fix glob pattern for `lint:remark` script command.
+
 # 3.0.1
 
 - Fixed: `--css-template-font-path` now get also from `cosmiconfig`.

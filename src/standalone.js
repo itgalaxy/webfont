@@ -13,23 +13,23 @@ import ttf2woff2 from 'ttf2woff2';
 
 function svgIcons2svgFontFn(files, options, glyphs = []) {
     const fontStream = svgicons2svgfont({
-        fontName: options.fontName,
+        ascent: options.ascent,
+        centerHorizontally: options.centerHorizontally,
+        descent: options.descent,
+        fixedWidth: options.fixedWidth,
+        fontHeight: options.fontHeight,
         fontId: options.fontId,
+        fontName: options.fontName,
         fontStyle: options.fontStyle,
         fontWeight: options.fontWeight,
-        fixedWidth: options.fixedWidth,
-        centerHorizontally: options.centerHorizontally,
-        normalize: options.normalize,
-        fontHeight: options.fontHeight,
-        round: options.round,
-        descent: options.descent,
-        ascent: options.ascent,
+        log: options.log,
         metadata: options.metadata,
-        log: options.log
+        normalize: options.normalize,
+        round: options.round
     });
     const metadataProvider = options.metadataProvider || defaultMetadataProvider({
-        startUnicode: options.startUnicode,
-        prependUnicode: options.prependUnicode
+        prependUnicode: options.prependUnicode,
+        startUnicode: options.startUnicode
     });
 
     const sortedFiles = files.sort((fileA, fileB) => fileSorter(fileA, fileB));
@@ -190,30 +190,30 @@ export default function ({
     })
         .then((buildedConfig) => {
             const options = Object.assign({}, {
-                fontName,
-                formats,
-                srcCssTemplate,
+                ascent,
+                centerHorizontally,
+                css,
+                cssFormat,
                 cssTemplateClassName,
-                cssTemplateFontPath,
                 cssTemplateFontName,
+                cssTemplateFontPath,
+                descent,
+                fixedWidth,
+                fontHeight,
                 fontId: !fontId ? fontName : fontId,
+                fontName,
                 fontStyle,
                 fontWeight,
-                fixedWidth,
-                centerHorizontally,
-                normalize,
-                fontHeight,
-                round,
-                descent,
-                ascent,
-                metadata,
-                log: quite ? () => {} : console.log, // eslint-disable-line no-console, no-empty-function
-                metadataProvider,
-                startUnicode,
-                prependUnicode,
+                formats,
                 formatsOptions,
-                css,
-                cssFormat
+                log: quite ? () => {} : console.log, // eslint-disable-line no-console, no-empty-function
+                metadata,
+                metadataProvider,
+                normalize,
+                prependUnicode,
+                round,
+                srcCssTemplate,
+                startUnicode
             }, buildedConfig.config);
 
             return globby([].concat(files))
@@ -275,10 +275,10 @@ export default function ({
                             className: options.cssTemplateClassName
                                 ? options.cssTemplateClassName
                                 : options.fontName,
-                            fontPath: options.cssTemplateFontPath,
                             fontName: options.cssTemplateFontName
                                 ? options.cssTemplateFontName
-                                : options.fontName
+                                : options.fontName,
+                            fontPath: options.cssTemplateFontPath
                         }
                     );
 

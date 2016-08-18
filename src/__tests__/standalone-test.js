@@ -80,8 +80,8 @@ test('should generated all fonts and css', (t) => {
     t.plan(6);
 
     return standalone({
-        files: `${fixturesPath}/svg-icons/**/*`,
         css: true,
+        files: `${fixturesPath}/svg-icons/**/*`,
         quite: true
     }).then((result) => {
         /* eslint-disable ava/max-asserts */
@@ -100,10 +100,10 @@ test('should generated all fonts with `css` by passed template', (t) => {
     t.plan(6);
 
     return standalone({
-        files: `${fixturesPath}/svg-icons/**/*`,
         css: true,
-        srcCssTemplate: `${fixturesPath}/templates/template.css`,
-        quite: true
+        files: `${fixturesPath}/svg-icons/**/*`,
+        quite: true,
+        srcCssTemplate: `${fixturesPath}/templates/template.css`
     }).then((result) => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
@@ -120,8 +120,8 @@ test('should load config', (t) => {
     t.plan(5);
 
     return standalone({
-        files: `${fixturesPath}/svg-icons/**/*`,
         configFile: `${fixturesPath}/configs/.webfontrc`,
+        files: `${fixturesPath}/svg-icons/**/*`,
         quite: true
     }).then((result) => {
         t.true(isSvg(result.svg));
@@ -138,8 +138,8 @@ test('should throw error of config file not found', (t) => {
     t.plan(1);
 
     return standalone({
-        files: `${fixturesPath}/svg-icons/**/*`,
         configFile: `${fixturesPath}/configs/.not-exist-webfontrc`,
+        files: `${fixturesPath}/svg-icons/**/*`,
         quite: true
     }).catch((error) => {
         t.true(error.code === 'ENOENT');

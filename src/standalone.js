@@ -131,11 +131,8 @@ function buildConfig(options) {
                 return Promise.reject(new Error('No configuration found'));
             }
 
-            const rootConfigDir = path.dirname(result.filepath);
-
             return Promise.resolve({
-                config: result.config,
-                configDir: rootConfigDir
+                config: result.config
             });
         });
 }
@@ -152,11 +149,11 @@ export default function ({
         'woff2'
     ],
     css = false,
-    srcCssTemplate = null,
     cssFormat = 'css',
     cssTemplateClassName = null,
     cssTemplateFontPath = './',
     cssTemplateFontName = null,
+    srcCssTemplate = null,
     formatsOptions = {
         ttf: {
             copyright: null,
@@ -262,7 +259,10 @@ export default function ({
                     if (!options.srcCssTemplate) {
                         nunjucks.configure(path.join(__dirname, '../'));
 
-                        options.srcCssTemplate = path.join(__dirname, `../templates/template.${options.cssFormat}`);
+                        options.srcCssTemplate = path.join(
+                            __dirname,
+                            `../templates/template.${options.cssFormat}.nunjucks`
+                        );
                     }
 
                     const nunjucksOptions = Object.assign(

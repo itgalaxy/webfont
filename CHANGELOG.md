@@ -1,7 +1,7 @@
-# Head
+# 4.0.0
 
+- Changed: all style templates for font now have `nunjucks` extension.
 - Chore(package): remove extra `files` from `package.json`.
-- Chore(package): change semver for `remark-lint-config-itgalaxy` from `~` to `^`.
 - Chore(package): install all `peerDependencies` for `eslint-plugin-itgalaxy`.
 - Chore(package): update a minimal version `ava` from `0.15.0` to `0.16.0`.
 - Chore(package): update a minimal version `eslint-plugin-ava` from `2.5.0` to `3.0.0`.
@@ -9,6 +9,10 @@
 - Chore(package): update a minimal version `eslint-plugin-itgalaxy` from `8.0.0` to `11.0.0`.
 - Chore(package): update a minimal version `nyc` from `7.0.0` to `8.0.0`.
 - Chore(package): remove `nyc` settings, now fine works without their.
+- Chore(package): use `^` instead `~` from `babel-preset-stage-0`.
+- Chore(package): use `remark-preset-lint-itgalaxy` instead `remark-lint-config-itgalaxy`.
+- Chore(package): use right version for `eslint-plugin-*` and `eslint`.
+- Chore: improved `README.md`.
 - Chore: fix glob pattern for `lint:remark` script command.
 
 # 3.0.1

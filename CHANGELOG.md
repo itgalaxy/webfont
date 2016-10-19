@@ -1,3 +1,7 @@
+# Head
+
+- Fixed: CLI `fontName` and `formats` arguments bug.
+
 # 4.0.0
 
 - Changed: all style templates for font now have `nunjucks` extension.

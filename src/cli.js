@@ -203,7 +203,7 @@ Promise.resolve().then(
     })
 )
     .then((options) => {
-        if (!options.files.length) {
+        if (options.files.length === 0) {
             cli.showHelp();
         }
 

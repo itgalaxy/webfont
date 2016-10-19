@@ -121,11 +121,14 @@ function buildConfig(options) {
         rcExtensions: true
     };
 
+    let configPath = process.cwd();
+
     if (options.configFile) {
-        cosmiconfigOptions.configPath = path.resolve(process.cwd(), options.configFile);
+        configPath = path.resolve(process.cwd(), options.configFile);
     }
 
     return cosmiconfig('webfont', cosmiconfigOptions)
+        .load(null, configPath)
         .then((result) => {
             if (!result) {
                 return Promise.reject(new Error('No configuration found'));

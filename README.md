@@ -1,13 +1,21 @@
 # webfont
 
-[![NPM version](https://img.shields.io/npm/v/webfont.svg)](https://www.npmjs.org/package/webfont) [![Travis Build Status](https://img.shields.io/travis/itgalaxy/webfont/master.svg?label=build)](https://travis-ci.org/itgalaxy/webfont) [![dependencies Status](https://david-dm.org/itgalaxy/webfont/status.svg)](https://david-dm.org/itgalaxy/webfont) [![devDependencies Status](https://david-dm.org/itgalaxy/webfont/dev-status.svg)](https://david-dm.org/itgalaxy/webfont?type=dev)
+[![NPM version](https://img.shields.io/npm/v/webfont.svg)](https://www.npmjs.org/package/webfont) 
+[![Travis Build Status](https://img.shields.io/travis/itgalaxy/webfont/master.svg?label=build)](https://travis-ci.org/itgalaxy/webfont) 
+[![dependencies Status](https://david-dm.org/itgalaxy/webfont/status.svg)](https://david-dm.org/itgalaxy/webfont) 
+[![devDependencies Status](https://david-dm.org/itgalaxy/webfont/dev-status.svg)](https://david-dm.org/itgalaxy/webfont?type=dev)
 
 Generator of webfont from SVG icons.
 
 Features:
 
 - Supported font formats: WOFF2, WOFF, EOT, TTF and SVG.
+
+- Support configuration Files - use a JavaScript, JSON or YAML file to specify configuration information 
+  for an entire directory and all of its subdirectories.
+
 - Supported browsers: IE8+.
+
 - Generates CSS files allows to use custom templates.
 
 ## Install
@@ -149,10 +157,15 @@ The CLI can exit the process with the following exit codes:
 
 ## Related
 
-- [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) - Simple tool to merge multiple icons to an SVG font.
+- [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) - Simple tool to merge multiple 
+  icons to an SVG font.
+
 - [svg2ttf](https://github.com/fontello/svg2ttf) - Converts SVG fonts to TTF format.
+
 - [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
+
 - [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
+
 - [ttf2woff2](https://github.com/nfroidure/ttf2woff2) - Converts TTF fonts to WOFF2.
 
 ## Contribution

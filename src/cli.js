@@ -114,11 +114,11 @@ if (cli.flags.config) {
 }
 
 if (cli.flags.fontName) {
-    optionsBase.syntax = cli.flags.fontName;
+    optionsBase.fontName = cli.flags.fontName;
 }
 
 if (cli.flags.formats) {
-    optionsBase.syntax = cli.flags.formats;
+    optionsBase.formats = cli.flags.formats;
 }
 
 if (cli.flags.dest) {

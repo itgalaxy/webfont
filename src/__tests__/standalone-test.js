@@ -76,6 +76,28 @@ test('should generated only `woff2` font', (t) => {
     }).catch(logError);
 });
 
+// In future improve css tests on valid based on postcss
+
+test('should generated only `woff and `woff2` fonts with css', (t) => {
+    t.plan(6);
+
+    return standalone({
+        css: true,
+        files: `${fixturesPath}/svg-icons/**/*`,
+        formats: ['woff', 'woff2'],
+        quite: true
+    }).then((result) => {
+        t.true(typeof result.svg === 'undefined');
+        t.true(typeof result.ttf === 'undefined');
+        t.true(typeof result.eot === 'undefined');
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
+        t.true(result.css.length > 0); // eslint-disable-line ava/max-asserts
+
+        return result;
+    }).catch(logError);
+});
+
 test('should generated all fonts and css', (t) => {
     t.plan(6);
 

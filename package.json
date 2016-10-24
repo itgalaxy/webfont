@@ -1,6 +1,6 @@
 {
     "name": "webfont",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": "Generator of webfonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
     "license": "MIT",
     "author": "itgalaxy <development@itgalaxy.company>",
@@ -52,6 +52,7 @@
         "globby": "^6.0.0",
         "meow": "^3.3.0",
         "mkdirp": "^0.5.1",
+        "merge-deep": "^3.0.0",
         "nunjucks": "^2.5.0",
         "resolve-from": "2.0.0",
         "svg2ttf": "^4.0.0",

@@ -1,0 +1,85 @@
+{% for glyph in glyphs
+%}${{ className }}-{{ glyph.name }}: "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
+{% endfor %}
+@font-face {
+    font-family: {{ fontName }};
+    {% if formats.indexOf('eot')>-1 -%}
+        src: url("{{ fontPath }}{{ fontName }}.eot");
+    {%- endif -%}
+    {%- set eotIndex = formats.indexOf('eot') -%}
+    {%- set woff2Index = formats.indexOf('woff2') -%}
+    {%- set woffIndex = formats.indexOf('woff') -%}
+    {%- set ttfIndex = formats.indexOf('ttf') -%}
+    {%- set svgIndex = formats.indexOf('svg') %}
+    src: {% if eotIndex != -1 -%}
+            url("{{ fontPath }}{{ fontName }}.eot?#iefix") format("embedded-opentype")
+            {%- set nothing = formats.splice(eotIndex, 1) -%}
+            {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+        {%- endif -%}
+        {%- if woff2Index != -1 -%}
+            url("{{ fontPath }}{{ fontName }}.woff2") format("woff2")
+            {%- set nothing = formats.splice(woff2Index, 1) -%}
+            {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+        {%- endif -%}
+        {%- if woffIndex != -1 -%}
+            url("{{ fontPath }}{{ fontName }}.woff") format("woff")
+            {%- set nothing = formats.splice(woffIndex, 1) -%}
+            {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+        {%- endif -%}
+        {%- if ttfIndex != -1 -%}
+            url("{{ fontPath }}{{ fontName }}.ttf") format("truetype")
+            {%- set nothing = formats.splice(ttfIndex, 1) -%}
+            {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+        {%- endif -%}
+        {%- if svgIndex != -1 -%}
+            url("{{ fontPath }}{{ fontName }}.svg#{{ fontName }}") format("svg");
+        {%- endif %}
+    font-style: normal;
+    font-weight: 400;
+}
+
+%{{ className }} {
+    display: inline-block;
+    transform: translate(0, 0);
+    text-rendering: auto;
+    font: normal normal 400 14px/1 {{ fontName }};
+    font-size: inherit;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+.{{ className }} {
+    @extend %{{ className }};
+}
+
+.{{ className }}-lg {
+    vertical-align: -15%;
+    line-height: 0.75em;
+    font-size: 1.33333333em;
+}
+
+.{{ className }}-2x {
+    font-size: 2em;
+}
+
+.{{ className }}-3x {
+    font-size: 3em;
+}
+
+.{{ className }}-4x {
+    font-size: 4em;
+}
+
+.{{ className }}-5x {
+    font-size: 5em;
+}
+
+.{{ className }}-fw {
+    width: 1.28571429em;
+    text-align: center;
+}{% for glyph in glyphs
+%}
+
+.{{ className }}-{{ glyph.name }}::before {
+    content: "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
+}{% endfor %}

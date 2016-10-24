@@ -3,6 +3,7 @@ import defaultMetadataProvider from 'svgicons2svgfont/src/metadata';
 import fileSorter from 'svgicons2svgfont/src/filesorter';
 import fs from 'fs';
 import globby from 'globby';
+import merge from 'merge-deep';
 import nunjucks from 'nunjucks';
 import path from 'path';
 import svg2ttf from 'svg2ttf';
@@ -189,7 +190,7 @@ export default function ({
         configFile
     })
         .then((buildedConfig) => {
-            const options = Object.assign({}, {
+            const options = merge({}, {
                 ascent,
                 centerHorizontally,
                 css,
@@ -264,11 +265,11 @@ export default function ({
 
                         options.srcCssTemplate = path.join(
                             __dirname,
-                            `../templates/template.${options.cssFormat}.nunjucks`
+                            `../templates/template.${options.cssFormat}.njk`
                         );
                     }
 
-                    const nunjucksOptions = Object.assign(
+                    const nunjucksOptions = merge(
                         {},
                         {
                             glyphs

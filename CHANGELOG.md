@@ -1,3 +1,8 @@
+# 5.0.0 - 2016-10-24
+
+- Fixed: wrong `CSS` syntax when not all format are selected.
+- Chore(SEMVER-MAJOR): rename extension for all templates from `nunjucks` to `njk`.
+
 # 4.0.1 - 2016-10-19
 
 - Fixed: CLI `fontName` and `formats` arguments bug.

@@ -27,25 +27,37 @@ npm install webfont
 ## Usage
 
 ```js
-const webfont = require('webfont')
+const webfont = require('webfont').default
 
 webfont({
-  files: [
-    'src/dropdown.svg',
-    'src/close.svg'
-  ],
+  files: 'src/svg-icons/**/*.svg',
   fontName: 'my-font-name'
 })
     .then((result) => {
         console.log(result);
-    })
+    });
+```
+
+Or
+
+```js
+import webfont from 'webfont';
+
+webfont({
+  files: 'src/svg-icons/**/*.svg',
+  fontName: 'my-font-name'
+})
+    .then((result) => {
+        console.log(result);
+    });
 ```
 
 ## Options
 
 ### `files`
 
-A file glob, or array of file globs. Ultimately passed to [node-glob](https://github.com/isaacs/node-glob) to figure out what files you want to lint.
+A file glob, or array of file globs. 
+Ultimately passed to [node-glob](https://github.com/isaacs/node-glob) to figure out what files you want to lint.
 
 `node_modules` and `bower_components` are always ignored.
 
@@ -99,8 +111,6 @@ Type: `string`
 Default: `null`
 
 Default CSS template path.
-
-### Other options comming soon.
 
 ## Command Line Interface
 

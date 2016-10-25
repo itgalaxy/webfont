@@ -1,3 +1,7 @@
+# Head
+
+- Chore: improve `README.md`.
+
 # 5.0.0 - 2016-10-24
 
 - Fixed: wrong `CSS` syntax when not all format are selected.

@@ -91,7 +91,9 @@ Type: `string`
 Default: `css`
 Possible values: `css`, `scss` (feel free to contribute).
 
-If passed `destCssTemplate`, then it takes from `extension` file.
+If passed `destCssTemplate`, then it takes from `extension` before `njk` `extension` of file.
+
+Example: `template.scss.njk` -> `scss`, `template.css.njk` -> `css` and etc.
 
 ### `srcCssTemplate`
 Type: `string`
@@ -101,7 +103,7 @@ Default CSS template path.
 
 ### `cssTemplateClassName`
 Type: `string`
-Default: null
+Default: `null`
 
 Default font class name.
 

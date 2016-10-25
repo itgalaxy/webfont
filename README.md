@@ -5,7 +5,7 @@
 [![dependencies Status](https://david-dm.org/itgalaxy/webfont/status.svg)](https://david-dm.org/itgalaxy/webfont) 
 [![devDependencies Status](https://david-dm.org/itgalaxy/webfont/dev-status.svg)](https://david-dm.org/itgalaxy/webfont?type=dev)
 
-Generator of webfont from SVG icons.
+Generator of font from SVG icons.
 
 Features:
 
@@ -17,6 +17,8 @@ Features:
 - Supported browsers: IE8+.
 
 - Generates CSS files allows to use custom templates.
+
+- CLI.
 
 ## Install
 
@@ -89,6 +91,14 @@ Type: `string`
 Default: `css`
 Possible values: `css`, `scss` (feel free to contribute).
 
+If passed `destCssTemplate`, then it takes from `extension` file.
+
+### `srcCssTemplate`
+Type: `string`
+Default: `null`
+
+Default CSS template path.
+
 ### `cssTemplateClassName`
 Type: `string`
 Default: null
@@ -106,11 +116,21 @@ Type: `string`
 
 Default value getting from `fontName` options, but you can specify any value.
 
-### `srcCssTemplate`
-Type: `string`
-Default: `null`
+### `fontId`
+### `style`
+### `weight`
+### `fixedWidth`
+### `centerHorizontally`
+### `normalize`
+### `height`
+### `round`
+### `descent`
+### `ascent`
+### `startUnicode`
+### `prependUnicode`
 
-Default CSS template path.
+Options that are passed directly to [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
+Option `fontName` for `svgicons2svgfont` taken from above `fontName` argument.
 
 ## Command Line Interface
 
@@ -141,7 +161,7 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
   -p, --css-template-font-path   Font path in css template.
   -n, --css-template-font-name   Font name in css template.
   -s, --dest-css-template        Destination for generated css template.
-  --quite                        Tell me everything!.
+  --quite                        No output in console.
 
   For "svgicons2svgfont":
     --font-id                      The font id you want, default as "--font-name".

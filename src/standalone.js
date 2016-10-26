@@ -178,7 +178,7 @@ export default function ({
     startUnicode = 0xEA01,
     prependUnicode = false,
     metadata = null,
-    quite = false
+    verbose = false
 } = {}) {
     if (!files) {
         return Promise.reject(new Error('You must pass webfont a `files` glob'));
@@ -207,7 +207,7 @@ export default function ({
                 fontWeight,
                 formats,
                 formatsOptions,
-                log: quite ? () => {} : console.log, // eslint-disable-line no-console, no-empty-function
+                log: verbose ? console.log : () => {}, // eslint-disable-line no-console, no-empty-function
                 metadata,
                 metadataProvider,
                 normalize,

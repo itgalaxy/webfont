@@ -37,7 +37,7 @@ const cli = meow(`
         -p, --css-template-font-path   Font path in css template.
         -n, --css-template-font-name   Font name in css template.
         -s, --dest-css-template        Destination for generated css template.
-        --quite                        Tell me everything!.
+        --verbose                      Tell me everything!.
 
     For "svgicons2svgfont":
         --font-id                      The font id you want, default as "--font-name".
@@ -72,7 +72,7 @@ const cli = meow(`
         'css',
         'help',
         'version',
-        'quite',
+        'verbose',
         'fixed-width',
         'center-horizontally',
         'normalize',
@@ -143,6 +143,10 @@ if (cli.flags.cssTemplateFontName) {
 
 if (cli.flags.destCssTemplate) {
     optionsBase.destCssTemplate = cli.flags.destCssTemplate;
+}
+
+if (cli.flags.verbose) {
+    optionsBase.verbose = cli.flags.verbose;
 }
 
 if (cli.flags.fontId) {

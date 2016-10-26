@@ -1,7 +1,10 @@
-# Head
+# 6.0.0 - 2016-10-26
 
 - Added: support `nodejs` `7`.
+- Added: `verbose` argument for verbose output.
+- Remove: `quite` argument.
 - Chore: improve `README.md`.
+- Chore: improve `description` in `package.json`.
 
 # 5.0.0 - 2016-10-24
 

@@ -1,7 +1,7 @@
 {
     "name": "webfont",
-    "version": "5.0.0",
-    "description": "Generator of font from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
+    "version": "6.0.0",
+    "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
     "license": "MIT",
     "author": "itgalaxy <development@itgalaxy.company>",
     "contributors": [
@@ -35,7 +35,8 @@
         "ttf2woff",
         "ttf2svg",
         "svg2ttf",
-        "css"
+        "css",
+        "scss"
     ],
     "bugs": {
         "url": "https://github.com/itgalaxy/webfont/issues"

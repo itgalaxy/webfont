@@ -27,8 +27,7 @@ test('should generated all fonts', (t) => {
     t.plan(5);
 
     return standalone({
-        files: `${fixturesPath}/svg-icons/**/*`,
-        quite: true
+        files: `${fixturesPath}/svg-icons/**/*`
     }).then((result) => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
@@ -45,8 +44,7 @@ test('should generated only `svg`, `ttf` and `eot` fonts', (t) => {
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
-        formats: ['svg', 'ttf', 'eot'],
-        quite: true
+        formats: ['svg', 'ttf', 'eot']
     }).then((result) => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
@@ -63,8 +61,7 @@ test('should generated only `woff2` font', (t) => {
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
-        formats: ['woff2'],
-        quite: true
+        formats: ['woff2']
     }).then((result) => {
         t.true(typeof result.svg === 'undefined');
         t.true(typeof result.ttf === 'undefined');
@@ -84,8 +81,7 @@ test('should generated only `woff and `woff2` fonts with css', (t) => {
     return standalone({
         css: true,
         files: `${fixturesPath}/svg-icons/**/*`,
-        formats: ['woff', 'woff2'],
-        quite: true
+        formats: ['woff', 'woff2']
     }).then((result) => {
         t.true(typeof result.svg === 'undefined');
         t.true(typeof result.ttf === 'undefined');
@@ -103,8 +99,7 @@ test('should generated all fonts and css', (t) => {
 
     return standalone({
         css: true,
-        files: `${fixturesPath}/svg-icons/**/*`,
-        quite: true
+        files: `${fixturesPath}/svg-icons/**/*`
     }).then((result) => {
         /* eslint-disable ava/max-asserts */
         t.true(isSvg(result.svg));
@@ -124,7 +119,6 @@ test('should generated all fonts with `css` by passed template', (t) => {
     return standalone({
         css: true,
         files: `${fixturesPath}/svg-icons/**/*`,
-        quite: true,
         srcCssTemplate: `${fixturesPath}/templates/template.css`
     }).then((result) => {
         t.true(isSvg(result.svg));
@@ -143,8 +137,7 @@ test('should load config', (t) => {
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc`,
-        files: `${fixturesPath}/svg-icons/**/*`,
-        quite: true
+        files: `${fixturesPath}/svg-icons/**/*`
     }).then((result) => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
@@ -161,8 +154,7 @@ test('should throw error of config file not found', (t) => {
 
     return standalone({
         configFile: `${fixturesPath}/configs/.not-exist-webfontrc`,
-        files: `${fixturesPath}/svg-icons/**/*`,
-        quite: true
+        files: `${fixturesPath}/svg-icons/**/*`
     }).catch((error) => {
         t.true(error.code === 'ENOENT');
     });

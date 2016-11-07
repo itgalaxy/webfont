@@ -1,6 +1,7 @@
 # Head
 
 - Fixed: use `reject` instead `Promise.reject` in glyphs `error` callback.
+- Tests: improve tests on bad examples.
 
 # 6.0.1 - 2016-11-07
 

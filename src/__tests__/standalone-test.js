@@ -178,6 +178,17 @@ test('should throw error on bad svg images - `Unexpected character "N"`', (t) =>
     });
 });
 
+test('should throw error on bad svg images - empty file', (t) => {
+    t.plan(1);
+
+    return standalone({
+        configFile: `${fixturesPath}/configs/.webfontrc`,
+        files: `${fixturesPath}/bad-svg-icons/avatar-3.svg`
+    }).catch((error) => {
+        t.regex(error, /Checksum error in glyf/);
+    });
+});
+
 test('should throw error of config file not found', (t) => {
     t.plan(1);
 

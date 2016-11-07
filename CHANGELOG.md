@@ -1,6 +1,7 @@
-# Head
+# 6.0.2 - 2016-11-07
 
 - Fixed: use `reject` instead `Promise.reject` in glyphs `error` callback.
+- Fixed: use callback `finish` instead `end` for `svgicons2svgfont` stream.
 - Tests: improve tests on bad examples.
 
 # 6.0.1 - 2016-11-07

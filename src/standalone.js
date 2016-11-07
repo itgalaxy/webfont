@@ -13,22 +13,6 @@ import ttf2woff from 'ttf2woff';
 import ttf2woff2 from 'ttf2woff2';
 
 function svgIcons2svgFontFn(files, options, glyphs = []) {
-    const fontStream = svgicons2svgfont({
-        ascent: options.ascent,
-        centerHorizontally: options.centerHorizontally,
-        descent: options.descent,
-        fixedWidth: options.fixedWidth,
-        fontHeight: options.fontHeight,
-        fontId: options.fontId,
-        fontName: options.fontName,
-        fontStyle: options.fontStyle,
-        fontWeight: options.fontWeight,
-        log: options.log,
-        metadata: options.metadata,
-        normalize: options.normalize,
-        round: options.round
-    });
-
     const metadataProvider = options.metadataProvider || defaultMetadataProvider({
         prependUnicode: options.prependUnicode,
         startUnicode: options.startUnicode
@@ -41,39 +25,50 @@ function svgIcons2svgFontFn(files, options, glyphs = []) {
     };
 
     return Promise.all(
-        sortedFiles.map(
-            (srcPath) => new Promise((resolve, reject) => {
-                metadataProvider(srcPath, (error, metadata) => {
-                    if (error) {
-                        return reject(error);
-                    }
+        sortedFiles.map((srcPath) => new Promise((resolve, reject) => {
+            metadataProvider(srcPath, (error, metadata) => {
+                if (error) {
+                    return reject(error);
+                }
 
-                    const glyph = fs.createReadStream(srcPath);
+                const glyph = fs.createReadStream(srcPath);
 
-                    glyph.on('error', (glyphError) => reject(glyphError));
+                glyph.on('error', (glyphError) => reject(glyphError));
 
-                    glyph.metadata = metadata;
-                    fontStream.write(glyph);
+                glyph.metadata = metadata;
 
-                    glyphs.push(metadata);
+                glyphs.push(metadata);
 
-                    return resolve(glyph);
-                });
-            })
-        )
-    )
-        .then(() => {
-            fontStream.end();
-
-            return new Promise((resolve, reject) => {
-                fontStream
-                    .on('error', (error) => reject(error))
-                    .on('data', (data) => {
-                        result.svg += data;
-                    })
-                    .on('end', () => resolve(result));
+                return resolve(glyph);
             });
-        });
+        }))
+    )
+        .then((emmitGlyphs) => new Promise((resolve, reject) => {
+            const fontStream = svgicons2svgfont({
+                ascent: options.ascent,
+                centerHorizontally: options.centerHorizontally,
+                descent: options.descent,
+                fixedWidth: options.fixedWidth,
+                fontHeight: options.fontHeight,
+                fontId: options.fontId,
+                fontName: options.fontName,
+                fontStyle: options.fontStyle,
+                fontWeight: options.fontWeight,
+                log: options.log,
+                metadata: options.metadata,
+                normalize: options.normalize,
+                round: options.round
+            })
+                .on('finish', () => resolve(result))
+                .on('data', (data) => {
+                    result.svg += data;
+                })
+                .on('error', (error) => reject(error));
+
+            emmitGlyphs.forEach((emmitGlyph) => fontStream.write(emmitGlyph));
+
+            fontStream.end();
+        }));
 }
 
 function svg2ttfFn(result, options) {

@@ -50,7 +50,7 @@ function svgIcons2svgFontFn(files, options, glyphs = []) {
 
                     const glyph = fs.createReadStream(srcPath);
 
-                    glyph.on('error', (glyphError) => Promise.reject(glyphError));
+                    glyph.on('error', (glyphError) => reject(glyphError));
 
                     glyph.metadata = metadata;
                     fontStream.write(glyph);

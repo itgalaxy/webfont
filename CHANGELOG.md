@@ -1,3 +1,7 @@
+# Head
+
+- Fixed: use `reject` instead `Promise.reject` in glyphs `error` callback.
+
 # 6.0.1 - 2016-11-07
 
 - Fixed: add `error` event to `glyph` stream.

@@ -1,3 +1,16 @@
+# 6.0.1 - 2016-11-07
+
+- Fixed: add `error` event to `glyph` stream.
+- Fixed: don't create `new Error` where this is not necessary.
+- Chore: update a minimal version of `nunjucks` from `2.5.0` to `3.0.0`.
+- Chore: update a minimal version of `eslint` from `3.4.0` to `3.9.1`.
+- Chore: update a minimal version of `eslint-plugin-ava` from `3.0.0` to `4.0.0`.
+- Chore: update a minimal version of `eslint-plugin-itgalaxy` from `23.0.0` to `25.0.0`.
+- Chore: update a minimal version of `eslint-plugin-node` from `2.0.0` to `3.0.0`.
+- Chore: update a minimal version of `eslint-plugin-promise` from `3.0.0` to `3.3.0`.
+- Chore: update a minimal version of `eslint-plugin-react` from `6.2.0` to `6.5.0`.
+- Tests: improve tests on bad examples.
+
 # 6.0.0 - 2016-10-26
 
 - Added: support `nodejs` `7`.

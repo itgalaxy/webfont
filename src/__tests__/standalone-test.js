@@ -9,10 +9,6 @@ import test from 'ava';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
-function logError(error) {
-    console.log(error.stack); // eslint-disable-line no-console
-}
-
 test('should throw error if `files` not passed', (t) => {
     t.throws(standalone(), 'You must pass webfont a `files` glob');
 });
@@ -36,7 +32,7 @@ test('should generated all fonts', (t) => {
         t.true(isWoff2(result.woff2));
 
         return result;
-    }).catch(logError);
+    });
 });
 
 test('should generated only `svg`, `ttf` and `eot` fonts', (t) => {
@@ -53,7 +49,7 @@ test('should generated only `svg`, `ttf` and `eot` fonts', (t) => {
         t.true(typeof result.woff2 === 'undefined');
 
         return result;
-    }).catch(logError);
+    });
 });
 
 test('should generated only `woff2` font', (t) => {
@@ -70,7 +66,7 @@ test('should generated only `woff2` font', (t) => {
         t.true(isWoff2(result.woff2));
 
         return result;
-    }).catch(logError);
+    });
 });
 
 // In future improve css tests on valid based on postcss
@@ -91,7 +87,7 @@ test('should generated only `woff and `woff2` fonts with css', (t) => {
         t.true(result.css.length > 0); // eslint-disable-line ava/max-asserts
 
         return result;
-    }).catch(logError);
+    });
 });
 
 test('should generated all fonts and css', (t) => {
@@ -110,7 +106,7 @@ test('should generated all fonts and css', (t) => {
         t.true(result.css.length > 0); // eslint-disable-line ava/max-asserts
 
         return result;
-    }).catch(logError);
+    });
 });
 
 test('should generated all fonts with `css` by passed template', (t) => {
@@ -129,7 +125,7 @@ test('should generated all fonts with `css` by passed template', (t) => {
         t.is(result.css.slice(0, 21), '/* custom template */');
 
         return result;
-    }).catch(logError);
+    });
 });
 
 test('should load config', (t) => {
@@ -146,7 +142,40 @@ test('should load config', (t) => {
         t.true(isWoff2(result.woff2));
 
         return result;
-    }).catch(logError);
+    });
+});
+
+test('should throw error on bad svg images - `Unclosed root tag`', (t) => {
+    t.plan(1);
+
+    return standalone({
+        configFile: `${fixturesPath}/configs/.webfontrc`,
+        files: `${fixturesPath}/bad-svg-icons/avatar.svg`
+    }).catch((error) => {
+        t.regex(error.message, /Unclosed root tag/);
+    });
+});
+
+test('should throw error on bad svg images - `Unterminated command at index`', (t) => {
+    t.plan(1);
+
+    return standalone({
+        configFile: `${fixturesPath}/configs/.webfontrc`,
+        files: `${fixturesPath}/bad-svg-icons/avatar-1.svg`
+    }).catch((error) => {
+        t.regex(error.message, /Unterminated command at index/);
+    });
+});
+
+test('should throw error on bad svg images - `Unexpected character "N"`', (t) => {
+    t.plan(1);
+
+    return standalone({
+        configFile: `${fixturesPath}/configs/.webfontrc`,
+        files: `${fixturesPath}/bad-svg-icons/avatar-2.svg`
+    }).catch((error) => {
+        t.regex(error.message, /Unexpected character "N"/);
+    });
 });
 
 test('should throw error of config file not found', (t) => {

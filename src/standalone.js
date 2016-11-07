@@ -28,6 +28,7 @@ function svgIcons2svgFontFn(files, options, glyphs = []) {
         normalize: options.normalize,
         round: options.round
     });
+
     const metadataProvider = options.metadataProvider || defaultMetadataProvider({
         prependUnicode: options.prependUnicode,
         startUnicode: options.startUnicode
@@ -44,10 +45,12 @@ function svgIcons2svgFontFn(files, options, glyphs = []) {
             (srcPath) => new Promise((resolve, reject) => {
                 metadataProvider(srcPath, (error, metadata) => {
                     if (error) {
-                        return reject(new Error(error));
+                        return reject(error);
                     }
 
                     const glyph = fs.createReadStream(srcPath);
+
+                    glyph.on('error', (glyphError) => Promise.reject(glyphError));
 
                     glyph.metadata = metadata;
                     fontStream.write(glyph);
@@ -64,7 +67,7 @@ function svgIcons2svgFontFn(files, options, glyphs = []) {
 
             return new Promise((resolve, reject) => {
                 fontStream
-                    .on('error', (error) => reject(new Error(error)))
+                    .on('error', (error) => reject(error))
                     .on('data', (data) => {
                         result.svg += data;
                     })

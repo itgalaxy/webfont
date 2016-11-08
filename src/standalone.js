@@ -214,7 +214,7 @@ export default function ({
         return Promise.reject(new Error('You must pass webfont a `files` glob'));
     }
 
-    let glyphsData = null;
+    let glyphsData = [];
 
     return buildConfig({
         configFile
@@ -259,16 +259,12 @@ export default function ({
 
                     return Promise.resolve(filteredFiles);
                 })
-                .then((foundFiles) => {
-                    glyphsData = getGlyphsData(foundFiles, options);
+                .then((foundFiles) => getGlyphsData(foundFiles, options))
+                .then((returnedGlyphsData) => {
+                    glyphsData = returnedGlyphsData;
 
-                    if (!glyphsData) {
-                        throw new Error('Can\'t get glyphs data');
-                    }
-
-                    return glyphsData;
+                    return svgIcons2svgFontFn(returnedGlyphsData, options);
                 })
-                .then((returnedGlyphsData) => svgIcons2svgFontFn(returnedGlyphsData, options))
                 .then((result) => svg2ttfFn(result, options.formatsOptions.ttf))
                 // maybe add ttfautohint
                 .then((result) => {
@@ -311,7 +307,7 @@ export default function ({
                     const nunjucksOptions = merge(
                         {},
                         {
-                            glyphsData
+                            glyphs: glyphsData.map((glyphData) => glyphData.metadata)
                         },
                         options,
                         {

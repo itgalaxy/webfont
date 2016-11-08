@@ -69,10 +69,28 @@ test('should generated only `woff2` font', (t) => {
     });
 });
 
-// In future improve css tests on valid based on postcss
+test('should generated all fonts with css', (t) => {
+    t.plan(8);
+
+    return standalone({
+        css: true,
+        files: `${fixturesPath}/svg-icons/**/*`
+    }).then((result) => {
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
+        t.regex(result.css, /\.webfont-avatar/);
+        t.regex(result.css, /\.webfont-envelope/);
+        t.regex(result.css, /\.webfont-phone-call/);
+
+        return result;
+    });
+});
 
 test('should generated only `woff and `woff2` fonts with css', (t) => {
-    t.plan(6);
+    t.plan(8);
 
     return standalone({
         css: true,
@@ -84,33 +102,36 @@ test('should generated only `woff and `woff2` fonts with css', (t) => {
         t.true(typeof result.eot === 'undefined');
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.true(result.css.length > 0); // eslint-disable-line ava/max-asserts
+        t.regex(result.css, /\.webfont-avatar/);
+        t.regex(result.css, /\.webfont-envelope/);
+        t.regex(result.css, /\.webfont-phone-call/);
 
         return result;
     });
 });
 
 test('should generated all fonts and css', (t) => {
-    t.plan(6);
+    t.plan(8);
 
     return standalone({
         css: true,
         files: `${fixturesPath}/svg-icons/**/*`
     }).then((result) => {
-        /* eslint-disable ava/max-asserts */
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.true(result.css.length > 0); // eslint-disable-line ava/max-asserts
+        t.regex(result.css, /\.webfont-avatar/);
+        t.regex(result.css, /\.webfont-envelope/);
+        t.regex(result.css, /\.webfont-phone-call/);
 
         return result;
     });
 });
 
 test('should generated all fonts with `css` by passed template', (t) => {
-    t.plan(6);
+    t.plan(9);
 
     return standalone({
         css: true,
@@ -122,7 +143,10 @@ test('should generated all fonts with `css` by passed template', (t) => {
         t.true(isEot(result.eot));
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.is(result.css.slice(0, 21), '/* custom template */');
+        t.regex(result.css, /\/\*\scustom template\s\*\//);
+        t.regex(result.css, /\.webfont-avatar/);
+        t.regex(result.css, /\.webfont-envelope/);
+        t.regex(result.css, /\.webfont-phone-call/);
 
         return result;
     });

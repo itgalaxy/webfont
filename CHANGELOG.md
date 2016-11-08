@@ -1,3 +1,7 @@
+# 6.0.4 - 2016-11-08
+
+- Fixed: regression bug with passed arguments to template.
+
 # 6.0.3 - 2016-11-08
 
 - Fixed: validate `xml` of glyphs.

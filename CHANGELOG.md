@@ -1,4 +1,4 @@
-# Head
+# 6.0.3 - 2016-11-08
 
 - Fixed: validate `xml` of glyphs.
 - Chore: update a minimal version of `eslint-plugin-ava` from `2.1.0` to `2.2.0`.

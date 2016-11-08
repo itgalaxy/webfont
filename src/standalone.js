@@ -1,3 +1,4 @@
+import { Readable } from 'stream';
 import cosmiconfig from 'cosmiconfig';
 import defaultMetadataProvider from 'svgicons2svgfont/src/metadata';
 import fileSorter from 'svgicons2svgfont/src/filesorter';
@@ -11,64 +12,95 @@ import svgicons2svgfont from 'svgicons2svgfont';
 import ttf2eot from 'ttf2eot';
 import ttf2woff from 'ttf2woff';
 import ttf2woff2 from 'ttf2woff2';
+import xml2js from 'xml2js';
 
-function svgIcons2svgFontFn(files, options, glyphs = []) {
+function getGlyphsData(files, options) {
     const metadataProvider = options.metadataProvider || defaultMetadataProvider({
         prependUnicode: options.prependUnicode,
         startUnicode: options.startUnicode
     });
 
     const sortedFiles = files.sort((fileA, fileB) => fileSorter(fileA, fileB));
+    const xmlParser = new xml2js.Parser();
 
-    const result = {
-        svg: ''
-    };
+    return Promise.all(sortedFiles.map((srcPath) => new Promise((resolve, reject) => {
+        const glyph = fs.createReadStream(srcPath);
+        let glyphContents = '';
 
-    return Promise.all(
-        sortedFiles.map((srcPath) => new Promise((resolve, reject) => {
-            metadataProvider(srcPath, (error, metadata) => {
+        return glyph
+            .on('error', (glyphError) => reject(glyphError))
+            .on('data', (data) => {
+                glyphContents += data.toString();
+            })
+            .on('end', () => {
+                xmlParser.parseString(glyphContents, (error) => {
+                    if (error) {
+                        return reject(error);
+                    }
+
+                    const glyphData = {
+                        contents: glyphContents,
+                        srcPath
+                    };
+
+                    return resolve(glyphData);
+                });
+            });
+    })
+        .then((glyphData) => new Promise((resolve, reject) => {
+            metadataProvider(glyphData.srcPath, (error, metadata) => {
                 if (error) {
                     return reject(error);
                 }
 
-                const glyph = fs.createReadStream(srcPath);
+                glyphData.metadata = metadata;
 
-                glyph.on('error', (glyphError) => reject(glyphError));
-
-                glyph.metadata = metadata;
-
-                glyphs.push(metadata);
-
-                return resolve(glyph);
+                return resolve(glyphData);
             });
         }))
-    )
-        .then((emmitGlyphs) => new Promise((resolve, reject) => {
-            const fontStream = svgicons2svgfont({
-                ascent: options.ascent,
-                centerHorizontally: options.centerHorizontally,
-                descent: options.descent,
-                fixedWidth: options.fixedWidth,
-                fontHeight: options.fontHeight,
-                fontId: options.fontId,
-                fontName: options.fontName,
-                fontStyle: options.fontStyle,
-                fontWeight: options.fontWeight,
-                log: options.log,
-                metadata: options.metadata,
-                normalize: options.normalize,
-                round: options.round
+    ));
+}
+
+function svgIcons2svgFontFn(glyphsData, options) {
+    const result = {
+        svg: ''
+    };
+
+    return new Promise((resolve, reject) => {
+        const fontStream = svgicons2svgfont({
+            ascent: options.ascent,
+            centerHorizontally: options.centerHorizontally,
+            descent: options.descent,
+            fixedWidth: options.fixedWidth,
+            fontHeight: options.fontHeight,
+            fontId: options.fontId,
+            fontName: options.fontName,
+            fontStyle: options.fontStyle,
+            fontWeight: options.fontWeight,
+            log: options.log,
+            metadata: options.metadata,
+            normalize: options.normalize,
+            round: options.round
+        })
+            .on('finish', () => resolve(result))
+            .on('data', (data) => {
+                result.svg += data;
             })
-                .on('finish', () => resolve(result))
-                .on('data', (data) => {
-                    result.svg += data;
-                })
-                .on('error', (error) => reject(error));
+            .on('error', (error) => reject(error));
 
-            emmitGlyphs.forEach((emmitGlyph) => fontStream.write(emmitGlyph));
+        glyphsData.forEach((glyphData) => {
+            const glyphStream = new Readable();
 
-            fontStream.end();
-        }));
+            glyphStream.push(glyphData.contents);
+            glyphStream.push(null);
+
+            glyphStream.metadata = glyphData.metadata;
+
+            fontStream.write(glyphStream);
+        });
+
+        fontStream.end();
+    });
 }
 
 function svg2ttfFn(result, options) {
@@ -182,7 +214,7 @@ export default function ({
         return Promise.reject(new Error('You must pass webfont a `files` glob'));
     }
 
-    const glyphs = [];
+    let glyphsData = null;
 
     return buildConfig({
         configFile
@@ -227,7 +259,16 @@ export default function ({
 
                     return Promise.resolve(filteredFiles);
                 })
-                .then((foundFiles) => svgIcons2svgFontFn(foundFiles, options, glyphs))
+                .then((foundFiles) => {
+                    glyphsData = getGlyphsData(foundFiles, options);
+
+                    if (!glyphsData) {
+                        throw new Error('Can\'t get glyphs data');
+                    }
+
+                    return glyphsData;
+                })
+                .then((returnedGlyphsData) => svgIcons2svgFontFn(returnedGlyphsData, options))
                 .then((result) => svg2ttfFn(result, options.formatsOptions.ttf))
                 // maybe add ttfautohint
                 .then((result) => {
@@ -270,7 +311,7 @@ export default function ({
                     const nunjucksOptions = merge(
                         {},
                         {
-                            glyphs
+                            glyphsData
                         },
                         options,
                         {

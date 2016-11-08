@@ -1,3 +1,12 @@
+# Head
+
+- Fixed: validate `xml` of glyphs.
+- Chore: update a minimal version of `eslint-plugin-ava` from `2.1.0` to `2.2.0`.
+- Chore: update a minimal version of `eslint-plugin-itgalaxy` from `25.0.0` to `26.0.0`.
+- Chore: update a minimal version of `eslint-plugin-jsx-a11y` from `2.2.0` to `3.0.0`.
+- Chore: update a minimal version of `eslint-plugin-react` from `6.5.0` to `6.6.0`.
+- Chore: refactoring code.
+
 # 6.0.2 - 2016-11-07
 
 - Fixed: use `reject` instead `Promise.reject` in glyphs `error` callback.

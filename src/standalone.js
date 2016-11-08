@@ -33,7 +33,12 @@ function getGlyphsData(files, options) {
                 glyphContents += data.toString();
             })
             .on('end', () => {
-                xmlParser.parseString(glyphContents, (error) => {
+                // Maybe bug in xml2js
+                if (glyphContents.length === 0) {
+                    return reject(new Error(`Empty file ${srcPath}`));
+                }
+
+                return xmlParser.parseString(glyphContents, (error) => {
                     if (error) {
                         return reject(error);
                     }

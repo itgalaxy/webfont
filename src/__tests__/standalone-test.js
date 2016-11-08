@@ -19,7 +19,7 @@ test('should throw error `files glob patterns specified did not match any files`
     }), 'Files glob patterns specified did not match any files');
 });
 
-test('should generated all fonts', (t) => {
+test('should generate all fonts', (t) => {
     t.plan(5);
 
     return standalone({
@@ -35,7 +35,7 @@ test('should generated all fonts', (t) => {
     });
 });
 
-test('should generated only `svg`, `ttf` and `eot` fonts', (t) => {
+test('should generate only `svg`, `ttf` and `eot` fonts', (t) => {
     t.plan(5);
 
     return standalone({
@@ -52,7 +52,7 @@ test('should generated only `svg`, `ttf` and `eot` fonts', (t) => {
     });
 });
 
-test('should generated only `woff2` font', (t) => {
+test('should generate only `woff2` font', (t) => {
     t.plan(5);
 
     return standalone({
@@ -69,7 +69,7 @@ test('should generated only `woff2` font', (t) => {
     });
 });
 
-test('should generated all fonts with css', (t) => {
+test('should generate all fonts with css', (t) => {
     t.plan(8);
 
     return standalone({
@@ -89,7 +89,7 @@ test('should generated all fonts with css', (t) => {
     });
 });
 
-test('should generated only `woff and `woff2` fonts with css', (t) => {
+test('should generate only `woff and `woff2` fonts with css', (t) => {
     t.plan(8);
 
     return standalone({
@@ -110,7 +110,7 @@ test('should generated only `woff and `woff2` fonts with css', (t) => {
     });
 });
 
-test('should generated all fonts and css', (t) => {
+test('should generate all fonts and css', (t) => {
     t.plan(8);
 
     return standalone({
@@ -130,7 +130,7 @@ test('should generated all fonts and css', (t) => {
     });
 });
 
-test('should generated all fonts with `css` by passed template', (t) => {
+test('should generate all fonts with `css` by passed template', (t) => {
     t.plan(9);
 
     return standalone({
@@ -209,7 +209,7 @@ test('should throw error on bad svg images - empty file', (t) => {
         configFile: `${fixturesPath}/configs/.webfontrc`,
         files: `${fixturesPath}/bad-svg-icons/avatar-3.svg`
     }).catch((error) => {
-        t.regex(error, /Checksum error in glyf/);
+        t.regex(error, /Empty file/);
     });
 });
 

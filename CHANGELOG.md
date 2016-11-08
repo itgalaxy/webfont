@@ -1,3 +1,7 @@
+# Head
+
+- Fixed: throw error on empty `svg` files.
+
 # 6.0.4 - 2016-11-08
 
 - Fixed: regression bug with passed arguments to template.

@@ -156,9 +156,9 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
       -h, --help                     Output usage information.
       -v, --version                  Output the version number.
       -r, --formats                  Only this formats generate.
-      -d, --dest                     Destination for generated fonts.
+      -d, --dest                     Destination for generated fonts (directory).
       -t, --template                 Type of styles ('css', 'scss') or path to custom template.
-      -s, --dest-styles              Destination for generated styles. If not passed used `dest` argument.
+      -s, --dest-styles              Destination for generated styles (directory). If not passed used `dest` argument.
       -c, --css-template-class-name  Class name in css template.
       -p, --css-template-font-path   Font path in css template.
       -n, --css-template-font-name   Font name in css template.

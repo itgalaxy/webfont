@@ -187,12 +187,10 @@ export default function ({
         'woff',
         'woff2'
     ],
-    css = false,
-    cssFormat = 'css',
     cssTemplateClassName = null,
+    template = null,
     cssTemplateFontPath = './',
     cssTemplateFontName = null,
-    srcCssTemplate = null,
     formatsOptions = {
         ttf: {
             copyright: null,
@@ -228,8 +226,6 @@ export default function ({
             const options = merge({}, {
                 ascent,
                 centerHorizontally,
-                css,
-                cssFormat,
                 cssTemplateClassName,
                 cssTemplateFontName,
                 cssTemplateFontPath,
@@ -248,8 +244,8 @@ export default function ({
                 normalize,
                 prependUnicode,
                 round,
-                srcCssTemplate,
-                startUnicode
+                startUnicode,
+                template
             }, buildedConfig.config);
 
             return globby([].concat(files))
@@ -296,39 +292,49 @@ export default function ({
                     return ttf2woff2Fn(result);
                 })
                 .then((result) => {
-                    if (!options.css) {
+                    if (!options.template) {
                         return Promise.resolve(result);
                     }
 
-                    if (!options.srcCssTemplate) {
-                        nunjucks.configure(path.join(__dirname, '../'));
+                    const buildInTemplateDirectory = path.resolve(__dirname, '../templates');
 
-                        options.srcCssTemplate = path.join(
-                            __dirname,
-                            `../templates/template.${options.cssFormat}.njk`
-                        );
-                    }
+                    return globby(`${buildInTemplateDirectory}/**/*`)
+                        .then((buildInTemplates) => {
+                            const supportedExtensions = buildInTemplates.map(
+                                (buildInTemplate) => path.extname(buildInTemplate.replace('.njk', ''))
+                            );
 
-                    const nunjucksOptions = merge(
-                        {},
-                        {
-                            glyphs: glyphsData.map((glyphData) => glyphData.metadata)
-                        },
-                        options,
-                        {
-                            className: options.cssTemplateClassName
-                                ? options.cssTemplateClassName
-                                : options.fontName,
-                            fontName: options.cssTemplateFontName
-                                ? options.cssTemplateFontName
-                                : options.fontName,
-                            fontPath: options.cssTemplateFontPath
-                        }
-                    );
+                            let templateFilePath = template;
 
-                    result.css = nunjucks.render(path.resolve(options.srcCssTemplate), nunjucksOptions);
+                            if (supportedExtensions.indexOf(`.${template}`) !== -1) {
+                                result.usedBuildInStylesTemplate = true;
+                                nunjucks.configure(path.join(__dirname, '../'));
+                                templateFilePath = `${buildInTemplateDirectory}/template.${template}.njk`;
+                            } else {
+                                templateFilePath = path.resolve(templateFilePath);
+                            }
 
-                    return result;
+                            const nunjucksOptions = merge(
+                                {},
+                                {
+                                    glyphs: glyphsData.map((glyphData) => glyphData.metadata)
+                                },
+                                options,
+                                {
+                                    className: options.cssTemplateClassName
+                                        ? options.cssTemplateClassName
+                                        : options.fontName,
+                                    fontName: options.cssTemplateFontName
+                                        ? options.cssTemplateFontName
+                                        : options.fontName,
+                                    fontPath: options.cssTemplateFontPath
+                                }
+                            );
+
+                            result.styles = nunjucks.render(templateFilePath, nunjucksOptions);
+
+                            return result;
+                        });
                 })
                 .then((result) => {
                     if (options.formats.indexOf('svg') === -1) {

@@ -1,6 +1,15 @@
 # Head
 
+- Added: `template` option instead `css`, `cssFormat`, `srcCssTemplate`.
+- Added: `destStyles` options instead `destCssTemplate`.
+- Added: `styles` property to result.
 - Fixed: throw error on empty `svg` files.
+- Removed: `css` option.
+- Removed: `cssFormat` option.
+- Removed: `srcCssTemplate` option.
+- Removed: `css` property from result.
+- Removed: `destCssTemplate` argument from `cli`.
+- Tests: improve tests (relative and absolute path to template).
 
 # 6.0.4 - 2016-11-08
 

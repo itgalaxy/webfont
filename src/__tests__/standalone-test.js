@@ -69,84 +69,84 @@ test('should generate only `woff2` font', (t) => {
     });
 });
 
-test('should generate all fonts with css', (t) => {
+test('should generate all fonts with build-in template', (t) => {
     t.plan(8);
 
     return standalone({
-        css: true,
-        files: `${fixturesPath}/svg-icons/**/*`
+        files: `${fixturesPath}/svg-icons/**/*`,
+        template: 'css'
     }).then((result) => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.regex(result.css, /\.webfont-avatar/);
-        t.regex(result.css, /\.webfont-envelope/);
-        t.regex(result.css, /\.webfont-phone-call/);
+        t.regex(result.styles, /\.webfont-avatar/);
+        t.regex(result.styles, /\.webfont-envelope/);
+        t.regex(result.styles, /\.webfont-phone-call/);
 
         return result;
     });
 });
 
-test('should generate only `woff and `woff2` fonts with css', (t) => {
+test('should generate only `woff and `woff2` fonts with build-in template', (t) => {
     t.plan(8);
 
     return standalone({
-        css: true,
         files: `${fixturesPath}/svg-icons/**/*`,
-        formats: ['woff', 'woff2']
+        formats: ['woff', 'woff2'],
+        template: 'css'
     }).then((result) => {
         t.true(typeof result.svg === 'undefined');
         t.true(typeof result.ttf === 'undefined');
         t.true(typeof result.eot === 'undefined');
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.regex(result.css, /\.webfont-avatar/);
-        t.regex(result.css, /\.webfont-envelope/);
-        t.regex(result.css, /\.webfont-phone-call/);
+        t.regex(result.styles, /\.webfont-avatar/);
+        t.regex(result.styles, /\.webfont-envelope/);
+        t.regex(result.styles, /\.webfont-phone-call/);
 
         return result;
     });
 });
 
-test('should generate all fonts and css', (t) => {
-    t.plan(8);
-
-    return standalone({
-        css: true,
-        files: `${fixturesPath}/svg-icons/**/*`
-    }).then((result) => {
-        t.true(isSvg(result.svg));
-        t.true(isTtf(result.ttf));
-        t.true(isEot(result.eot));
-        t.true(isWoff(result.woff));
-        t.true(isWoff2(result.woff2));
-        t.regex(result.css, /\.webfont-avatar/);
-        t.regex(result.css, /\.webfont-envelope/);
-        t.regex(result.css, /\.webfont-phone-call/);
-
-        return result;
-    });
-});
-
-test('should generate all fonts with `css` by passed template', (t) => {
+test('should generate all fonts with custom `template` with absolute path', (t) => {
     t.plan(9);
 
     return standalone({
-        css: true,
         files: `${fixturesPath}/svg-icons/**/*`,
-        srcCssTemplate: `${fixturesPath}/templates/template.css`
+        template: `${fixturesPath}/templates/template.css`
     }).then((result) => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.regex(result.css, /\/\*\scustom template\s\*\//);
-        t.regex(result.css, /\.webfont-avatar/);
-        t.regex(result.css, /\.webfont-envelope/);
-        t.regex(result.css, /\.webfont-phone-call/);
+        t.regex(result.styles, /\/\*\scustom template\s\*\//);
+        t.regex(result.styles, /\.webfont-avatar/);
+        t.regex(result.styles, /\.webfont-envelope/);
+        t.regex(result.styles, /\.webfont-phone-call/);
+
+        return result;
+    });
+});
+
+test('should generate all fonts with custom `template` with relative path', (t) => {
+    t.plan(9);
+
+    return standalone({
+        files: `${fixturesPath}/svg-icons/**/*`,
+        template: `fixtures/templates/template.css`
+    }).then((result) => {
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
+        t.regex(result.styles, /\/\*\scustom template\s\*\//);
+        t.regex(result.styles, /\.webfont-avatar/);
+        t.regex(result.styles, /\.webfont-envelope/);
+        t.regex(result.styles, /\.webfont-phone-call/);
 
         return result;
     });

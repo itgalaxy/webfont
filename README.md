@@ -80,26 +80,12 @@ Possible values: `svg, ttf, eot, woff, woff2`.
 
 Font file types to generate.
 
-### `css`
-Type: `boolean`
-Default: `false`
-
-Whether to generate CSS. If not passed `srcCssTemplate`, then it takes from `template` directory.
-
-### `cssFormat`
-Type: `string`
-Default: `css`
-Possible values: `css`, `scss` (feel free to contribute).
-
-If passed `destCssTemplate`, then it takes from `extension` before `njk` `extension` of file.
-
-Example: `template.scss.njk` -> `scss`, `template.css.njk` -> `css` and etc.
-
-### `srcCssTemplate`
+### `template`
 Type: `string`
 Default: `null`
 
-Default CSS template path.
+Possible values: `css`, `scss` (feel free to contribute). If you want to use custom template use this option.
+Example: `template: path.resolve(__dirname, './my-template.css')`.
 
 ### `cssTemplateClassName`
 Type: `string`
@@ -145,40 +131,53 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
 ### Options
 
 ```bash
-  --config                       Path to a specific configuration file (JSON, YAML, or CommonJS)
-                                 or the name of a module in \`node_modules\` that points to one.
-                                 If no \`--config\` argument is provided, webfont will search for
-                                 configuration  files in the following places, in this order:
-                                   - a \`webfont\` property in \`package.json\`
-                                   - a \`.webfontrc\` file (with or without filename extension:
-                                     \`.json\`, \`.yaml\`, and \`.js\` are available)
-                                   - a \`webfont.config.js\` file exporting a JS object
-  -f, --font-name                The font family name you want, default: "webfont".
-  -h, --help                     Output usage information.
-  -v, --version                  Output the version number.
-  -r, --formats                  Only this formats generate.
-  -d, --dest                     Destination for generated fonts.
-  -t, --src-css-template         Path to custom template.
-  -c, --css-template-class-name  Class name in css template.
-  -p, --css-template-font-path   Font path in css template.
-  -n, --css-template-font-name   Font name in css template.
-  -s, --dest-css-template        Destination for generated css template.
-  --quite                        No output in console.
+  Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2
+
+  Usage
+      $ webfont [input] [options]
+
+  Input
+      Files(s) or glob(s).
+      If an input argument is wrapped in quotation marks, it will be passed to node-glob
+      for cross-platform glob support.
+
+  Options
+      --config                       Path to a specific configuration file (JSON, YAML, or CommonJS)
+                                     or the name of a module in `node_modules` that points to one.
+                                     If no `--config` argument is provided, webfont will search for
+                                     configuration  files in the following places, in this order:
+                                         - a `webfont` property in `package.json`
+                                         - a `.webfontrc` file (with or without filename extension:
+                                             `.json`, `.yaml`, and `.js` are available)
+                                         - a `webfont.config.js` file exporting a JS object
+                                     The search will begin in the working directory and move up the
+                                     directory tree until a configuration file is found.
+      -f, --font-name                The font family name you want, default: "webfont".
+      -h, --help                     Output usage information.
+      -v, --version                  Output the version number.
+      -r, --formats                  Only this formats generate.
+      -d, --dest                     Destination for generated fonts.
+      -t, --template                 Type of styles ('css', 'scss') or path to custom template.
+      -s, --dest-styles              Destination for generated styles. If not passed used `dest` argument.
+      -c, --css-template-class-name  Class name in css template.
+      -p, --css-template-font-path   Font path in css template.
+      -n, --css-template-font-name   Font name in css template.
+      --verbose                      Tell me everything!.
 
   For "svgicons2svgfont":
-    --font-id                      The font id you want, default as "--font-name".
-    --style                        The font style you want.
-    --weight                       The font weight you want.
-    --fixed-width                  Creates a monospace font of the width of the largest input icon.
-    --center-horizontally          Calculate the bounds of a glyph and center it horizontally.
-    --normalize                    Normalize icons by scaling them to the height of the highest icon.
-    --height                       The outputted font height [MAX(icons.height)].
-    --round                        Setup the SVG path rounding [10e12].
-    --descent                      The font descent [0].
-    --ascent                       The font ascent [height - descent].
-    --start-unicode                The start unicode codepoint for unprefixed files [0xEA01].
-    --prepend-unicode              Prefix files with their automatically allocated unicode codepoint.
-    --metadata                     Content of the metadata tag.
+      --font-id                      The font id you want, default as "--font-name".
+      --style                        The font style you want.
+      --weight                       The font weight you want.
+      --fixed-width                  Creates a monospace font of the width of the largest input icon.
+      --center-horizontally          Calculate the bounds of a glyph and center it horizontally.
+      --normalize                    Normalize icons by scaling them to the height of the highest icon.
+      --height                       The outputted font height [MAX(icons.height)].
+      --round                        Setup the SVG path rounding [10e12].
+      --descent                      The font descent [0].
+      --ascent                       The font ascent [height - descent].
+      --start-unicode                The start unicode codepoint for unprefixed files [0xEA01].
+      --prepend-unicode              Prefix files with their automatically allocated unicode codepoint.
+      --metadata                     Content of the metadata tag.
 ```
 
 ### Exit codes

@@ -32,11 +32,11 @@ const cli = meow(`
         -v, --version                  Output the version number.
         -r, --formats                  Only this formats generate.
         -d, --dest                     Destination for generated fonts.
-        -t, --src-css-template         Path to custom template.
+        -t, --template                 Type of styles ('css', 'scss') or path to custom template.
+        -s, --dest-styles              Destination for generated styles. If not passed used \`dest\` argument.
         -c, --css-template-class-name  Class name in css template.
         -p, --css-template-font-path   Font path in css template.
         -n, --css-template-font-name   Font name in css template.
-        -s, --dest-css-template        Destination for generated css template.
         --verbose                      Tell me everything!.
 
     For "svgicons2svgfont":
@@ -63,8 +63,8 @@ const cli = meow(`
         n: 'css-template-font-name',
         p: 'css-template-font-path',
         r: 'formats',
-        s: 'dest-css-template',
-        t: 'src-css-template',
+        s: 'dest-styles',
+        t: 'template',
         v: 'version'
         /* eslint-enable id-length */
     },
@@ -84,11 +84,12 @@ const cli = meow(`
     string: [
         'font-name',
         'dest',
-        'src-css-template',
+        'dest-styles',
+        'template',
         'css-template-class-name',
         'css-template-font-path',
         'css-template-font-name',
-        'dest-css-template',
+        'dest-styles',
         'font-id',
         'style',
         'weight',
@@ -125,8 +126,8 @@ if (cli.flags.dest) {
     optionsBase.dest = cli.flags.dest;
 }
 
-if (cli.flags.srcCssTemplate) {
-    optionsBase.srcCssTemplate = cli.flags.srcCssTemplate;
+if (cli.flags.template) {
+    optionsBase.template = cli.flags.template;
 }
 
 if (cli.flags.cssTemplateClassName) {
@@ -141,8 +142,8 @@ if (cli.flags.cssTemplateFontName) {
     optionsBase.cssTemplateFontName = cli.flags.cssTemplateFontName;
 }
 
-if (cli.flags.destCssTemplate) {
-    optionsBase.destCssTemplate = cli.flags.destCssTemplate;
+if (cli.flags.destStyles) {
+    optionsBase.destStyles = cli.flags.destStyles;
 }
 
 if (cli.flags.verbose) {
@@ -212,19 +213,7 @@ Promise.resolve().then(
         }
 
         if (!options.dest) {
-            return Promise.reject(new Error('Require `--dest` options'));
-        }
-
-        if (options.srcCssTemplate && !options.destCssTemplate) {
-            return Promise.reject(new Error('Require `--dest-css-template` options'));
-        }
-
-        if (options.destCssTemplate) {
-            options.css = true;
-
-            const extname = path.extname(options.destCssTemplate);
-
-            options.cssFormat = extname ? extname.slice(1, extname.length) : 'css';
+            return Promise.reject(new Error('Require `--dest` (`-d`) options'));
         }
 
         return standalone(options)
@@ -232,7 +221,7 @@ Promise.resolve().then(
             .then((result) => {
                 result.config = Object.assign({}, {
                     dest: options.dest,
-                    destCssTemplate: options.destCssTemplate
+                    destStyles: options.destStyles
                 }, result.config);
 
                 return Promise.resolve(result);
@@ -240,9 +229,26 @@ Promise.resolve().then(
     })
     .then((result) => {
         const fontName = result.config.fontName;
+        const dest = result.config.dest;
+
+        let destStyles = null;
+
+        if (result.styles) {
+            destStyles = result.config.destStyles;
+
+            if (!destStyles) {
+                destStyles = dest;
+            }
+
+            if (result.usedBuildInStylesTemplate) {
+                destStyles = path.join(destStyles, `${result.config.fontName}.${result.config.template}`);
+            } else {
+                destStyles = path.join(destStyles, path.basename(result.config.template).replace('.njk', ''));
+            }
+        }
 
         return new Promise((resolve, reject) => {
-            mkdirp(path.resolve(result.config.dest), (error) => {
+            mkdirp(path.resolve(dest), (error) => {
                 if (error) {
                     return reject(error);
                 }
@@ -251,14 +257,14 @@ Promise.resolve().then(
             });
         })
             .then(() => {
-                if (!result.css) {
+                if (!result.styles) {
                     return Promise.resolve();
                 }
 
-                const cssTemplateDirectory = path.resolve(path.dirname(result.config.destCssTemplate));
+                const stylesDirectory = path.resolve(path.dirname(destStyles));
 
                 return new Promise((resolve, reject) => {
-                    mkdirp(cssTemplateDirectory, (error) => {
+                    mkdirp(stylesDirectory, (error) => {
                         if (error) {
                             return reject(error);
                         }
@@ -268,17 +274,17 @@ Promise.resolve().then(
                 });
             })
             .then(() => Promise.all(Object.keys(result).map((type) => {
-                if (type === 'config') {
+                if (type === 'config' || type === 'usedBuildInStylesTemplate') {
                     return Promise.resolve();
                 }
 
                 const content = result[type];
                 let destFilename = null;
 
-                if (type !== 'css') {
-                    destFilename = path.resolve(path.join(result.config.dest, `${fontName}.${type}`));
+                if (type !== 'styles') {
+                    destFilename = path.resolve(path.join(dest, `${fontName}.${type}`));
                 } else {
-                    destFilename = path.resolve(result.config.destCssTemplate);
+                    destFilename = path.resolve(destStyles);
                 }
 
                 return new Promise((resolve, reject) => {

@@ -1,6 +1,12 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+
+This project adheres to [Semantic Versioning](http://semver.org/).
+
 # Head
 
-- Chore: improve output help in `CLI`.
+- Chore: improved output of help in `CLI`.
 
 # 7.0.0 - 2016-11-09
 
@@ -13,7 +19,7 @@
 - Removed: `srcCssTemplate` option.
 - Removed: `css` property from result.
 - Removed: `destCssTemplate` argument from `cli`.
-- Tests: improve tests (relative and absolute path to template).
+- Tests: improved tests (relative and absolute path to template).
 
 # 6.0.4 - 2016-11-08
 
@@ -22,10 +28,10 @@
 # 6.0.3 - 2016-11-08
 
 - Fixed: validate `xml` of glyphs.
-- Chore: update a minimal version of `eslint-plugin-ava` from `2.1.0` to `2.2.0`.
-- Chore: update a minimal version of `eslint-plugin-itgalaxy` from `25.0.0` to `26.0.0`.
-- Chore: update a minimal version of `eslint-plugin-jsx-a11y` from `2.2.0` to `3.0.0`.
-- Chore: update a minimal version of `eslint-plugin-react` from `6.5.0` to `6.6.0`.
+- Chore: minimum required `eslint-plugin-ava` version is now `^2.2.0`.
+- Chore: minimum required `eslint-plugin-itgalaxy` version is now `^26.0.0`.
+- Chore: minimum required `eslint-plugin-jsx-a11y` version is now `^3.0.0`.
+- Chore: minimum required `eslint-plugin-react` version is now `^6.6.0`.
 - Chore: refactoring code.
 
 # 6.0.2 - 2016-11-07
@@ -38,13 +44,13 @@
 
 - Fixed: add `error` event to `glyph` stream.
 - Fixed: don't create `new Error` where this is not necessary.
-- Chore: update a minimal version of `nunjucks` from `2.5.0` to `3.0.0`.
-- Chore: update a minimal version of `eslint` from `3.4.0` to `3.9.1`.
-- Chore: update a minimal version of `eslint-plugin-ava` from `3.0.0` to `4.0.0`.
-- Chore: update a minimal version of `eslint-plugin-itgalaxy` from `23.0.0` to `25.0.0`.
-- Chore: update a minimal version of `eslint-plugin-node` from `2.0.0` to `3.0.0`.
-- Chore: update a minimal version of `eslint-plugin-promise` from `3.0.0` to `3.3.0`.
-- Chore: update a minimal version of `eslint-plugin-react` from `6.2.0` to `6.5.0`.
+- Chore: minimum required `nunjucks` version is now `^3.0.0`.
+- Chore: minimum required `eslint` version is now `^3.9.1`.
+- Chore: minimum required `eslint-plugin-ava` version is now `^4.0.0`.
+- Chore: minimum required `eslint-plugin-itgalaxy` version is now `^25.0.0`.
+- Chore: minimum required `eslint-plugin-node` version is now `^3.0.0`.
+- Chore: minimum required `eslint-plugin-promise` version is now `^3.3.0`.
+- Chore: minimum required `eslint-plugin-react` version is now `^6.5.0`.
 - Tests: improve tests on bad examples.
 
 # 6.0.0 - 2016-10-26
@@ -64,16 +70,16 @@
 
 - Fixed: CLI `fontName` and `formats` arguments bug.
 - Chore: use `^` instead `~` for `ajv-cli`, `package-schema`, `remark-cli`, `remark-lint`, `remark-preset-lint-itgalaxy`.
-- Chore: update a minimal version of `ajv-cli` from `0.9.0` to `1.1.0`.
-- Chore: update a minimal version of `remark-preset-lint-itgalaxy` from `1.0.0` to `2.0.0`.
-- Chore: update a minimal version of `nunjucks` from `2.0.0` to `2.5.0`.
-- Chore: update a minimal version of `eslint-plugin-import` from `1.16.0` to `2.0.0`.
-- Chore: update a minimal version of `eslint-plugin-promise` from `2.0.0` to `3.0.0`.
-- Chore: update a minimal version of `eslint-plugin-lodash` from `1.10.0` to `2.1.0`.
+- Chore: minimum required `ajv-cli` version is now `^1.1.0`.
+- Chore: minimum required `remark-preset-lint-itgalaxy` version is now `^2.0.0`.
+- Chore: minimum required `nunjucks` from `2.0.0` to `2.5.0`.
+- Chore: minimum required `eslint-plugin-import` version is now `^2.0.0`.
+- Chore: minimum required `eslint-plugin-promise` version is now `^3.0.0`.
+- Chore: minimum required `eslint-plugin-lodash` version is now `^2.1.0`.
 - Chore: rename `eslint-plugin-xo` to `eslint-plugin-unicorn`.
-- Chore: update a minimal version of `eslint-plugin-unicorn` from `0.5.0` to `1.0.0`.
-- Chore: update a minimal version of `eslint-plugin-itgalaxy` from `13.0.0` to `23.0.0`.
-- Chore: update a minimal version of `cosmiconfig` from `1.0.0` to `2.0.0`.
+- Chore: minimum required `eslint-plugin-unicorn` version is now `^1.0.0`.
+- Chore: minimum required `eslint-plugin-itgalaxy` version is now `^23.0.0`.
+- Chore: minimum required `cosmiconfig` version is now `^2.0.0`.
 
 # 4.0.0
 

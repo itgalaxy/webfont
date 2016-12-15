@@ -64,7 +64,7 @@
         "ttf2woff2": "^2.0.0"
     },
     "devDependencies": {
-        "ava": "^0.16.0",
+        "ava": "^0.17.0",
         "ajv-cli": "^1.1.0",
         "babel-cli": "^6.11.0",
         "babel-core": "^6.11.0",
@@ -75,7 +75,7 @@
         "eslint": "^3.9.1",
         "eslint-plugin-ava": "^4.0.0",
         "eslint-plugin-import": "^2.2.0",
-        "eslint-plugin-itgalaxy": "^26.0.0",
+        "eslint-plugin-itgalaxy": "^33.0.0",
         "eslint-plugin-jsx-a11y": "^3.0.0",
         "eslint-plugin-lodash": "^2.1.0",
         "eslint-plugin-node": "^3.0.0",
@@ -89,7 +89,7 @@
         "is-woff2": "^1.0.0",
         "npmpub": "^3.1.0",
         "npm-run-all": "^3.0.0",
-        "nyc": "^8.0.0",
+        "nyc": "^10.0.0",
         "package-schema": "^1.0.0",
         "remark-cli": "^2.0.0",
         "remark-lint": "^5.0.0",

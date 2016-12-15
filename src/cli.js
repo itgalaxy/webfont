@@ -213,7 +213,7 @@ Promise.resolve().then(
         }
 
         if (!options.dest) {
-            return Promise.reject(new Error('Require `--dest` (`-d`) options'));
+            throw new Error('Require `--dest` (`-d`) options');
         }
 
         return standalone(options)
@@ -224,7 +224,7 @@ Promise.resolve().then(
                     destStyles: options.destStyles
                 }, result.config);
 
-                return Promise.resolve(result);
+                return result;
             });
     })
     .then((result) => {
@@ -258,7 +258,7 @@ Promise.resolve().then(
         })
             .then(() => {
                 if (!result.styles) {
-                    return Promise.resolve();
+                    return null;
                 }
 
                 const stylesDirectory = path.resolve(path.dirname(destStyles));
@@ -275,7 +275,7 @@ Promise.resolve().then(
             })
             .then(() => Promise.all(Object.keys(result).map((type) => {
                 if (type === 'config' || type === 'usedBuildInStylesTemplate') {
-                    return Promise.resolve();
+                    return null;
                 }
 
                 const content = result[type];

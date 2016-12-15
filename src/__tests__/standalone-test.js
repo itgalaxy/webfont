@@ -136,7 +136,7 @@ test('should generate all fonts with custom `template` with relative path', (t) 
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
-        template: `fixtures/templates/template.css`
+        template: `src/__tests__/fixtures/templates/template.css`
     }).then((result) => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));

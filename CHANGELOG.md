@@ -4,8 +4,9 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# Head
+# 7.0.1 - 2016-12-20
 
+- Fixed: arguments for svgicons2svgfont (missing font prefix).
 - Chore: improved output of help in `CLI`.
 
 # 7.0.0 - 2016-11-09

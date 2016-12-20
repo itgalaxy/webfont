@@ -41,12 +41,12 @@ const cli = meow(`
 
     For "svgicons2svgfont":
         --font-id                      The font id you want, default as "--font-name".
-        --style                        The font style you want.
-        --weight                       The font weight you want.
+        --font-style                   The font style you want.
+        --font-weight                  The font weight you want.
         --fixed-width                  Creates a monospace font of the width of the largest input icon.
         --center-horizontally          Calculate the bounds of a glyph and center it horizontally.
         --normalize                    Normalize icons by scaling them to the height of the highest icon.
-        --height                       The outputted font height [MAX(icons.height)].
+        --font-height                  The outputted font height [MAX(icons.height)].
         --round                        Setup the SVG path rounding [10e12].
         --descent                      The font descent [0].
         --ascent                       The font ascent [height - descent].
@@ -91,9 +91,9 @@ const cli = meow(`
         'css-template-font-name',
         'dest-styles',
         'font-id',
-        'style',
-        'weight',
-        'height',
+        'font-style',
+        'font-weight',
+        'font-height',
         'round',
         'descent',
         'ascent',
@@ -154,12 +154,12 @@ if (cli.flags.fontId) {
     optionsBase.fontId = cli.flags.fontId;
 }
 
-if (cli.flags.style) {
-    optionsBase.style = cli.flags.style;
+if (cli.flags.fontStyle) {
+    optionsBase.fontStyle = cli.flags.fontStyle;
 }
 
-if (cli.flags.weight) {
-    optionsBase.weight = cli.flags.weight;
+if (cli.flags.fontWeight) {
+    optionsBase.fontWeight = cli.flags.fontWeight;
 }
 
 if (cli.flags.fixedWidth) {
@@ -174,8 +174,8 @@ if (cli.flags.normalize) {
     optionsBase.normalize = cli.flags.normalize;
 }
 
-if (cli.flags.height) {
-    optionsBase.height = cli.flags.height;
+if (cli.flags.fontHeight) {
+    optionsBase.fontHeight = cli.flags.fontHeight;
 }
 
 if (cli.flags.round) {

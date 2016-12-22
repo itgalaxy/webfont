@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# Head
+
+- Fixed: exit code can be not number.
+
 # 7.0.1 - 2016-12-20
 
 - Fixed: arguments for svgicons2svgfont (missing font prefix).

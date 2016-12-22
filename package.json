@@ -72,6 +72,7 @@
         "babel-preset-stage-0": "^6.5.0",
         "babel-register": "^6.9.0",
         "coveralls": "^2.11.6",
+        "cross-env": "^3.1.3",
         "eslint": "^3.9.1",
         "eslint-plugin-ava": "^4.0.0",
         "eslint-plugin-import": "^2.2.0",
@@ -101,11 +102,11 @@
 
         "lint:eslint": "eslint . --ignore-path .gitignore  --color",
         "lint:package": "ajv -s ./node_modules/package-schema/schema.json -d package --errors=text",
-        "lint:remark": "remark '{**/*,*}.md' -i .gitignore -f -q",
+        "lint:remark": "remark . -i .gitignore -f -q",
         "lint": "npm-run-all -l --parallel lint:*",
 
         "pretest": "npm run lint",
-        "ava": "nyc ava --verbose 'src/**/__tests__/*.js'",
+        "ava": "nyc ava --verbose",
         "test": "npm run ava",
 
         "prebuild": "rimraf dist",

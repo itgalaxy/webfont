@@ -184,7 +184,9 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
 
 The CLI can exit the process with the following exit codes:
 
--   1: Something unknown went wrong.
+- 0: All ok.
+- 1: Something unknown went wrong.
+- Other: related to using packages.
 
 ## Related
 

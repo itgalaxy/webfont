@@ -301,5 +301,8 @@ Promise.resolve().then(
     })
     .catch((error) => {
         console.log(error.stack); // eslint-disable-line no-console
-        process.exit(error.code || 1); // eslint-disable-line no-process-exit
+
+        const exitCode = typeof error.code === 'number' ? error.code : 1;
+
+        process.exit(exitCode); // eslint-disable-line no-process-exit
     });

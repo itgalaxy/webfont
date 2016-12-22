@@ -105,12 +105,12 @@ Type: `string`
 Default value getting from `fontName` options, but you can specify any value.
 
 ### `fontId`
-### `style`
-### `weight`
+### `fontStyle`
+### `fontWeight`
 ### `fixedWidth`
 ### `centerHorizontally`
 ### `normalize`
-### `height`
+### `fontHeight`
 ### `round`
 ### `descent`
 ### `ascent`
@@ -166,12 +166,12 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
 
   For "svgicons2svgfont":
       --font-id                      The font id you want, default as "--font-name".
-      --style                        The font style you want.
-      --weight                       The font weight you want.
+      --font-style                   The font style you want.
+      --font-weight                  The font weight you want.
       --fixed-width                  Creates a monospace font of the width of the largest input icon.
       --center-horizontally          Calculate the bounds of a glyph and center it horizontally.
       --normalize                    Normalize icons by scaling them to the height of the highest icon.
-      --height                       The outputted font height [MAX(icons.height)].
+      --font-height                  The outputted font height [MAX(icons.height)].
       --round                        Setup the SVG path rounding [10e12].
       --descent                      The font descent [0].
       --ascent                       The font ascent [height - descent].

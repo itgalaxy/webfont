@@ -105,7 +105,7 @@
         "lint": "npm-run-all -l --parallel lint:*",
 
         "pretest": "npm run lint",
-        "ava": "nyc ava --verbose \"src/**/__tests__/*.js\"",
+        "ava": "nyc ava --verbose 'src/**/__tests__/*.js'",
         "test": "npm run ava",
 
         "prebuild": "rimraf dist",

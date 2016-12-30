@@ -24,7 +24,7 @@ Features:
 ## Install
 
 ```shell
-npm install webfont
+npm install --save-dev webfont
 ```
 
 ## Usage

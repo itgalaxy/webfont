@@ -228,13 +228,15 @@ Promise.resolve().then(
             });
     })
     .then((result) => {
-        const fontName = result.config.fontName;
-        const dest = result.config.dest;
+        const {
+            fontName,
+            dest
+        } = result.config;
 
         let destStyles = null;
 
         if (result.styles) {
-            destStyles = result.config.destStyles;
+            ({ destStyles } = result.config);
 
             if (!destStyles) {
                 destStyles = dest;

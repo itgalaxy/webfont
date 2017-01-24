@@ -107,9 +107,10 @@ Default value getting from `fontName` options, but you can specify any value.
 
 ### `glyphTransformFn`
 Type: `function`
+Default: `null`
 
-If you need some transform it titles of CSS classes for your icons, you can use option glyphTransformFn with glyphs
-metadata object
+If you need transform glyph metadata (e.g. titles of CSS classes) before transferred in style template 
+for your icons, you can use this option with glyphs metadata object.
 
 Example:
 ```

@@ -227,6 +227,7 @@ export default function ({
             const options = merge({}, {
                 ascent,
                 centerHorizontally,
+                // Renamed with `style` prefix in next major release
                 cssTemplateClassName,
                 cssTemplateFontName,
                 cssTemplateFontPath,
@@ -319,6 +320,7 @@ export default function ({
                             const nunjucksOptions = merge(
                                 {},
                                 {
+                                    // Maybe best solution is return metadata object of glyph.
                                     glyphs: glyphsData.map((glyphData) => {
                                         if (typeof options.glyphTransformFn === 'function') {
                                             options.glyphTransformFn(glyphData.metadata);

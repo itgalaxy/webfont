@@ -211,7 +211,8 @@ export default function ({
     startUnicode = 0xEA01,
     prependUnicode = false,
     metadata = null,
-    verbose = false
+    verbose = false,
+    glyphTransformFn = null
 } = {}) {
     if (!files) {
         return Promise.reject(new Error('You must pass webfont a `files` glob'));
@@ -238,6 +239,7 @@ export default function ({
                 fontWeight,
                 formats,
                 formatsOptions,
+                glyphTransformFn,
                 log: verbose ? console.log : () => {}, // eslint-disable-line no-console, no-empty-function
                 metadata,
                 metadataProvider,
@@ -317,7 +319,13 @@ export default function ({
                             const nunjucksOptions = merge(
                                 {},
                                 {
-                                    glyphs: glyphsData.map((glyphData) => glyphData.metadata)
+                                    glyphs: glyphsData.map((glyphData) => {
+                                        if (typeof options.glyphTransformFn === 'function') {
+                                            options.glyphTransformFn(glyphData.metadata);
+                                        }
+
+                                        return glyphData.metadata;
+                                    })
                                 },
                                 options,
                                 {

@@ -223,3 +223,27 @@ test('should throw error of config file not found', (t) => {
         t.true(error.code === 'ENOENT');
     });
 });
+
+test('should create css selectors with transform titles through function', (t) => {
+    t.plan(8);
+
+    return standalone({
+        files: `${fixturesPath}/svg-icons/**/*`,
+        formats: ['eot'],
+        glyphTransformFn: (obj) => {
+            obj.name += '_transform';
+        },
+        template: 'css'
+    }).then((result) => {
+        t.true(typeof result.svg === 'undefined');
+        t.true(typeof result.ttf === 'undefined');
+        t.true(typeof result.woff === 'undefined');
+        t.true(typeof result.woff2 === 'undefined');
+        t.true(isEot(result.eot));
+        t.regex(result.styles, /\.webfont-avatar_transform/);
+        t.regex(result.styles, /\.webfont-envelope_transform/);
+        t.regex(result.styles, /\.webfont-phone-call_transform/);
+
+        return result;
+    });
+});

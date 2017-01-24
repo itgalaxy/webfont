@@ -321,9 +321,7 @@ export default function ({
                                 {
                                     glyphs: glyphsData.map((glyphData) => {
                                         if (typeof options.glyphTransformFn === 'function') {
-                                            options.glyphTransformFn(glyphData.metadata); // If I want to use object
-                                        // glyphData.metadata.name = options.glyphTransformFn(glyphData.metadata.name);
-                                            // If I want send to transform function only name of glyph
+                                            options.glyphTransformFn(glyphData.metadata);
                                         }
 
                                         return glyphData.metadata;

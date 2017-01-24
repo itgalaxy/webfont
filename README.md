@@ -105,6 +105,19 @@ Type: `string`
 
 Default value getting from `fontName` options, but you can specify any value.
 
+### `glyphTransformFn`
+Type: `function`
+
+If you need some transform it titles of CSS classes for your icons, you can use option glyphTransformFn with glyphs
+metadata object
+
+Example:
+```
+glyphTransformFn: (obj) => {
+    obj.name += '_transform';
+}
+```
+
 ### `fontId`
 ### `fontStyle`
 ### `fontWeight`

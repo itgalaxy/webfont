@@ -82,7 +82,7 @@
         "eslint-plugin-node": "^3.0.0",
         "eslint-plugin-promise": "^3.3.0",
         "eslint-plugin-react": "^6.6.0",
-        "eslint-plugin-unicorn": "^1.0.0",
+        "eslint-plugin-unicorn": "^2.0.0",
         "is-eot": "^1.0.0",
         "is-svg": "^2.0.0",
         "is-ttf": "^0.2.0",

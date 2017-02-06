@@ -77,7 +77,7 @@
         "eslint-plugin-ava": "^4.0.0",
         "eslint-plugin-import": "^2.2.0",
         "eslint-plugin-itgalaxy": "^37.0.0",
-        "eslint-plugin-jsx-a11y": "^3.0.0",
+        "eslint-plugin-jsx-a11y": "^4.0.0",
         "eslint-plugin-lodash": "^2.1.0",
         "eslint-plugin-node": "^4.0.0",
         "eslint-plugin-promise": "^3.3.0",

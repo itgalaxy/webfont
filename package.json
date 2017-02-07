@@ -127,6 +127,9 @@
         ]
     },
     "eslintConfig": {
+        "rules": [
+            "unicorn/no-new-buffer": "off"
+        ],
         "extends": [
             "plugin:itgalaxy/ava",
             "plugin:itgalaxy/esnext",

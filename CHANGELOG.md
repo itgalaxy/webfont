@@ -78,7 +78,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 # 4.0.1 - 2016-10-19
 
 - Fixed: CLI `fontName` and `formats` arguments bug.
-- Chore: use `^` instead `~` for `ajv-cli`, `package-schema`, `remark-cli`, `remark-lint`, `remark-preset-lint-itgalaxy`.
 - Chore: minimum required `ajv-cli` version is now `^1.1.0`.
 - Chore: minimum required `remark-preset-lint-itgalaxy` version is now `^2.0.0`.
 - Chore: minimum required `nunjucks` from `2.0.0` to `2.5.0`.

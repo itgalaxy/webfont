@@ -70,12 +70,14 @@ Ultimately passed to [node-glob](https://github.com/isaacs/node-glob) to figure 
 A `webfont` configuration object.
 
 ### `fontName`
+
 Type: `String`
 Default: `webfont`
 
 The font family name you want.
 
 ### `formats`
+
 Type: `Array`
 Default value: `['svg', 'ttf', 'eot', 'woff', 'woff2']`
 Possible values: `svg, ttf, eot, woff, woff2`.
@@ -83,6 +85,7 @@ Possible values: `svg, ttf, eot, woff, woff2`.
 Font file types to generate.
 
 ### `template`
+
 Type: `string`
 Default: `null`
 
@@ -90,23 +93,27 @@ Possible values: `css`, `scss` (feel free to contribute). If you want to use cus
 Example: `template: path.resolve(__dirname, './my-template.css')`.
 
 ### `cssTemplateClassName`
+
 Type: `string`
 Default: `null`
 
 Default font class name.
 
 ### `cssTemplateFontPath`
+
 Type: `string`
 Default: `./`
 
 Path to generated fonts in the `CSS` file.
 
 ### `cssTemplateFontName`
+
 Type: `string`
 
 Default value getting from `fontName` options, but you can specify any value.
 
 ### `glyphTransformFn`
+
 Type: `function`
 Default: `null`
 
@@ -114,23 +121,35 @@ If you need transform glyph metadata (e.g. titles of CSS classes) before transfe
 for your icons, you can use this option with glyphs metadata object.
 
 Example:
-```
+
+```js
 glyphTransformFn: (obj) => {
     obj.name += '_transform';
 }
 ```
 
 ### `fontId`
+
 ### `fontStyle`
+
 ### `fontWeight`
+
 ### `fixedWidth`
+
 ### `centerHorizontally`
+
 ### `normalize`
+
 ### `fontHeight`
+
 ### `round`
+
 ### `descent`
+
 ### `ascent`
+
 ### `startUnicode`
+
 ### `prependUnicode`
 
 Options that are passed directly to [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).

@@ -11,16 +11,16 @@ Generator of font from SVG icons.
 
 Features:
 
-- Supported font formats: WOFF2, WOFF, EOT, TTF and SVG.
+-   Supported font formats: WOFF2, WOFF, EOT, TTF and SVG.
 
-- Support configuration Files - use a JavaScript, JSON or YAML file to specify configuration information 
-  for an entire directory and all of its subdirectories.
+-   Support configuration Files - use a JavaScript, JSON or YAML file to specify configuration information 
+    for an entire directory and all of its subdirectories.
 
-- Supported browsers: IE8+.
+-   Supported browsers: IE8+.
 
-- Generates CSS files allows to use custom templates.
+-   Generates CSS files allows to use custom templates.
 
-- CLI.
+-   CLI.
 
 ## Install
 
@@ -219,22 +219,22 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
 
 The CLI can exit the process with the following exit codes:
 
-- 0: All ok.
-- 1: Something unknown went wrong.
-- Other: related to using packages.
+-   0: All ok.
+-   1: Something unknown went wrong.
+-   Other: related to using packages.
 
 ## Related
 
-- [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) - Simple tool to merge multiple 
-  icons to an SVG font.
+-   [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) - Simple tool to merge multiple 
+    icons to an SVG font.
 
-- [svg2ttf](https://github.com/fontello/svg2ttf) - Converts SVG fonts to TTF format.
+-   [svg2ttf](https://github.com/fontello/svg2ttf) - Converts SVG fonts to TTF format.
 
-- [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
+-   [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
 
-- [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
+-   [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
 
-- [ttf2woff2](https://github.com/nfroidure/ttf2woff2) - Converts TTF fonts to WOFF2.
+-   [ttf2woff2](https://github.com/nfroidure/ttf2woff2) - Converts TTF fonts to WOFF2.
 
 ## Contribution
 

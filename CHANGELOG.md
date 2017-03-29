@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# Head
+# 7.1.1 - 2017-03-29
 
 -   Fixed: potential crash with memory allocation when using `fs` for read files.
 

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# Head
+
+-   Fixed: potential crash with memory allocation when using `fs` for read files.
+
 # 7.1.0 - 2017-01-24
 
 -   Added: `glyphTransformFn` option for transform glyph metadata before transferred in style template.

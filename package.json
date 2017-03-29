@@ -36,7 +36,9 @@
         "ttf2svg",
         "svg2ttf",
         "css",
-        "scss"
+        "scss",
+        "builder",
+        "generator"
     ],
     "bugs": {
         "url": "https://github.com/itgalaxy/webfont/issues"
@@ -49,6 +51,7 @@
         "!**/__tests__"
     ],
     "dependencies": {
+        "async-throttle": "^1.1.0",
         "cosmiconfig": "^2.0.0",
         "xml2js": "^0.4.17",
         "globby": "^6.0.0",

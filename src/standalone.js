@@ -1,11 +1,13 @@
 import { Readable } from 'stream';
 import cosmiconfig from 'cosmiconfig';
+import createThrottle from 'async-throttle';
 import defaultMetadataProvider from 'svgicons2svgfont/src/metadata';
 import fileSorter from 'svgicons2svgfont/src/filesorter';
 import fs from 'fs';
 import globby from 'globby';
 import merge from 'merge-deep';
 import nunjucks from 'nunjucks';
+import os from 'os';
 import path from 'path';
 import svg2ttf from 'svg2ttf';
 import svgicons2svgfont from 'svgicons2svgfont';
@@ -22,8 +24,9 @@ function getGlyphsData(files, options) {
 
     const sortedFiles = files.sort((fileA, fileB) => fileSorter(fileA, fileB));
     const xmlParser = new xml2js.Parser();
+    const throttle = createThrottle(options.maxConcurrency);
 
-    return Promise.all(sortedFiles.map((srcPath) => new Promise((resolve, reject) => {
+    return Promise.all(sortedFiles.map((srcPath) => throttle(() => new Promise((resolve, reject) => {
         const glyph = fs.createReadStream(srcPath);
         let glyphContents = '';
 
@@ -51,7 +54,7 @@ function getGlyphsData(files, options) {
                     return resolve(glyphData);
                 });
             });
-    })
+    }))
         .then((glyphData) => new Promise((resolve, reject) => {
             metadataProvider(glyphData.srcPath, (error, metadata) => {
                 if (error) {
@@ -197,6 +200,8 @@ export default function ({
             ts: Math.round(Date.now() / 1000)
         }
     },
+    // Maybe allow setup from CLI
+    maxConcurrency = os.cpus().length,
     metadataProvider = null,
     fontId = null,
     fontStyle = '',
@@ -242,6 +247,7 @@ export default function ({
                 formatsOptions,
                 glyphTransformFn,
                 log: verbose ? console.log : () => {}, // eslint-disable-line no-console, no-empty-function
+                maxConcurrency,
                 metadata,
                 metadataProvider,
                 normalize,

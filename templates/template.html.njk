@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{{ fontName }}</title>
+		<style>
+		body {
+			margin:0;
+			padding:10px 20px;
+			background:#fff;
+			color:#222;
+			font-family:"Helvetica Neue", Arial, sans-serif;
+		}
+
+		h1 {
+			margin:0 0 20px;
+			font-size:32px;
+			font-weight:normal;
+		}
+
+		.icons {
+			margin-bottom:40px;
+			-webkit-column-count:5;
+			   -moz-column-count:5;
+			        column-count:5;
+			-webkit-column-gap:20px;
+			   -moz-column-gap:20px;
+			        column-gap:20px;
+		}
+
+		.icons__item{
+		    padding: 4px 0;
+		}
+
+		.icons__item,
+		.icons__item i {
+			cursor:pointer;
+			overflow:hidden;
+        }
+
+		.icons__item:hover {
+			color:#3c90be;
+			}
+		.icons__item i {
+			display:inline-block;
+			width:32px;
+			text-align:center;
+			}
+
+        @font-face {
+            font-family: {{ fontName }};
+            {% if formats.indexOf('eot')>-1 -%}
+                src: url("{{ fontPath }}{{ fontName }}.eot");
+            {%- endif %}
+            {%- set eotIndex = formats.indexOf('eot') -%}
+            {%- set woff2Index = formats.indexOf('woff2') -%}
+            {%- set woffIndex = formats.indexOf('woff') -%}
+            {%- set ttfIndex = formats.indexOf('ttf') -%}
+            {%- set svgIndex = formats.indexOf('svg') %}
+            src: {% if eotIndex != -1 -%}
+                    url("{{ fontPath }}{{ fontName }}.eot?#iefix") format("embedded-opentype")
+                    {%- set nothing = formats.splice(eotIndex, 1) -%}
+                    {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+                {%- endif -%}
+                {%- if woff2Index != -1 -%}
+                    url("{{ fontPath }}{{ fontName }}.woff2") format("woff2")
+                    {%- set nothing = formats.splice(woff2Index, 1) -%}
+                    {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+                {%- endif -%}
+                {%- if woffIndex != -1 -%}
+                    url("{{ fontPath }}{{ fontName }}.woff") format("woff")
+                    {%- set nothing = formats.splice(woffIndex, 1) -%}
+                    {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+                {%- endif -%}
+                {%- if ttfIndex != -1 -%}
+                    url("{{ fontPath }}{{ fontName }}.ttf") format("truetype")
+                    {%- set nothing = formats.splice(ttfIndex, 1) -%}
+                    {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+                {%- endif -%}
+                {%- if svgIndex != -1 -%}
+                    url("{{ fontPath }}{{ fontName }}.svg#{{ fontName }}") format("svg");
+                {%- endif %}
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        {% for glyph in glyphs %}
+            .{{ className }}-{{ glyph.name }}:before{
+                content:"\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
+            }
+        {% endfor %}
+
+            [class^="{{ className }}-"]:before,
+            [class*=" {{ className }}-"]:before {
+                font-family:"workshare-icons";
+                display:inline-block;
+                vertical-align:middle;
+
+                font-weight:normal;
+                font-style:normal;
+                speak:none;
+                text-decoration:inherit;
+                text-transform:none;
+                text-rendering:auto;
+                -webkit-font-smoothing:antialiased;
+                -moz-osx-font-smoothing:grayscale;
+            }
+
+		</style>
+	</head>
+	<body>
+		<h1>{{ fontName }}</h1>
+
+        <div class="icons" id="icons">
+            {% for glyph in glyphs %}
+                <div class="icons__item" data-name="{{ className }}-{{ glyph.name }}"><i class="{{ className }}-{{ glyph.name }}"></i> {{ className }}-{{ glyph.name }}</div>
+            {% endfor %}
+        </div>
+
+		<h1>Usage</h1>
+		<pre><code>&lt;i class=&quot;<span id="name">name</span>&quot;&gt;&lt;/i&gt;</code></pre>
+
+		<script>
+		(function() {
+			document.getElementById('icons').onclick = function(e) {
+				e = e || window.event;
+				var name = e.target.getAttribute('data-name') || e.target.parentNode.getAttribute('data-name');
+				document.getElementById('name').innerHTML = name;
+			}
+		})();
+		</script>
+	</body>
+</html>

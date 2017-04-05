@@ -67,7 +67,7 @@
         "ttf2woff2": "^2.0.0"
     },
     "devDependencies": {
-        "ava": "^0.18.1",
+        "ava": "^0.19.0",
         "ajv-cli": "^1.1.0",
         "babel-cli": "^6.22.2",
         "babel-core": "^6.11.0",

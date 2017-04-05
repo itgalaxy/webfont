@@ -9,15 +9,17 @@ import test from 'ava';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
-test('should throw error if `files` not passed', (t) => {
-    t.throws(standalone(), 'You must pass webfont a `files` glob');
-});
+test(
+    'should throw error if `files` not passed',
+    (t) => t.throws(standalone(), 'You must pass webfont a `files` glob')
+);
 
-test('should throw error `files glob patterns specified did not match any files` if not found files', (t) => {
-    t.throws(standalone({
+test(
+    'should throw error `files glob patterns specified did not match any files` if not found files',
+    (t) => t.throws(standalone({
         files: `${fixturesPath}/not-found-svg-icons/**/*`
-    }), 'Files glob patterns specified did not match any files');
-});
+    }), 'Files glob patterns specified did not match any files')
+);
 
 test('should generate all fonts', (t) => {
     t.plan(5);
@@ -209,7 +211,7 @@ test('should throw error on bad svg images - empty file', (t) => {
         configFile: `${fixturesPath}/configs/.webfontrc`,
         files: `${fixturesPath}/bad-svg-icons/avatar-3.svg`
     }).catch((error) => {
-        t.regex(error, /Empty file/);
+        t.regex(error.message, /Empty file/);
     });
 });
 

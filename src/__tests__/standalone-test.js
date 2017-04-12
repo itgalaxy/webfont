@@ -155,7 +155,7 @@ test('should generate all fonts with custom `template` with relative path', (t) 
 });
 
 test('should load config', (t) => {
-    t.plan(5);
+    t.plan(6);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc`,
@@ -166,6 +166,49 @@ test('should load config', (t) => {
         t.true(isEot(result.eot));
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
+        t.true(result.config.template === null);
+
+        return result;
+    });
+});
+
+test('should load config and respect `template` option with build-in template value', (t) => {
+    t.plan(9);
+
+    return standalone({
+        configFile: `${fixturesPath}/configs/.webfontrc-with-build-in-template`,
+        files: `${fixturesPath}/svg-icons/**/*`
+    }).then((result) => {
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
+        t.true(result.config.template === 'scss');
+        t.regex(result.styles, /\.webfont-avatar/);
+        t.regex(result.styles, /\.webfont-envelope/);
+        t.regex(result.styles, /\.webfont-phone-call/);
+
+        return result;
+    });
+});
+
+test('should load config and respect `template` option with external template value', (t) => {
+    t.plan(9);
+
+    return standalone({
+        configFile: `${fixturesPath}/configs/.webfontrc-with-external-template`,
+        files: `${fixturesPath}/svg-icons/**/*`
+    }).then((result) => {
+        t.true(isSvg(result.svg));
+        t.true(isTtf(result.ttf));
+        t.true(isEot(result.eot));
+        t.true(isWoff(result.woff));
+        t.true(isWoff2(result.woff2));
+        t.true(result.config.template === 'src/__tests__/fixtures/templates/template.css');
+        t.regex(result.styles, /\.webfont-avatar/);
+        t.regex(result.styles, /\.webfont-envelope/);
+        t.regex(result.styles, /\.webfont-phone-call/);
 
         return result;
     });

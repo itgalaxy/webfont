@@ -313,12 +313,14 @@ export default function ({
                                 (buildInTemplate) => path.extname(buildInTemplate.replace('.njk', ''))
                             );
 
-                            let templateFilePath = template;
+                            let templateFilePath = options.template;
 
-                            if (supportedExtensions.indexOf(`.${template}`) !== -1) {
+                            if (supportedExtensions.indexOf(`.${options.template}`) !== -1) {
                                 result.usedBuildInStylesTemplate = true;
+
                                 nunjucks.configure(path.join(__dirname, '../'));
-                                templateFilePath = `${buildInTemplateDirectory}/template.${template}.njk`;
+
+                                templateFilePath = `${buildInTemplateDirectory}/template.${options.template}.njk`;
                             } else {
                                 templateFilePath = path.resolve(templateFilePath);
                             }

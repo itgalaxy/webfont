@@ -236,6 +236,17 @@ The CLI can exit the process with the following exit codes:
 
 -   [ttf2woff2](https://github.com/nfroidure/ttf2woff2) - Converts TTF fonts to WOFF2.
 
+## Roadmap
+
+-   Rewrite on ecma6, without `babel` compilation.
+-   More tests, include CLI test.
+-   Option `glyphTransformFn` should return object, not change passed.
+-   Improved docs.
+-   Reduce package size (maybe implement `ttf2woff2` with native js library).
+-   Improve performance (maybe use cache for this).
+-   Implement `webpack` loader.
+-   Close all issues.
+
 ## Contribution
 
 Feel free to push your code if you agree with publishing under the MIT license.

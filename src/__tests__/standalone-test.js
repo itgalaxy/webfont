@@ -11,7 +11,7 @@ const fixturesPath = path.join(__dirname, 'fixtures');
 
 test(
     'should throw error if `files` not passed',
-    (t) => t.throws(standalone(), 'You must pass webfont a `files` glob')
+    (t) => t.throws(() => standalone(), 'You must pass webfont a `files` glob')
 );
 
 test(
@@ -166,7 +166,7 @@ test('should load config', (t) => {
         t.true(isEot(result.eot));
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.true(result.config.template === null);
+        t.true(result.config.foo === 'bar');
 
         return result;
     });

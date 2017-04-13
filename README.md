@@ -238,6 +238,7 @@ The CLI can exit the process with the following exit codes:
 
 ## Roadmap
 
+-   The ability to generate from any type to any type.
 -   Rewrite on ecma6, without `babel` compilation.
 -   More tests, include CLI test.
 -   Option `glyphTransformFn` should return object, not change passed.

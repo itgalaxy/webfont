@@ -70,9 +70,7 @@ function getGlyphsData(files, options) {
 }
 
 function svgIcons2svgFontFn(glyphsData, options) {
-    const result = {
-        svg: ''
-    };
+    let result = '';
 
     return new Promise((resolve, reject) => {
         const fontStream = svgicons2svgfont({
@@ -85,14 +83,15 @@ function svgIcons2svgFontFn(glyphsData, options) {
             fontName: options.fontName,
             fontStyle: options.fontStyle,
             fontWeight: options.fontWeight,
-            log: options.log,
+            // eslint-disable-next-line no-console, no-empty-function
+            log: options.vebose ? console.log.bind(console) : () => {},
             metadata: options.metadata,
             normalize: options.normalize,
             round: options.round
         })
             .on('finish', () => resolve(result))
             .on('data', (data) => {
-                result.svg += data;
+                result += data;
             })
             .on('error', (error) => reject(error));
 
@@ -111,198 +110,133 @@ function svgIcons2svgFontFn(glyphsData, options) {
     });
 }
 
-function svg2ttfFn(result, options) {
-    return new Promise((resolve) => {
-        // eslint-disable-next-line node/no-deprecated-api
-        result.ttf = new Buffer(svg2ttf(result.svg.toString(), {
-            copyright: options.copyright,
-            ts: options.ts,
-            version: options.version
-        }).buffer);
-
-        return resolve(result);
-    });
-}
-
-function ttf2eotFn(result) {
-    return new Promise((resolve) => {
-        // eslint-disable-next-line node/no-deprecated-api
-        result.eot = new Buffer(ttf2eot(new Uint8Array(result.ttf)).buffer);
-
-        return resolve(result);
-    });
-}
-
-function ttf2woffFn(result, options) {
-    return new Promise((resolve) => {
-        // eslint-disable-next-line node/no-deprecated-api
-        result.woff = new Buffer(ttf2woff(new Uint8Array(result.ttf), options).buffer);
-
-        return resolve(result);
-    });
-}
-
-function ttf2woff2Fn(result) {
-    return new Promise((resolve) => {
-        result.woff2 = ttf2woff2(result.ttf);
-
-        return resolve(result);
-    });
-}
-
 function buildConfig(options) {
-    if (!options.configFile) {
-        return Promise.resolve({});
-    }
-
     const cosmiconfigOptions = {
+        argv: true,
         // Allow extensions on rc filenames
         rcExtensions: true
     };
 
-    let configPath = process.cwd();
+    let searchPath = process.cwd();
+    let configPath = null;
 
     if (options.configFile) {
+        searchPath = null;
         configPath = path.resolve(process.cwd(), options.configFile);
     }
 
     return cosmiconfig('webfont', cosmiconfigOptions)
-        .load(null, configPath)
+        .load(searchPath, configPath)
         .then((result) => {
             if (!result) {
-                return Promise.reject(new Error('No configuration found'));
+                return {};
             }
 
-            return Promise.resolve({
-                config: result.config
-            });
+            return result.config;
         });
 }
 
-export default function ({
-    files,
-    configFile,
-    fontName = 'webfont',
-    formats = [
-        'svg',
-        'ttf',
-        'eot',
-        'woff',
-        'woff2'
-    ],
-    cssTemplateClassName = null,
-    template = null,
-    cssTemplateFontPath = './',
-    cssTemplateFontName = null,
-    formatsOptions = {
-        ttf: {
-            copyright: null,
-            ts: Math.round(Date.now() / 1000)
-        }
-    },
-    // Maybe allow setup from CLI
-    maxConcurrency = os.cpus().length,
-    metadataProvider = null,
-    fontId = null,
-    fontStyle = '',
-    fontWeight = '',
-    fixedWidth = false,
-    centerHorizontally = false,
-    normalize = false,
-    fontHeight = null,
-    round = 10e12,
-    descent = 0,
-    ascent = undefined, // eslint-disable-line no-undefined
-    startUnicode = 0xEA01,
-    prependUnicode = false,
-    metadata = null,
-    verbose = false,
-    glyphTransformFn = null
-} = {}) {
-    if (!files) {
-        return Promise.reject(new Error('You must pass webfont a `files` glob'));
+export default function (initialOptions) {
+    if (!initialOptions || !initialOptions.files) {
+        throw new Error('You must pass webfont a `files` glob');
     }
+
+    const { files } = initialOptions;
+
+    let options = Object.assign({}, {
+        ascent: undefined, // eslint-disable-line no-undefined
+        centerHorizontally: false,
+        cssTemplateClassName: null,
+        cssTemplateFontName: null,
+        cssTemplateFontPath: './',
+        descent: 0,
+        fixedWidth: false,
+        fontHeight: null,
+        fontId: null,
+        fontName: 'webfont',
+        fontStyle: '',
+        fontWeight: '',
+        formats: [
+            'svg',
+            'ttf',
+            'eot',
+            'woff',
+            'woff2'
+        ],
+        formatsOptions: {
+            ttf: {
+                copyright: null,
+                ts: Math.round(Date.now() / 1000)
+            }
+        },
+        glyphTransformFn: null,
+        // Maybe allow setup from CLI
+        maxConcurrency: os.cpus().length,
+        metadata: null,
+        metadataProvider: null,
+        normalize: false,
+        prependUnicode: false,
+        round: 10e12,
+        startUnicode: 0xEA01,
+        template: null,
+        verbose: false
+    }, initialOptions);
 
     let glyphsData = [];
 
     return buildConfig({
-        configFile
+        configFile: options.configFile
     })
-        .then((buildedConfig) => {
-            const options = merge({}, {
-                ascent,
-                centerHorizontally,
-                // Renamed with `style` prefix in next major release
-                cssTemplateClassName,
-                cssTemplateFontName,
-                cssTemplateFontPath,
-                descent,
-                fixedWidth,
-                fontHeight,
-                fontId: !fontId ? fontName : fontId,
-                fontName,
-                fontStyle,
-                fontWeight,
-                formats,
-                formatsOptions,
-                glyphTransformFn,
-                log: verbose ? console.log : () => {}, // eslint-disable-line no-console, no-empty-function
-                maxConcurrency,
-                metadata,
-                metadataProvider,
-                normalize,
-                prependUnicode,
-                round,
-                startUnicode,
-                template
-            }, buildedConfig.config);
+        .then((loadedConfig) => {
+            options = merge({}, options, loadedConfig);
 
             return globby([].concat(files))
                 .then((foundFiles) => {
-                    const filteredFiles = foundFiles.filter(
-                        (foundFile) => path.extname(foundFile) === '.svg'
-                    );
+                    const filteredFiles = foundFiles.filter((foundFile) => path.extname(foundFile) === '.svg');
 
                     if (filteredFiles.length === 0) {
-                        return Promise.reject(new Error('Files glob patterns specified did not match any files'));
+                        throw new Error('Files glob patterns specified did not match any files');
                     }
 
-                    return Promise.resolve(filteredFiles);
+                    options.foundFiles = foundFiles;
+
+                    return getGlyphsData(foundFiles, options);
                 })
-                .then((foundFiles) => getGlyphsData(foundFiles, options))
                 .then((returnedGlyphsData) => {
                     glyphsData = returnedGlyphsData;
 
                     return svgIcons2svgFontFn(returnedGlyphsData, options);
                 })
-                .then((result) => svg2ttfFn(result, options.formatsOptions.ttf))
-                // maybe add ttfautohint
-                .then((result) => {
-                    if (options.formats.indexOf('eot') === -1) {
-                        return Promise.resolve(result);
+                // Maybe add ttfautohint
+                .then((svgFont) => {
+                    const result = {};
+
+                    result.svg = svgFont;
+                    result.ttf = Buffer.from(svg2ttf(result.svg.toString(), {
+                        copyright: options.copyright,
+                        ts: options.ts,
+                        version: options.version
+                    }).buffer);
+
+                    if (options.formats.indexOf('eot') !== -1) {
+                        result.eot = Buffer.from(ttf2eot(result.ttf).buffer);
                     }
 
-                    return ttf2eotFn(result);
-                })
-                .then((result) => {
-                    if (options.formats.indexOf('woff') === -1) {
-                        return Promise.resolve(result);
+                    if (options.formats.indexOf('woff') !== -1) {
+                        result.woff = Buffer.from(ttf2woff(result.ttf, {
+                            metadata: options.metadata
+                        }).buffer);
                     }
 
-                    return ttf2woffFn(result, {
-                        metadata
-                    });
-                })
-                .then((result) => {
-                    if (options.formats.indexOf('woff2') === -1) {
-                        return Promise.resolve(result);
+                    if (options.formats.indexOf('woff2') !== -1) {
+                        result.woff2 = ttf2woff2(result.ttf);
                     }
 
-                    return ttf2woff2Fn(result);
+                    return result;
                 })
                 .then((result) => {
                     if (!options.template) {
-                        return Promise.resolve(result);
+                        return result;
                     }
 
                     const buildInTemplateDirectory = path.resolve(__dirname, '../templates');
@@ -365,10 +299,7 @@ export default function ({
 
                     result.config = options;
 
-                    return Promise.resolve(result);
+                    return result;
                 });
-        })
-        .catch((error) => {
-            throw error;
         });
 }

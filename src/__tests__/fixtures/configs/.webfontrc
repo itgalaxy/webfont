@@ -1,3 +1,4 @@
 {
-    "normalize": true
+    "normalize": true,
+    "foo": "bar"
 }

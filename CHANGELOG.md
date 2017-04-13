@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# 7.1.3 - 2017-04-13
+
+-   Fixed: search config if not present in CLI arguments.
+
 # 7.1.2 - 2017-04-12
 
 -   Fixed: `template` option now respected from config.

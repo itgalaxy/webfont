@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# Head
+# 7.1.4 - 2017-05-24
 
 -   Fixed: use `copyright`, `ts` and `version` with null value by default, 
     it is avoid problems when your use long term caching.

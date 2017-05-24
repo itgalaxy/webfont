@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 # Head
 
+-   Fixed: use `copyright`, `ts` and `version` with null value by default, 
+    it is avoid problems when your use long term caching.
+
 -   Fixed: options for `ttf` font generation now correctly handles.
 
 # 7.1.3 - 2017-04-13

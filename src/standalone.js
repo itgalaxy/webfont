@@ -166,7 +166,7 @@ export default function (initialOptions) {
         formatsOptions: {
             ttf: {
                 copyright: null,
-                ts: Math.round(Date.now() / 1000),
+                ts: null,
                 version: null
             }
         },

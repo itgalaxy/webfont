@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# Head
+
+-   Fixed: options for `ttf` font generation now correctly handles.
+
 # 7.1.3 - 2017-04-13
 
 -   Fixed: search config if not present in CLI arguments.

@@ -166,7 +166,8 @@ export default function (initialOptions) {
         formatsOptions: {
             ttf: {
                 copyright: null,
-                ts: Math.round(Date.now() / 1000)
+                ts: Math.round(Date.now() / 1000),
+                version: null
             }
         },
         glyphTransformFn: null,
@@ -212,11 +213,13 @@ export default function (initialOptions) {
                     const result = {};
 
                     result.svg = svgFont;
-                    result.ttf = Buffer.from(svg2ttf(result.svg.toString(), {
-                        copyright: options.copyright,
-                        ts: options.ts,
-                        version: options.version
-                    }).buffer);
+
+                    result.ttf = Buffer.from(
+                        svg2ttf(
+                            result.svg.toString(),
+                            options.formatsOptions && options.formatsOptions.ttf ? options.formatsOptions.ttf : {}
+                        ).buffer
+                    );
 
                     if (options.formats.indexOf('eot') !== -1) {
                         result.eot = Buffer.from(ttf2eot(result.ttf).buffer);

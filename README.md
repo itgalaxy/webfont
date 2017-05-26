@@ -31,7 +31,7 @@ npm install --save-dev webfont
 ## Usage
 
 ```js
-const webfont = require('webfont').default
+const webfont = require('webfont').default;
 
 webfont({
   files: 'src/svg-icons/**/*.svg',

@@ -76,16 +76,18 @@
         "babel-register": "^6.9.0",
         "coveralls": "^2.13.0",
         "cross-env": "^5.0.0",
-        "eslint": "^3.15.0",
-        "eslint-plugin-ava": "^4.0.0",
+        "eslint": "^3.17.0",
+        "eslint-plugin-ava": "^4.2.0",
         "eslint-plugin-import": "^2.2.0",
-        "eslint-plugin-itgalaxy": "^46.0.0",
-        "eslint-plugin-jsx-a11y": "^5.0.0",
-        "eslint-plugin-lodash": "^2.1.0",
-        "eslint-plugin-node": "^4.2.0",
-        "eslint-plugin-promise": "^3.3.0",
+        "eslint-plugin-itgalaxy": "^47.0.0",
+        "eslint-plugin-jsx-a11y": "^5.0.1",
+        "eslint-plugin-jest": "^20.0.3",
+        "eslint-plugin-lodash": "^2.3.0",
+        "eslint-plugin-node": "^5.0.0",
+        "eslint-plugin-prettier": "^2.1.1",
+        "eslint-plugin-promise": "^3.5.0",
         "eslint-plugin-react": "^7.0.0",
-        "eslint-plugin-unicorn": "^2.1.0",
+        "eslint-plugin-unicorn": "^2.0.0",
         "is-eot": "^1.0.0",
         "is-svg": "^2.0.0",
         "is-ttf": "^0.2.0",
@@ -97,19 +99,26 @@
         "package-schema": "^1.0.0",
         "remark-cli": "^3.0.0",
         "remark-preset-lint-itgalaxy": "^6.0.0",
-        "rimraf": "^2.5.2"
+        "rimraf": "^2.5.2",
+        "husky": "^0.13.0",
+        "lint-staged": "^3.6.0",
+        "prettier": "^1.4.2"
     },
     "scripts": {
-        "coveralls": "nyc report --reporter=text-lcov | coveralls",
+        "precommit": "lint-staged",
 
         "lint:eslint": "eslint . --ignore-path .gitignore  --color",
         "lint:package": "ajv -s ./node_modules/package-schema/schema.json -d package --errors=text",
         "lint:remark": "remark . -i .gitignore -f -q",
         "lint": "npm-run-all -l --parallel lint:*",
 
+        "formatter:prettier": "eslint . --fix --ignore-path .gitignore",
+        "formatter": "npm-run-all -l -p formatter:**",
+
         "pretest": "npm run lint",
         "ava": "nyc ava --verbose",
         "test": "npm run ava",
+        "coveralls": "nyc report --reporter=text-lcov | coveralls",
 
         "prebuild": "rimraf dist",
         "build": "babel src --out-dir dist --ignore /__tests__/",
@@ -130,12 +139,14 @@
     },
     "eslintConfig": {
         "rules": {
-            "unicorn/no-new-buffer": "off"
+            "unicorn/no-new-buffer": "off",
+            "node/no-unsupported-features": "off"
         },
         "extends": [
             "plugin:itgalaxy/ava",
             "plugin:itgalaxy/esnext",
-            "plugin:itgalaxy/node"
+            "plugin:itgalaxy/node",
+            "plugin:itgalaxy/prettier"
         ],
         "root": true
     },

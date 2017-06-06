@@ -9,24 +9,23 @@ import test from 'ava';
 
 const fixturesPath = path.join(__dirname, 'fixtures');
 
-test(
-    'should throw error if `files` not passed',
-    (t) => t.throws(() => standalone(), 'You must pass webfont a `files` glob')
-);
+test('should throw error if `files` not passed', t =>
+    t.throws(() => standalone(), 'You must pass webfont a `files` glob'));
 
-test(
-    'should throw error `files glob patterns specified did not match any files` if not found files',
-    (t) => t.throws(standalone({
-        files: `${fixturesPath}/not-found-svg-icons/**/*`
-    }), 'Files glob patterns specified did not match any files')
-);
+test('should throw error `files glob patterns specified did not match any files` if not found files', t =>
+    t.throws(
+        standalone({
+            files: `${fixturesPath}/not-found-svg-icons/**/*`
+        }),
+        'Files glob patterns specified did not match any files'
+    ));
 
-test('should generate all fonts', (t) => {
+test('should generate all fonts', t => {
     t.plan(5);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
@@ -37,13 +36,13 @@ test('should generate all fonts', (t) => {
     });
 });
 
-test('should generate only `svg`, `ttf` and `eot` fonts', (t) => {
+test('should generate only `svg`, `ttf` and `eot` fonts', t => {
     t.plan(5);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         formats: ['svg', 'ttf', 'eot']
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
@@ -54,13 +53,13 @@ test('should generate only `svg`, `ttf` and `eot` fonts', (t) => {
     });
 });
 
-test('should generate only `woff2` font', (t) => {
+test('should generate only `woff2` font', t => {
     t.plan(5);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         formats: ['woff2']
-    }).then((result) => {
+    }).then(result => {
         t.true(typeof result.svg === 'undefined');
         t.true(typeof result.ttf === 'undefined');
         t.true(typeof result.eot === 'undefined');
@@ -71,13 +70,13 @@ test('should generate only `woff2` font', (t) => {
     });
 });
 
-test('should generate all fonts with build-in template', (t) => {
+test('should generate all fonts with build-in template', t => {
     t.plan(8);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         template: 'css'
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
@@ -91,14 +90,14 @@ test('should generate all fonts with build-in template', (t) => {
     });
 });
 
-test('should generate only `woff and `woff2` fonts with build-in template', (t) => {
+test('should generate only `woff and `woff2` fonts with build-in template', t => {
     t.plan(8);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         formats: ['woff', 'woff2'],
         template: 'css'
-    }).then((result) => {
+    }).then(result => {
         t.true(typeof result.svg === 'undefined');
         t.true(typeof result.ttf === 'undefined');
         t.true(typeof result.eot === 'undefined');
@@ -112,13 +111,13 @@ test('should generate only `woff and `woff2` fonts with build-in template', (t) 
     });
 });
 
-test('should generate all fonts with custom `template` with absolute path', (t) => {
+test('should generate all fonts with custom `template` with absolute path', t => {
     t.plan(9);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         template: `${fixturesPath}/templates/template.css`
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
@@ -133,13 +132,13 @@ test('should generate all fonts with custom `template` with absolute path', (t) 
     });
 });
 
-test('should generate all fonts with custom `template` with relative path', (t) => {
+test('should generate all fonts with custom `template` with relative path', t => {
     t.plan(9);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         template: `src/__tests__/fixtures/templates/template.css`
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
@@ -154,13 +153,13 @@ test('should generate all fonts with custom `template` with relative path', (t) 
     });
 });
 
-test('should load config', (t) => {
+test('should load config', t => {
     t.plan(6);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc`,
         files: `${fixturesPath}/svg-icons/**/*`
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
@@ -172,13 +171,13 @@ test('should load config', (t) => {
     });
 });
 
-test('should load config and respect `template` option with build-in template value', (t) => {
+test('should load config and respect `template` option with build-in template value', t => {
     t.plan(9);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc-with-build-in-template`,
         files: `${fixturesPath}/svg-icons/**/*`
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
@@ -193,19 +192,22 @@ test('should load config and respect `template` option with build-in template va
     });
 });
 
-test('should load config and respect `template` option with external template value', (t) => {
+test('should load config and respect `template` option with external template value', t => {
     t.plan(9);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc-with-external-template`,
         files: `${fixturesPath}/svg-icons/**/*`
-    }).then((result) => {
+    }).then(result => {
         t.true(isSvg(result.svg));
         t.true(isTtf(result.ttf));
         t.true(isEot(result.eot));
         t.true(isWoff(result.woff));
         t.true(isWoff2(result.woff2));
-        t.true(result.config.template === 'src/__tests__/fixtures/templates/template.css');
+        t.true(
+            result.config.template ===
+                'src/__tests__/fixtures/templates/template.css'
+        );
         t.regex(result.styles, /\.webfont-avatar/);
         t.regex(result.styles, /\.webfont-envelope/);
         t.regex(result.styles, /\.webfont-phone-call/);
@@ -214,72 +216,72 @@ test('should load config and respect `template` option with external template va
     });
 });
 
-test('should throw error on bad svg images - `Unclosed root tag`', (t) => {
+test('should throw error on bad svg images - `Unclosed root tag`', t => {
     t.plan(1);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc`,
         files: `${fixturesPath}/bad-svg-icons/avatar.svg`
-    }).catch((error) => {
+    }).catch(error => {
         t.regex(error.message, /Unclosed root tag/);
     });
 });
 
-test('should throw error on bad svg images - `Unterminated command at index`', (t) => {
+test('should throw error on bad svg images - `Unterminated command at index`', t => {
     t.plan(1);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc`,
         files: `${fixturesPath}/bad-svg-icons/avatar-1.svg`
-    }).catch((error) => {
+    }).catch(error => {
         t.regex(error.message, /Unterminated command at index/);
     });
 });
 
-test('should throw error on bad svg images - `Unexpected character "N"`', (t) => {
+test('should throw error on bad svg images - `Unexpected character "N"`', t => {
     t.plan(1);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc`,
         files: `${fixturesPath}/bad-svg-icons/avatar-2.svg`
-    }).catch((error) => {
+    }).catch(error => {
         t.regex(error.message, /Unexpected character "N"/);
     });
 });
 
-test('should throw error on bad svg images - empty file', (t) => {
+test('should throw error on bad svg images - empty file', t => {
     t.plan(1);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.webfontrc`,
         files: `${fixturesPath}/bad-svg-icons/avatar-3.svg`
-    }).catch((error) => {
+    }).catch(error => {
         t.regex(error.message, /Empty file/);
     });
 });
 
-test('should throw error of config file not found', (t) => {
+test('should throw error of config file not found', t => {
     t.plan(1);
 
     return standalone({
         configFile: `${fixturesPath}/configs/.not-exist-webfontrc`,
         files: `${fixturesPath}/svg-icons/**/*`
-    }).catch((error) => {
+    }).catch(error => {
         t.true(error.code === 'ENOENT');
     });
 });
 
-test('should create css selectors with transform titles through function', (t) => {
+test('should create css selectors with transform titles through function', t => {
     t.plan(3);
 
     return standalone({
         files: `${fixturesPath}/svg-icons/**/*`,
         formats: ['eot'],
-        glyphTransformFn: (obj) => {
+        glyphTransformFn: obj => {
             obj.name += '_transform';
         },
         template: 'css'
-    }).then((result) => {
+    }).then(result => {
         t.regex(result.styles, /\.webfont-avatar_transform/);
         t.regex(result.styles, /\.webfont-envelope_transform/);
         t.regex(result.styles, /\.webfont-phone-call_transform/);

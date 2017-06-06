@@ -7,7 +7,8 @@ import path from 'path';
 import resolveFrom from 'resolve-from';
 import standalone from './standalone';
 
-const cli = meow(`
+const cli = meow(
+    `
     Usage: webfont [input] [options]
 
     Input: File(s) or glob(s).
@@ -127,55 +128,57 @@ const cli = meow(`
         --metadata
 
             Content of the metadata tag.
-`, {
-    alias: {
-        /* eslint-disable id-length */
-        c: 'css-template-class-name',
-        d: 'dest',
-        f: 'font-name',
-        h: 'help',
-        n: 'css-template-font-name',
-        p: 'css-template-font-path',
-        r: 'formats',
-        s: 'dest-styles',
-        t: 'template',
-        v: 'version'
-        /* eslint-enable id-length */
-    },
-    boolean: [
-        'css',
-        'help',
-        'version',
-        'verbose',
-        'fixed-width',
-        'center-horizontally',
-        'normalize',
-        'prepend-unicode'
-    ],
-    default: {
-        config: false,
-        verbose: false
-    },
-    pkg: '../package.json',
-    string: [
-        'font-name',
-        'dest',
-        'dest-styles',
-        'template',
-        'css-template-class-name',
-        'css-template-font-path',
-        'css-template-font-name',
-        'dest-styles',
-        'font-id',
-        'font-style',
-        'font-weight',
-        'font-height',
-        'round',
-        'descent',
-        'ascent',
-        'start-unicode'
-    ]
-});
+`,
+    {
+        alias: {
+            /* eslint-disable id-length */
+            c: 'css-template-class-name',
+            d: 'dest',
+            f: 'font-name',
+            h: 'help',
+            n: 'css-template-font-name',
+            p: 'css-template-font-path',
+            r: 'formats',
+            s: 'dest-styles',
+            t: 'template',
+            v: 'version'
+            /* eslint-enable id-length */
+        },
+        boolean: [
+            'css',
+            'help',
+            'version',
+            'verbose',
+            'fixed-width',
+            'center-horizontally',
+            'normalize',
+            'prepend-unicode'
+        ],
+        default: {
+            config: false,
+            verbose: false
+        },
+        pkg: '../package.json',
+        string: [
+            'font-name',
+            'dest',
+            'dest-styles',
+            'template',
+            'css-template-class-name',
+            'css-template-font-path',
+            'css-template-font-name',
+            'dest-styles',
+            'font-id',
+            'font-style',
+            'font-weight',
+            'font-height',
+            'round',
+            'descent',
+            'ascent',
+            'start-unicode'
+        ]
+    }
+);
 
 const optionsBase = {};
 
@@ -186,8 +189,9 @@ if (cli.flags.config) {
     //   c. relative path relative to `process.cwd()`.
     // If none of the above work, we'll try a relative path starting
     // in `process.cwd()`.
-    optionsBase.configFile = resolveFrom(process.cwd(), cli.flags.config)
-        || path.join(process.cwd(), cli.flags.config);
+    optionsBase.configFile =
+        resolveFrom(process.cwd(), cli.flags.config) ||
+        path.join(process.cwd(), cli.flags.config);
 }
 
 if (cli.flags.fontName) {
@@ -278,12 +282,13 @@ if (cli.flags.metadata) {
     optionsBase.metadata = cli.flags.metadata;
 }
 
-Promise.resolve().then(
-    () => Object.assign({}, optionsBase, {
-        files: cli.input
-    })
-)
-    .then((options) => {
+Promise.resolve()
+    .then(() =>
+        Object.assign({}, optionsBase, {
+            files: cli.input
+        })
+    )
+    .then(options => {
         if (options.files.length === 0) {
             cli.showHelp();
         }
@@ -293,21 +298,22 @@ Promise.resolve().then(
         }
 
         return standalone(options)
-            .then((result) => Promise.resolve(result))
-            .then((result) => {
-                result.config = Object.assign({}, {
-                    dest: options.dest,
-                    destStyles: options.destStyles
-                }, result.config);
+            .then(result => Promise.resolve(result))
+            .then(result => {
+                result.config = Object.assign(
+                    {},
+                    {
+                        dest: options.dest,
+                        destStyles: options.destStyles
+                    },
+                    result.config
+                );
 
                 return result;
             });
     })
-    .then((result) => {
-        const {
-            fontName,
-            dest
-        } = result.config;
+    .then(result => {
+        const { fontName, dest } = result.config;
 
         let destStyles = null;
 
@@ -319,14 +325,20 @@ Promise.resolve().then(
             }
 
             if (result.usedBuildInStylesTemplate) {
-                destStyles = path.join(destStyles, `${result.config.fontName}.${result.config.template}`);
+                destStyles = path.join(
+                    destStyles,
+                    `${result.config.fontName}.${result.config.template}`
+                );
             } else {
-                destStyles = path.join(destStyles, path.basename(result.config.template).replace('.njk', ''));
+                destStyles = path.join(
+                    destStyles,
+                    path.basename(result.config.template).replace('.njk', '')
+                );
             }
         }
 
         return new Promise((resolve, reject) => {
-            mkdirp(path.resolve(dest), (error) => {
+            mkdirp(path.resolve(dest), error => {
                 if (error) {
                     return reject(error);
                 }
@@ -342,7 +354,7 @@ Promise.resolve().then(
                 const stylesDirectory = path.resolve(path.dirname(destStyles));
 
                 return new Promise((resolve, reject) => {
-                    mkdirp(stylesDirectory, (error) => {
+                    mkdirp(stylesDirectory, error => {
                         if (error) {
                             return reject(error);
                         }
@@ -351,33 +363,42 @@ Promise.resolve().then(
                     });
                 });
             })
-            .then(() => Promise.all(Object.keys(result).map((type) => {
-                if (type === 'config' || type === 'usedBuildInStylesTemplate') {
-                    return null;
-                }
-
-                const content = result[type];
-                let destFilename = null;
-
-                if (type !== 'styles') {
-                    destFilename = path.resolve(path.join(dest, `${fontName}.${type}`));
-                } else {
-                    destFilename = path.resolve(destStyles);
-                }
-
-                return new Promise((resolve, reject) => {
-                    fs.writeFile(destFilename, content, (error) => {
-                        if (error) {
-                            return reject(new Error(error));
+            .then(() =>
+                Promise.all(
+                    Object.keys(result).map(type => {
+                        if (
+                            type === 'config' ||
+                            type === 'usedBuildInStylesTemplate'
+                        ) {
+                            return null;
                         }
 
-                        return resolve();
-                    });
-                });
-            })))
+                        const content = result[type];
+                        let destFilename = null;
+
+                        if (type !== 'styles') {
+                            destFilename = path.resolve(
+                                path.join(dest, `${fontName}.${type}`)
+                            );
+                        } else {
+                            destFilename = path.resolve(destStyles);
+                        }
+
+                        return new Promise((resolve, reject) => {
+                            fs.writeFile(destFilename, content, error => {
+                                if (error) {
+                                    return reject(new Error(error));
+                                }
+
+                                return resolve();
+                            });
+                        });
+                    })
+                )
+            )
             .then(() => Promise.resolve(result));
     })
-    .catch((error) => {
+    .catch(error => {
         console.log(error.stack); // eslint-disable-line no-console
 
         const exitCode = typeof error.code === 'number' ? error.code : 1;

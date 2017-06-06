@@ -17,56 +17,74 @@ import ttf2woff2 from 'ttf2woff2';
 import xml2js from 'xml2js';
 
 function getGlyphsData(files, options) {
-    const metadataProvider = options.metadataProvider || defaultMetadataProvider({
-        prependUnicode: options.prependUnicode,
-        startUnicode: options.startUnicode
-    });
+    const metadataProvider =
+        options.metadataProvider ||
+        defaultMetadataProvider({
+            prependUnicode: options.prependUnicode,
+            startUnicode: options.startUnicode
+        });
 
     const sortedFiles = files.sort((fileA, fileB) => fileSorter(fileA, fileB));
     const xmlParser = new xml2js.Parser();
     const throttle = createThrottle(options.maxConcurrency);
 
-    return Promise.all(sortedFiles.map((srcPath) => throttle(() => new Promise((resolve, reject) => {
-        const glyph = fs.createReadStream(srcPath);
-        let glyphContents = '';
+    return Promise.all(
+        sortedFiles.map(srcPath =>
+            throttle(
+                () =>
+                    new Promise((resolve, reject) => {
+                        const glyph = fs.createReadStream(srcPath);
+                        let glyphContents = '';
 
-        return glyph
-            .on('error', (glyphError) => reject(glyphError))
-            .on('data', (data) => {
-                glyphContents += data.toString();
-            })
-            .on('end', () => {
-                // Maybe bug in xml2js
-                if (glyphContents.length === 0) {
-                    return reject(new Error(`Empty file ${srcPath}`));
-                }
+                        return glyph
+                            .on('error', glyphError => reject(glyphError))
+                            .on('data', data => {
+                                glyphContents += data.toString();
+                            })
+                            .on('end', () => {
+                                // Maybe bug in xml2js
+                                if (glyphContents.length === 0) {
+                                    return reject(
+                                        new Error(`Empty file ${srcPath}`)
+                                    );
+                                }
 
-                return xmlParser.parseString(glyphContents, (error) => {
-                    if (error) {
-                        return reject(error);
-                    }
+                                return xmlParser.parseString(
+                                    glyphContents,
+                                    error => {
+                                        if (error) {
+                                            return reject(error);
+                                        }
 
-                    const glyphData = {
-                        contents: glyphContents,
-                        srcPath
-                    };
+                                        const glyphData = {
+                                            contents: glyphContents,
+                                            srcPath
+                                        };
 
-                    return resolve(glyphData);
-                });
-            });
-    }))
-        .then((glyphData) => new Promise((resolve, reject) => {
-            metadataProvider(glyphData.srcPath, (error, metadata) => {
-                if (error) {
-                    return reject(error);
-                }
+                                        return resolve(glyphData);
+                                    }
+                                );
+                            });
+                    })
+            ).then(
+                glyphData =>
+                    new Promise((resolve, reject) => {
+                        metadataProvider(
+                            glyphData.srcPath,
+                            (error, metadata) => {
+                                if (error) {
+                                    return reject(error);
+                                }
 
-                glyphData.metadata = metadata;
+                                glyphData.metadata = metadata;
 
-                return resolve(glyphData);
-            });
-        }))
-    ));
+                                return resolve(glyphData);
+                            }
+                        );
+                    })
+            )
+        )
+    );
 }
 
 function svgIcons2svgFontFn(glyphsData, options) {
@@ -90,12 +108,12 @@ function svgIcons2svgFontFn(glyphsData, options) {
             round: options.round
         })
             .on('finish', () => resolve(result))
-            .on('data', (data) => {
+            .on('data', data => {
                 result += data;
             })
-            .on('error', (error) => reject(error));
+            .on('error', error => reject(error));
 
-        glyphsData.forEach((glyphData) => {
+        glyphsData.forEach(glyphData => {
             const glyphStream = new Readable();
 
             glyphStream.push(glyphData.contents);
@@ -127,7 +145,7 @@ function buildConfig(options) {
 
     return cosmiconfig('webfont', cosmiconfigOptions)
         .load(searchPath, configPath)
-        .then((result) => {
+        .then(result => {
             if (!result) {
                 return {};
             }
@@ -136,80 +154,83 @@ function buildConfig(options) {
         });
 }
 
-export default function (initialOptions) {
+export default function(initialOptions) {
     if (!initialOptions || !initialOptions.files) {
         throw new Error('You must pass webfont a `files` glob');
     }
 
     const { files } = initialOptions;
 
-    let options = Object.assign({}, {
-        ascent: undefined, // eslint-disable-line no-undefined
-        centerHorizontally: false,
-        cssTemplateClassName: null,
-        cssTemplateFontName: null,
-        cssTemplateFontPath: './',
-        descent: 0,
-        fixedWidth: false,
-        fontHeight: null,
-        fontId: null,
-        fontName: 'webfont',
-        fontStyle: '',
-        fontWeight: '',
-        formats: [
-            'svg',
-            'ttf',
-            'eot',
-            'woff',
-            'woff2'
-        ],
-        formatsOptions: {
-            ttf: {
-                copyright: null,
-                ts: null,
-                version: null
-            }
+    let options = Object.assign(
+        {},
+        {
+            ascent: undefined, // eslint-disable-line no-undefined
+            centerHorizontally: false,
+            cssTemplateClassName: null,
+            cssTemplateFontName: null,
+            cssTemplateFontPath: './',
+            descent: 0,
+            fixedWidth: false,
+            fontHeight: null,
+            fontId: null,
+            fontName: 'webfont',
+            fontStyle: '',
+            fontWeight: '',
+            formats: ['svg', 'ttf', 'eot', 'woff', 'woff2'],
+            formatsOptions: {
+                ttf: {
+                    copyright: null,
+                    ts: null,
+                    version: null
+                }
+            },
+            glyphTransformFn: null,
+            // Maybe allow setup from CLI
+            maxConcurrency: os.cpus().length,
+            metadata: null,
+            metadataProvider: null,
+            normalize: false,
+            prependUnicode: false,
+            round: 10e12,
+            // eslint-disable-next-line prettier/prettier
+            startUnicode: 0xEA01,
+            template: null,
+            verbose: false
         },
-        glyphTransformFn: null,
-        // Maybe allow setup from CLI
-        maxConcurrency: os.cpus().length,
-        metadata: null,
-        metadataProvider: null,
-        normalize: false,
-        prependUnicode: false,
-        round: 10e12,
-        startUnicode: 0xEA01,
-        template: null,
-        verbose: false
-    }, initialOptions);
+        initialOptions
+    );
 
     let glyphsData = [];
 
     return buildConfig({
         configFile: options.configFile
-    })
-        .then((loadedConfig) => {
-            options = merge({}, options, loadedConfig);
+    }).then(loadedConfig => {
+        options = merge({}, options, loadedConfig);
 
-            return globby([].concat(files))
-                .then((foundFiles) => {
-                    const filteredFiles = foundFiles.filter((foundFile) => path.extname(foundFile) === '.svg');
+        return (
+            globby([].concat(files))
+                .then(foundFiles => {
+                    const filteredFiles = foundFiles.filter(
+                        foundFile => path.extname(foundFile) === '.svg'
+                    );
 
                     if (filteredFiles.length === 0) {
-                        throw new Error('Files glob patterns specified did not match any files');
+                        throw new Error(
+                            'Files glob patterns specified did not match any files'
+                        );
                     }
 
                     options.foundFiles = foundFiles;
 
                     return getGlyphsData(foundFiles, options);
                 })
-                .then((returnedGlyphsData) => {
+                .then(returnedGlyphsData => {
                     glyphsData = returnedGlyphsData;
 
                     return svgIcons2svgFontFn(returnedGlyphsData, options);
                 })
                 // Maybe add ttfautohint
-                .then((svgFont) => {
+                .then(svgFont => {
                     const result = {};
 
                     result.svg = svgFont;
@@ -217,7 +238,9 @@ export default function (initialOptions) {
                     result.ttf = Buffer.from(
                         svg2ttf(
                             result.svg.toString(),
-                            options.formatsOptions && options.formatsOptions.ttf ? options.formatsOptions.ttf : {}
+                            options.formatsOptions && options.formatsOptions.ttf
+                                ? options.formatsOptions.ttf
+                                : {}
                         ).buffer
                     );
 
@@ -226,9 +249,11 @@ export default function (initialOptions) {
                     }
 
                     if (options.formats.indexOf('woff') !== -1) {
-                        result.woff = Buffer.from(ttf2woff(result.ttf, {
-                            metadata: options.metadata
-                        }).buffer);
+                        result.woff = Buffer.from(
+                            ttf2woff(result.ttf, {
+                                metadata: options.metadata
+                            }).buffer
+                        );
                     }
 
                     if (options.formats.indexOf('woff2') !== -1) {
@@ -237,61 +262,80 @@ export default function (initialOptions) {
 
                     return result;
                 })
-                .then((result) => {
+                .then(result => {
                     if (!options.template) {
                         return result;
                     }
 
-                    const buildInTemplateDirectory = path.resolve(__dirname, '../templates');
+                    const buildInTemplateDirectory = path.resolve(
+                        __dirname,
+                        '../templates'
+                    );
 
-                    return globby(`${buildInTemplateDirectory}/**/*`)
-                        .then((buildInTemplates) => {
-                            const supportedExtensions = buildInTemplates.map(
-                                (buildInTemplate) => path.extname(buildInTemplate.replace('.njk', ''))
-                            );
+                    return globby(
+                        `${buildInTemplateDirectory}/**/*`
+                    ).then(buildInTemplates => {
+                        const supportedExtensions = buildInTemplates.map(
+                            buildInTemplate =>
+                                path.extname(
+                                    buildInTemplate.replace('.njk', '')
+                                )
+                        );
 
-                            let templateFilePath = options.template;
+                        let templateFilePath = options.template;
 
-                            if (supportedExtensions.indexOf(`.${options.template}`) !== -1) {
-                                result.usedBuildInStylesTemplate = true;
+                        if (
+                            supportedExtensions.indexOf(
+                                `.${options.template}`
+                            ) !== -1
+                        ) {
+                            result.usedBuildInStylesTemplate = true;
 
-                                nunjucks.configure(path.join(__dirname, '../'));
+                            nunjucks.configure(path.join(__dirname, '../'));
 
-                                templateFilePath = `${buildInTemplateDirectory}/template.${options.template}.njk`;
-                            } else {
-                                templateFilePath = path.resolve(templateFilePath);
+                            templateFilePath = `${buildInTemplateDirectory}/template.${options.template}.njk`;
+                        } else {
+                            templateFilePath = path.resolve(templateFilePath);
+                        }
+
+                        const nunjucksOptions = merge(
+                            {},
+                            {
+                                // Maybe best solution is return metadata object of glyph.
+                                glyphs: glyphsData.map(glyphData => {
+                                    if (
+                                        typeof options.glyphTransformFn ===
+                                        'function'
+                                    ) {
+                                        options.glyphTransformFn(
+                                            glyphData.metadata
+                                        );
+                                    }
+
+                                    return glyphData.metadata;
+                                })
+                            },
+                            options,
+                            {
+                                className: options.cssTemplateClassName
+                                    ? options.cssTemplateClassName
+                                    : options.fontName,
+                                fontName: options.cssTemplateFontName
+                                    ? options.cssTemplateFontName
+                                    : options.fontName,
+                                fontPath: options.cssTemplateFontPath
                             }
+                        );
 
-                            const nunjucksOptions = merge(
-                                {},
-                                {
-                                    // Maybe best solution is return metadata object of glyph.
-                                    glyphs: glyphsData.map((glyphData) => {
-                                        if (typeof options.glyphTransformFn === 'function') {
-                                            options.glyphTransformFn(glyphData.metadata);
-                                        }
+                        result.styles = nunjucks.render(
+                            templateFilePath,
+                            nunjucksOptions
+                        );
 
-                                        return glyphData.metadata;
-                                    })
-                                },
-                                options,
-                                {
-                                    className: options.cssTemplateClassName
-                                        ? options.cssTemplateClassName
-                                        : options.fontName,
-                                    fontName: options.cssTemplateFontName
-                                        ? options.cssTemplateFontName
-                                        : options.fontName,
-                                    fontPath: options.cssTemplateFontPath
-                                }
-                            );
-
-                            result.styles = nunjucks.render(templateFilePath, nunjucksOptions);
-
-                            return result;
-                        });
+                        return result;
+                    });
                 })
-                .then((result) => {
+                .then(result => {
                     if (options.formats.indexOf('svg') === -1) {
                         delete result.svg;
                     }
@@ -303,6 +347,7 @@ export default function (initialOptions) {
                     result.config = options;
 
                     return result;
-                });
-        });
+                })
+        );
+    });
 }

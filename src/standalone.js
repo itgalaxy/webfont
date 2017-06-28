@@ -1,20 +1,20 @@
-import { Readable } from 'stream';
-import cosmiconfig from 'cosmiconfig';
-import createThrottle from 'async-throttle';
-import defaultMetadataProvider from 'svgicons2svgfont/src/metadata';
-import fileSorter from 'svgicons2svgfont/src/filesorter';
-import fs from 'fs';
-import globby from 'globby';
-import merge from 'merge-deep';
-import nunjucks from 'nunjucks';
-import os from 'os';
-import path from 'path';
-import svg2ttf from 'svg2ttf';
-import svgicons2svgfont from 'svgicons2svgfont';
-import ttf2eot from 'ttf2eot';
-import ttf2woff from 'ttf2woff';
-import ttf2woff2 from 'ttf2woff2';
-import xml2js from 'xml2js';
+import { Readable } from "stream";
+import cosmiconfig from "cosmiconfig";
+import createThrottle from "async-throttle";
+import defaultMetadataProvider from "svgicons2svgfont/src/metadata";
+import fileSorter from "svgicons2svgfont/src/filesorter";
+import fs from "fs";
+import globby from "globby";
+import merge from "merge-deep";
+import nunjucks from "nunjucks";
+import os from "os";
+import path from "path";
+import svg2ttf from "svg2ttf";
+import svgicons2svgfont from "svgicons2svgfont";
+import ttf2eot from "ttf2eot";
+import ttf2woff from "ttf2woff";
+import ttf2woff2 from "ttf2woff2";
+import xml2js from "xml2js";
 
 function getGlyphsData(files, options) {
     const metadataProvider =
@@ -34,14 +34,14 @@ function getGlyphsData(files, options) {
                 () =>
                     new Promise((resolve, reject) => {
                         const glyph = fs.createReadStream(srcPath);
-                        let glyphContents = '';
+                        let glyphContents = "";
 
                         return glyph
-                            .on('error', glyphError => reject(glyphError))
-                            .on('data', data => {
+                            .on("error", glyphError => reject(glyphError))
+                            .on("data", data => {
                                 glyphContents += data.toString();
                             })
-                            .on('end', () => {
+                            .on("end", () => {
                                 // Maybe bug in xml2js
                                 if (glyphContents.length === 0) {
                                     return reject(
@@ -88,7 +88,7 @@ function getGlyphsData(files, options) {
 }
 
 function svgIcons2svgFontFn(glyphsData, options) {
-    let result = '';
+    let result = "";
 
     return new Promise((resolve, reject) => {
         const fontStream = svgicons2svgfont({
@@ -107,11 +107,11 @@ function svgIcons2svgFontFn(glyphsData, options) {
             normalize: options.normalize,
             round: options.round
         })
-            .on('finish', () => resolve(result))
-            .on('data', data => {
+            .on("finish", () => resolve(result))
+            .on("data", data => {
                 result += data;
             })
-            .on('error', error => reject(error));
+            .on("error", error => reject(error));
 
         glyphsData.forEach(glyphData => {
             const glyphStream = new Readable();
@@ -143,7 +143,7 @@ function buildConfig(options) {
         configPath = path.resolve(process.cwd(), options.configFile);
     }
 
-    return cosmiconfig('webfont', cosmiconfigOptions)
+    return cosmiconfig("webfont", cosmiconfigOptions)
         .load(searchPath, configPath)
         .then(result => {
             if (!result) {
@@ -156,7 +156,7 @@ function buildConfig(options) {
 
 export default function(initialOptions) {
     if (!initialOptions || !initialOptions.files) {
-        throw new Error('You must pass webfont a `files` glob');
+        throw new Error("You must pass webfont a `files` glob");
     }
 
     const { files } = initialOptions;
@@ -168,15 +168,15 @@ export default function(initialOptions) {
             centerHorizontally: false,
             cssTemplateClassName: null,
             cssTemplateFontName: null,
-            cssTemplateFontPath: './',
+            cssTemplateFontPath: "./",
             descent: 0,
             fixedWidth: false,
             fontHeight: null,
             fontId: null,
-            fontName: 'webfont',
-            fontStyle: '',
-            fontWeight: '',
-            formats: ['svg', 'ttf', 'eot', 'woff', 'woff2'],
+            fontName: "webfont",
+            fontStyle: "",
+            fontWeight: "",
+            formats: ["svg", "ttf", "eot", "woff", "woff2"],
             formatsOptions: {
                 ttf: {
                     copyright: null,
@@ -211,12 +211,12 @@ export default function(initialOptions) {
             globby([].concat(files))
                 .then(foundFiles => {
                     const filteredFiles = foundFiles.filter(
-                        foundFile => path.extname(foundFile) === '.svg'
+                        foundFile => path.extname(foundFile) === ".svg"
                     );
 
                     if (filteredFiles.length === 0) {
                         throw new Error(
-                            'Files glob patterns specified did not match any files'
+                            "Files glob patterns specified did not match any files"
                         );
                     }
 
@@ -244,11 +244,11 @@ export default function(initialOptions) {
                         ).buffer
                     );
 
-                    if (options.formats.indexOf('eot') !== -1) {
+                    if (options.formats.indexOf("eot") !== -1) {
                         result.eot = Buffer.from(ttf2eot(result.ttf).buffer);
                     }
 
-                    if (options.formats.indexOf('woff') !== -1) {
+                    if (options.formats.indexOf("woff") !== -1) {
                         result.woff = Buffer.from(
                             ttf2woff(result.ttf, {
                                 metadata: options.metadata
@@ -256,7 +256,7 @@ export default function(initialOptions) {
                         );
                     }
 
-                    if (options.formats.indexOf('woff2') !== -1) {
+                    if (options.formats.indexOf("woff2") !== -1) {
                         result.woff2 = ttf2woff2(result.ttf);
                     }
 
@@ -269,7 +269,7 @@ export default function(initialOptions) {
 
                     const buildInTemplateDirectory = path.resolve(
                         __dirname,
-                        '../templates'
+                        "../templates"
                     );
 
                     return globby(
@@ -278,7 +278,7 @@ export default function(initialOptions) {
                         const supportedExtensions = buildInTemplates.map(
                             buildInTemplate =>
                                 path.extname(
-                                    buildInTemplate.replace('.njk', '')
+                                    buildInTemplate.replace(".njk", "")
                                 )
                         );
 
@@ -291,7 +291,7 @@ export default function(initialOptions) {
                         ) {
                             result.usedBuildInStylesTemplate = true;
 
-                            nunjucks.configure(path.join(__dirname, '../'));
+                            nunjucks.configure(path.join(__dirname, "../"));
 
                             templateFilePath = `${buildInTemplateDirectory}/template.${options.template}.njk`;
                         } else {
@@ -305,7 +305,7 @@ export default function(initialOptions) {
                                 glyphs: glyphsData.map(glyphData => {
                                     if (
                                         typeof options.glyphTransformFn ===
-                                        'function'
+                                        "function"
                                     ) {
                                         options.glyphTransformFn(
                                             glyphData.metadata
@@ -336,11 +336,11 @@ export default function(initialOptions) {
                     });
                 })
                 .then(result => {
-                    if (options.formats.indexOf('svg') === -1) {
+                    if (options.formats.indexOf("svg") === -1) {
                         delete result.svg;
                     }
 
-                    if (options.formats.indexOf('ttf') === -1) {
+                    if (options.formats.indexOf("ttf") === -1) {
                         delete result.ttf;
                     }
 

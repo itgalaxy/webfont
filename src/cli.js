@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-import fs from 'fs';
-import meow from 'meow';
-import mkdirp from 'mkdirp';
-import path from 'path';
-import resolveFrom from 'resolve-from';
-import standalone from './standalone';
+import fs from "fs";
+import meow from "meow";
+import mkdirp from "mkdirp";
+import path from "path";
+import resolveFrom from "resolve-from";
+import standalone from "./standalone";
 
 const cli = meow(
     `
@@ -132,50 +132,50 @@ const cli = meow(
     {
         alias: {
             /* eslint-disable id-length */
-            c: 'css-template-class-name',
-            d: 'dest',
-            f: 'font-name',
-            h: 'help',
-            n: 'css-template-font-name',
-            p: 'css-template-font-path',
-            r: 'formats',
-            s: 'dest-styles',
-            t: 'template',
-            v: 'version'
+            c: "css-template-class-name",
+            d: "dest",
+            f: "font-name",
+            h: "help",
+            n: "css-template-font-name",
+            p: "css-template-font-path",
+            r: "formats",
+            s: "dest-styles",
+            t: "template",
+            v: "version"
             /* eslint-enable id-length */
         },
         boolean: [
-            'css',
-            'help',
-            'version',
-            'verbose',
-            'fixed-width',
-            'center-horizontally',
-            'normalize',
-            'prepend-unicode'
+            "css",
+            "help",
+            "version",
+            "verbose",
+            "fixed-width",
+            "center-horizontally",
+            "normalize",
+            "prepend-unicode"
         ],
         default: {
             config: false,
             verbose: false
         },
-        pkg: '../package.json',
+        pkg: "../package.json",
         string: [
-            'font-name',
-            'dest',
-            'dest-styles',
-            'template',
-            'css-template-class-name',
-            'css-template-font-path',
-            'css-template-font-name',
-            'dest-styles',
-            'font-id',
-            'font-style',
-            'font-weight',
-            'font-height',
-            'round',
-            'descent',
-            'ascent',
-            'start-unicode'
+            "font-name",
+            "dest",
+            "dest-styles",
+            "template",
+            "css-template-class-name",
+            "css-template-font-path",
+            "css-template-font-name",
+            "dest-styles",
+            "font-id",
+            "font-style",
+            "font-weight",
+            "font-height",
+            "round",
+            "descent",
+            "ascent",
+            "start-unicode"
         ]
     }
 );
@@ -294,7 +294,7 @@ Promise.resolve()
         }
 
         if (!options.dest) {
-            throw new Error('Require `--dest` (`-d`) options');
+            throw new Error("Require `--dest` (`-d`) options");
         }
 
         return standalone(options)
@@ -332,7 +332,7 @@ Promise.resolve()
             } else {
                 destStyles = path.join(
                     destStyles,
-                    path.basename(result.config.template).replace('.njk', '')
+                    path.basename(result.config.template).replace(".njk", "")
                 );
             }
         }
@@ -367,8 +367,8 @@ Promise.resolve()
                 Promise.all(
                     Object.keys(result).map(type => {
                         if (
-                            type === 'config' ||
-                            type === 'usedBuildInStylesTemplate'
+                            type === "config" ||
+                            type === "usedBuildInStylesTemplate"
                         ) {
                             return null;
                         }
@@ -376,7 +376,7 @@ Promise.resolve()
                         const content = result[type];
                         let destFilename = null;
 
-                        if (type !== 'styles') {
+                        if (type !== "styles") {
                             destFilename = path.resolve(
                                 path.join(dest, `${fontName}.${type}`)
                             );
@@ -401,7 +401,7 @@ Promise.resolve()
     .catch(error => {
         console.log(error.stack); // eslint-disable-line no-console
 
-        const exitCode = typeof error.code === 'number' ? error.code : 1;
+        const exitCode = typeof error.code === "number" ? error.code : 1;
 
         process.exit(exitCode); // eslint-disable-line no-process-exit
     });

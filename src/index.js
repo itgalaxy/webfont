@@ -1,3 +1,3 @@
-import standalone from './standalone';
+import standalone from "./standalone";
 
 export default standalone;

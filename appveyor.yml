@@ -15,7 +15,6 @@ environment:
 install:
     # Get the latest stable version of Node.js
     - ps: Install-Product node $env:nodejs_version
-    - npm prune
     # Install modules
     - npm install
 

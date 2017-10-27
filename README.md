@@ -3,24 +3,19 @@
 [![NPM version](https://img.shields.io/npm/v/webfont.svg)](https://www.npmjs.org/package/webfont)
 [![Travis Build Status](https://img.shields.io/travis/itgalaxy/webfont/master.svg?label=build)](https://travis-ci.org/itgalaxy/webfont)
 [![Build status](https://ci.appveyor.com/api/projects/status/a8absovr2r44w1oc?svg=true)](https://ci.appveyor.com/project/evilebottnawi/webfont)
-[![Greenkeeper badge](https://badges.greenkeeper.io/itgalaxy/webfont.svg)](https://greenkeeper.io/)
 [![dependencies Status](https://david-dm.org/itgalaxy/webfont/status.svg)](https://david-dm.org/itgalaxy/webfont)
 [![devDependencies Status](https://david-dm.org/itgalaxy/webfont/dev-status.svg)](https://david-dm.org/itgalaxy/webfont?type=dev)
+[![Greenkeeper badge](https://badges.greenkeeper.io/itgalaxy/webfont.svg)](https://greenkeeper.io)
 
 Generator of fonts from SVG icons.
 
 Features:
 
--   Supported font formats: WOFF2, WOFF, EOT, TTF and SVG.
-
--   Support configuration Files - use a JavaScript, JSON or YAML file to specify configuration information 
-    for an entire directory and all of its subdirectories.
-
--   Supported browsers: IE8+.
-
--   Generates CSS files allows to use custom templates.
-
--   CLI.
+- Supported font formats: WOFF2, WOFF, EOT, TTF and SVG.
+- Support configuration Files - use a JavaScript, JSON or YAML file to specify configuration information  for an entire directory and all of its subdirectories.
+- Supported browsers: IE8+.
+- Generates CSS files allows to use custom templates.
+- CLI.
 
 ## Install
 
@@ -37,9 +32,9 @@ webfont({
   files: 'src/svg-icons/**/*.svg',
   fontName: 'my-font-name'
 })
-    .then((result) => {
-        console.log(result);
-    });
+  .then((result) => {
+    console.log(result);
+  });
 ```
 
 Or
@@ -51,16 +46,16 @@ webfont({
   files: 'src/svg-icons/**/*.svg',
   fontName: 'my-font-name'
 })
-    .then((result) => {
-        console.log(result);
-    });
+  .then((result) => {
+    console.log(result);
+  });
 ```
 
 ## Options
 
 ### `files`
 
-A file glob, or array of file globs. 
+A file glob, or array of file globs.
 Ultimately passed to [node-glob](https://github.com/isaacs/node-glob) to figure out what files you want to lint.
 
 `node_modules` and `bower_components` are always ignored.
@@ -117,8 +112,7 @@ Default value getting from `fontName` options, but you can specify any value.
 Type: `function`
 Default: `null`
 
-If you need transform glyph metadata (e.g. titles of CSS classes) before transferred in style template 
-for your icons, you can use this option with glyphs metadata object.
+If you need transform glyph metadata (e.g. titles of CSS classes) before transferred in style template for your icons, you can use this option with glyphs metadata object.
 
 Example:
 
@@ -219,34 +213,28 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
 
 The CLI can exit the process with the following exit codes:
 
--   0: All ok.
--   1: Something unknown went wrong.
--   Other: related to using packages.
+- 0: All ok.
+- 1: Something unknown went wrong.
+- Other: related to using packages.
 
 ## Related
 
--   [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) - Simple tool to merge multiple 
-    icons to an SVG font.
-
--   [svg2ttf](https://github.com/fontello/svg2ttf) - Converts SVG fonts to TTF format.
-
--   [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
-
--   [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
-
--   [ttf2woff2](https://github.com/nfroidure/ttf2woff2) - Converts TTF fonts to WOFF2.
+- [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) - Simple tool to merge multiple icons to an SVG font.
+- [svg2ttf](https://github.com/fontello/svg2ttf) - Converts SVG fonts to TTF format.
+- [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
+- [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
+- [ttf2woff2](https://github.com/nfroidure/ttf2woff2) - Converts TTF fonts to WOFF2.
 
 ## Roadmap
 
--   The ability to generate from any type to any type.
--   Rewrite on ecma6, without `babel` compilation.
--   More tests, include CLI test.
--   Option `glyphTransformFn` should return object, not change passed.
--   Improved docs.
--   Reduce package size (maybe implement `ttf2woff2` with native js library).
--   Improve performance (maybe use cache for this).
--   Implement `webpack` loader.
--   Close all issues.
+- The ability to generate from any type to any type.
+- More tests, include CLI test.
+- Option `glyphTransformFn` should return object, not change passed.
+- Improved docs.
+- Reduce package size (maybe implement `ttf2woff2` with native js library).
+- Improve performance (maybe use cache for this).
+- Implement `webpack` loader.
+- Close all issues.
 
 ## Contribution
 

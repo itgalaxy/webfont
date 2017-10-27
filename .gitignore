@@ -1,11 +1,6 @@
-# IDE
-.idea
-*.iml
-
 # Logs
 logs
-*.log
-npm-debug.log*
+*.log*
 
 # Runtime data
 pids
@@ -31,7 +26,7 @@ coverage
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directoriesq
+# Dependency directories
 node_modules
 jspm_packages
 
@@ -41,8 +36,24 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-# Applcation
-dist
-
 # gitkeep
 !.gitkeep
+
+# IDE
+.idea
+*.iml
+
+#VSCode metadata
+.vscode
+
+# Mac files
+.DS_Store
+
+# Ignore compressed files
+*.min.*
+
+# Composer
+lib/vendor
+
+# Package
+dist

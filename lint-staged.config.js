@@ -1,9 +1,6 @@
-"use strict"; // eslint-disable-line lines-around-directive, strict
+"use strict";
 
 module.exports = {
-    "*.{js,jsx,babel}": ["eslint --fix", "git add"],
-    "*.{md,markdown,mdown,mkdn,mkd,mdwn,mkdown,ron}": [
-        "remark -f -q",
-        "git add"
-    ]
+  "*.{js,jsx}": ["prettier --list-different", "eslint", "git add"],
+  "*.{md,markdown,mdown,mkdn,mkd,mdwn,mkdown,ron}": ["remark -f -q", "git add"]
 };

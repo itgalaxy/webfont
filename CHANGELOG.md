@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## HEAD
+
+- Changed: minimum required `nodejs` version is now `6.9.5` (see [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont/blob/master/package.json#L41).
+- Chore: minimum used `svgicons2svgfont` package is now `^7.0.2`
+
 ## 7.1.4 - 2017-05-24
 
 - Fixed: use `copyright`, `ts` and `version` with null value by default, it is avoid problems when your use long term caching.

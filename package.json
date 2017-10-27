@@ -1,6 +1,6 @@
 {
   "name": "webfont",
-  "version": "7.1.4",
+  "version": "8.0.0",
   "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
   "license": "MIT",
   "author": "itgalaxy <development@itgalaxy.company>",
@@ -61,7 +61,7 @@
     "nunjucks": "^3.0.0",
     "resolve-from": "^4.0.0",
     "svg2ttf": "^4.0.0",
-    "svgicons2svgfont": "^5.0.0",
+    "svgicons2svgfont": "^7.0.2",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
     "ttf2woff2": "^2.0.0"
@@ -129,7 +129,7 @@
         "env",
         {
           "targets": {
-            "node": "4.3"
+            "node": "6.9.5"
           }
         }
       ]

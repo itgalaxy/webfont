@@ -1,4 +1,5 @@
 import { Readable } from "stream";
+import SVGIcons2SVGFontStream from "svgicons2svgfont";
 import cosmiconfig from "cosmiconfig";
 import createThrottle from "async-throttle";
 import defaultMetadataProvider from "svgicons2svgfont/src/metadata";
@@ -10,7 +11,6 @@ import nunjucks from "nunjucks";
 import os from "os";
 import path from "path";
 import svg2ttf from "svg2ttf";
-import svgicons2svgfont from "svgicons2svgfont";
 import ttf2eot from "ttf2eot";
 import ttf2woff from "ttf2woff";
 import ttf2woff2 from "ttf2woff2";
@@ -83,7 +83,7 @@ function svgIcons2svgFontFn(glyphsData, options) {
   let result = "";
 
   return new Promise((resolve, reject) => {
-    const fontStream = svgicons2svgfont({
+    const fontStream = new SVGIcons2SVGFontStream({
       ascent: options.ascent,
       centerHorizontally: options.centerHorizontally,
       descent: options.descent,

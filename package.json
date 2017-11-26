@@ -55,7 +55,7 @@
     "cosmiconfig": "^3.0.0",
     "xml2js": "^0.4.17",
     "globby": "^6.0.0",
-    "meow": "^3.3.0",
+    "meow": "^4.0.0",
     "mkdirp": "^0.5.1",
     "merge-deep": "^3.0.0",
     "nunjucks": "^3.0.0",

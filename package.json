@@ -52,7 +52,7 @@
   ],
   "dependencies": {
     "async-throttle": "^1.1.0",
-    "cosmiconfig": "^3.0.0",
+    "cosmiconfig": "^4.0.0",
     "xml2js": "^0.4.17",
     "globby": "^6.0.0",
     "meow": "^3.3.0",

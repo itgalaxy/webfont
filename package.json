@@ -86,7 +86,7 @@
     "eslint-plugin-react": "^7.1.0",
     "eslint-plugin-unicorn": "^2.1.2",
     "is-eot": "^1.0.0",
-    "is-svg": "^2.0.0",
+    "is-svg": "^3.0.0",
     "is-ttf": "^0.2.0",
     "is-woff": "^1.0.0",
     "is-woff2": "^1.0.0",

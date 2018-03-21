@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ fontName }}</title>
+    <style>
+      body {
+        margin: 0;
+        padding:10px 20px;
+        background: #fff;
+        color: #222;
+        font-family:"Helvetica Neue", Arial, sans-serif;
+      }
+      h1 {
+        margin:0 0 20px;
+        font-size: 32px;
+        font-weight: normal;
+      }
+      .icons {
+        margin-bottom: 40px;
+        -webkit-column-count: 5;
+           -moz-column-count: 5;
+                column-count: 5;
+      }
+      .icons__item {
+          padding: 4px 0;
+      }
+      .icons__item,
+      .icons__item i {
+          cursor:pointer;
+      }
+      .icons__item i {
+           font-size: 36px;
+      }
+      .icons__item:hover {
+          color:#3c90be;
+      }
+      @font-face {
+          font-family: {{ fontName }};
+          {% if formats.indexOf('eot')>-1 -%}
+              src: url("{{ fontPath }}{{ fontName }}.eot");
+          {%- endif %}
+          {%- set eotIndex = formats.indexOf('eot') -%}
+          {%- set woff2Index = formats.indexOf('woff2') -%}
+          {%- set woffIndex = formats.indexOf('woff') -%}
+          {%- set ttfIndex = formats.indexOf('ttf') -%}
+          {%- set svgIndex = formats.indexOf('svg') %}
+          src: {% if eotIndex != -1 -%}
+                  url("{{ fontPath }}{{ fontName }}.eot?#iefix") format("embedded-opentype")
+                  {%- set nothing = formats.splice(eotIndex, 1) -%}
+                  {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+              {%- endif -%}
+              {%- if woff2Index != -1 -%}
+                  url("{{ fontPath }}{{ fontName }}.woff2") format("woff2")
+                  {%- set nothing = formats.splice(woff2Index, 1) -%}
+                  {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+              {%- endif -%}
+              {%- if woffIndex != -1 -%}
+                  url("{{ fontPath }}{{ fontName }}.woff") format("woff")
+                  {%- set nothing = formats.splice(woffIndex, 1) -%}
+                  {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+              {%- endif -%}
+              {%- if ttfIndex != -1 -%}
+                  url("{{ fontPath }}{{ fontName }}.ttf") format("truetype")
+                  {%- set nothing = formats.splice(ttfIndex, 1) -%}
+                  {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
+              {%- endif -%}
+              {%- if svgIndex != -1 -%}
+                  url("{{ fontPath }}{{ fontName }}.svg#{{ fontName }}") format("svg");
+              {%- endif %}
+          font-style: normal;
+          font-weight: 400;
+      }
+
+      .{{ className }} {
+          display: inline-block;
+          transform: translate(0, 0);
+          text-rendering: auto;
+          font: normal normal 400 14px/1 {{ fontName }};
+          font-size: inherit;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-font-smoothing: antialiased;
+      }
+
+      .{{ className }}-lg {
+          vertical-align: -15%;
+          line-height: 0.75em;
+          font-size: 1.33333333em;
+      }
+
+      .{{ className }}-2x {
+          font-size: 2em;
+      }
+
+      .{{ className }}-3x {
+          font-size: 3em;
+      }
+
+      .{{ className }}-4x {
+          font-size: 4em;
+      }
+
+      .{{ className }}-5x {
+          font-size: 5em;
+      }
+
+      .{{ className }}-fw {
+          width: 1.28571429em;
+          text-align: center;
+      }{% for glyph in glyphs
+      %}
+
+      .{{ className }}-{{ glyph.name }}::before {
+          content: "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
+      }{% endfor %}
+    </style>
+  </head>
+  <body>
+    <h1>List Icons</h1>
+      <div class="icons" id="icons">
+          {% for glyph in glyphs %}
+              <div class="icons__item">
+                <i class="{{ className }} {{ className }}-{{ glyph.name }}"></i>
+                <span>{{ className }}-{{ glyph.name }}</span>
+                </div>
+          {% endfor %}
+      </div>
+  </body>
+</html>

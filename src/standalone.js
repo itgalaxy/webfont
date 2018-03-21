@@ -151,16 +151,11 @@ export default function(initialOptions) {
     throw new Error("You must pass webfont a `files` glob");
   }
 
-  const { files } = initialOptions;
-
   let options = Object.assign(
     {},
     {
       ascent: undefined, // eslint-disable-line no-undefined
       centerHorizontally: false,
-      cssTemplateClassName: null,
-      cssTemplateFontName: null,
-      cssTemplateFontPath: "./",
       descent: 0,
       fixedWidth: false,
       fontHeight: null,
@@ -186,6 +181,9 @@ export default function(initialOptions) {
       round: 10e12,
       startUnicode: 0xea01,
       template: null,
+      templateClassName: null,
+      templateFontName: null,
+      templateFontPath: "./",
       verbose: false
     },
     initialOptions
@@ -199,7 +197,7 @@ export default function(initialOptions) {
     options = merge({}, options, loadedConfig);
 
     return (
-      globby([].concat(files))
+      globby([].concat(options.files))
         .then(foundFiles => {
           const filteredFiles = foundFiles.filter(
             foundFile => path.extname(foundFile) === ".svg"
@@ -210,8 +208,6 @@ export default function(initialOptions) {
               "Files glob patterns specified did not match any files"
             );
           }
-
-          options.foundFiles = foundFiles;
 
           return getGlyphsData(foundFiles, options);
         })
@@ -225,6 +221,7 @@ export default function(initialOptions) {
           const result = {};
 
           result.svg = svgFont;
+          result.glyphsData = glyphsData;
 
           result.ttf = Buffer.from(
             svg2ttf(
@@ -262,60 +259,63 @@ export default function(initialOptions) {
             __dirname,
             "../templates"
           );
+          const buildInTemplates = {
+            css: {
+              path: path.resolve(buildInTemplateDirectory, "template.css.njk")
+            },
+            html: {
+              path: path.resolve(
+                buildInTemplateDirectory,
+                "template.preview-html.njk"
+              )
+            },
+            scss: {
+              path: path.resolve(buildInTemplateDirectory, "template.scss.njk")
+            }
+          };
 
-          return globby(`${buildInTemplateDirectory}/**/*`).then(
-            buildInTemplates => {
-              const supportedExtensions = buildInTemplates.map(
-                buildInTemplate =>
-                  path.extname(buildInTemplate.replace(".njk", ""))
-              );
+          let templateFilePath = options.template;
 
-              let templateFilePath = options.template;
+          if (Object.keys(buildInTemplates).includes(options.template)) {
+            result.usedBuildInTemplate = true;
 
-              if (supportedExtensions.indexOf(`.${options.template}`) !== -1) {
-                result.usedBuildInStylesTemplate = true;
+            nunjucks.configure(path.join(__dirname, "../"));
 
-                nunjucks.configure(path.join(__dirname, "../"));
+            templateFilePath = `${buildInTemplateDirectory}/template.${
+              options.template
+            }.njk`;
+          } else {
+            templateFilePath = path.resolve(templateFilePath);
+          }
 
-                templateFilePath = `${buildInTemplateDirectory}/template.${
-                  options.template
-                }.njk`;
-              } else {
-                templateFilePath = path.resolve(templateFilePath);
-              }
-
-              const nunjucksOptions = merge(
-                {},
-                {
-                  // Maybe best solution is return metadata object of glyph.
-                  glyphs: glyphsData.map(glyphData => {
-                    if (typeof options.glyphTransformFn === "function") {
-                      options.glyphTransformFn(glyphData.metadata);
-                    }
-
-                    return glyphData.metadata;
-                  })
-                },
-                options,
-                {
-                  className: options.cssTemplateClassName
-                    ? options.cssTemplateClassName
-                    : options.fontName,
-                  fontName: options.cssTemplateFontName
-                    ? options.cssTemplateFontName
-                    : options.fontName,
-                  fontPath: options.cssTemplateFontPath
+          const nunjucksOptions = merge(
+            {},
+            {
+              glyphs: glyphsData.map(glyphData => {
+                if (typeof options.glyphTransformFn === "function") {
+                  glyphData.metadata = options.glyphTransformFn(
+                    glyphData.metadata
+                  );
                 }
-              );
 
-              result.styles = nunjucks.render(
-                templateFilePath,
-                nunjucksOptions
-              );
-
-              return result;
+                return glyphData.metadata;
+              })
+            },
+            options,
+            {
+              className: options.templateClassName
+                ? options.templateClassName
+                : options.fontName,
+              fontName: options.templateFontName
+                ? options.templateFontName
+                : options.fontName,
+              fontPath: options.templateFontPath.replace(/\/?$/, "/")
             }
           );
+
+          result.template = nunjucks.render(templateFilePath, nunjucksOptions);
+
+          return result;
         })
         .then(result => {
           if (options.formats.indexOf("svg") === -1) {

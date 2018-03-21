@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-import fs from "fs";
+import fs from "fs-extra";
 import meow from "meow";
-import mkdirp from "mkdirp";
 import path from "path";
 import resolveFrom from "resolve-from";
 import standalone from "./standalone";
@@ -13,7 +12,7 @@ const cli = meow(
 
     Input: File(s) or glob(s).
 
-        If an input argument is wrapped in quotation marks, it will be passed to node-glob
+        If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
         for cross-platform glob support.
 
     Options:
@@ -53,21 +52,21 @@ const cli = meow(
 
         -t, --template
 
-            Type of styles ('css', 'scss') or path to custom template.
+            Type of template ('css', 'scss') or path to custom template.
 
-        -s, --dest-styles
+        -s, --dest-template
 
-            Destination for generated styles. If not passed used \`dest\` argument.
+            Destination for generated template. If not passed used \`dest\` argument value.
 
-        -c, --css-template-class-name  
+        -c, --template-class-name  
 
             Class name in css template.
 
-        -p, --css-template-font-path
+        -p, --template-font-path
 
             Font path in css template.
 
-        -n, --css-template-font-name
+        -n, --template-font-name
 
             Font name in css template.
 
@@ -130,53 +129,93 @@ const cli = meow(
             Content of the metadata tag.
 `,
   {
-    alias: {
-      /* eslint-disable id-length */
-      c: "css-template-class-name",
-      d: "dest",
-      f: "font-name",
-      h: "help",
-      n: "css-template-font-name",
-      p: "css-template-font-path",
-      r: "formats",
-      s: "dest-styles",
-      t: "template",
-      v: "version"
-      /* eslint-enable id-length */
-    },
-    boolean: [
-      "css",
-      "help",
-      "version",
-      "verbose",
-      "fixed-width",
-      "center-horizontally",
-      "normalize",
-      "prepend-unicode"
-    ],
-    default: {
-      config: false,
-      verbose: false
-    },
-    pkg: "../package.json",
-    string: [
-      "font-name",
-      "dest",
-      "dest-styles",
-      "template",
-      "css-template-class-name",
-      "css-template-font-path",
-      "css-template-font-name",
-      "dest-styles",
-      "font-id",
-      "font-style",
-      "font-weight",
-      "font-height",
-      "round",
-      "descent",
-      "ascent",
-      "start-unicode"
-    ]
+    autoHelp: false,
+    autoVersion: false,
+    flags: {
+      ascent: {
+        type: "string"
+      },
+      "center-horizontally": {
+        type: "boolean"
+      },
+      config: {
+        default: null
+      },
+      descent: {
+        type: "string"
+      },
+      dest: {
+        alias: "d",
+        default: process.cwd(),
+        type: "string"
+      },
+      "dest-template": {
+        alias: "s",
+        type: "string"
+      },
+      "fixed-width": {
+        type: "boolean"
+      },
+      "font-height": {
+        type: "string"
+      },
+      "font-id": {
+        type: "string"
+      },
+      "font-name": {
+        alias: "u",
+        type: "string"
+      },
+      "font-style": {
+        type: "string"
+      },
+      "font-weight": {
+        type: "string"
+      },
+      formats: {
+        alias: "f"
+      },
+      help: {
+        alias: "h",
+        type: "boolean"
+      },
+      normalize: {
+        type: "boolean"
+      },
+      "prepend-unicode": {
+        type: "boolean"
+      },
+      round: {
+        type: "string"
+      },
+      "start-unicode": {
+        type: "string"
+      },
+      template: {
+        alias: "t",
+        type: "string"
+      },
+      "template-class-name": {
+        alias: "c",
+        type: "string"
+      },
+      "template-font-name": {
+        alias: "n",
+        type: "string"
+      },
+      "template-font-path": {
+        alias: "p",
+        type: "string"
+      },
+      verbose: {
+        default: false,
+        type: "boolean"
+      },
+      version: {
+        alias: "v",
+        type: "boolean"
+      }
+    }
   }
 );
 
@@ -210,20 +249,20 @@ if (cli.flags.template) {
   optionsBase.template = cli.flags.template;
 }
 
-if (cli.flags.cssTemplateClassName) {
-  optionsBase.cssTemplateClassName = cli.flags.cssTemplateClassName;
+if (cli.flags.templateClassName) {
+  optionsBase.templateClassName = cli.flags.templateClassName;
 }
 
-if (cli.flags.cssTemplateFontPath) {
-  optionsBase.cssTemplateFontPath = cli.flags.cssTemplateFontPath;
+if (cli.flags.templateFontPath) {
+  optionsBase.templateFontPath = cli.flags.templateFontPath;
 }
 
-if (cli.flags.cssTemplateFontName) {
-  optionsBase.cssTemplateFontName = cli.flags.cssTemplateFontName;
+if (cli.flags.templateFontName) {
+  optionsBase.templateFontName = cli.flags.templateFontName;
 }
 
-if (cli.flags.destStyles) {
-  optionsBase.destStyles = cli.flags.destStyles;
+if (cli.flags.destTemplate) {
+  optionsBase.destTemplate = cli.flags.destTemplate;
 }
 
 if (cli.flags.verbose) {
@@ -282,6 +321,14 @@ if (cli.flags.metadata) {
   optionsBase.metadata = cli.flags.metadata;
 }
 
+if (cli.flags.help || cli.flags.h) {
+  cli.showHelp();
+}
+
+if (cli.flags.version || cli.flags.v) {
+  cli.showVersion();
+}
+
 Promise.resolve()
   .then(() =>
     Object.assign({}, optionsBase, {
@@ -293,103 +340,66 @@ Promise.resolve()
       cli.showHelp();
     }
 
-    if (!options.dest) {
-      throw new Error("Require `--dest` (`-d`) options");
-    }
+    return standalone(options).then(result => {
+      result.config = Object.assign(
+        {},
+        {
+          dest: options.dest,
+          destTemplate: options.destTemplate
+        },
+        result.config
+      );
 
-    return standalone(options)
-      .then(result => Promise.resolve(result))
-      .then(result => {
-        result.config = Object.assign(
-          {},
-          {
-            dest: options.dest,
-            destStyles: options.destStyles
-          },
-          result.config
-        );
-
-        return result;
-      });
+      return result;
+    });
   })
   .then(result => {
     const { fontName, dest } = result.config;
 
-    let destStyles = null;
+    let destTemplate = null;
 
-    if (result.styles) {
-      ({ destStyles } = result.config);
+    if (result.template) {
+      ({ destTemplate } = result.config);
 
-      if (!destStyles) {
-        destStyles = dest;
+      if (!destTemplate) {
+        destTemplate = dest;
       }
 
-      if (result.usedBuildInStylesTemplate) {
-        destStyles = path.join(
-          destStyles,
+      if (result.usedBuildInTemplate) {
+        destTemplate = path.join(
+          destTemplate,
           `${result.config.fontName}.${result.config.template}`
         );
       } else {
-        destStyles = path.join(
-          destStyles,
+        destTemplate = path.join(
+          destTemplate,
           path.basename(result.config.template).replace(".njk", "")
         );
       }
     }
 
-    return new Promise((resolve, reject) => {
-      mkdirp(path.resolve(dest), error => {
-        if (error) {
-          return reject(error);
-        }
-
-        return resolve();
-      });
-    })
-      .then(() => {
-        if (!result.styles) {
-          return null;
-        }
-
-        const stylesDirectory = path.resolve(path.dirname(destStyles));
-
-        return new Promise((resolve, reject) => {
-          mkdirp(stylesDirectory, error => {
-            if (error) {
-              return reject(error);
-            }
-
-            return resolve();
-          });
-        });
-      })
+    return Promise.resolve()
       .then(() =>
         Promise.all(
           Object.keys(result).map(type => {
-            if (type === "config" || type === "usedBuildInStylesTemplate") {
+            if (
+              type === "config" ||
+              type === "usedBuildInTemplate" ||
+              type === "glyphsData"
+            ) {
               return null;
             }
 
             const content = result[type];
-            let destFilename = null;
+            let file = null;
 
-            if (type !== "styles") {
-              destFilename = path.resolve(
-                path.join(dest, `${fontName}.${type}`)
-              );
+            if (type !== "template") {
+              file = path.resolve(path.join(dest, `${fontName}.${type}`));
             } else {
-              destFilename = path.resolve(destStyles);
+              file = path.resolve(destTemplate);
             }
 
-            return new Promise((resolve, reject) => {
-              fs.writeFile(destFilename, content, error => {
-                if (error) {
-                  return reject(new Error(error));
-                }
-
-                return resolve();
-              });
-            });
+            return fs.writeFile(file, content);
           })
         )
       )

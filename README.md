@@ -11,10 +11,12 @@ Generator of fonts from SVG icons.
 
 Features:
 
-* Supported font formats: WOFF2, WOFF, EOT, TTF and SVG.
-* Support configuration Files - use a JavaScript, JSON or YAML file to specify configuration information for an entire directory and all of its subdirectories.
+* Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF` and `SVG`.
+* Support configuration Files - use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories.
 * Supported browsers: IE8+.
-* Generates CSS files allows to use custom templates.
+* Allows to use custom templates (example `css`, `scss` and etc).
+* No extra dependencies as `gulp`, `grunt` or other big tools.
+* Tested on all platforms (`linux`, `windows` and `osx`).
 * CLI.
 
 ## Install
@@ -54,7 +56,7 @@ webfont({
 ### `files`
 
 A file glob, or array of file globs.
-Ultimately passed to [node-glob](https://github.com/isaacs/node-glob) to figure out what files you want to lint.
+Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
 
 `node_modules` and `bower_components` are always ignored.
 
@@ -85,21 +87,21 @@ Default: `null`
 Possible values: `css`, `scss` (feel free to contribute). If you want to use custom template use this option.
 Example: `template: path.resolve(__dirname, './my-template.css')`.
 
-### `cssTemplateClassName`
+### `templateClassName`
 
 Type: `string`
 Default: `null`
 
 Default font class name.
 
-### `cssTemplateFontPath`
+### `templateFontPath`
 
 Type: `string`
 Default: `./`
 
 Path to generated fonts in the `CSS` file.
 
-### `cssTemplateFontName`
+### `templateFontName`
 
 Type: `string`
 
@@ -117,6 +119,8 @@ Example:
 ```js
 glyphTransformFn: obj => {
   obj.name += "_transform";
+
+  return obj;
 };
 ```
 
@@ -157,54 +161,128 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
 
 ### Options
 
-```bash
+```sh
   Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2
 
-  Usage
-      $ webfont [input] [options]
+  Usage: webfont [input] [options]
 
-  Input
-      Files(s) or glob(s).
-      If an input argument is wrapped in quotation marks, it will be passed to node-glob
+  Input: File(s) or glob(s).
+
+      If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
       for cross-platform glob support.
 
-  Options
-      --config                       Path to a specific configuration file (JSON, YAML, or CommonJS)
-                                     or the name of a module in `node_modules` that points to one.
-                                     If no `--config` argument is provided, webfont will search for
-                                     configuration  files in the following places, in this order:
-                                         - a `webfont` property in `package.json`
-                                         - a `.webfontrc` file (with or without filename extension:
-                                             `.json`, `.yaml`, and `.js` are available)
-                                         - a `webfont.config.js` file exporting a JS object
-                                     The search will begin in the working directory and move up the
-                                     directory tree until a configuration file is found.
-      -f, --font-name                The font family name you want, default: "webfont".
-      -h, --help                     Output usage information.
-      -v, --version                  Output the version number.
-      -r, --formats                  Only this formats generate.
-      -d, --dest                     Destination for generated fonts (directory).
-      -t, --template                 Type of styles ('css', 'scss') or path to custom template.
-      -s, --dest-styles              Destination for generated styles (directory). If not passed used `dest` argument.
-      -c, --css-template-class-name  Class name in css template.
-      -p, --css-template-font-path   Font path in css template.
-      -n, --css-template-font-name   Font name in css template.
-      --verbose                      Tell me everything!.
+  Options:
+
+      --config
+
+          Path to a specific configuration file (JSON, YAML, or CommonJS)
+          or the name of a module in `node_modules` that points to one.
+          If no `--config` argument is provided, webfont will search for
+          configuration  files in the following places, in this order:
+             - a `webfont` property in `package.json`
+             - a `.webfontrc` file (with or without filename extension:
+                 `.json`, `.yaml`, and `.js` are available)
+             - a `webfont.config.js` file exporting a JS object
+          The search will begin in the working directory and move up the
+          directory tree until a configuration file is found.
+
+      -f, --font-name
+
+          The font family name you want, default: "webfont".
+
+      -h, --help
+
+          Output usage information.
+
+      -v, --version
+
+          Output the version number.
+
+      -r, --formats
+
+          Only this formats generate.
+
+      -d, --dest
+
+          Destination for generated fonts.
+
+      -t, --template
+
+          Type of template ('css', 'scss') or path to custom template.
+
+      -s, --dest-template
+
+          Destination for generated template. If not passed used `dest` argument value.
+
+      -c, --template-class-name  
+
+          Class name in css template.
+
+      -p, --template-font-path
+
+          Font path in css template.
+
+      -n, --template-font-name
+
+          Font name in css template.
+
+      --verbose
+
+          Tell me everything!.
 
   For "svgicons2svgfont":
-      --font-id                      The font id you want, default as "--font-name".
-      --font-style                   The font style you want.
-      --font-weight                  The font weight you want.
-      --fixed-width                  Creates a monospace font of the width of the largest input icon.
-      --center-horizontally          Calculate the bounds of a glyph and center it horizontally.
-      --normalize                    Normalize icons by scaling them to the height of the highest icon.
-      --font-height                  The outputted font height [MAX(icons.height)].
-      --round                        Setup the SVG path rounding [10e12].
-      --descent                      The font descent [0].
-      --ascent                       The font ascent [height - descent].
-      --start-unicode                The start unicode codepoint for unprefixed files [0xEA01].
-      --prepend-unicode              Prefix files with their automatically allocated unicode codepoint.
-      --metadata                     Content of the metadata tag.
+
+      --font-id
+
+          The font id you want, default as "--font-name".
+
+      --font-style
+
+          The font style you want.
+
+      --font-weight
+
+          The font weight you want.
+
+      --fixed-width
+
+          Creates a monospace font of the width of the largest input icon.
+
+      --center-horizontally
+
+          Calculate the bounds of a glyph and center it horizontally.
+
+      --normalize
+
+          Normalize icons by scaling them to the height of the highest icon.
+
+      --font-height
+
+          The outputted font height [MAX(icons.height)].
+
+      --round
+
+          Setup the SVG path rounding [10e12].
+
+      --descent
+
+          The font descent [0].
+
+      --ascent
+
+          The font ascent [height - descent].
+
+      --start-unicode
+
+          The start unicode codepoint for unprefixed files [0xEA01].
+
+      --prepend-unicode
+
+          Prefix files with their automatically allocated unicode codepoint.
+
+      --metadata
+
+          Content of the metadata tag.
 ```
 
 ### Exit codes
@@ -227,7 +305,6 @@ The CLI can exit the process with the following exit codes:
 
 * The ability to generate from any type to any type.
 * More tests, include CLI test.
-* Option `glyphTransformFn` should return object, not change passed.
 * Improved docs.
 * Reduce package size (maybe implement `ttf2woff2` with native js library).
 * Improve performance (maybe use cache for this).

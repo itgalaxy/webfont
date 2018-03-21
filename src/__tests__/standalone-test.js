@@ -82,9 +82,9 @@ test("should generate all fonts with build-in template", t => {
     t.true(isEot(result.eot));
     t.true(isWoff(result.woff));
     t.true(isWoff2(result.woff2));
-    t.regex(result.styles, /\.webfont-avatar/);
-    t.regex(result.styles, /\.webfont-envelope/);
-    t.regex(result.styles, /\.webfont-phone-call/);
+    t.regex(result.template, /\.webfont-avatar/);
+    t.regex(result.template, /\.webfont-envelope/);
+    t.regex(result.template, /\.webfont-phone-call/);
 
     return result;
   });
@@ -103,9 +103,9 @@ test("should generate only `woff and `woff2` fonts with build-in template", t =>
     t.true(typeof result.eot === "undefined");
     t.true(isWoff(result.woff));
     t.true(isWoff2(result.woff2));
-    t.regex(result.styles, /\.webfont-avatar/);
-    t.regex(result.styles, /\.webfont-envelope/);
-    t.regex(result.styles, /\.webfont-phone-call/);
+    t.regex(result.template, /\.webfont-avatar/);
+    t.regex(result.template, /\.webfont-envelope/);
+    t.regex(result.template, /\.webfont-phone-call/);
 
     return result;
   });
@@ -123,10 +123,10 @@ test("should generate all fonts with custom `template` with absolute path", t =>
     t.true(isEot(result.eot));
     t.true(isWoff(result.woff));
     t.true(isWoff2(result.woff2));
-    t.regex(result.styles, /\/\*\scustom template\s\*\//);
-    t.regex(result.styles, /\.webfont-avatar/);
-    t.regex(result.styles, /\.webfont-envelope/);
-    t.regex(result.styles, /\.webfont-phone-call/);
+    t.regex(result.template, /\/\*\scustom template\s\*\//);
+    t.regex(result.template, /\.webfont-avatar/);
+    t.regex(result.template, /\.webfont-envelope/);
+    t.regex(result.template, /\.webfont-phone-call/);
 
     return result;
   });
@@ -144,10 +144,10 @@ test("should generate all fonts with custom `template` with relative path", t =>
     t.true(isEot(result.eot));
     t.true(isWoff(result.woff));
     t.true(isWoff2(result.woff2));
-    t.regex(result.styles, /\/\*\scustom template\s\*\//);
-    t.regex(result.styles, /\.webfont-avatar/);
-    t.regex(result.styles, /\.webfont-envelope/);
-    t.regex(result.styles, /\.webfont-phone-call/);
+    t.regex(result.template, /\/\*\scustom template\s\*\//);
+    t.regex(result.template, /\.webfont-avatar/);
+    t.regex(result.template, /\.webfont-envelope/);
+    t.regex(result.template, /\.webfont-phone-call/);
 
     return result;
   });
@@ -184,9 +184,9 @@ test("should load config and respect `template` option with build-in template va
     t.true(isWoff(result.woff));
     t.true(isWoff2(result.woff2));
     t.true(result.config.template === "scss");
-    t.regex(result.styles, /\.webfont-avatar/);
-    t.regex(result.styles, /\.webfont-envelope/);
-    t.regex(result.styles, /\.webfont-phone-call/);
+    t.regex(result.template, /\.webfont-avatar/);
+    t.regex(result.template, /\.webfont-envelope/);
+    t.regex(result.template, /\.webfont-phone-call/);
 
     return result;
   });
@@ -207,9 +207,9 @@ test("should load config and respect `template` option with external template va
     t.true(
       result.config.template === "src/__tests__/fixtures/templates/template.css"
     );
-    t.regex(result.styles, /\.webfont-avatar/);
-    t.regex(result.styles, /\.webfont-envelope/);
-    t.regex(result.styles, /\.webfont-phone-call/);
+    t.regex(result.template, /\.webfont-avatar/);
+    t.regex(result.template, /\.webfont-envelope/);
+    t.regex(result.template, /\.webfont-phone-call/);
 
     return result;
   });
@@ -278,12 +278,55 @@ test("should create css selectors with transform titles through function", t => 
     formats: ["eot"],
     glyphTransformFn: obj => {
       obj.name += "_transform";
+
+      return obj;
     },
     template: "css"
   }).then(result => {
-    t.regex(result.styles, /\.webfont-avatar_transform/);
-    t.regex(result.styles, /\.webfont-envelope_transform/);
-    t.regex(result.styles, /\.webfont-phone-call_transform/);
+    t.regex(result.template, /\.webfont-avatar_transform/);
+    t.regex(result.template, /\.webfont-envelope_transform/);
+    t.regex(result.template, /\.webfont-phone-call_transform/);
+
+    return result;
+  });
+});
+
+test("should respect `template` options", t => {
+  t.plan(12);
+
+  return standalone({
+    files: `${fixturesPath}/svg-icons/**/*`,
+    template: "css",
+    templateClassName: "foo",
+    templateFontName: "bar",
+    templateFontPath: "./foo-bar"
+  }).then(result => {
+    t.true(isSvg(result.svg));
+    t.true(isTtf(result.ttf));
+    t.true(isEot(result.eot));
+    t.true(isWoff(result.woff));
+    t.true(isWoff2(result.woff2));
+    t.true(result.config.template === "css");
+    t.true(result.usedBuildInTemplate);
+    t.regex(result.template, /\.foo-avatar/);
+    t.regex(result.template, /\.foo-envelope/);
+    t.regex(result.template, /\.foo-phone-call/);
+    t.regex(result.template, /\.foo-phone-call/);
+    t.regex(result.template, /url\("\.\/foo-bar\/bar\.eot"\)/);
+
+    return result;
+  });
+});
+
+test("should export `glyphsData` in `result`", t => {
+  t.plan(2);
+
+  return standalone({
+    files: `${fixturesPath}/svg-icons/**/*`,
+    template: "css"
+  }).then(result => {
+    t.true(Array.isArray(result.glyphsData));
+    t.true(result.glyphsData.length > 0);
 
     return result;
   });

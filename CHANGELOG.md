@@ -4,11 +4,23 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
-## HEAD
+## 8.0.0 - 2018-03-21
 
+* Added: `demo` directory (thanks for [@shogo](https://github.com/ShogoFunaguchi)).
+* Changed: export `glyphsData` instead `foundFiles` (`glyphsData` contain all information about any glyph).
+* Changed: `result.styles` rename to `result.template` (for API).
+* Changed: `dest` by default `process.cwd()`.
+* Changed: rename `dest-styles` CLI option to `dest-template`.
+* Changed: rename `cssTemplateClassName` to `templateClassName`.
+* Changed: rename `cssTemplateFontPath` to `templateFontPath`.
+* Changed: rename `cssTemplateFontName` to `templateFontName`.
+* Changed: `glyphTransformFn` should always return glyph metadata.
 * Changed: minimum required `nodejs` version is now `6.9.5` (see [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont/blob/master/package.json#L41).
+* Changed: use `globby@8` (based on `fast-glob`, it is increase perf).
 * Chore: minimum used `svgicons2svgfont` package is now `^7.0.2`
 * Chore: minimum used `cosmiconfig` package is now `^4.0.0`
+* Fixed: don't use `globby` for getting build-in tempalte (better perf).
+* Fixed: always add trailing slash to `templateFontPath`.
 
 ## 7.1.4 - 2017-05-24
 

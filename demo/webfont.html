@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>webfont</title>
+    <style>
+      body {
+        margin: 0;
+        padding:10px 20px;
+        background: #fff;
+        color: #222;
+        font-family:"Helvetica Neue", Arial, sans-serif;
+      }
+      h1 {
+        margin:0 0 20px;
+        font-size: 32px;
+        font-weight: normal;
+      }
+      .icons {
+        margin-bottom: 40px;
+        -webkit-column-count: 5;
+           -moz-column-count: 5;
+                column-count: 5;
+      }
+      .icons__item {
+          padding: 4px 0;
+      }
+      .icons__item,
+      .icons__item i {
+          cursor:pointer;
+      }
+      .icons__item i {
+           font-size: 36px;
+      }
+      .icons__item:hover {
+          color:#3c90be;
+      }
+      @font-face {
+          font-family: webfont;
+          src: url("./webfont.eot");
+          src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2") format("woff2"), url("./webfont.woff") format("woff"), url("./webfont.ttf") format("truetype"), url("./webfont.svg#webfont") format("svg");
+          font-style: normal;
+          font-weight: 400;
+      }
+
+      .webfont {
+          display: inline-block;
+          transform: translate(0, 0);
+          text-rendering: auto;
+          font: normal normal 400 14px/1 webfont;
+          font-size: inherit;
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-font-smoothing: antialiased;
+      }
+
+      .webfont-lg {
+          vertical-align: -15%;
+          line-height: 0.75em;
+          font-size: 1.33333333em;
+      }
+
+      .webfont-2x {
+          font-size: 2em;
+      }
+
+      .webfont-3x {
+          font-size: 3em;
+      }
+
+      .webfont-4x {
+          font-size: 4em;
+      }
+
+      .webfont-5x {
+          font-size: 5em;
+      }
+
+      .webfont-fw {
+          width: 1.28571429em;
+          text-align: center;
+      }
+
+      .webfont-avatar::before {
+          content: "\ea01";
+      }
+
+      .webfont-envelope::before {
+          content: "\ea02";
+      }
+
+      .webfont-phone-call::before {
+          content: "\ea03";
+      }
+    </style>
+  </head>
+  <body>
+    <h1>List Icons</h1>
+      <div class="icons" id="icons">
+          
+              <div class="icons__item">
+                <i class="webfont webfont-avatar"></i>
+                <span>webfont-avatar</span>
+                </div>
+          
+              <div class="icons__item">
+                <i class="webfont webfont-envelope"></i>
+                <span>webfont-envelope</span>
+                </div>
+          
+              <div class="icons__item">
+                <i class="webfont webfont-phone-call"></i>
+                <span>webfont-phone-call</span>
+                </div>
+          
+      </div>
+  </body>
+</html>

@@ -1,4 +1,6 @@
 sudo: false
+dist: trusty
+language: node_js
 
 git:
   depth: 1
@@ -6,10 +8,8 @@ git:
 branches:
   only:
     - master
+    - next
 
-language: node_js
-
-# cache node modules
 cache:
   directories:
     - $HOME/.npm
@@ -18,19 +18,25 @@ cache:
 matrix:
   fast_finish: true
   include:
-    - node_js: '9'
+    - os: linux
+      node_js: '9'
       script: npm run $JOB_PART
       env: JOB_PART=pretest
-    - node_js: '9'
+    - os: linux
+      node_js: '9'
       script: npm run $JOB_PART
       env: JOB_PART=test-only
-    - node_js: '8'
+    - os: linux
+      node_js: '8'
       script: npm run $JOB_PART
       env: JOB_PART=test-only
-    - node_js: '6'
+    - os: linux
+      node_js: '6'
       script: npm run $JOB_PART
       env: JOB_PART=test-only
-      sudo: required
+    - os: osx
+      node_js: "8"
+      env: JOB_PART=test-only
 
 before_install:
   - 'if [[ `npm -v` != 5* ]]; then npm i -g npm@^5.0.0; fi'

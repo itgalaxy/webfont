@@ -16,8 +16,8 @@ This project adheres to [Semantic Versioning](http://semver.org).
 * Changed: rename `cssTemplateFontName` to `templateFontName`.
 * Changed: `glyphTransformFn` should always return glyph metadata.
 * Changed: minimum required `nodejs` version is now `6.9.5` (see [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont/blob/master/package.json#L41).
-* Changed: use `globby@8` (based on `fast-glob`, it is increase perf).
-* Chore: minimum used `svgicons2svgfont` package is now `^7.0.2`
+* Changed: use `globby@8` (based on `fast-glob`, it is better perf).
+* Chore: minimum used `svgicons2svgfont` package is now `^9.0.2`
 * Chore: minimum used `cosmiconfig` package is now `^4.0.0`
 * Fixed: don't use `globby` for getting build-in tempalte (better perf).
 * Fixed: always add trailing slash to `templateFontPath`.

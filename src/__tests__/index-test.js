@@ -1,4 +1,4 @@
-import index from "../index";
+import index from "..";
 import test from "ava";
 
 test("should exported", t => {

@@ -16,20 +16,24 @@ cache:
     - node_modules
 
 matrix:
+  fast_finish: true
   include:
+    - node_js: '9'
+      script: npm run $JOB_PART
+      env: JOB_PART=pretest
+    - node_js: '9'
+      script: npm run $JOB_PART
+      env: JOB_PART=test-only
     - node_js: '8'
-      script: npm run pretest
-      env: CI=pretest
-    - node_js: '8'
-      script: npm run test-only
-      env: CI=tests 8
+      script: npm run $JOB_PART
+      env: JOB_PART=test-only
     - node_js: '6'
-      script: npm run test-only
-      env: CI=tests 6
-    - node_js: '4'
-      script: npm run test-only
-      env: CI=tests 4
+      script: npm run $JOB_PART
+      env: JOB_PART=test-only
       sudo: required
 
 before_install:
-  - npm install -g npm@latest
+  - 'if [[ `npm -v` != 5* ]]; then npm i -g npm@^5.0.0; fi'
+  - nvm --version
+  - node --version
+  - npm --version

@@ -52,7 +52,7 @@
   ],
   "dependencies": {
     "async-throttle": "^1.1.0",
-    "cosmiconfig": "^3.0.0",
+    "cosmiconfig": "^4.0.0",
     "xml2js": "^0.4.17",
     "globby": "^6.0.0",
     "meow": "^3.3.0",
@@ -61,14 +61,15 @@
     "nunjucks": "^3.0.0",
     "resolve-from": "^4.0.0",
     "svg2ttf": "^4.0.0",
-    "svgicons2svgfont": "^7.0.2",
+    "svgicons2svgfont": "^9.0.2",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
     "ttf2woff2": "^2.0.0"
   },
   "devDependencies": {
-    "ava": "^0.23.0",
+    "ava": "^0.25.0",
     "babel-cli": "^6.22.2",
+    "babel-eslint": "^8.2.2",
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.9.0",
     "coveralls": "^3.0.0",
@@ -76,17 +77,17 @@
     "eslint": "^4.1.1",
     "eslint-plugin-ava": "^4.2.1",
     "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-itgalaxy": "^56.0.0",
+    "eslint-plugin-itgalaxy": "^66.0.0",
     "eslint-plugin-jest": "^21.2.0",
     "eslint-plugin-jsx-a11y": "^6.0.0",
     "eslint-plugin-lodash": "^2.4.3",
-    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-unicorn": "^2.1.2",
+    "eslint-plugin-unicorn": "^4.0.2",
     "is-eot": "^1.0.0",
-    "is-svg": "^2.0.0",
+    "is-svg": "^3.0.0",
     "is-ttf": "^0.2.0",
     "is-woff": "^1.0.0",
     "is-woff2": "^1.0.0",
@@ -94,19 +95,19 @@
     "npm-run-all": "^4.0.0",
     "nyc": "^11.0.0",
     "prettier": "^1.7.4",
-    "remark-cli": "^4.0.0",
-    "remark-preset-lint-itgalaxy": "^11.0.0",
+    "remark-cli": "^5.0.0",
+    "remark-preset-lint-itgalaxy": "^12.0.0",
     "rimraf": "^2.5.2",
     "husky": "^0.14.0",
-    "lint-staged": "^5.0.0"
+    "lint-staged": "^7.0.0"
   },
   "scripts": {
     "precommit": "lint-staged",
-    "lint:eslint": "eslint . --ignore-path .gitignore  --color",
-    "lint:prettier": "prettier --list-different 'src/**/*.js' '*.js'",
+    "lint:eslint": "eslint . --report-unused-disable-directives --ignore-path .gitignore  --color",
+    "lint:prettify": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,md}' '!{package,composer}*.json' --ignore-path .gitignore",
     "lint:remark": "remark . -i .gitignore -f -q",
     "lint": "npm-run-all -l --parallel lint:*",
-    "fix:prettier": "prettier --write 'src/**/*.js' '*.js'",
+    "prettify": "npm run lint:prettify -- --write",
     "fix:eslint": "eslint . '.*.js' --fix --ignore-path .gitignore --ext '.js,.jsx'",
     "fix": "npm-run-all -l -p 'fix:**'",
     "pretest": "npm run lint",
@@ -166,6 +167,6 @@
     ]
   },
   "engines": {
-    "node": ">= 4.3 < 5.0.0 || >= 5.10"
+    "node": ">= 6.9.5 || >= 8.9.0"
   }
 }

@@ -184,7 +184,6 @@ export default function(initialOptions) {
       normalize: false,
       prependUnicode: false,
       round: 10e12,
-      // eslint-disable-next-line prettier/prettier
       startUnicode: 0xea01,
       template: null,
       verbose: false
@@ -264,53 +263,59 @@ export default function(initialOptions) {
             "../templates"
           );
 
-          return globby(
-            `${buildInTemplateDirectory}/**/*`
-          ).then(buildInTemplates => {
-            const supportedExtensions = buildInTemplates.map(buildInTemplate =>
-              path.extname(buildInTemplate.replace(".njk", ""))
-            );
+          return globby(`${buildInTemplateDirectory}/**/*`).then(
+            buildInTemplates => {
+              const supportedExtensions = buildInTemplates.map(
+                buildInTemplate =>
+                  path.extname(buildInTemplate.replace(".njk", ""))
+              );
 
-            let templateFilePath = options.template;
+              let templateFilePath = options.template;
 
-            if (supportedExtensions.indexOf(`.${options.template}`) !== -1) {
-              result.usedBuildInStylesTemplate = true;
+              if (supportedExtensions.indexOf(`.${options.template}`) !== -1) {
+                result.usedBuildInStylesTemplate = true;
 
-              nunjucks.configure(path.join(__dirname, "../"));
+                nunjucks.configure(path.join(__dirname, "../"));
 
-              templateFilePath = `${buildInTemplateDirectory}/template.${options.template}.njk`;
-            } else {
-              templateFilePath = path.resolve(templateFilePath);
-            }
-
-            const nunjucksOptions = merge(
-              {},
-              {
-                // Maybe best solution is return metadata object of glyph.
-                glyphs: glyphsData.map(glyphData => {
-                  if (typeof options.glyphTransformFn === "function") {
-                    options.glyphTransformFn(glyphData.metadata);
-                  }
-
-                  return glyphData.metadata;
-                })
-              },
-              options,
-              {
-                className: options.cssTemplateClassName
-                  ? options.cssTemplateClassName
-                  : options.fontName,
-                fontName: options.cssTemplateFontName
-                  ? options.cssTemplateFontName
-                  : options.fontName,
-                fontPath: options.cssTemplateFontPath
+                templateFilePath = `${buildInTemplateDirectory}/template.${
+                  options.template
+                }.njk`;
+              } else {
+                templateFilePath = path.resolve(templateFilePath);
               }
-            );
 
-            result.styles = nunjucks.render(templateFilePath, nunjucksOptions);
+              const nunjucksOptions = merge(
+                {},
+                {
+                  // Maybe best solution is return metadata object of glyph.
+                  glyphs: glyphsData.map(glyphData => {
+                    if (typeof options.glyphTransformFn === "function") {
+                      options.glyphTransformFn(glyphData.metadata);
+                    }
 
-            return result;
-          });
+                    return glyphData.metadata;
+                  })
+                },
+                options,
+                {
+                  className: options.cssTemplateClassName
+                    ? options.cssTemplateClassName
+                    : options.fontName,
+                  fontName: options.cssTemplateFontName
+                    ? options.cssTemplateFontName
+                    : options.fontName,
+                  fontPath: options.cssTemplateFontPath
+                }
+              );
+
+              result.styles = nunjucks.render(
+                templateFilePath,
+                nunjucksOptions
+              );
+
+              return result;
+            }
+          );
         })
         .then(result => {
           if (options.formats.indexOf("svg") === -1) {

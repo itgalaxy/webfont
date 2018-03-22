@@ -79,7 +79,7 @@ function getGlyphsData(files, options) {
   );
 }
 
-function svgIcons2svgFontFn(glyphsData, options) {
+function svgIcons2svgFont(glyphsData, options) {
   let result = "";
 
   return new Promise((resolve, reject) => {
@@ -142,7 +142,7 @@ function buildConfig(options) {
         return {};
       }
 
-      return result.config;
+      return result;
     });
 }
 
@@ -194,7 +194,10 @@ export default function(initialOptions) {
   return buildConfig({
     configFile: options.configFile
   }).then(loadedConfig => {
-    options = merge({}, options, loadedConfig);
+    if (Object.keys(loadedConfig).length > 0) {
+      options = merge({}, options, loadedConfig.config);
+      options.filePath = loadedConfig.filepath;
+    }
 
     return (
       globby([].concat(options.files))
@@ -214,7 +217,7 @@ export default function(initialOptions) {
         .then(returnedGlyphsData => {
           glyphsData = returnedGlyphsData;
 
-          return svgIcons2svgFontFn(returnedGlyphsData, options);
+          return svgIcons2svgFont(returnedGlyphsData, options);
         })
         // Maybe add ttfautohint
         .then(svgFont => {
@@ -255,26 +258,23 @@ export default function(initialOptions) {
             return result;
           }
 
-          const buildInTemplateDirectory = path.resolve(
-            __dirname,
-            "../templates"
-          );
+          const buildInTemplateDirectory = path.join(__dirname, "../templates");
           const buildInTemplates = {
             css: {
-              path: path.resolve(buildInTemplateDirectory, "template.css.njk")
+              path: path.join(buildInTemplateDirectory, "template.css.njk")
             },
             html: {
-              path: path.resolve(
+              path: path.join(
                 buildInTemplateDirectory,
                 "template.preview-html.njk"
               )
             },
             scss: {
-              path: path.resolve(buildInTemplateDirectory, "template.scss.njk")
+              path: path.join(buildInTemplateDirectory, "template.scss.njk")
             }
           };
 
-          let templateFilePath = options.template;
+          let templateFilePath = null;
 
           if (Object.keys(buildInTemplates).includes(options.template)) {
             result.usedBuildInTemplate = true;
@@ -285,7 +285,7 @@ export default function(initialOptions) {
               options.template
             }.njk`;
           } else {
-            templateFilePath = path.resolve(templateFilePath);
+            templateFilePath = path.resolve(options.template);
           }
 
           const nunjucksOptions = merge(

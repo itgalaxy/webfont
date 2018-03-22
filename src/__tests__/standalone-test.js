@@ -116,7 +116,7 @@ test("should generate all fonts with custom `template` with absolute path", t =>
 
   return standalone({
     files: `${fixturesPath}/svg-icons/**/*`,
-    template: `${fixturesPath}/templates/template.css`
+    template: path.join(fixturesPath, "templates/template.css")
   }).then(result => {
     t.true(isSvg(result.svg));
     t.true(isTtf(result.ttf));
@@ -137,7 +137,7 @@ test("should generate all fonts with custom `template` with relative path", t =>
 
   return standalone({
     files: `${fixturesPath}/svg-icons/**/*`,
-    template: `src/__tests__/fixtures/templates/template.css`
+    template: "src/__tests__/fixtures/templates/template.css"
   }).then(result => {
     t.true(isSvg(result.svg));
     t.true(isTtf(result.ttf));
@@ -153,11 +153,13 @@ test("should generate all fonts with custom `template` with relative path", t =>
   });
 });
 
-test("should load config", t => {
-  t.plan(6);
+test("should load config and export file path in result", t => {
+  t.plan(7);
+
+  const configFile = path.join(fixturesPath, "configs/.webfontrc");
 
   return standalone({
-    configFile: `${fixturesPath}/configs/.webfontrc`,
+    configFile,
     files: `${fixturesPath}/svg-icons/**/*`
   }).then(result => {
     t.true(isSvg(result.svg));
@@ -166,6 +168,7 @@ test("should load config", t => {
     t.true(isWoff(result.woff));
     t.true(isWoff2(result.woff2));
     t.true(result.config.foo === "bar");
+    t.true(result.config.filePath === configFile);
 
     return result;
   });
@@ -174,8 +177,13 @@ test("should load config", t => {
 test("should load config and respect `template` option with build-in template value", t => {
   t.plan(9);
 
+  const configFile = path.join(
+    fixturesPath,
+    "configs/.webfontrc-with-build-in-template"
+  );
+
   return standalone({
-    configFile: `${fixturesPath}/configs/.webfontrc-with-build-in-template`,
+    configFile,
     files: `${fixturesPath}/svg-icons/**/*`
   }).then(result => {
     t.true(isSvg(result.svg));
@@ -195,8 +203,13 @@ test("should load config and respect `template` option with build-in template va
 test("should load config and respect `template` option with external template value", t => {
   t.plan(9);
 
+  const configFile = path.join(
+    fixturesPath,
+    "configs/.webfontrc-with-external-template"
+  );
+
   return standalone({
-    configFile: `${fixturesPath}/configs/.webfontrc-with-external-template`,
+    configFile,
     files: `${fixturesPath}/svg-icons/**/*`
   }).then(result => {
     t.true(isSvg(result.svg));
@@ -218,8 +231,10 @@ test("should load config and respect `template` option with external template va
 test("should throw error on bad svg images - `Unclosed root tag`", t => {
   t.plan(1);
 
+  const configFile = path.join(fixturesPath, "configs/.webfontrc");
+
   return standalone({
-    configFile: `${fixturesPath}/configs/.webfontrc`,
+    configFile,
     files: `${fixturesPath}/bad-svg-icons/avatar.svg`
   }).catch(error => {
     t.regex(error.message, /Unclosed root tag/);
@@ -229,8 +244,10 @@ test("should throw error on bad svg images - `Unclosed root tag`", t => {
 test("should throw error on bad svg images - `Unterminated command at index`", t => {
   t.plan(1);
 
+  const configFile = path.join(fixturesPath, "configs/.webfontrc");
+
   return standalone({
-    configFile: `${fixturesPath}/configs/.webfontrc`,
+    configFile,
     files: `${fixturesPath}/bad-svg-icons/avatar-1.svg`
   }).catch(error => {
     t.regex(error.message, /Unterminated command at index/);
@@ -240,8 +257,10 @@ test("should throw error on bad svg images - `Unterminated command at index`", t
 test('should throw error on bad svg images - `Unexpected character "N"`', t => {
   t.plan(1);
 
+  const configFile = path.join(fixturesPath, "configs/.webfontrc");
+
   return standalone({
-    configFile: `${fixturesPath}/configs/.webfontrc`,
+    configFile,
     files: `${fixturesPath}/bad-svg-icons/avatar-2.svg`
   }).catch(error => {
     t.regex(error.message, /Unexpected character "N"/);
@@ -251,8 +270,10 @@ test('should throw error on bad svg images - `Unexpected character "N"`', t => {
 test("should throw error on bad svg images - empty file", t => {
   t.plan(1);
 
+  const configFile = path.join(fixturesPath, "configs/.webfontrc");
+
   return standalone({
-    configFile: `${fixturesPath}/configs/.webfontrc`,
+    configFile,
     files: `${fixturesPath}/bad-svg-icons/avatar-3.svg`
   }).catch(error => {
     t.regex(error.message, /Empty file/);
@@ -262,8 +283,10 @@ test("should throw error on bad svg images - empty file", t => {
 test("should throw error of config file not found", t => {
   t.plan(1);
 
+  const configFile = path.join(fixturesPath, "configs/.not-exist-webfontrc");
+
   return standalone({
-    configFile: `${fixturesPath}/configs/.not-exist-webfontrc`,
+    configFile,
     files: `${fixturesPath}/svg-icons/**/*`
   }).catch(error => {
     t.true(error.code === "ENOENT");

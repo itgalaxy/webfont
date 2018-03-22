@@ -1,6 +1,6 @@
 {
   "name": "webfont",
-  "version": "8.0.0",
+  "version": "8.1.0",
   "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
   "license": "MIT",
   "author": "itgalaxy <development@itgalaxy.company>",

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## 8.1.0 - 2018-03-22
+
+* Feat: export `config` path when he is using (in `result.config.filePath`).
+
 ## 8.0.0 - 2018-03-21
 
 * Added: `demo` directory (thanks for [@shogo](https://github.com/ShogoFunaguchi)).

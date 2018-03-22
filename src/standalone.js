@@ -285,7 +285,11 @@ export default function(initialOptions) {
               options.template
             }.njk`;
           } else {
-            templateFilePath = path.resolve(options.template);
+            const resolvedTemplateFilePath = path.resolve(options.template);
+
+            nunjucks.configure(path.dirname(resolvedTemplateFilePath));
+
+            templateFilePath = path.resolve(resolvedTemplateFilePath);
           }
 
           const nunjucksOptions = merge(

@@ -53,18 +53,19 @@
   "dependencies": {
     "async-throttle": "^1.1.0",
     "cosmiconfig": "^4.0.0",
-    "xml2js": "^0.4.17",
+    "fs-extra": "^5.0.0",
     "globby": "^8.0.1",
     "meow": "^4.0.0",
-    "fs-extra": "^5.0.0",
     "merge-deep": "^3.0.0",
     "nunjucks": "^3.0.0",
     "resolve-from": "^4.0.0",
     "svg2ttf": "^4.0.0",
     "svgicons2svgfont": "^9.0.2",
+    "temp": "^0.8.3",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
-    "ttf2woff2": "^2.0.0"
+    "ttf2woff2": "^2.0.0",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "ava": "^0.25.0",

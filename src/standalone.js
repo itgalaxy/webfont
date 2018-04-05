@@ -3,6 +3,7 @@ import SVGIcons2SVGFontStream from "svgicons2svgfont";
 import cosmiconfig from "cosmiconfig";
 import createThrottle from "async-throttle";
 import defaultMetadataProvider from "svgicons2svgfont/src/metadata";
+import { exec } from "child_process";
 import fileSorter from "svgicons2svgfont/src/filesorter";
 import fs from "fs";
 import globby from "globby";
@@ -11,6 +12,7 @@ import nunjucks from "nunjucks";
 import os from "os";
 import path from "path";
 import svg2ttf from "svg2ttf";
+import temp from "temp";
 import ttf2eot from "ttf2eot";
 import ttf2woff from "ttf2woff";
 import ttf2woff2 from "ttf2woff2";
@@ -146,6 +148,51 @@ function buildConfig(options) {
     });
 }
 
+// auto hinting from grunt-webfont project
+// https://github.com/sapegin/grunt-webfont
+function autohintTtfFont(font, options, done) {
+  const tempDir = temp.mkdirSync(); // eslint-disable-line no-sync
+  const originalFilepath = path.join(tempDir, "font.ttf");
+  const hintedFilepath = path.join(tempDir, "hinted.ttf");
+
+  if (!options.autoHint) {
+    done(false);
+
+    return;
+  }
+
+  // Save original font to temporary directory
+  fs.writeFileSync(originalFilepath, font); // eslint-disable-line no-sync
+
+  // Run ttfautohint
+  const args = [
+    "ttfautohint",
+    "--symbol",
+    "--fallback-script=latn",
+    "--windows-compatibility",
+    "--no-info",
+    originalFilepath,
+    hintedFilepath
+  ].join(" ");
+
+  exec(args, { maxBuffer: options.execMaxBuffer }, err => {
+    if (err) {
+      if (err.code === 127) {
+        done(false);
+
+        return;
+      }
+
+      done(false);
+
+      return;
+    }
+
+    // Read hinted font back
+    done(fs.readFileSync(hintedFilepath)); // eslint-disable-line no-sync
+  });
+}
+
 export default function(initialOptions) {
   if (!initialOptions || !initialOptions.files) {
     throw new Error("You must pass webfont a `files` glob");
@@ -219,7 +266,6 @@ export default function(initialOptions) {
 
           return svgIcons2svgFont(returnedGlyphsData, options);
         })
-        // Maybe add ttfautohint
         .then(svgFont => {
           const result = {};
 
@@ -234,6 +280,13 @@ export default function(initialOptions) {
                 : {}
             ).buffer
           );
+
+          autohintTtfFont(result.ttf, hintedFont => {
+            // ttfautohint is optional
+            if (hintedFont) {
+              result.ttf = hintedFont;
+            }
+          });
 
           if (options.formats.indexOf("eot") !== -1) {
             result.eot = Buffer.from(ttf2eot(result.ttf).buffer);

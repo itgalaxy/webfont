@@ -12,9 +12,11 @@
     }
   ],
   "repository": {
-    "type": "https",
-    "url": "https://github.com/itgalaxy/webfont"
+    "type": "git",
+    "url": "https://github.com/itgalaxy/webfont.git"
   },
+  "homepage": "https://github.com/itgalaxy/webfont",
+  "bugs": "https://github.com/itgalaxy/webfonty/issues",
   "keywords": [
     "cli",
     "standalone",
@@ -40,9 +42,6 @@
     "builder",
     "generator"
   ],
-  "bugs": {
-    "url": "https://github.com/itgalaxy/webfont/issues"
-  },
   "main": "dist/index.js",
   "bin": "dist/cli.js",
   "files": [

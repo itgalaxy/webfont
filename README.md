@@ -18,6 +18,7 @@ Features:
 * No extra dependencies as `gulp`, `grunt` or other big tools.
 * Tested on all platforms (`linux`, `windows` and `osx`).
 * CLI.
+* [Webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin).
 
 ## Install
 
@@ -295,6 +296,7 @@ The CLI can exit the process with the following exit codes:
 
 ## Related
 
+* [Webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin) - `webpack` plugin.
 * [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) - Simple tool to merge multiple icons to an SVG font.
 * [svg2ttf](https://github.com/fontello/svg2ttf) - Converts SVG fonts to TTF format.
 * [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
@@ -308,8 +310,6 @@ The CLI can exit the process with the following exit codes:
 * Improved docs.
 * Reduce package size (maybe implement `ttf2woff2` with native js library).
 * Improve performance (maybe use cache for this).
-* Implement `webpack` loader.
-* Close all issues.
 
 ## Contribution
 

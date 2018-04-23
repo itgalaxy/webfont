@@ -24,12 +24,11 @@ function getGlyphsData(files, options) {
       startUnicode: options.startUnicode
     });
 
-  const sortedFiles = files.sort((fileA, fileB) => fileSorter(fileA, fileB));
   const xmlParser = new xml2js.Parser();
   const throttle = createThrottle(options.maxConcurrency);
 
   return Promise.all(
-    sortedFiles.map(srcPath =>
+    files.map(srcPath =>
       throttle(
         () =>
           new Promise((resolve, reject) => {
@@ -61,7 +60,15 @@ function getGlyphsData(files, options) {
                 });
               });
           })
-      ).then(
+      )
+    )
+  ).then(glyphsData => {
+    const sortedGlyphsData = glyphsData.sort((fileA, fileB) =>
+      fileSorter(fileA.srcPath, fileB.srcPath)
+    );
+
+    return Promise.all(
+      sortedGlyphsData.map(
         glyphData =>
           new Promise((resolve, reject) => {
             metadataProvider(glyphData.srcPath, (error, metadata) => {
@@ -75,8 +82,8 @@ function getGlyphsData(files, options) {
             });
           })
       )
-    )
-  );
+    );
+  });
 }
 
 function svgIcons2svgFont(glyphsData, options) {

@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import isEot from "is-eot";
 import isSvg from "is-svg";
 import isTtf from "is-ttf";
@@ -31,6 +32,50 @@ test("should generate all fonts", t => {
     t.true(isEot(result.eot));
     t.true(isWoff(result.woff));
     t.true(isWoff2(result.woff2));
+
+    return result;
+  });
+});
+
+// Need search better way to test `fs` delay
+test("should generate all fonts and will be deterministic", t => {
+  t.plan(10);
+
+  return standalone({
+    files: `${fixturesPath}/svg-icons/**/*`
+  }).then(result => {
+    t.true(isSvg(result.svg));
+    t.true(isTtf(result.ttf));
+    t.true(isEot(result.eot));
+    t.true(isWoff(result.woff));
+    t.true(isWoff2(result.woff2));
+
+    const svgHash = crypto
+      .createHash("md5")
+      .update(result.svg)
+      .digest("hex");
+    const ttfHash = crypto
+      .createHash("md5")
+      .update(result.ttf)
+      .digest("hex");
+    const eotHash = crypto
+      .createHash("md5")
+      .update(result.eot)
+      .digest("hex");
+    const woffHash = crypto
+      .createHash("md5")
+      .update(result.woff)
+      .digest("hex");
+    const woff2Hash = crypto
+      .createHash("md5")
+      .update(result.woff2)
+      .digest("hex");
+
+    t.true(svgHash === "ead2b6f69fc603bf1cbd00bf9f8a8a33");
+    t.true(ttfHash === "8ffaa42f84b0835c7c250ec16e8f5d78");
+    t.true(eotHash === "cc86496a4fd871e31a79043a7ba96a07");
+    t.true(woffHash === "e90fb075e22ab56621e1caf13c52ef17");
+    t.true(woff2Hash === "8c0bd62996d1e84ebd01263adf6aa163");
 
     return result;
   });

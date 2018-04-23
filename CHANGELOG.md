@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## 8.1.2 - 2018-04-23
+
+* Fixed: deterministic output (i.e. each glyph in font have same unicode in font).
+
 ## 8.1.1 - 2018-03-22
 
 * Fixed: always configure `nunjucks` for template path.

@@ -43,7 +43,7 @@ matrix:
       env: JOB_PART=test-only
 
 before_install:
-  - 'if [[ `npm -v` != 5* ]]; then npm i -g npm@^5.0.0; fi'
+  - npm install -g npm@latest
   - nvm --version
   - node --version
   - npm --version

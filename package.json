@@ -1,6 +1,6 @@
 {
   "name": "webfont",
-  "version": "8.1.2",
+  "version": "8.1.3",
   "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
   "license": "MIT",
   "author": "itgalaxy <development@itgalaxy.company>",
@@ -54,7 +54,7 @@
     "cosmiconfig": "^4.0.0",
     "xml2js": "^0.4.17",
     "globby": "^8.0.1",
-    "meow": "^4.0.0",
+    "meow": "^5.0.0",
     "fs-extra": "^5.0.0",
     "merge-deep": "^3.0.0",
     "nunjucks": "^3.0.0",

@@ -54,3 +54,5 @@ jspm_packages
 
 # Composer
 lib/vendor
+
+dist

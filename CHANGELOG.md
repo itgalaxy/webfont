@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org).
 ## 8.1.3 - 2018-04-25
 
 * Chore: minimum require `meow` version is now `^5.0.0`.
+* Chore: drop `merge-deep` in favor `lodash.merge`.
 
 ## 8.1.2 - 2018-04-23
 

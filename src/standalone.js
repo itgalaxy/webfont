@@ -6,7 +6,7 @@ import defaultMetadataProvider from "svgicons2svgfont/src/metadata";
 import fileSorter from "svgicons2svgfont/src/filesorter";
 import fs from "fs";
 import globby from "globby";
-import merge from "merge-deep";
+import merge from "lodash.merge";
 import nunjucks from "nunjucks";
 import os from "os";
 import path from "path";

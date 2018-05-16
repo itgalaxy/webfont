@@ -219,13 +219,17 @@ export default function(initialOptions) {
             );
           }
 
-          return getGlyphsData(foundFiles, options);
+          return filteredFiles;
         })
-        .then(returnedGlyphsData => {
-          glyphsData = returnedGlyphsData;
+        .then(files =>
+          Promise.resolve()
+            .then(() => getGlyphsData(files, options))
+            .then(generatedDataInternal => {
+              glyphsData = generatedDataInternal;
 
-          return svgIcons2svgFont(returnedGlyphsData, options);
-        })
+              return svgIcons2svgFont(generatedDataInternal, options);
+            })
+        )
         // Maybe add ttfautohint
         .then(svgFont => {
           const result = {};

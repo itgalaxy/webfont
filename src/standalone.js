@@ -128,12 +128,6 @@ function svgIcons2svgFont(glyphsData, options) {
 }
 
 function buildConfig(options) {
-  const cosmiconfigOptions = {
-    argv: true,
-    // Allow extensions on rc filenames
-    rcExtensions: true
-  };
-
   let searchPath = process.cwd();
   let configPath = null;
 
@@ -142,15 +136,18 @@ function buildConfig(options) {
     configPath = path.resolve(process.cwd(), options.configFile);
   }
 
-  return cosmiconfig("webfont", cosmiconfigOptions)
-    .load(searchPath, configPath)
-    .then(result => {
-      if (!result) {
-        return {};
-      }
+  const configExplorer = cosmiconfig("webfont");
+  const searchForConfig = configPath
+    ? configExplorer.load(configPath)
+    : configExplorer.search(searchPath);
 
-      return result;
-    });
+  return searchForConfig.then(result => {
+    if (!result) {
+      return {};
+    }
+
+    return result;
+  });
 }
 
 export default function(initialOptions) {

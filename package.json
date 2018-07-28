@@ -85,7 +85,7 @@
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.1.0",
-    "eslint-plugin-unicorn": "^4.0.2",
+    "eslint-plugin-unicorn": "^5.0.0",
     "is-eot": "^1.0.0",
     "is-svg": "^3.0.0",
     "is-ttf": "^0.2.0",

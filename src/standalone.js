@@ -101,7 +101,7 @@ function svgIcons2svgFont(glyphsData, options) {
       fontStyle: options.fontStyle,
       fontWeight: options.fontWeight,
       // eslint-disable-next-line no-console, no-empty-function
-      log: options.vebose ? console.log.bind(console) : () => {},
+      log: options.verbose ? console.log.bind(console) : () => {},
       metadata: options.metadata,
       normalize: options.normalize,
       round: options.round

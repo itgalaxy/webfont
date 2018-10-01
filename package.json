@@ -82,7 +82,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.0",
     "eslint-plugin-lodash": "^2.4.3",
     "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-prettier": "^2.1.2",
+    "eslint-plugin-prettier": "^3.0.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.1.0",
     "eslint-plugin-unicorn": "^4.0.2",

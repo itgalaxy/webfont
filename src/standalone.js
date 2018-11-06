@@ -63,9 +63,11 @@ function getGlyphsData(files, options) {
       )
     )
   ).then(glyphsData => {
-    const sortedGlyphsData = glyphsData.sort((fileA, fileB) =>
-      fileSorter(fileA.srcPath, fileB.srcPath)
-    );
+    const sortedGlyphsData = !options.sort
+      ? glyphsData
+      : glyphsData.sort((fileA, fileB) =>
+          fileSorter(fileA.srcPath, fileB.srcPath)
+        );
 
     return Promise.all(
       sortedGlyphsData.map(
@@ -183,6 +185,7 @@ export default function(initialOptions) {
       normalize: false,
       prependUnicode: false,
       round: 10e12,
+      sort: true,
       startUnicode: 0xea01,
       template: null,
       templateClassName: null,

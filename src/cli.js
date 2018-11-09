@@ -46,7 +46,7 @@ const cli = meow(
 
             Only this formats generate.
 
-        -d, --dest 
+        -d, --dest
 
             Destination for generated fonts.
 
@@ -58,7 +58,7 @@ const cli = meow(
 
             Destination for generated template. If not passed used \`dest\` argument value.
 
-        -c, --template-class-name  
+        -c, --template-class-name
 
             Class name in css template.
 
@@ -70,8 +70,12 @@ const cli = meow(
 
             Font name in css template.
 
-        --verbose   
-        
+        --no-sort
+
+            Keeps the files in the same order of entry
+
+        --verbose
+
             Tell me everything!.
 
     For "svgicons2svgfont":
@@ -187,6 +191,10 @@ const cli = meow(
       },
       round: {
         type: "string"
+      },
+      sort: {
+        default: false,
+        type: "boolean"
       },
       "start-unicode": {
         type: "string"
@@ -319,6 +327,10 @@ if (cli.flags.prependUnicode) {
 
 if (cli.flags.metadata) {
   optionsBase.metadata = cli.flags.metadata;
+}
+
+if (cli.flags.sort === false) {
+  optionsBase.sort = cli.flags.sort;
 }
 
 if (cli.flags.help || cli.flags.h) {

@@ -273,6 +273,35 @@ test("should load config and respect `template` option with external template va
   });
 });
 
+test("should generate the ordered output source in the same order of entry", t => {
+  t.plan(1);
+
+  const templateOutput = `
+    .webfont-envelope::before {
+      content: "\\ea01";
+    }
+    .webfont-avatar::before {
+      content: "\\ea02";
+    }
+  `;
+
+  return standalone({
+    files: [
+      `${fixturesPath}/svg-icons/envelope.svg`,
+      `${fixturesPath}/svg-icons/avatar.svg`
+    ],
+    sort: false,
+    template: path.join(fixturesPath, "templates/template-ordered.css")
+  }).then(result => {
+    t.is(
+      templateOutput.replace(/(\n|\r|\s)/g, ""),
+      result.template.replace(/(\n|\r|\s)/g, "")
+    );
+
+    return result;
+  });
+});
+
 test("should throw error on bad svg images - `Unclosed root tag`", t => {
   t.plan(1);
 

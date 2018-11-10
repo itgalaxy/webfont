@@ -125,6 +125,13 @@ glyphTransformFn: obj => {
 };
 ```
 
+### `sort`
+
+Type: `bool`
+Default: `true`
+
+Default the icons are sorted by name, do not sort by setting this to `false`
+
 ### `fontId`
 
 ### `fontStyle`
@@ -215,7 +222,7 @@ The interface for command-line usage is fairly simplistic at this stage, as seen
 
           Destination for generated template. If not passed used `dest` argument value.
 
-      -c, --template-class-name  
+      -c, --template-class-name
 
           Class name in css template.
 

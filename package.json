@@ -66,11 +66,13 @@
     "ttf2woff2": "^2.0.0"
   },
   "devDependencies": {
-    "ava": "^0.25.0",
-    "babel-cli": "^6.22.2",
+    "@babel/core": "^7.1.5",
+    "@babel/cli": "^7.1.5",
+    "@babel/preset-env": "^7.1.5",
+    "@babel/register": "^7.0.0",
+    "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-preset-env": "^1.6.0",
-    "babel-register": "^6.9.0",
+    "babel-jest": "23.6.0",
     "coveralls": "^3.0.0",
     "cross-env": "^5.0.0",
     "execa": "^1.0.0",
@@ -92,6 +94,7 @@
     "is-ttf": "^0.2.0",
     "is-woff": "^1.0.0",
     "is-woff2": "^1.0.0",
+    "jest": "23.6.0",
     "npmpub": "^4.1.0",
     "npm-run-all": "^4.0.0",
     "nyc": "^13.1.0",
@@ -111,23 +114,18 @@
     "fix:js": "npm run lint:js -- --fix",
     "fix": "npm-run-all -l prettify -p 'fix:**'",
     "pretest": "npm run lint",
-    "test-only": "nyc ava --verbose",
-    "test": "npm run test-only",
+    "test-only": "jest",
+    "test": "npm run test-only -- --coverage",
     "prebuild": "rimraf dist",
     "demo": "node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
-    "build": "babel src --out-dir dist --ignore /__tests__/",
+    "build": "babel src --out-dir dist --ignore '**/__tests__/**'",
     "prepublish": "npm-run-all build",
     "release": "npmpub"
-  },
-  "ava": {
-    "require": "babel-register",
-    "concurrency": 5,
-    "babel": "inherit"
   },
   "babel": {
     "presets": [
       [
-        "env",
+        "@babel/preset-env",
         {
           "targets": {
             "node": "6.9.5"
@@ -141,7 +139,7 @@
       "sourceType": "script"
     },
     "extends": [
-      "plugin:itgalaxy/ava",
+      "plugin:itgalaxy/jest",
       "plugin:itgalaxy/node",
       "plugin:itgalaxy/esnext",
       "plugin:itgalaxy/markdown"

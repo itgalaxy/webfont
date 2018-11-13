@@ -1,6 +1,7 @@
 import index from "..";
-import test from "ava";
 
-test("should exported", t => {
-  t.true(typeof index === "function");
+describe("index", () => {
+  it("should exported", () => {
+    expect(typeof index === "function").toBe(true);
+  });
 });

@@ -63,11 +63,11 @@ function getGlyphsData(files, options) {
       )
     )
   ).then(glyphsData => {
-    const sortedGlyphsData = !options.sort
-      ? glyphsData
-      : glyphsData.sort((fileA, fileB) =>
+    const sortedGlyphsData = options.sort
+      ? glyphsData.sort((fileA, fileB) =>
           fileSorter(fileA.srcPath, fileB.srcPath)
-        );
+        )
+      : glyphsData;
 
     return Promise.all(
       sortedGlyphsData.map(
@@ -102,7 +102,7 @@ function svgIcons2svgFont(glyphsData, options) {
       fontName: options.fontName,
       fontStyle: options.fontStyle,
       fontWeight: options.fontWeight,
-      // eslint-disable-next-line no-console, no-empty-function
+      // eslint-disable-next-line no-empty-function
       log: options.verbose ? console.log.bind(console) : () => {},
       metadata: options.metadata,
       normalize: options.normalize,

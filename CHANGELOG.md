@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## 8.2.0 - 2018-11-13
+
+- Added: `sort` option (and `--no-sort` flag for CLI).
+- Chore: update deps.
+
 ## 8.1.4 - 2018-06-05
 
 - Chore: minimum require `svgicons2svgfont` version is now `^9.0.3` (this fix compatibility with `nodejs@10`).

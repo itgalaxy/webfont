@@ -193,7 +193,7 @@ const cli = meow(
         type: "string"
       },
       sort: {
-        default: false,
+        default: true,
         type: "boolean"
       },
       "start-unicode": {
@@ -418,7 +418,7 @@ Promise.resolve()
       .then(() => Promise.resolve(result));
   })
   .catch(error => {
-    console.log(error.stack); // eslint-disable-line no-console
+    console.log(error.stack);
 
     const exitCode = typeof error.code === "number" ? error.code : 1;
 

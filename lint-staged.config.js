@@ -10,5 +10,6 @@ module.exports = {
     "prettier --list-different",
     "remark -f -q",
     "git add"
-  ]
+  ],
+  "*.{yml,yaml}": ["prettier --list-different", "git add"]
 };

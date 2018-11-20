@@ -282,6 +282,9 @@ export default function(initialOptions) {
             },
             scss: {
               path: path.join(buildInTemplateDirectory, "template.scss.njk")
+            },
+            styl: {
+              path: path.join(buildInTemplateDirectory, "template.styl.njk")
             }
           };
 

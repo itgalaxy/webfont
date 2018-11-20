@@ -1,0 +1,60 @@
+$webfont-avatar= "\ea01";
+$webfont-envelope= "\ea02";
+$webfont-phone-call= "\ea03";
+
+@font-face {
+    font-family: webfont;
+    src: url("./webfont.eot");
+    src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2") format("woff2"), url("./webfont.woff") format("woff"), url("./webfont.ttf") format("truetype"), url("./webfont.svg#webfont") format("svg");
+    font-style: normal;
+    font-weight: 400;
+}
+
+.webfont {
+    display: inline-block;
+    transform: translate(0, 0);
+    text-rendering: auto;
+    font: normal normal 400 14px/1 webfont;
+    font-size: inherit;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+    vertical-align: -15%;
+    line-height: 0.75em;
+    font-size: 1.33333333em;
+}
+
+.webfont-2x {
+    font-size: 2em;
+}
+
+.webfont-3x {
+    font-size: 3em;
+}
+
+.webfont-4x {
+    font-size: 4em;
+}
+
+.webfont-5x {
+    font-size: 5em;
+}
+
+.webfont-fw {
+    width: 1.28571429em;
+    text-align: center;
+}
+
+.webfont-avatar::before {
+    content: "\ea01";
+}
+
+.webfont-envelope::before {
+    content: "\ea02";
+}
+
+.webfont-phone-call::before {
+    content: "\ea03";
+}

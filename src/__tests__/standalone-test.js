@@ -1,10 +1,10 @@
 import crypto from "crypto";
+import path from "path";
 import isEot from "is-eot";
 import isSvg from "is-svg";
 import isTtf from "is-ttf";
 import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
-import path from "path";
 import standalone from "../standalone";
 
 const fixturesGlob = "src/__tests__/fixtures";

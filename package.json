@@ -50,14 +50,14 @@
     "!**/__tests__"
   ],
   "dependencies": {
-    "async-throttle": "^1.1.0",
     "cosmiconfig": "^5.0.3",
     "xml2js": "^0.4.17",
     "globby": "^8.0.1",
     "meow": "^5.0.0",
     "fs-extra": "^7.0.1",
     "lodash.merge": "^4.6.1",
-    "nunjucks": "^3.0.0",
+    "nunjucks": "^3.1.6",
+    "p-limit": "^2.1.0",
     "resolve-from": "^4.0.0",
     "svg2ttf": "^4.0.0",
     "svgicons2svgfont": "^9.0.3",
@@ -80,10 +80,10 @@
     "eslint-plugin-ava": "^5.1.1",
     "eslint-plugin-html": "^5.0.0",
     "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-itgalaxy": "^88.0.0",
+    "eslint-plugin-itgalaxy": "^95.0.0",
     "eslint-plugin-jest": "^22.0.0",
     "eslint-plugin-jsx-a11y": "^6.0.0",
-    "eslint-plugin-lodash": "^3.1.0",
+    "eslint-plugin-lodash": "^5.1.0",
     "eslint-plugin-markdown": "^1.0.0-rc.1",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-promise": "^4.0.1",
@@ -139,40 +139,43 @@
       "sourceType": "script"
     },
     "extends": [
-      "plugin:itgalaxy/jest",
       "plugin:itgalaxy/node",
       "plugin:itgalaxy/esnext",
+      "plugin:itgalaxy/jest",
       "plugin:itgalaxy/markdown"
     ],
     "overrides": [
       {
         "files": [
-          "src/**",
-          "**/__tests__/**/*.js",
-          "**/*.md"
+          "src/**/*"
         ],
         "parserOptions": {
           "sourceType": "module"
         },
         "rules": {
-          "import/no-unresolved": [
-            "error",
-            {
-              "commonjs": true,
-              "caseSensitive": true,
-              "ignore": [
-                "webfont"
-              ]
-            }
-          ],
-          "import/extensions": [
-            "error",
-            "ignorePackages",
-            {
-              "js": "never",
-              "jsx": "never"
-            }
-          ],
+          "node/no-unsupported-features/es-syntax": "off"
+        }
+      },
+      {
+        "files": [
+          "**/*.md"
+        ],
+        "parserOptions": {
+          "sourceType": "module",
+          "ecmaFeatures": {
+            "impliedStrict": true
+          }
+        },
+        "rules": {
+          "strict": "off",
+          "no-undef": "off",
+          "no-unused-vars": "off",
+          "no-process-env": "off",
+          "no-process-exit": "off",
+          "no-console": "off",
+          "import/no-unresolved": "off",
+          "import/extensions": "off",
+          "node/no-unpublished-require": "off",
           "node/no-unsupported-features/es-syntax": "off"
         }
       }

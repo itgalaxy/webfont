@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+import path from "path";
 import fs from "fs-extra";
 import meow from "meow";
-import path from "path";
 import resolveFrom from "resolve-from";
 import standalone from "./standalone";
 
@@ -418,9 +418,10 @@ Promise.resolve()
       .then(() => Promise.resolve(result));
   })
   .catch(error => {
+    // eslint-disable-next-line no-console
     console.log(error.stack);
 
     const exitCode = typeof error.code === "number" ? error.code : 1;
 
-    process.exit(exitCode); // eslint-disable-line no-process-exit
+    process.exit(exitCode);
   });

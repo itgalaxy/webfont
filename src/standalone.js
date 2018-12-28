@@ -1,15 +1,14 @@
 import { Readable } from "stream";
+import fs from "fs";
+import path from "path";
 import SVGIcons2SVGFontStream from "svgicons2svgfont";
 import cosmiconfig from "cosmiconfig";
-import createThrottle from "async-throttle";
+import pLimit from "p-limit";
 import defaultMetadataProvider from "svgicons2svgfont/src/metadata";
 import fileSorter from "svgicons2svgfont/src/filesorter";
-import fs from "fs";
 import globby from "globby";
 import merge from "lodash.merge";
 import nunjucks from "nunjucks";
-import os from "os";
-import path from "path";
 import svg2ttf from "svg2ttf";
 import ttf2eot from "ttf2eot";
 import ttf2woff from "ttf2woff";
@@ -25,7 +24,7 @@ function getGlyphsData(files, options) {
     });
 
   const xmlParser = new xml2js.Parser();
-  const throttle = createThrottle(options.maxConcurrency);
+  const throttle = pLimit(options.maxConcurrency);
 
   return Promise.all(
     files.map(srcPath =>
@@ -102,7 +101,7 @@ function svgIcons2svgFont(glyphsData, options) {
       fontName: options.fontName,
       fontStyle: options.fontStyle,
       fontWeight: options.fontWeight,
-      // eslint-disable-next-line no-empty-function
+      // eslint-disable-next-line no-console, no-empty-function
       log: options.verbose ? console.log.bind(console) : () => {},
       metadata: options.metadata,
       normalize: options.normalize,
@@ -179,7 +178,8 @@ export default function(initialOptions) {
       },
       glyphTransformFn: null,
       // Maybe allow setup from CLI
-      maxConcurrency: os.cpus().length,
+      // This is usually less than file read maximums while staying performance
+      maxConcurrency: 100,
       metadata: null,
       metadataProvider: null,
       normalize: false,

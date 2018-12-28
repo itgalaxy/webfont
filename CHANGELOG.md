@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## 8.2.1 - 2018-12-28
+
+- Chore: update dependencies.
+
 ## 8.2.0 - 2018-11-13
 
 - Added: `sort` option (and `--no-sort` flag for CLI).

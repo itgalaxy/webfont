@@ -52,7 +52,7 @@
   "dependencies": {
     "cosmiconfig": "^5.0.3",
     "xml2js": "^0.4.17",
-    "globby": "^8.0.1",
+    "globby": "^9.1.0",
     "meow": "^5.0.0",
     "fs-extra": "^7.0.1",
     "lodash.merge": "^4.6.1",

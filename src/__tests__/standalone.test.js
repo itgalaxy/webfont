@@ -366,4 +366,16 @@ describe("standalone", () => {
     expect(Array.isArray(result.glyphsData)).toBe(true);
     expect(result.glyphsData.length > 0).toBe(true);
   });
+
+  it("should export `hash` in `result`", () => {
+    expect.assertions(1);
+
+    return standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`
+    }).then(result => {
+      expect(result.hash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
+
+      return result;
+    });
+  });
 });

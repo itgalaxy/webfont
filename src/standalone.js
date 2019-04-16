@@ -1,6 +1,7 @@
 import { Readable } from "stream";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 import SVGIcons2SVGFontStream from "svgicons2svgfont";
 import cosmiconfig from "cosmiconfig";
 import pLimit from "p-limit";
@@ -239,6 +240,11 @@ export default async function(initialOptions) {
       : {}
   );
 
+  result.hash = crypto
+    .createHash("md5")
+    .update(result.svg)
+    .digest("hex");
+
   if (options.formats.includes("eot")) {
     result.eot = toEot(result.ttf);
   }
@@ -277,6 +283,7 @@ export default async function(initialOptions) {
       templateFilePath = path.resolve(resolvedTemplateFilePath);
     }
 
+    const hashOption = options.addHashInFontUrl ? { hash: result.hash } : {};
     const nunjucksOptions = deepmerge.all([
       {
         glyphs: result.glyphsData.map(glyphData => {
@@ -292,7 +299,8 @@ export default async function(initialOptions) {
         className: options.templateClassName || options.fontName,
         fontName: options.templateFontName || options.fontName,
         fontPath: options.templateFontPath.replace(/\/?$/, "/")
-      }
+      },
+      hashOption
     ]);
 
     result.template = nunjucks.render(templateFilePath, nunjucksOptions);

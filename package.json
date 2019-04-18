@@ -115,7 +115,7 @@
     "test:only": "jest",
     "test": "npm run test:only -- --coverage",
     "prebuild": "rimraf dist",
-    "demo": "node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
+    "demo": "npm run build && node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "build": "babel src --out-dir dist --ignore '**/__tests__/**'",
     "prepare": "npm run build",
     "release": "standard-version"

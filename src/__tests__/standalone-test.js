@@ -76,7 +76,7 @@ describe("standalone", () => {
       expect(ttfHash).toBe("8ffaa42f84b0835c7c250ec16e8f5d78");
       expect(eotHash).toBe("cc86496a4fd871e31a79043a7ba96a07");
       expect(woffHash).toBe("e90fb075e22ab56621e1caf13c52ef17");
-      expect(woff2Hash).toBe("8c0bd62996d1e84ebd01263adf6aa163");
+      expect(woff2Hash).toBe("c71b12c10bb6576528ef1a461c166e3a");
 
       return result;
     });

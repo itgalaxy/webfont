@@ -63,7 +63,7 @@
     "svgicons2svgfont": "^9.0.3",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
-    "ttf2woff2": "^2.0.0"
+    "wawoff2": "^1.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",
@@ -117,7 +117,7 @@
     "prebuild": "rimraf dist",
     "demo": "node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "build": "babel src --out-dir dist --ignore '**/__tests__/**'",
-    "prepublish": "npm-run-all build",
+    "prepare": "npm run build",
     "release": "standard-version"
   },
   "babel": {
@@ -184,6 +184,9 @@
     "plugins": [
       "remark-preset-lint-itgalaxy"
     ]
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "engines": {
     "node": ">= 8.9.0"

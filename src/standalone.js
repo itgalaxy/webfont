@@ -12,7 +12,7 @@ import nunjucks from "nunjucks";
 import svg2ttf from "svg2ttf";
 import ttf2eot from "ttf2eot";
 import ttf2woff from "ttf2woff";
-import ttf2woff2 from "ttf2woff2";
+import wawoff2 from "wawoff2";
 import xml2js from "xml2js";
 
 function getGlyphsData(files, options) {
@@ -258,11 +258,19 @@ export default function(initialOptions) {
             );
           }
 
-          if (options.formats.includes("woff2")) {
-            result.woff2 = ttf2woff2(result.ttf);
-          }
+          return Promise.resolve()
+            .then(() => {
+              if (options.formats.includes("woff2")) {
+                return wawoff2.compress(result.ttf).then(woff2 => {
+                  result.woff2 = woff2;
 
-          return result;
+                  return Promise.resolve();
+                });
+              }
+
+              return Promise.resolve();
+            })
+            .then(() => result);
         })
         .then(result => {
           if (!options.template) {

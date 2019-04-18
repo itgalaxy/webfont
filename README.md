@@ -5,7 +5,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/a8absovr2r44w1oc?svg=true)](https://ci.appveyor.com/project/evilebottnawi/webfont)
 [![dependencies Status](https://david-dm.org/itgalaxy/webfont/status.svg)](https://david-dm.org/itgalaxy/webfont)
 [![devDependencies Status](https://david-dm.org/itgalaxy/webfont/dev-status.svg)](https://david-dm.org/itgalaxy/webfont?type=dev)
-[![Greenkeeper badge](https://badges.greenkeeper.io/itgalaxy/webfont.svg)](https://greenkeeper.io)
 
 Generator of fonts from SVG icons.
 

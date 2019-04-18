@@ -246,11 +246,11 @@ export default function(initialOptions) {
             ).buffer
           );
 
-          if (options.formats.indexOf("eot") !== -1) {
+          if (options.formats.includes("eot")) {
             result.eot = Buffer.from(ttf2eot(result.ttf).buffer);
           }
 
-          if (options.formats.indexOf("woff") !== -1) {
+          if (options.formats.includes("woff")) {
             result.woff = Buffer.from(
               ttf2woff(result.ttf, {
                 metadata: options.metadata
@@ -258,7 +258,7 @@ export default function(initialOptions) {
             );
           }
 
-          if (options.formats.indexOf("woff2") !== -1) {
+          if (options.formats.includes("woff2")) {
             result.woff2 = ttf2woff2(result.ttf);
           }
 
@@ -333,11 +333,11 @@ export default function(initialOptions) {
           return result;
         })
         .then(result => {
-          if (options.formats.indexOf("svg") === -1) {
+          if (!options.formats.includes("svg")) {
             delete result.svg;
           }
 
-          if (options.formats.indexOf("ttf") === -1) {
+          if (!options.formats.includes("ttf")) {
             delete result.ttf;
           }
 

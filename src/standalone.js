@@ -7,7 +7,7 @@ import pLimit from "p-limit";
 import defaultMetadataProvider from "svgicons2svgfont/src/metadata";
 import fileSorter from "svgicons2svgfont/src/filesorter";
 import globby from "globby";
-import merge from "lodash.merge";
+import deepmerge from "deepmerge";
 import nunjucks from "nunjucks";
 import svg2ttf from "svg2ttf";
 import ttf2eot from "ttf2eot";
@@ -202,7 +202,7 @@ export default function(initialOptions) {
     configFile: options.configFile
   }).then(loadedConfig => {
     if (Object.keys(loadedConfig).length > 0) {
-      options = merge({}, options, loadedConfig.config);
+      options = deepmerge(options, loadedConfig.config);
       options.filePath = loadedConfig.filepath;
     }
 
@@ -311,8 +311,7 @@ export default function(initialOptions) {
             templateFilePath = path.resolve(resolvedTemplateFilePath);
           }
 
-          const nunjucksOptions = merge(
-            {},
+          const nunjucksOptions = deepmerge.all([
             {
               glyphs: glyphsData.map(glyphData => {
                 if (typeof options.glyphTransformFn === "function") {
@@ -334,7 +333,7 @@ export default function(initialOptions) {
                 : options.fontName,
               fontPath: options.templateFontPath.replace(/\/?$/, "/")
             }
-          );
+          ]);
 
           result.template = nunjucks.render(templateFilePath, nunjucksOptions);
 

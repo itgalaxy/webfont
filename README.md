@@ -206,7 +206,7 @@ The CLI can exit the process with the following exit codes:
 - [svg2ttf](https://github.com/fontello/svg2ttf) - Converts SVG fonts to TTF format.
 - [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
 - [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
-- [ttf2woff2](https://github.com/nfroidure/ttf2woff2) - Converts TTF fonts to WOFF2.
+- [wawoff2](https://github.com/fontello/wawoff2) - Converts TTF fonts to WOFF2 and versa vice.
 
 ## Roadmap
 

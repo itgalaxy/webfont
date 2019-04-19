@@ -11,9 +11,11 @@ const fixturesGlob = "src/__tests__/fixtures";
 
 describe("standalone", () => {
   it("should throw error if `files` not passed", async () => {
-    await expect(() => standalone()).toThrow(
-      "You must pass webfont a `files` glob"
-    );
+    try {
+      await standalone();
+    } catch (error) {
+      expect(error.message).toMatch("You must pass webfont a `files` glob");
+    }
   });
 
   it("should throw error `files glob patterns specified did not match any files` if not found files", async () => {

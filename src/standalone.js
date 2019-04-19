@@ -15,6 +15,27 @@ import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
 import xml2js from "xml2js";
 
+async function buildConfig(options) {
+  let searchPath = process.cwd();
+  let configPath = null;
+
+  if (options.configFile) {
+    searchPath = null;
+    configPath = path.resolve(process.cwd(), options.configFile);
+  }
+
+  const configExplorer = cosmiconfig("webfont");
+  const config = await (configPath
+    ? configExplorer.load(configPath)
+    : configExplorer.search(searchPath));
+
+  if (!config) {
+    return {};
+  }
+
+  return config;
+}
+
 function getGlyphsData(files, options) {
   const metadataProvider =
     options.metadataProvider ||
@@ -87,7 +108,7 @@ function getGlyphsData(files, options) {
   });
 }
 
-function svgIcons2svgFont(glyphsData, options) {
+function toSvg(glyphsData, options) {
   let result = "";
 
   return new Promise((resolve, reject) => {
@@ -128,30 +149,23 @@ function svgIcons2svgFont(glyphsData, options) {
   });
 }
 
-function buildConfig(options) {
-  let searchPath = process.cwd();
-  let configPath = null;
-
-  if (options.configFile) {
-    searchPath = null;
-    configPath = path.resolve(process.cwd(), options.configFile);
-  }
-
-  const configExplorer = cosmiconfig("webfont");
-  const searchForConfig = configPath
-    ? configExplorer.load(configPath)
-    : configExplorer.search(searchPath);
-
-  return searchForConfig.then(result => {
-    if (!result) {
-      return {};
-    }
-
-    return result;
-  });
+function toTtf(buffer, options) {
+  return Buffer.from(svg2ttf(buffer, options).buffer);
 }
 
-export default function(initialOptions) {
+function toEot(buffer) {
+  return Buffer.from(ttf2eot(buffer).buffer);
+}
+
+function toWoff(buffer, options) {
+  return Buffer.from(ttf2woff(buffer, options).buffer);
+}
+
+function toWoff2(buffer) {
+  return wawoff2.compress(buffer);
+}
+
+export default async function(initialOptions) {
   if (!initialOptions || !initialOptions.files) {
     throw new Error("You must pass webfont a `files` glob");
   }
@@ -196,162 +210,103 @@ export default function(initialOptions) {
     initialOptions
   );
 
-  let glyphsData = [];
-
-  return buildConfig({
+  const config = await buildConfig({
     configFile: options.configFile
-  }).then(loadedConfig => {
-    if (Object.keys(loadedConfig).length > 0) {
-      options = deepmerge(options, loadedConfig.config);
-      options.filePath = loadedConfig.filepath;
+  });
+
+  if (Object.keys(config).length > 0) {
+    options = deepmerge(options, config.config);
+    options.filePath = config.filepath;
+  }
+
+  const foundFiles = await globby([].concat(options.files));
+  const filteredFiles = foundFiles.filter(
+    foundFile => path.extname(foundFile) === ".svg"
+  );
+
+  if (filteredFiles.length === 0) {
+    throw new Error("Files glob patterns specified did not match any files");
+  }
+
+  const result = {};
+
+  result.glyphsData = await getGlyphsData(filteredFiles, options);
+  result.svg = await toSvg(result.glyphsData, options);
+  result.ttf = toTtf(
+    result.svg,
+    options.formatsOptions && options.formatsOptions.ttf
+      ? options.formatsOptions.ttf
+      : {}
+  );
+
+  if (options.formats.includes("eot")) {
+    result.eot = toEot(result.ttf);
+  }
+
+  if (options.formats.includes("woff")) {
+    result.woff = toWoff(result.ttf, { metadata: options.metadata });
+  }
+
+  if (options.formats.includes("woff2")) {
+    result.woff2 = await toWoff2(result.ttf);
+  }
+
+  if (options.template) {
+    const templateDirectory = path.resolve(__dirname, "../templates");
+    const buildInTemplates = {
+      css: { path: path.join(templateDirectory, "template.css.njk") },
+      html: { path: path.join(templateDirectory, "template.html.njk") },
+      scss: { path: path.join(templateDirectory, "template.scss.njk") }
+    };
+
+    let templateFilePath = null;
+
+    if (Object.keys(buildInTemplates).includes(options.template)) {
+      result.usedBuildInTemplate = true;
+
+      nunjucks.configure(path.resolve(__dirname, "../"));
+
+      templateFilePath = `${templateDirectory}/template.${
+        options.template
+      }.njk`;
+    } else {
+      const resolvedTemplateFilePath = path.resolve(options.template);
+
+      nunjucks.configure(path.dirname(resolvedTemplateFilePath));
+
+      templateFilePath = path.resolve(resolvedTemplateFilePath);
     }
 
-    return (
-      globby([].concat(options.files))
-        .then(foundFiles => {
-          const filteredFiles = foundFiles.filter(
-            foundFile => path.extname(foundFile) === ".svg"
-          );
-
-          if (filteredFiles.length === 0) {
-            throw new Error(
-              "Files glob patterns specified did not match any files"
-            );
+    const nunjucksOptions = deepmerge.all([
+      {
+        glyphs: result.glyphsData.map(glyphData => {
+          if (typeof options.glyphTransformFn === "function") {
+            glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
           }
 
-          return filteredFiles;
+          return glyphData.metadata;
         })
-        .then(files =>
-          Promise.resolve()
-            .then(() => getGlyphsData(files, options))
-            .then(generatedDataInternal => {
-              glyphsData = generatedDataInternal;
+      },
+      options,
+      {
+        className: options.templateClassName || options.fontName,
+        fontName: options.templateFontName || options.fontName,
+        fontPath: options.templateFontPath.replace(/\/?$/, "/")
+      }
+    ]);
 
-              return svgIcons2svgFont(generatedDataInternal, options);
-            })
-        )
-        // Maybe add ttfautohint
-        .then(svgFont => {
-          const result = {};
+    result.template = nunjucks.render(templateFilePath, nunjucksOptions);
+  }
 
-          result.svg = svgFont;
-          result.glyphsData = glyphsData;
+  if (!options.formats.includes("svg")) {
+    delete result.svg;
+  }
 
-          result.ttf = Buffer.from(
-            svg2ttf(
-              result.svg.toString(),
-              options.formatsOptions && options.formatsOptions.ttf
-                ? options.formatsOptions.ttf
-                : {}
-            ).buffer
-          );
+  if (!options.formats.includes("ttf")) {
+    delete result.ttf;
+  }
 
-          if (options.formats.includes("eot")) {
-            result.eot = Buffer.from(ttf2eot(result.ttf).buffer);
-          }
+  result.config = options;
 
-          if (options.formats.includes("woff")) {
-            result.woff = Buffer.from(
-              ttf2woff(result.ttf, {
-                metadata: options.metadata
-              }).buffer
-            );
-          }
-
-          return Promise.resolve()
-            .then(() => {
-              if (options.formats.includes("woff2")) {
-                return wawoff2.compress(result.ttf).then(woff2 => {
-                  result.woff2 = woff2;
-
-                  return Promise.resolve();
-                });
-              }
-
-              return Promise.resolve();
-            })
-            .then(() => result);
-        })
-        .then(result => {
-          if (!options.template) {
-            return result;
-          }
-
-          const buildInTemplateDirectory = path.join(__dirname, "../templates");
-          const buildInTemplates = {
-            css: {
-              path: path.join(buildInTemplateDirectory, "template.css.njk")
-            },
-            html: {
-              path: path.join(
-                buildInTemplateDirectory,
-                "template.preview-html.njk"
-              )
-            },
-            scss: {
-              path: path.join(buildInTemplateDirectory, "template.scss.njk")
-            }
-          };
-
-          let templateFilePath = null;
-
-          if (Object.keys(buildInTemplates).includes(options.template)) {
-            result.usedBuildInTemplate = true;
-
-            nunjucks.configure(path.join(__dirname, "../"));
-
-            templateFilePath = `${buildInTemplateDirectory}/template.${
-              options.template
-            }.njk`;
-          } else {
-            const resolvedTemplateFilePath = path.resolve(options.template);
-
-            nunjucks.configure(path.dirname(resolvedTemplateFilePath));
-
-            templateFilePath = path.resolve(resolvedTemplateFilePath);
-          }
-
-          const nunjucksOptions = deepmerge.all([
-            {
-              glyphs: glyphsData.map(glyphData => {
-                if (typeof options.glyphTransformFn === "function") {
-                  glyphData.metadata = options.glyphTransformFn(
-                    glyphData.metadata
-                  );
-                }
-
-                return glyphData.metadata;
-              })
-            },
-            options,
-            {
-              className: options.templateClassName
-                ? options.templateClassName
-                : options.fontName,
-              fontName: options.templateFontName
-                ? options.templateFontName
-                : options.fontName,
-              fontPath: options.templateFontPath.replace(/\/?$/, "/")
-            }
-          ]);
-
-          result.template = nunjucks.render(templateFilePath, nunjucksOptions);
-
-          return result;
-        })
-        .then(result => {
-          if (!options.formats.includes("svg")) {
-            delete result.svg;
-          }
-
-          if (!options.formats.includes("ttf")) {
-            delete result.ttf;
-          }
-
-          result.config = options;
-
-          return result;
-        })
-    );
-  });
+  return result;
 }

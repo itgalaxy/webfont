@@ -342,12 +342,11 @@ if (cli.flags.version || cli.flags.v) {
 }
 
 Promise.resolve()
-  .then(() =>
-    Object.assign({}, optionsBase, {
+  .then(() => {
+    const options = Object.assign({}, optionsBase, {
       files: cli.input
-    })
-  )
-  .then(options => {
+    });
+
     if (options.files.length === 0) {
       cli.showHelp();
     }

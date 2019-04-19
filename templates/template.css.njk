@@ -1,5 +1,5 @@
 @font-face {
-  font-family: {{ fontName }};
+  font-family: "{{ fontName }}";
   font-style: normal;
   font-weight: 400;
   font-display: auto;
@@ -38,7 +38,7 @@
 
 .{{ className }} {
   display: inline-block;
-  font-family: {{ fontName }};
+  font-family: "{{ fontName }}";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -130,7 +130,7 @@
 }
 
 {% for glyph in glyphs %}
-  .{{ className }}-{{ glyph.name }}::before {
-    content: "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
-  }
+.{{ className }}-{{ glyph.name }}::before {
+  content: "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
+}
 {% endfor %}

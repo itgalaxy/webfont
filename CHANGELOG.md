@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## 9.0.0 - 2019-04-19
+
+- Changed: drops support for Node.js 6.
+- Feat: improve basic templates (see [templates](templates)).
+- Feat: use wasm package for generate woff2
+
 ## 8.2.1 - 2018-12-28
 
 - Chore: update dependencies.

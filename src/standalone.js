@@ -191,7 +191,6 @@ export default async function(initialOptions) {
         }
       },
       glyphTransformFn: null,
-      beforeFontGenerationGlyphTransformation: glyph => glyph,
       // Maybe allow setup from CLI
       // This is usually less than file read maximums while staying performance
       maxConcurrency: 100,
@@ -232,7 +231,13 @@ export default async function(initialOptions) {
   const result = {};
 
   result.glyphsData = await getGlyphsData(filteredFiles, options);
-  result.glyphsData.map(options.beforeFontGenerationGlyphTransformation);
+  result.glyphsData = result.glyphsData.map(glyphData => {
+    if (typeof options.glyphTransformFn === "function") {
+      glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
+    }
+
+    return glyphData;
+  });
 
   result.svg = await toSvg(result.glyphsData, options);
   result.ttf = toTtf(
@@ -282,13 +287,7 @@ export default async function(initialOptions) {
 
     const nunjucksOptions = deepmerge.all([
       {
-        glyphs: result.glyphsData.map(glyphData => {
-          if (typeof options.glyphTransformFn === "function") {
-            glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
-          }
-
-          return glyphData.metadata;
-        })
+        glyphs: result.glyphsData.map(glyph => glyph.metadata)
       },
       options,
       {

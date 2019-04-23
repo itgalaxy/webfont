@@ -338,22 +338,19 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
-  it("should transform icons before creating icons", async () => {
+  it("should change unicode symbols in the result", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["eot"],
-      beforeFontGenerationGlyphTransformation: obj => {
-        obj.metadata.unicode = ["\u0001"];
+      glyphTransformFn: obj => {
+        obj.unicode = ["\u0001"];
 
         return obj;
       },
       template: "css"
     });
-    const transformed = result.glyphsData.map(
-      glyph => glyph.metadata.unicode[0]
-    );
 
-    expect(transformed.every(uni => uni === "\u0001")).toBe(true);
+    expect(result.template).toMatchSnapshot();
   });
 
   it("should respect `template` options", async () => {

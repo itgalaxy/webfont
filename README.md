@@ -135,6 +135,7 @@ webfont({
   files: "src/svg-icons/**/*.svg",
   glyphTransformFn: async obj => {
     obj.name += "_transform";
+    await something();
 
     return obj;
   }

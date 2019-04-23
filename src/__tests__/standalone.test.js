@@ -371,6 +371,21 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
+  it("should handle errors properly", async () => {
+    try {
+      await standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        formats: ["eot"],
+        glyphTransformFn: async () => {
+          throw new Error("Name Invalid");
+        },
+        template: "css"
+      });
+    } catch (error) {
+      expect(error.message).toMatch("Name Invalid");
+    }
+  });
+
   it("should respect `template` options", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

@@ -329,10 +329,10 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["eot"],
-      glyphTransformFn: obj => {
+      glyphTransformFn: async obj => {
         obj.name += "_transform";
 
-        return Promise.resolve(obj);
+        return obj;
       },
       template: "css"
     });
@@ -344,10 +344,10 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["eot"],
-      glyphTransformFn: obj => {
+      glyphTransformFn: async obj => {
         obj.unicode = ["\u0001"];
 
-        return Promise.resolve(obj);
+        return obj;
       },
       template: "css"
     });

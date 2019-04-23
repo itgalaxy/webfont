@@ -9,7 +9,7 @@ import standalone from "../standalone";
 
 const fixturesGlob = "src/__tests__/fixtures";
 
-const wait = () => Promise.resolve(true);
+const waitFor = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 describe("standalone", () => {
   it("should throw error if `files` not passed", async () => {
@@ -332,7 +332,7 @@ describe("standalone", () => {
       glyphTransformFn: obj => {
         obj.name += "_transform";
 
-        return obj;
+        return Promise.resolve(obj);
       },
       template: "css"
     });
@@ -344,9 +344,24 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["eot"],
-      glyphTransformFn: async obj => {
-        await wait();
+      glyphTransformFn: obj => {
         obj.unicode = ["\u0001"];
+
+        return Promise.resolve(obj);
+      },
+      template: "css"
+    });
+
+    expect(result.template).toMatchSnapshot();
+  });
+
+  it("should be a async function", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      formats: ["eot"],
+      glyphTransformFn: async obj => {
+        obj.unicode = ["\u0001"];
+        await waitFor(500);
 
         return obj;
       },

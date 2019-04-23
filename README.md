@@ -149,6 +149,42 @@ webfont({
   });
 ```
 
+### `beforeFontGenerationGlyphTransformation`
+
+Type: `function`
+Default: `(glyph) => { return glyph }`
+
+If you need transform glyph before transferred in to any font, you can use this option with glyphs metadata object.
+
+Example:
+
+```js
+import webfont from "webfont";
+
+const historyMap = new Map(...filled);
+
+webfont({
+  files: "src/svg-icons/**/*.svg",
+  beforeFontGenerationGlyphTransformation: obj => {
+    if (historyMap.has(obj.metadata.name)) {
+      obj.metadata.unicode = [
+        String.fromCodePoint(historyMap.get(obj.metadata.unicode))
+      ];
+    }
+
+    return obj;
+  }
+})
+  .then(result => {
+    console.log(result);
+
+    return result;
+  })
+  .catch(error => {
+    throw error;
+  });
+```
+
 ### `sort`
 
 Type: `bool`

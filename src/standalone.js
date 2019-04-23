@@ -191,6 +191,7 @@ export default async function(initialOptions) {
         }
       },
       glyphTransformFn: null,
+      beforeFontGenerationGlyphTransformation: glyph => glyph,
       // Maybe allow setup from CLI
       // This is usually less than file read maximums while staying performance
       maxConcurrency: 100,
@@ -231,6 +232,8 @@ export default async function(initialOptions) {
   const result = {};
 
   result.glyphsData = await getGlyphsData(filteredFiles, options);
+  result.glyphsData.map(options.beforeFontGenerationGlyphTransformation);
+
   result.svg = await toSvg(result.glyphsData, options);
   result.ttf = toTtf(
     result.svg,

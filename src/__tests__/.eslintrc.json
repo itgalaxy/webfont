@@ -1,6 +1,5 @@
 {
   "rules": {
-    "node/no-unpublished-import": "off",
-    "require-await": "off"
+    "node/no-unpublished-import": "off"
   }
 }

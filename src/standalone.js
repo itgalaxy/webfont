@@ -231,13 +231,16 @@ export default async function(initialOptions) {
   const result = {};
 
   result.glyphsData = await getGlyphsData(filteredFiles, options);
-  result.glyphsData = result.glyphsData.map(glyphData => {
-    if (typeof options.glyphTransformFn === "function") {
-      glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
-    }
 
-    return glyphData;
-  });
+  if (options.glyphTransformFn) {
+    const transformedGlyphs = result.glyphsData.map(async glyphData => {
+      const metadata = await options.glyphTransformFn(glyphData.metadata);
+
+      return { ...glyphData, metadata };
+    });
+
+    result.glyphsData = await Promise.all(transformedGlyphs);
+  }
 
   result.svg = await toSvg(result.glyphsData, options);
   result.ttf = toTtf(

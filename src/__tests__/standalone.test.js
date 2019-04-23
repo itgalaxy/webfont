@@ -9,6 +9,8 @@ import standalone from "../standalone";
 
 const fixturesGlob = "src/__tests__/fixtures";
 
+const wait = () => Promise.resolve(true);
+
 describe("standalone", () => {
   it("should throw error if `files` not passed", async () => {
     try {
@@ -342,7 +344,8 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["eot"],
-      glyphTransformFn: obj => {
+      glyphTransformFn: async obj => {
+        await wait();
         obj.unicode = ["\u0001"];
 
         return obj;

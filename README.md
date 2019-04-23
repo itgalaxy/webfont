@@ -121,7 +121,7 @@ Default value getting from `fontName` options, but you can specify any value.
 
 ### `glyphTransformFn`
 
-Type: `function`
+Type: `async function`
 Default: `null`
 
 If you need to transform glyph metadata (e.g. titles of CSS classes, or unicode) before font creation for your icons, you can use this option with glyphs metadata object.
@@ -133,7 +133,7 @@ import webfont from "webfont";
 
 webfont({
   files: "src/svg-icons/**/*.svg",
-  glyphTransformFn: obj => {
+  glyphTransformFn: async obj => {
     obj.name += "_transform";
 
     return obj;

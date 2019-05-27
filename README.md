@@ -28,7 +28,7 @@ npm install --save-dev webfont
 ## Usage
 
 ```js
-const webfont = require("webfont").default;
+const webfont = require("webfont").default; // import webfont from "webfont";
 
 webfont({
   files: "src/svg-icons/**/*.svg",
@@ -47,11 +47,12 @@ webfont({
 Or
 
 ```js
-import webfont from "webfont";
+const webfont = require("webfont").default; // import webfont from "webfont";
 
 webfont({
-  files: "src/svg-icons/**/*.svg",
-  fontName: "my-font-name"
+  files: "src/ttf-fonts/**/*.ttf",
+  fontName: "my-font-name",
+  ttfMode: true,
 })
   .then(result => {
     console.log(result);
@@ -71,6 +72,16 @@ A file glob, or array of file globs.
 Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
 
 `node_modules` and `bower_components` are always ignored.
+
+### `ttfMode`
+
+Type: `boolean`
+Default: `false`
+
+Whether plugin should transform TTF fonts as opposed to SVG icons. Keep in mind that in TTF mode most of the plugin
+options intended for icon font generation are not used (e.g. `normalize`, `round`, etc). Also, when converting TTF
+into WOFF2, webpack may get stuck for a few seconds. This is normal and may improve in further versions by running
+font conversions in parallel threads.
 
 ### `configFile`
 

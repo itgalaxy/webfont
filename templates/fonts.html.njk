@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ fontName }}</title>
+    <style>
+      body {
+        margin: 0;
+        padding:10px 20px;
+        background: #fff;
+        color: #222;
+        font-family:"Helvetica Neue", Arial, sans-serif;
+      }
+
+      h1 {
+        margin:0 0 20px;
+        font-size: 32px;
+        font-weight: normal;
+      }
+
+      .fonts {
+        margin-bottom: 40px;
+        -webkit-column-count: 2;
+           -moz-column-count: 2;
+                column-count: 2;
+      }
+
+      .fonts__item {
+        display: block;
+        padding: 4px 0;
+      }
+
+      .fonts__item div {
+        white-space: nowrap;
+      }
+
+      .fonts__item div[class] {
+        line-height: 3em;
+        margin-left: 16px;
+        white-space: nowrap;
+      }
+
+      {%- set eotIndex = formats.indexOf('eot') -%}
+      {%- set woff2Index = formats.indexOf('woff2') -%}
+      {%- set woffIndex = formats.indexOf('woff') -%}
+      {%- set ttfIndex = formats.indexOf('ttf') -%}
+      {% for font in fonts %}@font-face {
+        font-family: '{{ font.family }}';
+        font-style: {{ font.style }};
+        font-weight: {{ font.weight }};
+        font-display: swap;
+      {%- if eotIndex != -1 -%}
+        src: url('{{ fontPath }}{{ font.fileName }}.eot');
+      {%- endif %}
+        src:
+          local('{{ font.local1 }}'),
+          local('{{ font.local2 }}'){% if eotIndex != -1 -%},
+          url('{{ fontPath }}{{ font.fileName }}.eot?#iefix') format('embedded-opentype')
+        {%- endif -%}{%- if woff2Index != -1 -%},
+          url('{{ fontPath }}{{ font.fileName }}.woff2') format('woff2')
+        {%- endif -%}{%- if woffIndex != -1 -%},
+          url('{{ fontPath }}{{ font.fileName }}.woff') format('woff')
+        {%- endif -%}{%- if ttfIndex != -1 -%},
+          url('{{ fontPath }}{{ font.fileName }}.ttf') format('truetype')
+      {%- endif -%};
+      }
+
+      {% endfor %}
+
+      {% for font in fonts %}
+      .{{ className }}-{{ font.family }}-{{ font.style }}-{{ font.weight }} {
+        font-family: '{{ font.family }}';
+        font-style: {{ font.style }};
+        font-weight: {{ font.weight }};
+      }
+      {% endfor %}
+
+    </style>
+  </head>
+  <body>
+    <h1>List fonts</h1>
+      <div class="fonts" id="fonts">
+          {% for font in fonts %}
+            <div class="fonts__item">
+              <div>{{ className }}-{{ font.family }}-{{ font.style }}-{{ font.weight }}:</div>
+              <div class="{{ className }}-{{ font.family }}-{{ font.style }}-{{ font.weight }}">
+                The quick brown fox jumps over the lazy dog
+              </div>
+            </div>
+          {% endfor %}
+      </div>
+  </body>
+</html>

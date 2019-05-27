@@ -1,0 +1,26 @@
+{%- set eotIndex = formats.indexOf('eot') -%}
+{%- set woff2Index = formats.indexOf('woff2') -%}
+{%- set woffIndex = formats.indexOf('woff') -%}
+{%- set ttfIndex = formats.indexOf('ttf') -%}
+{% for font in fonts %}@font-face {
+  font-family: '{{ font.family }}';
+  font-style: {{ font.style }};
+  font-weight: {{ font.weight }};
+  font-display: swap;
+{%- if eotIndex != -1 -%}
+  src: url('{{ fontPath }}{{ font.fileName }}.eot');
+{%- endif %}
+  src:
+    local('{{ font.local1 }}'),
+    local('{{ font.local2 }}'){% if eotIndex != -1 -%},
+    url('{{ fontPath }}{{ font.fileName }}.eot?#iefix') format('embedded-opentype')
+  {%- endif -%}{%- if woff2Index != -1 -%},
+    url('{{ fontPath }}{{ font.fileName }}.woff2') format('woff2')
+  {%- endif -%}{%- if woffIndex != -1 -%},
+    url('{{ fontPath }}{{ font.fileName }}.woff') format('woff')
+  {%- endif -%}{%- if ttfIndex != -1 -%},
+    url('{{ fontPath }}{{ font.fileName }}.ttf') format('truetype')
+{%- endif -%};
+}
+
+{% endfor %}

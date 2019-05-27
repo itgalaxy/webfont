@@ -4,7 +4,8 @@ import path from "path";
 import SVGIcons2SVGFontStream from "svgicons2svgfont";
 import cosmiconfig from "cosmiconfig";
 import pLimit from "p-limit";
-import defaultMetadataProvider from "svgicons2svgfont/src/metadata";
+import defaultTtfMetadataProvider from "ttfinfo";
+import defaultSvgMetadataProvider from "svgicons2svgfont/src/metadata";
 import fileSorter from "svgicons2svgfont/src/filesorter";
 import globby from "globby";
 import deepmerge from "deepmerge";
@@ -38,8 +39,8 @@ async function buildConfig(options) {
 
 function getGlyphsData(files, options) {
   const metadataProvider =
-    options.metadataProvider ||
-    defaultMetadataProvider({
+    options.svgMetadataProvider ||
+    defaultSvgMetadataProvider({
       prependUnicode: options.prependUnicode,
       startUnicode: options.startUnicode
     });
@@ -101,6 +102,74 @@ function getGlyphsData(files, options) {
               glyphData.metadata = metadata;
 
               return resolve(glyphData);
+            });
+          })
+      )
+    );
+  });
+}
+
+function getFontsData(files, options) {
+  const metadataProvider =
+    options.ttfMetadataProvider ||
+    defaultTtfMetadataProvider;
+
+  const throttle = pLimit(options.maxConcurrency);
+
+  return Promise.all(
+    files.map(srcPath =>
+      throttle(
+        () =>
+          new Promise((resolve, reject) => {
+            const font = fs.createReadStream(srcPath);
+            let chunks = [];
+
+            return font
+              .on("error", glyphError => reject(glyphError))
+              .on("data", data => {chunks.push(data);})
+              .on("end", () => {
+                if (chunks.length === 0) {
+                  return reject(new Error(`Empty file ${srcPath}`));
+                }
+                const fontData = {
+                  srcPath,
+                  contents: Buffer.concat(chunks),
+                };
+                return resolve(fontData);
+              });
+          })
+      )
+    )
+  ).then(fontsData => {
+    const sortedFontsData = options.sort
+      ? fontsData.sort((fileA, fileB) =>
+        fileSorter(fileA.srcPath, fileB.srcPath)
+      )
+      : fontsData;
+
+    return Promise.all(
+      sortedFontsData.map(
+        fontData =>
+          new Promise((resolve, reject) => {
+            metadataProvider(fontData.srcPath, (error, metadata) => {
+              if (error) {
+                return reject(error);
+              }
+
+              fontData.metadata = {
+                family: metadata.tables.name[1],
+                style: metadata.tables.post.italicAngle ? 'italic' : 'normal',
+                weight: Math.round(metadata.tables['OS/2'].weightClass / 100) * 100,
+                local1: metadata.tables.name[4],
+                local2: metadata.tables.name[6],
+                weightClass: metadata.tables['OS/2'].weightClass,
+                italicAngle: metadata.tables.post.italicAngle,
+                underlinePosition: metadata.tables.post.underlinePosition,
+                underlineThickness: metadata.tables.post.underlineThickness,
+                fileName: path.basename(fontData.srcPath, '.ttf'),
+              };
+
+              return resolve(fontData);
             });
           })
       )
@@ -176,6 +245,7 @@ export default async function(initialOptions) {
       ascent: undefined, // eslint-disable-line no-undefined
       centerHorizontally: false,
       descent: 0,
+      ttfMode: false,
       fixedWidth: false,
       fontHeight: null,
       fontId: null,
@@ -191,11 +261,13 @@ export default async function(initialOptions) {
         }
       },
       glyphTransformFn: null,
+      fontTransformFn: null,
       // Maybe allow setup from CLI
       // This is usually less than file read maximums while staying performance
       maxConcurrency: 100,
       metadata: null,
-      metadataProvider: null,
+      svgMetadataProvider: null,
+      ttfMetadataProvider: null,
       normalize: false,
       prependUnicode: false,
       round: 10e12,
@@ -220,8 +292,9 @@ export default async function(initialOptions) {
   }
 
   const foundFiles = await globby([].concat(options.files));
+
   const filteredFiles = foundFiles.filter(
-    foundFile => path.extname(foundFile) === ".svg"
+    foundFile => path.extname(foundFile) === (options.ttfMode ? ".ttf" : ".svg")
   );
 
   if (filteredFiles.length === 0) {
@@ -230,33 +303,87 @@ export default async function(initialOptions) {
 
   const result = {};
 
-  result.glyphsData = await getGlyphsData(filteredFiles, options);
-  result.svg = await toSvg(result.glyphsData, options);
-  result.ttf = toTtf(
-    result.svg,
-    options.formatsOptions && options.formatsOptions.ttf
-      ? options.formatsOptions.ttf
-      : {}
-  );
+  if (!options.ttfMode) {
 
-  if (options.formats.includes("eot")) {
-    result.eot = toEot(result.ttf);
-  }
+    result.glyphsData = await getGlyphsData(filteredFiles, options);
+    result.svg = await toSvg(result.glyphsData, options);
 
-  if (options.formats.includes("woff")) {
-    result.woff = toWoff(result.ttf, { metadata: options.metadata });
-  }
+    result.ttf = toTtf(
+      result.svg,
+      options.formatsOptions && options.formatsOptions.ttf
+        ? options.formatsOptions.ttf
+        : {}
+    );
 
-  if (options.formats.includes("woff2")) {
-    result.woff2 = await toWoff2(result.ttf);
+    if (options.formats.includes("eot")) {
+      result.eot = toEot(result.ttf);
+    }
+
+    if (options.formats.includes("woff")) {
+      result.woff = toWoff(result.ttf, { metadata: options.metadata });
+    }
+
+    if (options.formats.includes("woff2")) {
+      result.woff2 = await toWoff2(result.ttf);
+    }
+
+  } else {
+
+    result.fontsData = await getFontsData(filteredFiles, options);
+
+    result.ttf = result.fontsData.map(fontData => ({
+      name: fontData.srcPath,
+      buffer: fontData.contents,
+    }));
+
+    if (options.formats.includes("eot")) {
+      result.eot = result.ttf.map(file => ({
+        name: file.name.replace(/\.ttf$/, '.eot'),
+        buffer: toEot(file.buffer),
+      }));
+    }
+
+    if (options.formats.includes("woff")) {
+      result.woff = result.ttf.map(file => ({
+        name: file.name.replace(/\.ttf$/, '.woff'),
+        buffer: toWoff(file.buffer, { metadata: options.metadata }),
+      }));
+    }
+
+    if (options.formats.includes("woff2")) {
+
+      // IMPORTANT!
+
+      // Woff2 is hard on CPU due to it's sophisticated compression algorithms.
+      // As a result, it literally 'hangs' main thread for a few seconds while
+      // processing a standard TTF fonts. On a MacBook Pro 2015 it takes around
+      // 6 seconds to compress 4 TTF files 250Kb each.
+
+      // Recommended solution here is:
+      // 1) Use WOFF2 compression in production only
+      // 2) Implement parallel background processing
+
+      // console.log('Start WOFF2');
+      // console.time('WOFF2');
+
+      result.woff2 = await Promise.all(result.ttf.map(async file => ({
+        name: file.name.replace(/\.ttf$/, '.woff2'),
+        buffer: await toWoff2(file.buffer),
+      })));
+
+      // console.timeEnd('WOFF2');
+      // console.log('End WOFF2');
+    }
+
   }
 
   if (options.template) {
+    const templateFileName = !options.ttfMode ? "icons" : "fonts";
     const templateDirectory = path.resolve(__dirname, "../templates");
     const buildInTemplates = {
-      css: { path: path.join(templateDirectory, "template.css.njk") },
-      html: { path: path.join(templateDirectory, "template.html.njk") },
-      scss: { path: path.join(templateDirectory, "template.scss.njk") }
+      css: { path: path.join(templateDirectory, `${templateFileName}.css.njk`) },
+      html: { path: path.join(templateDirectory, `${templateFileName}.html.njk`) },
+      scss: { path: path.join(templateDirectory, `${templateFileName}.scss.njk`) }
     };
 
     let templateFilePath = null;
@@ -266,7 +393,7 @@ export default async function(initialOptions) {
 
       nunjucks.configure(path.resolve(__dirname, "../"));
 
-      templateFilePath = `${templateDirectory}/template.${
+      templateFilePath = `${templateDirectory}/${templateFileName}.${
         options.template
       }.njk`;
     } else {
@@ -277,16 +404,24 @@ export default async function(initialOptions) {
       templateFilePath = path.resolve(resolvedTemplateFilePath);
     }
 
-    const nunjucksOptions = deepmerge.all([
-      {
-        glyphs: result.glyphsData.map(glyphData => {
-          if (typeof options.glyphTransformFn === "function") {
-            glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
-          }
+    const metadata = !options.ttfMode ? {
+      glyphs: result.glyphsData.map(glyphData => {
+        if (typeof options.glyphTransformFn === "function") {
+          glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
+        }
+        return glyphData.metadata;
+      })
+    } : {
+      fonts: result.fontsData.map(fontData => {
+        if (typeof options.fontTransformFn === "function") {
+          fontData.metadata = options.fontTransformFn(fontData.metadata);
+        }
+        return fontData.metadata;
+      })
+    };
 
-          return glyphData.metadata;
-        })
-      },
+    const nunjucksOptions = deepmerge.all([
+      metadata,
       options,
       {
         className: options.templateClassName || options.fontName,

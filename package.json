@@ -52,10 +52,9 @@
   "dependencies": {
     "cosmiconfig": "^5.2.0",
     "deepmerge": "^3.2.0",
-    "xml2js": "^0.4.17",
+    "fs-extra": "^7.0.1",
     "globby": "^9.2.0",
     "meow": "^5.0.0",
-    "fs-extra": "^7.0.1",
     "nunjucks": "^3.2.0",
     "p-limit": "^2.2.0",
     "resolve-from": "^5.0.0",
@@ -63,7 +62,9 @@
     "svgicons2svgfont": "^9.0.3",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
-    "wawoff2": "^1.0.2"
+    "ttfinfo": "^0.2.0",
+    "wawoff2": "^1.0.2",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",

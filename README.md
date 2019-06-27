@@ -83,7 +83,7 @@ Default: `webfont`
 
 The font family name you want.
 
-### `formats`
+### `formats`
 
 Type: `Array`
 Default value: `['svg', 'ttf', 'eot', 'woff', 'woff2']`

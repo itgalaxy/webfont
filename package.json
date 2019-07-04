@@ -63,7 +63,8 @@
     "svgicons2svgfont": "^9.0.3",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
-    "wawoff2": "^1.0.2"
+    "wawoff2": "^1.0.2",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",
@@ -117,8 +118,9 @@
     "prebuild": "rimraf dist",
     "demo": "npm run build && node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "build": "babel src -d dist --ignore '**/__tests__/**'",
-    "prepare": "npm run build",
-    "release": "standard-version"
+    "prepare": "npm run snyk-protect; npm run build",
+    "release": "standard-version",
+    "snyk-protect": "snyk protect"
   },
   "babel": {
     "presets": [
@@ -190,5 +192,6 @@
   },
   "engines": {
     "node": ">= 8.9.0"
-  }
+  },
+  "snyk": true
 }

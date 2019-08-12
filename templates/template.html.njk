@@ -43,6 +43,7 @@
         display: inline-block;
         line-height: 3em;
         margin-left: 5px;
+        white-space: nowrap;
       }
 
       @font-face {
@@ -185,11 +186,21 @@
   </head>
   <body>
     <h1>List Icons</h1>
-      <div class="icons" id="icons">
+      <h3>Class</h3>
+      <div class="icons" id="icon-classes">
           {% for glyph in glyphs %}
             <div class="icons__item">
-              <i class="{{ className }} {{ className }}-3x {{ className }}-{{ glyph.name }}"></i>
-              <span>{{ className }}-{{ glyph.name }}</span>
+              <i class="{{ className }} {{ className }}-3x {{ className }}-{{ glyph.name }}"></i><br />
+              <span>.{{ className }}-{{ glyph.name }}</span>
+            </div>
+          {% endfor %}
+      </div>
+      <h3>Ligature</h3>
+      <div class="icons" id="icon-ligatures">
+          {% for glyph in glyphs %}
+            <div class="icons__item">
+              <i class="{{ className }} {{ className }}-3x">{{ glyph.unicode[1] }}</i><br />
+              <span>{{ glyph.unicode[1] }}</span>
             </div>
           {% endfor %}
       </div>

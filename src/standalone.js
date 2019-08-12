@@ -98,6 +98,7 @@ function getGlyphsData(files, options) {
                 return reject(error);
               }
 
+              metadata.unicode.push(metadata.name.replace("-", "_"));
               glyphData.metadata = metadata;
 
               return resolve(glyphData);

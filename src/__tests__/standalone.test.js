@@ -113,7 +113,8 @@ describe("standalone", () => {
   it("should generate all fonts with build-in template", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: "css"
+      template: "css",
+      templateCacheString: "test"
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -128,7 +129,8 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["woff", "woff2"],
-      template: "css"
+      template: "css",
+      templateCacheString: "test"
     });
 
     expect(result.svg).toBeUndefined();
@@ -142,7 +144,8 @@ describe("standalone", () => {
   it("should generate all fonts with custom `template` with absolute path", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: path.join(fixturesGlob, "templates/template.css")
+      template: path.join(fixturesGlob, "templates/template.css"),
+      templateCacheString: "test"
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -156,7 +159,8 @@ describe("standalone", () => {
   it("should generate all fonts with custom `template` with relative path", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: "src/__tests__/fixtures/templates/template.css"
+      template: "src/__tests__/fixtures/templates/template.css",
+      templateCacheString: "test"
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -190,7 +194,8 @@ describe("standalone", () => {
 
     const result = await standalone({
       configFile,
-      files: `${fixturesGlob}/svg-icons/**/*`
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      templateCacheString: "test"
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -332,7 +337,8 @@ describe("standalone", () => {
 
         return obj;
       },
-      template: "css"
+      template: "css",
+      templateCacheString: "test"
     });
 
     expect(result.template).toMatchSnapshot();
@@ -344,7 +350,8 @@ describe("standalone", () => {
       template: "css",
       templateClassName: "foo",
       templateFontName: "bar",
-      templateFontPath: "./foo-bar"
+      templateFontPath: "./foo-bar",
+      templateCacheString: "test"
     });
 
     expect(isSvg(result.svg)).toBe(true);

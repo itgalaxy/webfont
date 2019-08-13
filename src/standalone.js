@@ -98,7 +98,7 @@ function getGlyphsData(files, options) {
                 return reject(error);
               }
 
-              metadata.unicode.push(metadata.name.replace("-", "_"));
+              metadata.unicode.push(metadata.name.replace(/-/g, "_"));
               glyphData.metadata = metadata;
 
               return resolve(glyphData);
@@ -206,6 +206,7 @@ export default async function(initialOptions) {
       templateClassName: null,
       templateFontName: null,
       templateFontPath: "./",
+      templateCacheString: null,
       verbose: false
     },
     initialOptions
@@ -257,7 +258,8 @@ export default async function(initialOptions) {
     const buildInTemplates = {
       css: { path: path.join(templateDirectory, "template.css.njk") },
       html: { path: path.join(templateDirectory, "template.html.njk") },
-      scss: { path: path.join(templateDirectory, "template.scss.njk") }
+      scss: { path: path.join(templateDirectory, "template.scss.njk") },
+      json: { path: path.join(templateDirectory, "template.json.njk") }
     };
 
     let templateFilePath = null;
@@ -292,7 +294,8 @@ export default async function(initialOptions) {
       {
         className: options.templateClassName || options.fontName,
         fontName: options.templateFontName || options.fontName,
-        fontPath: options.templateFontPath.replace(/\/?$/, "/")
+        fontPath: options.templateFontPath.replace(/\/?$/, "/"),
+        cacheString: options.templateCacheString || Date.now()
       }
     ]);
 

@@ -6,7 +6,7 @@ exports[`standalone should create css selectors with transform titles through fu
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-  src: url(\\"./webfont.eot\\");
+  src: url(\\"./webfont.eot?test\\");
   src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
 }
 
@@ -125,8 +125,8 @@ exports[`standalone should generate all fonts with build-in template 1`] = `
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-  src: url(\\"./webfont.eot\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"), url(\\"./webfont.ttf\\") format(\\"truetype\\"), url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
+  src: url(\\"./webfont.eot?test\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"), url(\\"./webfont.ttf?test\\") format(\\"truetype\\"), url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
 }
 
 .webfont {
@@ -242,13 +242,13 @@ exports[`standalone should generate all fonts with custom \`template\` with abso
 "/* custom template */
 @font-face {
     font-family: webfont;
-    src: url(\\"./webfont.eot\\");
+    src: url(\\"./webfont.eot?test\\");
     src:
         url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
-        url(\\"./webfont.woff2\\") format(\\"woff2\\"),
-        url(\\"./webfont.woff\\") format(\\"woff\\"),
-        url(\\"./webfont.ttf\\") format(\\"truetype\\"),
-        url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
+        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
+        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
+        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
+        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
     font-style: normal;
     font-weight: 400;
 }
@@ -308,13 +308,13 @@ exports[`standalone should generate all fonts with custom \`template\` with rela
 "/* custom template */
 @font-face {
     font-family: webfont;
-    src: url(\\"./webfont.eot\\");
+    src: url(\\"./webfont.eot?test\\");
     src:
         url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
-        url(\\"./webfont.woff2\\") format(\\"woff2\\"),
-        url(\\"./webfont.woff\\") format(\\"woff\\"),
-        url(\\"./webfont.ttf\\") format(\\"truetype\\"),
-        url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
+        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
+        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
+        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
+        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
     font-style: normal;
     font-weight: 400;
 }
@@ -377,7 +377,7 @@ exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build
   font-weight: 400;
   font-display: auto;
   
-  src: url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"); 
+  src: url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"); 
 }
 
 .webfont {
@@ -503,8 +503,8 @@ exports[`standalone should load config and respect \`template\` option with buil
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-  src: url(\\"./webfont.eot\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"), url(\\"./webfont.ttf\\") format(\\"truetype\\"), url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
+  src: url(\\"./webfont.eot?test\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"), url(\\"./webfont.ttf?test\\") format(\\"truetype\\"), url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
 }
 
 %webfont {
@@ -624,13 +624,13 @@ exports[`standalone should load config and respect \`template\` option with exte
 "/* custom template */
 @font-face {
     font-family: webfont;
-    src: url(\\"./webfont.eot\\");
+    src: url(\\"./webfont.eot?test\\");
     src:
         url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
-        url(\\"./webfont.woff2\\") format(\\"woff2\\"),
-        url(\\"./webfont.woff\\") format(\\"woff\\"),
-        url(\\"./webfont.ttf\\") format(\\"truetype\\"),
-        url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
+        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
+        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
+        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
+        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
     font-style: normal;
     font-weight: 400;
 }
@@ -692,8 +692,8 @@ exports[`standalone should respect \`template\` options 1`] = `
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-  src: url(\\"./foo-bar/bar.eot\\");
-  src: url(\\"./foo-bar/bar.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./foo-bar/bar.woff2\\") format(\\"woff2\\"), url(\\"./foo-bar/bar.woff\\") format(\\"woff\\"), url(\\"./foo-bar/bar.ttf\\") format(\\"truetype\\"), url(\\"./foo-bar/bar.svg#bar\\") format(\\"svg\\");
+  src: url(\\"./foo-bar/bar.eot?test\\");
+  src: url(\\"./foo-bar/bar.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./foo-bar/bar.woff2?test\\") format(\\"woff2\\"), url(\\"./foo-bar/bar.woff?test\\") format(\\"woff\\"), url(\\"./foo-bar/bar.ttf?test\\") format(\\"truetype\\"), url(\\"./foo-bar/bar.svg?test#bar\\") format(\\"svg\\");
 }
 
 .foo {

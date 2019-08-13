@@ -70,6 +70,10 @@ const cli = meow(
 
             Font name in css template.
 
+        --template-cache-string
+
+            Specify cache string in scss/css template.
+
         --no-sort
 
             Keeps the files in the same order of entry
@@ -215,6 +219,10 @@ const cli = meow(
         alias: "p",
         type: "string"
       },
+      "template-cache-string": {
+        default: null,
+        type: "string"
+      },
       verbose: {
         default: false,
         type: "boolean"
@@ -267,6 +275,10 @@ if (cli.flags.templateFontPath) {
 
 if (cli.flags.templateFontName) {
   optionsBase.templateFontName = cli.flags.templateFontName;
+}
+
+if (cli.flags.templateCacheString) {
+  optionsBase.templateCacheString = cli.flags.templateCacheString;
 }
 
 if (cli.flags.destTemplate) {

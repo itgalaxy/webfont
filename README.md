@@ -21,7 +21,7 @@ Features:
 
 ## Table Of Contents
 
-- [Webfont](#webpack)
+- [Webfont](#webfont)
   - [Installation](#webfont-installation)
   - [Usage](#webfont-usage)
   - [Options](#webfont-options)
@@ -40,7 +40,7 @@ Features:
 
 ---
 
-## Webpack
+## Webfont
 
 <h2 id="webfont-installation">Installation</h2>
 
@@ -124,7 +124,7 @@ webfont({
 - Note: If you want to use a custom template use this option pass in a path `string` like this:
 
   ```js
-    webpack({
+    webfont({
       template: './path/to/my-template.css'
     });
   ```
@@ -132,7 +132,7 @@ webfont({
   Or
 
   ```js
-    webpack({
+    webfont({
       template: path.resolve(__dirname, './my-template.css')
     });
   ```
@@ -287,8 +287,8 @@ Add the `cli` script to your `package.json` file's `scripts` object:
 
 ```json
 "scripts": {
-  //..
-  "webpack": "node node_modules/webfont/dist/cli.js"
+  // ..
+  "webfont": "node node_modules/webfont/dist/cli.js"
 }
 ```
 
@@ -296,8 +296,8 @@ If you're using cross-env:
 
 ```json
 "scripts": {
-  //..
-  "webpack": "cross-env node_modules/webfont/dist/cli.js"
+  // ..
+  "webfont": "cross-env node_modules/webfont/dist/cli.js"
 }
 ```
 

@@ -215,7 +215,9 @@ export default async function(initialOptions) {
   });
 
   if (Object.keys(config).length > 0) {
-    options = deepmerge(options, config.config);
+    options = deepmerge(options, config.config, {
+      arrayMerge: (_destinationArray, sourceArray, _opts) => sourceArray
+    });
     options.filePath = config.filepath;
   }
 
@@ -266,9 +268,7 @@ export default async function(initialOptions) {
 
       nunjucks.configure(path.resolve(__dirname, "../"));
 
-      templateFilePath = `${templateDirectory}/template.${
-        options.template
-      }.njk`;
+      templateFilePath = `${templateDirectory}/template.${options.template}.njk`;
     } else {
       const resolvedTemplateFilePath = path.resolve(options.template);
 

@@ -223,6 +223,23 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
+  it("should load config and respect `format` option", async () => {
+    const configFile = path.join(
+      fixturesGlob,
+      "configs/.webfontrc-with-custom-formats"
+    );
+    const result = await standalone({
+      configFile,
+      files: `${fixturesGlob}/svg-icons/**/*`
+    });
+
+    expect(result.svg).toBeUndefined();
+    expect(result.ttf).toBeUndefined();
+    expect(result.eot).toBeUndefined();
+    expect(result.woff).toBeUndefined();
+    expect(isWoff2(result.woff2)).toBe(true);
+  });
+
   it("should generate the ordered output source in the same order of entry", async () => {
     expect.assertions(1);
 

@@ -223,7 +223,7 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
-  it("should load config and respect `format` option", async () => {
+  it("should load config and respect `formats` option", async () => {
     const configFile = path.join(
       fixturesGlob,
       "configs/.webfontrc-with-custom-formats"

@@ -18,9 +18,9 @@ describe("cli", () => {
     rimraf.sync(templatesOutDir);
   });
 
-  it("should generate output as defined in webfont-config.js", async (done) => {
+  it("should generate output as defined in webfont.config.js", async (done) => {
     exec(
-      `node dist/cli.js ${fixturesSrcDir}/svg-icons/**/* --config ${fixturesSrcDir}/configs/webfont-config.js`,
+      `node dist/cli.js ${fixturesSrcDir}/svg-icons/**/* --config ${fixturesSrcDir}/configs/webfont.config.js`,
       (err) => {
         if (err) { throw new Error(err.message); }
 

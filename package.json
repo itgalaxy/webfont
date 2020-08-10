@@ -186,7 +186,8 @@
     ]
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testRegex": "((\\.|/)(test|spec))\\.jsx?$"
   },
   "engines": {
     "node": ">= 8.9.0"

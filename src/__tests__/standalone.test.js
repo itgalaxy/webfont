@@ -441,7 +441,7 @@ describe("standalone", () => {
   it("should respect options set in config and generate output", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      configFile: './src/__tests__/fixtures/configs/webfont-config.js'
+      configFile: './src/__tests__/fixtures/configs/webfont.config.js'
     });
 
     expect(isSvg(result.svg)).toBe(false);

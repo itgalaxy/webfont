@@ -7,7 +7,7 @@ exports[`standalone should create css selectors with transform titles through fu
   font-weight: 400;
   font-display: auto;
   src: url(\\"./webfont.eot\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
 }
 
 .webfont {
@@ -126,7 +126,7 @@ exports[`standalone should create css selectors with transform titles through fu
   font-weight: 400;
   font-display: auto;
   src: url(\\"./webfont.eot\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
 }
 
 .webfont {
@@ -476,8 +476,8 @@ Object {
 }
 
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\templates\\\\template.css.njk",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
 }
 `;
 
@@ -719,8 +719,8 @@ Object {
 }
 
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\templates\\\\template.css.njk",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
 }
 `;
 
@@ -790,8 +790,8 @@ Object {
     content: \\"\\\\ea03\\";
 }
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\template.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
 }
 `;
 
@@ -927,8 +927,8 @@ Object {
     content: \\"\\\\ea03\\";
 }
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\template.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
 }
 `;
 
@@ -1064,8 +1064,8 @@ Object {
     content: \\"\\\\ea03\\";
 }
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\template.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
 }
 `;
 
@@ -1307,8 +1307,8 @@ Object {
 }
 
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\dist\\\\__tests__\\\\resources\\\\css\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\templates\\\\template.css.njk",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\dist\\\\__tests__\\\\resources\\\\css\\\\webfont.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
 }
 `;
 
@@ -1378,8 +1378,8 @@ Object {
     content: \\"\\\\ea03\\";
 }
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\dist\\\\__tests__\\\\resources\\\\css\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\dist\\\\__tests__\\\\resources\\\\css\\\\template.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
 }
 `;
 
@@ -1389,8 +1389,8 @@ exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-
-  src: url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\");
+  
+  src: url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"); 
 }
 
 .webfont {
@@ -1510,8 +1510,8 @@ Object {
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-
-  src: url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\");
+  
+  src: url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"); 
 }
 
 .webfont {
@@ -1621,8 +1621,8 @@ Object {
 }
 
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\templates\\\\template.css.njk",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.css",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
 }
 `;
 
@@ -1888,8 +1888,8 @@ display: inline-block;
 }
 
 ",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\webfont\\\\webfont.scss",
-  "input": "D:\\\\iskv21c\\\\external\\\\webfont\\\\templates\\\\template.scss.njk",
+  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.scss",
+  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.scss.njk",
 }
 `;
 

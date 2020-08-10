@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`cli should generate output as defined in webfont-config.js 1`] = `
+exports[`cli should generate output as defined in webfont.config.js 1`] = `
 Object {
   "data": Array [
     64,
@@ -1510,7 +1510,7 @@ Object {
 }
 `;
 
-exports[`cli should generate output as defined in webfont-config.js 2`] = `
+exports[`cli should generate output as defined in webfont.config.js 2`] = `
 Object {
   "data": Array [
     47,

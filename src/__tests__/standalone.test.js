@@ -123,7 +123,7 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
     expect(Array.isArray(result.templates)).toBe(true);
-    expect(result.templates[0]).toMatchSnapshot();
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should generate only `woff` and `woff2` fonts with build-in template", async () => {
@@ -140,7 +140,7 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
     expect(Array.isArray(result.templates)).toBe(true);
-    expect(result.templates[0]).toMatchSnapshot();
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should generate all fonts with custom `template` with absolute path", async () => {
@@ -156,7 +156,7 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
     expect(Array.isArray(result.templates)).toBe(true);
-    expect(result.templates[0]).toMatchSnapshot();
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should generate all fonts with custom `template` with relative path", async () => {
@@ -172,7 +172,7 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
     expect(Array.isArray(result.templates)).toBe(true);
-    expect(result.templates[0]).toMatchSnapshot();
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should load config and export file path in result", async () => {
@@ -203,8 +203,8 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
     expect(Array.isArray(result.templates)).toBe(true);
-    expect(result.templates[0]).toMatchSnapshot();
-    expect(result.templates[1]).toMatchSnapshot();
+    expect(result.templates[0].content).toMatchSnapshot();
+    expect(result.templates[1].content).toMatchSnapshot();
   });
 
   it("should generate all fonts with multiple template-configs supplied as array of objects", async () => {
@@ -223,8 +223,8 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
     expect(Array.isArray(result.templates)).toBe(true);
-    expect(result.templates[0]).toMatchSnapshot();
-    expect(result.templates[1]).toMatchSnapshot();
+    expect(result.templates[0].content).toMatchSnapshot();
+    expect(result.templates[1].content).toMatchSnapshot();
   });
 
   it("should load config and respect `template` option with build-in template value", async () => {
@@ -246,7 +246,7 @@ describe("standalone", () => {
     expect(result.config.template).toBe("scss");
     expect(result.template).toMatchSnapshot();
     expect(Array.isArray(result.templates)).toBe(true);
-    expect(result.templates[0]).toMatchSnapshot();
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should load config and respect `template` option with external template value", async () => {

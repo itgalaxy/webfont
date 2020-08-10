@@ -358,9 +358,7 @@ exports[`standalone should generate all fonts with build-in template 1`] = `
 `;
 
 exports[`standalone should generate all fonts with build-in template 2`] = `
-Object {
-  "builtInType": "css",
-  "content": "@font-face {
+"@font-face {
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
@@ -475,10 +473,7 @@ Object {
   content: \\"\\\\ea03\\";
 }
 
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
-}
+"
 `;
 
 exports[`standalone should generate all fonts with comma-separated multiple templates (built-in and custom) 1`] = `
@@ -601,9 +596,7 @@ exports[`standalone should generate all fonts with comma-separated multiple temp
 `;
 
 exports[`standalone should generate all fonts with comma-separated multiple templates (built-in and custom) 2`] = `
-Object {
-  "builtInType": "css",
-  "content": "@font-face {
+"@font-face {
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
@@ -718,16 +711,11 @@ Object {
   content: \\"\\\\ea03\\";
 }
 
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
-}
+"
 `;
 
 exports[`standalone should generate all fonts with comma-separated multiple templates (built-in and custom) 3`] = `
-Object {
-  "builtInType": null,
-  "content": "/* custom template */
+"/* custom template */
 @font-face {
     font-family: webfont;
     src: url(\\"./webfont.eot\\");
@@ -789,10 +777,7 @@ Object {
 .webfont-phone-call::before {
     content: \\"\\\\ea03\\";
 }
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
-}
+"
 `;
 
 exports[`standalone should generate all fonts with custom \`template\` with absolute path 1`] = `
@@ -862,9 +847,7 @@ exports[`standalone should generate all fonts with custom \`template\` with abso
 `;
 
 exports[`standalone should generate all fonts with custom \`template\` with absolute path 2`] = `
-Object {
-  "builtInType": null,
-  "content": "/* custom template */
+"/* custom template */
 @font-face {
     font-family: webfont;
     src: url(\\"./webfont.eot\\");
@@ -926,10 +909,7 @@ Object {
 .webfont-phone-call::before {
     content: \\"\\\\ea03\\";
 }
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
-}
+"
 `;
 
 exports[`standalone should generate all fonts with custom \`template\` with relative path 1`] = `
@@ -999,9 +979,7 @@ exports[`standalone should generate all fonts with custom \`template\` with rela
 `;
 
 exports[`standalone should generate all fonts with custom \`template\` with relative path 2`] = `
-Object {
-  "builtInType": null,
-  "content": "/* custom template */
+"/* custom template */
 @font-face {
     font-family: webfont;
     src: url(\\"./webfont.eot\\");
@@ -1063,10 +1041,7 @@ Object {
 .webfont-phone-call::before {
     content: \\"\\\\ea03\\";
 }
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
-}
+"
 `;
 
 exports[`standalone should generate all fonts with multiple template-configs supplied as array of objects 1`] = `
@@ -1189,9 +1164,7 @@ exports[`standalone should generate all fonts with multiple template-configs sup
 `;
 
 exports[`standalone should generate all fonts with multiple template-configs supplied as array of objects 2`] = `
-Object {
-  "builtInType": "css",
-  "content": "@font-face {
+"@font-face {
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
@@ -1306,16 +1279,11 @@ Object {
   content: \\"\\\\ea03\\";
 }
 
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\dist\\\\__tests__\\\\resources\\\\css\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
-}
+"
 `;
 
 exports[`standalone should generate all fonts with multiple template-configs supplied as array of objects 3`] = `
-Object {
-  "builtInType": null,
-  "content": "/* custom template */
+"/* custom template */
 @font-face {
     font-family: webfont;
     src: url(\\"./webfont.eot\\");
@@ -1377,10 +1345,7 @@ Object {
 .webfont-phone-call::before {
     content: \\"\\\\ea03\\";
 }
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\dist\\\\__tests__\\\\resources\\\\css\\\\template.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\src\\\\__tests__\\\\fixtures\\\\templates\\\\template.css",
-}
+"
 `;
 
 exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build-in template 1`] = `
@@ -1503,9 +1468,7 @@ exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build
 `;
 
 exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build-in template 2`] = `
-Object {
-  "builtInType": "css",
-  "content": "@font-face {
+"@font-face {
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
@@ -1620,10 +1583,7 @@ Object {
   content: \\"\\\\ea03\\";
 }
 
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.css",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.css.njk",
-}
+"
 `;
 
 exports[`standalone should load config and respect \`template\` option with build-in template value 1`] = `
@@ -1758,9 +1718,7 @@ display: inline-block;
 `;
 
 exports[`standalone should load config and respect \`template\` option with build-in template value 2`] = `
-Object {
-  "builtInType": "scss",
-  "content": "
+"
   $webfont-avatar: \\"\\\\ea01\\";
 
   $webfont-envelope: \\"\\\\ea02\\";
@@ -1887,10 +1845,7 @@ display: inline-block;
     content: \\"\\\\ea03\\";
 }
 
-",
-  "destPath": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\webfont.scss",
-  "input": "D:\\\\iskv21c\\\\external\\\\m-jung\\\\webfont\\\\templates\\\\template.scss.njk",
-}
+"
 `;
 
 exports[`standalone should load config and respect \`template\` option with external template value 1`] = `

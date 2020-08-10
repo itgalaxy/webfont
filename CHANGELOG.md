@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org).
 
+## 9.1.0 - 2020-08-09
+
+- Feat: Support for processing of multiple templates via CLI and API (see [README.md](README.md)).
+- Fixed: Where defining less font-formats using `formats` in an config-file wouldn't lead to expected result.
+- Fixed: _"file not found"_ error if the parent output directory for fonts or templates didn't exist.  
+
 ## 9.0.0 - 2019-04-19
 
 - Changed: drops support for Node.js 6.

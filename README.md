@@ -13,7 +13,7 @@ Features:
 - Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF` and `SVG`.
 - Support configuration Files - use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories.
 - Supported browsers: IE8+.
-- Allows to use custom templates (example `css`, `scss` and etc).
+- Allows to use custom templates (example `css`, `scss` and `html` etc).
 - No extra dependencies as `gulp`, `grunt` or other big tools.
 - Tested on all platforms (`linux`, `windows` and `osx`).
 - CLI.
@@ -93,11 +93,36 @@ Font file types to generate.
 
 ### `template`
 
-Type: `string`
+Type: `string`, `string[]`, `WebfontTemplateOptions[]`
 Default: `null`
 
-Possible values: `css`, `scss` (feel free to contribute). If you want to use custom template use this option.
+Built-in template aliases: `css`, `scss`, `html` (feel free to contribute).<br/>
+If you want to use custom template(s), supply one or more paths.
+
+- CLI: `-t`, `-template "css, html"`<br/>
+- API: `template: 'css, html'` or `template: ['css', 'html']`
+- API `WebfontTemplateOptions[]`: More flexible results can be achieved, if you specify options for each template separately.<br/>
+  Missing properties will default to either the corresponding global- or generic predefined properties. 
+```js
+import webfont from "webfont";
+
+webfont({
+  files: "src/svg-icons/**/*.svg",
+  fontName: "my-font-name",
+  template: [
+    {file: 'css', outDir: './resources/css'},
+    {file: './templates/icon-list.html.njk', outDir: './resources/docs'}
+  ]
+});
+```
+
 Example: `template: path.resolve(__dirname, './my-template.css')`.
+
+#### `WebfontTemplateOptions`
+- `String` `file`:      Type or (relative) template path
+- `String` `outDir`:    The (relative) path of the output file.     _Default_: `options.dest`
+- `String` `className`: Classname used for each font-icon class.    _Default_: `options.templateClassName`
+- `String` `fontPath`:  Path used as URI in the resulting template. _Default_: `options.templateFontPath`
 
 ### `templateClassName`
 

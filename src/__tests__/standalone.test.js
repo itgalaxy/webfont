@@ -122,6 +122,8 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0]).toMatchSnapshot();
   });
 
   it("should generate only `woff` and `woff2` fonts with build-in template", async () => {
@@ -137,12 +139,14 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0]).toMatchSnapshot();
   });
 
   it("should generate all fonts with custom `template` with absolute path", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: path.join(fixturesGlob, "templates/template.css")
+      template: path.join(fixturesGlob, "templates/template.css"),
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -151,6 +155,8 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0]).toMatchSnapshot();
   });
 
   it("should generate all fonts with custom `template` with relative path", async () => {
@@ -165,6 +171,8 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0]).toMatchSnapshot();
   });
 
   it("should load config and export file path in result", async () => {
@@ -180,6 +188,43 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.config.foo).toBe("bar");
+  });
+
+  it("should generate all fonts with comma-separated multiple templates (built-in and custom)", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "css, src/__tests__/fixtures/templates/template.css",
+    });
+
+    expect(isSvg(result.svg)).toBe(true);
+    expect(isTtf(result.ttf)).toBe(true);
+    expect(isEot(result.eot)).toBe(true);
+    expect(isWoff(result.woff)).toBe(true);
+    expect(isWoff2(result.woff2)).toBe(true);
+    expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0]).toMatchSnapshot();
+    expect(result.templates[1]).toMatchSnapshot();
+  });
+
+  it("should generate all fonts with multiple template-configs supplied as array of objects", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: [
+        {file: 'css', outDir: 'dist/__tests__/resources/css'},
+        {file: 'src/__tests__/fixtures/templates/template.css', outDir: 'dist/__tests__/resources/css'}
+      ],
+    });
+
+    expect(isSvg(result.svg)).toBe(true);
+    expect(isTtf(result.ttf)).toBe(true);
+    expect(isEot(result.eot)).toBe(true);
+    expect(isWoff(result.woff)).toBe(true);
+    expect(isWoff2(result.woff2)).toBe(true);
+    expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0]).toMatchSnapshot();
+    expect(result.templates[1]).toMatchSnapshot();
   });
 
   it("should load config and respect `template` option with build-in template value", async () => {
@@ -200,6 +245,8 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.config.template).toBe("scss");
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0]).toMatchSnapshot();
   });
 
   it("should load config and respect `template` option with external template value", async () => {
@@ -221,6 +268,8 @@ describe("standalone", () => {
       "src/__tests__/fixtures/templates/template.css"
     );
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should generate the ordered output source in the same order of entry", async () => {
@@ -336,6 +385,8 @@ describe("standalone", () => {
     });
 
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should respect `template` options", async () => {
@@ -355,6 +406,26 @@ describe("standalone", () => {
     expect(result.config.template).toBe("css");
     expect(result.usedBuildInTemplate).toBe(true);
     expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0].content).toMatchSnapshot();
+  });
+
+  it("should override general options if template specific options are set", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: [{
+        file: 'css',
+        className: "foo",
+        fontPath: "./foo-bar"
+      }],
+      templateClassName: "fizz",
+      templateFontName: "bar",
+      templateFontPath: "./fizz-buzz",
+    });
+
+    expect(result.template).toMatchSnapshot();
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates[0].content).toMatchSnapshot();
   });
 
   it("should export `glyphsData` in `result`", async () => {
@@ -365,5 +436,20 @@ describe("standalone", () => {
 
     expect(Array.isArray(result.glyphsData)).toBe(true);
     expect(result.glyphsData.length > 0).toBe(true);
+  });
+
+  it("should respect options set in config and generate output", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      configFile: './src/__tests__/fixtures/configs/webfont-config.js'
+    });
+
+    expect(isSvg(result.svg)).toBe(false);
+    expect(isTtf(result.ttf)).toBe(false);
+    expect(isEot(result.eot)).toBe(false);
+    expect(isWoff(result.woff)).toBe(false);
+    expect(isWoff2(result.woff2)).toBe(true);
+    expect(Array.isArray(result.templates)).toBe(true);
+    expect(result.templates.length).toBe(2);
   });
 });

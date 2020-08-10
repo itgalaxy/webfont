@@ -52,7 +52,8 @@ const cli = meow(
 
         -t, --template
 
-            Type of template ('css', 'scss') or path to custom template.
+            Type of template ('css', 'scss', 'html') or path to custom template.
+            Comma-separated types or paths ('css, html') to process multiple templates.
 
         -s, --dest-template
 
@@ -351,67 +352,24 @@ Promise.resolve()
       cli.showHelp();
     }
 
-    return standalone(options).then(result => {
-      result.config = Object.assign(
-        {},
-        {
-          dest: options.dest,
-          destTemplate: options.destTemplate
-        },
-        result.config
-      );
-
-      return result;
-    });
+    return standalone(options);
   })
   .then(result => {
-    const { fontName, dest } = result.config;
-
-    let destTemplate = null;
-
-    if (result.template) {
-      ({ destTemplate } = result.config);
-
-      if (!destTemplate) {
-        destTemplate = dest;
-      }
-
-      if (result.usedBuildInTemplate) {
-        destTemplate = path.join(
-          destTemplate,
-          `${result.config.fontName}.${result.config.template}`
-        );
-      } else {
-        destTemplate = path.join(
-          destTemplate,
-          path.basename(result.config.template).replace(".njk", "")
-        );
-      }
-    }
+    const options = result.config;
 
     return Promise.resolve()
       .then(() =>
         Promise.all(
-          Object.keys(result).map(type => {
-            if (
-              type === "config" ||
-              type === "usedBuildInTemplate" ||
-              type === "glyphsData"
-            ) {
-              return null;
-            }
-
-            const content = result[type];
-            let file = null;
-
-            if (type !== "template") {
-              file = path.resolve(path.join(dest, `${fontName}.${type}`));
-            } else {
-              file = path.resolve(destTemplate);
-            }
-
-            return fs.writeFile(file, content);
+          result.fonts.map(
+            renderResult => {
+              if (options.verbose) { console.log(`Writing font-file '${renderResult.format}' -> '${renderResult.destPath}' (${renderResult.content.length})`); }
+              return fs.outputFile(renderResult.destPath, renderResult.content)
           })
+            .concat(result.templates.map(
+              renderResult => {
+                if (options.verbose) { console.log(`Writing template-file '${renderResult.input}' -> '${renderResult.destPath}' (${renderResult.content.length})`); }
+                return fs.outputFile(renderResult.destPath, renderResult.content)
+              }))
         )
       )
       .then(() => Promise.resolve(result));

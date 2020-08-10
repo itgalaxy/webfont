@@ -15,6 +15,8 @@ import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
 import xml2js from "xml2js";
 
+const OPTIONS_TEMPLATE_SEPARATOR = ',';
+
 async function buildConfig(options) {
   let searchPath = process.cwd();
   let configPath = null;
@@ -37,6 +39,8 @@ async function buildConfig(options) {
 }
 
 function getGlyphsData(files, options) {
+  if (options.verbose) { console.log(`Rendering glyphs for '${options.fontName}'`); }
+
   const metadataProvider =
     options.metadataProvider ||
     defaultMetadataProvider({
@@ -109,6 +113,9 @@ function getGlyphsData(files, options) {
 }
 
 function toSvg(glyphsData, options) {
+  const renderMsgHint = options.formats.includes('svg') ? '' : ' (internal base for further rendering)';
+  if (options.verbose) { console.log(`Rendering svg format for '${options.fontName}'${renderMsgHint}`); }
+
   let result = "";
 
   return new Promise((resolve, reject) => {
@@ -150,19 +157,127 @@ function toSvg(glyphsData, options) {
 }
 
 function toTtf(buffer, options) {
-  return Buffer.from(svg2ttf(buffer, options).buffer);
+  const renderMsgHint = options.formats.includes('svg') ? '' : ' (internal base for further rendering)';
+  if (options.verbose) { console.log(`Rendering ttf format for '${options.fontName}'${renderMsgHint}`); }
+
+  return Buffer.from(
+    svg2ttf(
+      buffer,
+      options.formatsOptions && options.formatsOptions.ttf
+        ? options.formatsOptions.ttf
+        : {})
+    .buffer);
 }
 
-function toEot(buffer) {
+function toEot(buffer, options) {
+  if (options.verbose) { console.log(`Rendering eof format for '${options.fontName}'`); }
   return Buffer.from(ttf2eot(buffer).buffer);
 }
 
 function toWoff(buffer, options) {
-  return Buffer.from(ttf2woff(buffer, options).buffer);
+  if (options.verbose) { console.log(`Rendering woff format for '${options.fontName}'`); }
+  return Buffer.from(ttf2woff(buffer, { metadata: options.metadata }).buffer);
 }
 
-function toWoff2(buffer) {
+function toWoff2(buffer, options) {
+  if (options.verbose) { console.log(`Rendering woff2 format for '${options.fontName}'`); }
   return wawoff2.compress(buffer);
+}
+
+/**
+ * Resolves the absolute path of the template for type or (relative) template path.
+ * @param {String} templateTypeOrPath Template type or (relative) template path.
+ *
+ * @returns {WebfontTemplateInput} Resolved input information.
+ */
+function resolveTemplateInput(templateTypeOrPath) {
+  const builtInTemplates = {
+    css : 'template.css.njk',
+    html: 'template.html.njk',
+    scss: 'template.scss.njk',
+  };
+
+  if (Object.keys(builtInTemplates).includes(templateTypeOrPath)) {
+    return {
+      builtInType : templateTypeOrPath,
+      fileDirPath : path.resolve(__dirname, "../templates"),
+      filePath    : path.resolve(__dirname, `../templates/${builtInTemplates[templateTypeOrPath]}`),
+    }
+  } else {
+    const resolvedPath = path.resolve(templateTypeOrPath);
+
+    return {
+      builtInType : null,
+      fileDirPath : path.dirname(resolvedPath),
+      filePath    : resolvedPath,
+    };
+  }
+}
+
+/**
+ * Resolves the absolute path of the output file.
+ *
+ * @param {WebfontTemplateInput}   templateInput   Input information for this template.
+ * @param {WebfontTemplateOptions} templateOptions Options specific for this template.
+ * @param {Object}                 runOptions      Options specified or resulting defaults for this run.
+ *
+ * @returns {String} Absolute  path of the output file.
+ */
+function resolveTemplateOutputPath(templateInput, templateOptions, runOptions) {
+  const fontName   = runOptions.fontName;
+  let   outDirPath = templateOptions.outDir || runOptions.destTemplate || runOptions.dest;
+
+  return templateInput.builtInType
+    ? path.resolve(outDirPath, `${fontName}.${templateInput.builtInType}`)
+    : path.resolve(outDirPath, path.basename(templateInput.filePath).replace(/\.njk$/, ''));
+}
+
+/**
+ * Renders the Template using specified Options
+ * @param {WebfontTemplateOptions|String} templateOptions Options specific for this template.
+ * @param {Object}                        runOptions      Options specified or resulting defaults for this run.
+ * @param {Object}                        glyphsData      Glyphs resolved by `getGlyphsData()`
+ *
+ * @returns {WebfontTemplateRenderResult}
+ */
+function renderTemplate(templateOptions, runOptions, glyphsData) {
+  if (typeof templateOptions === 'string') { templateOptions = {file: templateOptions}; }
+
+  if (runOptions.verbose) { console.log(`Preparing template '${templateOptions.file}'`); }
+
+  const templateInput = resolveTemplateInput(templateOptions.file);
+  if (runOptions.verbose) { console.log(`Resolved template path to '${templateInput.filePath}'`); }
+
+  const outputPath    = resolveTemplateOutputPath(templateInput, templateOptions, runOptions);
+  if (runOptions.verbose) { console.log(`Resolved output path to '${outputPath}'`); }
+
+  nunjucks.configure(templateInput.fileDirPath);
+
+  const nunjucksOptions = deepmerge.all([
+    {
+      glyphs: glyphsData.map(glyphData => {
+        if (typeof runOptions.glyphTransformFn === "function") {
+          glyphData.metadata = runOptions.glyphTransformFn(glyphData.metadata);
+        }
+
+        return glyphData.metadata;
+      })
+    },
+    runOptions,
+    {
+      className: templateOptions.className || runOptions.templateClassName || runOptions.fontName,
+      fontName : runOptions.templateFontName || runOptions.fontName,
+      fontPath : (templateOptions.fontPath || runOptions.templateFontPath).replace(/\/?$/, "/"),
+    }
+  ]);
+
+  if (runOptions.verbose) { console.log(`Rendering template '${templateOptions.file}'`); }
+  return {
+    input      : templateInput.filePath,
+    content    : nunjucks.render(templateInput.filePath, nunjucksOptions),
+    destPath   : outputPath,
+    builtInType: templateInput.builtInType,
+  }
 }
 
 export default async function(initialOptions) {
@@ -176,6 +291,8 @@ export default async function(initialOptions) {
       ascent: undefined, // eslint-disable-line no-undefined
       centerHorizontally: false,
       descent: 0,
+      dest: './',
+      destTemplate: './',
       fixedWidth: false,
       fontHeight: null,
       fontId: null,
@@ -215,10 +332,22 @@ export default async function(initialOptions) {
   });
 
   if (Object.keys(config).length > 0) {
-    options = deepmerge(options, config.config);
+    // Do not merge Arrays, since this this would leak the defaults into specified config-options.
+    // E.g. you can't reduce the defined defaults.
+    // Fixes config.formats: ['woff2'] + ["svg", "ttf", "eot", "woff", "woff2"] = ["svg", "ttf", "eot", "woff", "woff2", "woff2"]
+    options = deepmerge(options, config.config, { arrayMerge: function dontMergeUseRight(l, r) { return [...r]; }});
     options.filePath = config.filepath;
   }
 
+  // Convert formats[] to object-map for easy access.
+  options._formats = () => {
+    const obj = {};
+    options.formats.forEach(type => obj[type] = true);
+    return obj;
+  };
+
+
+  if (options.verbose) { console.log(`Collection SVGs for '${options.files}'`); }
   const foundFiles = await globby([].concat(options.files));
   const filteredFiles = foundFiles.filter(
     foundFile => path.extname(foundFile) === ".svg"
@@ -228,85 +357,93 @@ export default async function(initialOptions) {
     throw new Error("Files glob patterns specified did not match any files");
   }
 
-  const result = {};
+  const result     = {};
+  const glyphsData = await getGlyphsData(filteredFiles, options);
+  const svgContent = await toSvg(glyphsData, options);
+  const ttfContent = toTtf(svgContent, options);
 
-  result.glyphsData = await getGlyphsData(filteredFiles, options);
-  result.svg = await toSvg(result.glyphsData, options);
-  result.ttf = toTtf(
-    result.svg,
-    options.formatsOptions && options.formatsOptions.ttf
-      ? options.formatsOptions.ttf
-      : {}
-  );
+  result.glyphsData = glyphsData;
+  result.templates  = []; // templates array may never be undefined
+  result.fonts      = []; // font array may never be undefined
 
-  if (options.formats.includes("eot")) {
-    result.eot = toEot(result.ttf);
-  }
+  if (options.verbose) { console.log(`Rendering fonts for formats'${options.formats.join(', ')}'`); }
 
-  if (options.formats.includes("woff")) {
-    result.woff = toWoff(result.ttf, { metadata: options.metadata });
-  }
+  await options.formats.forEach(async format => {
+    let content = null;
 
-  if (options.formats.includes("woff2")) {
-    result.woff2 = await toWoff2(result.ttf);
-  }
-
-  if (options.template) {
-    const templateDirectory = path.resolve(__dirname, "../templates");
-    const buildInTemplates = {
-      css: { path: path.join(templateDirectory, "template.css.njk") },
-      html: { path: path.join(templateDirectory, "template.html.njk") },
-      scss: { path: path.join(templateDirectory, "template.scss.njk") }
-    };
-
-    let templateFilePath = null;
-
-    if (Object.keys(buildInTemplates).includes(options.template)) {
-      result.usedBuildInTemplate = true;
-
-      nunjucks.configure(path.resolve(__dirname, "../"));
-
-      templateFilePath = `${templateDirectory}/template.${
-        options.template
-      }.njk`;
-    } else {
-      const resolvedTemplateFilePath = path.resolve(options.template);
-
-      nunjucks.configure(path.dirname(resolvedTemplateFilePath));
-
-      templateFilePath = path.resolve(resolvedTemplateFilePath);
+    switch (format) {
+      case 'svg'  : result.svg   = content = svgContent; break;
+      case 'ttf'  : result.ttf   = content = ttfContent; break;
+      case 'eot'  : result.eot   = content = toEot(ttfContent, options); break;
+      case 'woff' : result.woff  = content = toWoff(ttfContent, options); break;
+      case 'woff2': result.woff2 = content = await toWoff2(ttfContent, options); break;
     }
 
-    const nunjucksOptions = deepmerge.all([
-      {
-        glyphs: result.glyphsData.map(glyphData => {
-          if (typeof options.glyphTransformFn === "function") {
-            glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
-          }
+    if (content) {
+      result.fonts.push({
+        format  : format,
+        content : content,
+        destPath: path.resolve(options.dest, `${options.fontName}.${format}`),
+      });
+    }
+  });
 
-          return glyphData.metadata;
-        })
-      },
-      options,
-      {
-        className: options.templateClassName || options.fontName,
-        fontName: options.templateFontName || options.fontName,
-        fontPath: options.templateFontPath.replace(/\/?$/, "/")
+  if (options.template) {
+    let templates = options.template;
+    if (typeof templates !== 'string' && !Array.isArray(templates)) {
+      throw new TypeError('template option must be an string or array.');
+    }
+
+    if (typeof templates === 'string') {
+      if (templates.includes(OPTIONS_TEMPLATE_SEPARATOR)) {
+        // Multiple templates, delimiter separated, like: 'css, html'
+        templates = templates.split(OPTIONS_TEMPLATE_SEPARATOR).map(template => template.trim());
+      } else {
+        // Single template
+        templates = [templates];
       }
-    ]);
+    }
 
-    result.template = nunjucks.render(templateFilePath, nunjucksOptions);
+    if (Array.isArray(templates)) {
+      result.templates = templates.map(templateOptions => renderTemplate(templateOptions, options, result.glyphsData));
+      // Make first result accessible as .template for backwards compatibility
+      if (result.templates.length > 0) { result.template = result.templates[0].content;}
+    }
   }
 
-  if (!options.formats.includes("svg")) {
-    delete result.svg;
-  }
-
-  if (!options.formats.includes("ttf")) {
-    delete result.ttf;
-  }
-
+  // For backwards compatibility: true if any of the results is based on an built-in template.
+  result.usedBuildInTemplate = !!result.templates.find(({builtInType}) => !!builtInType);
   result.config = options;
 
   return result;
 }
+
+/**
+ * @typedef {Object} WebfontTemplateOptions
+ * @property {String} [file]       Type or (relative) template path
+ * @property {String} [outDir]  The (relative) path of the output file.
+ * @property {String} [className]  Classname used for each font-icon class.
+ * @property {String} [fontPath]   Path used as URI in the resulting template.
+ */
+
+/**
+ * @typedef {Object} WebfontTemplateInput
+ * @property {String}      filePath    Absolute path to the file.
+ * @property {String}      fileDirPath Absolute path to the directory the file is located in.
+ * @property {String|null} builtInType Type of the template, if it is an built-in template.
+ */
+
+/**
+ * @typedef {Object} WebfontTemplateRenderResult
+ * @property {String}  input       Template type or (relative) template path, this result is based on.
+ * @property {String}  content     The rendered template result.
+ * @property {String}  destPath    The file path the output should be written to.
+ * @property {boolean} builtInType Type of the template, if it is based on an built-in template.
+ */
+
+/**
+ * @typedef {Object} WebfontFontRenderResult
+ * @property {String}  format   Type of the font format, this result is based on.
+ * @property {String}  content  The rendered font result.
+ * @property {String}  destPath The file path the output should be written to.
+ */

@@ -157,7 +157,7 @@ function toSvg(glyphsData, options) {
 }
 
 function toTtf(buffer, options) {
-  const renderMsgHint = options.formats.includes('svg') ? '' : ' (internal base for further rendering)';
+  const renderMsgHint = options.formats.includes('ttf') ? '' : ' (internal base for further rendering)';
   if (options.verbose) { console.log(`Rendering ttf format for '${options.fontName}'${renderMsgHint}`); }
 
   return Buffer.from(
@@ -340,12 +340,7 @@ export default async function(initialOptions) {
   }
 
   // Convert formats[] to object-map for easy access.
-  options._formats = () => {
-    const obj = {};
-    options.formats.forEach(type => obj[type] = true);
-    return obj;
-  };
-
+  const formats = options.formats.reduce((l,r) => {l[r] = options.formatsOptions[r] || {}; return l;}, {});
 
   if (options.verbose) { console.log(`Collection SVGs for '${options.files}'`); }
   const foundFiles = await globby([].concat(options.files));
@@ -368,24 +363,18 @@ export default async function(initialOptions) {
 
   if (options.verbose) { console.log(`Rendering fonts for formats'${options.formats.join(', ')}'`); }
 
-  await options.formats.forEach(async format => {
-    let content = null;
+  if (formats.svg) { result.svg = svgContent; }
+  if (formats.ttf) { result.ttf = ttfContent; }
+  if (formats.eot) { result.eot = toEot(ttfContent, options); }
+  if (formats.woff) { result.woff = toWoff(ttfContent, options); }
+  if (formats.woff2) { result.woff2 = await toWoff2(ttfContent, options); }
 
-    switch (format) {
-      case 'svg'  : result.svg   = content = svgContent; break;
-      case 'ttf'  : result.ttf   = content = ttfContent; break;
-      case 'eot'  : result.eot   = content = toEot(ttfContent, options); break;
-      case 'woff' : result.woff  = content = toWoff(ttfContent, options); break;
-      case 'woff2': result.woff2 = content = await toWoff2(ttfContent, options); break;
-    }
-
-    if (content) {
-      result.fonts.push({
-        format  : format,
-        content : content,
-        destPath: path.resolve(options.dest, `${options.fontName}.${format}`),
-      });
-    }
+  Object.entries(formats).forEach(([format, formatOptions]) => {
+    result.fonts.push({
+      format  : format,
+      content : result[format],
+      destPath: path.resolve(options.dest, `${options.fontName}.${format}`),
+    });
   });
 
   if (options.template) {

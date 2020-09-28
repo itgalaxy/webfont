@@ -52,18 +52,18 @@
   "dependencies": {
     "cosmiconfig": "^5.2.0",
     "deepmerge": "^3.2.0",
-    "xml2js": "^0.4.17",
+    "fs-extra": "^7.0.1",
     "globby": "^9.2.0",
     "meow": "^6.1.0",
-    "fs-extra": "^7.0.1",
-    "nunjucks": "^3.2.0",
+    "nunjucks": "^3.2.2",
     "p-limit": "^2.2.0",
     "resolve-from": "^5.0.0",
     "svg2ttf": "^4.0.0",
     "svgicons2svgfont": "^9.0.3",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
-    "wawoff2": "^1.0.2"
+    "wawoff2": "^1.0.2",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",
@@ -104,21 +104,21 @@
     "lint-staged": "^8.0.4"
   },
   "scripts": {
-    "lint:prettier": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,md,yml,yaml}' --ignore-path .gitignore",
+    "build": "babel src -d dist --ignore '**/__tests__/**'",
+    "demo": "npm run build && node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
+    "fix": "npm-run-all -l prettify -p 'fix:**'",
+    "fix:js": "npm run lint:js -- --fix",
+    "lint": "npm-run-all -l --parallel lint:*",
     "lint:js": "eslint . --report-unused-disable-directives --ignore-path .gitignore --ext 'js,.mjs,.jsx,.md'",
     "lint:md": "remark . -i .gitignore -f -q",
-    "lint": "npm-run-all -l --parallel lint:*",
-    "prettify": "npm run lint:prettier -- --write",
-    "fix:js": "npm run lint:js -- --fix",
-    "fix": "npm-run-all -l prettify -p 'fix:**'",
-    "pretest": "npm run lint",
-    "test:only": "jest src",
-    "test": "npm run test:only -- --coverage",
+    "lint:prettier": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,md,yml,yaml}' --ignore-path .gitignore",
     "prebuild": "rimraf dist",
-    "demo": "npm run build && node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
-    "build": "babel src -d dist --ignore '**/__tests__/**'",
     "prepare": "npm run build",
-    "release": "standard-version"
+    "pretest": "npm run lint",
+    "prettify": "npm run lint:prettier -- --write",
+    "release": "standard-version",
+    "test": "npm run test:only -- --coverage",
+    "test:only": "jest src"
   },
   "babel": {
     "presets": [

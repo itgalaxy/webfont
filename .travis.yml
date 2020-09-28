@@ -30,20 +30,12 @@ matrix:
       node_js: "10"
       script: npm run $JOB_PART
       env: JOB_PART=test:only
-    - os: linux
-      node_js: "8"
-      script: npm run $JOB_PART
-      env: JOB_PART=test:only
     - os: osx
       node_js: "11"
       script: npm run $JOB_PART
       env: JOB_PART=test:only
     - os: osx
       node_js: "10"
-      script: npm run $JOB_PART
-      env: JOB_PART=test:only
-    - os: osx
-      node_js: "8"
       script: npm run $JOB_PART
       env: JOB_PART=test:only
 

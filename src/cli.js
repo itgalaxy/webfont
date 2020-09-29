@@ -137,93 +137,93 @@ const cli = meow(
     autoVersion: false,
     flags: {
       ascent: {
-        type: "string"
+        type: "string",
       },
       "center-horizontally": {
-        type: "boolean"
+        type: "boolean",
       },
       config: {
-        default: null
+        default: null,
       },
       descent: {
-        type: "string"
+        type: "string",
       },
       dest: {
         alias: "d",
         default: process.cwd(),
-        type: "string"
+        type: "string",
       },
       "dest-template": {
         alias: "s",
-        type: "string"
+        type: "string",
       },
       "fixed-width": {
-        type: "boolean"
+        type: "boolean",
       },
       "font-height": {
-        type: "string"
+        type: "string",
       },
       "font-id": {
-        type: "string"
+        type: "string",
       },
       "font-name": {
         alias: "u",
-        type: "string"
+        type: "string",
       },
       "font-style": {
-        type: "string"
+        type: "string",
       },
       "font-weight": {
-        type: "string"
+        type: "string",
       },
       formats: {
-        alias: "f"
+        alias: "f",
       },
       help: {
         alias: "h",
-        type: "boolean"
+        type: "boolean",
       },
       normalize: {
-        type: "boolean"
+        type: "boolean",
       },
       "prepend-unicode": {
-        type: "boolean"
+        type: "boolean",
       },
       round: {
-        type: "string"
+        type: "string",
       },
       sort: {
         default: true,
-        type: "boolean"
+        type: "boolean",
       },
       "start-unicode": {
-        type: "string"
+        type: "string",
       },
       template: {
         alias: "t",
-        type: "string"
+        type: "string",
       },
       "template-class-name": {
         alias: "c",
-        type: "string"
+        type: "string",
       },
       "template-font-name": {
         alias: "n",
-        type: "string"
+        type: "string",
       },
       "template-font-path": {
         alias: "p",
-        type: "string"
+        type: "string",
       },
       verbose: {
         default: false,
-        type: "boolean"
+        type: "boolean",
       },
       version: {
         alias: "v",
-        type: "boolean"
-      }
-    }
+        type: "boolean",
+      },
+    },
   }
 );
 
@@ -344,19 +344,19 @@ if (cli.flags.version || cli.flags.v) {
 Promise.resolve()
   .then(() => {
     const options = Object.assign({}, optionsBase, {
-      files: cli.input
+      files: cli.input,
     });
 
     if (options.files.length === 0) {
       cli.showHelp();
     }
 
-    return standalone(options).then(result => {
+    return standalone(options).then((result) => {
       result.config = Object.assign(
         {},
         {
           dest: options.dest,
-          destTemplate: options.destTemplate
+          destTemplate: options.destTemplate,
         },
         result.config
       );
@@ -364,7 +364,7 @@ Promise.resolve()
       return result;
     });
   })
-  .then(result => {
+  .then((result) => {
     const { fontName, dest } = result.config;
 
     let destTemplate = null;
@@ -392,7 +392,7 @@ Promise.resolve()
     return Promise.resolve()
       .then(() =>
         Promise.all(
-          Object.keys(result).map(type => {
+          Object.keys(result).map((type) => {
             if (
               type === "config" ||
               type === "usedBuildInTemplate" ||
@@ -419,7 +419,7 @@ Promise.resolve()
       )
       .then(() => Promise.resolve(result));
   })
-  .catch(error => {
+  .catch((error) => {
     // eslint-disable-next-line no-console
     console.log(error.stack);
 

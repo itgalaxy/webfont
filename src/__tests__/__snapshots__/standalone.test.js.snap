@@ -2,10 +2,10 @@
 
 exports[`standalone should create css selectors with transform titles through function 1`] = `
 "@font-face {
+  font-display: auto;
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
-  font-display: auto;
   src: url(\\"./webfont.eot\\");
   src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
 }
@@ -121,10 +121,10 @@ exports[`standalone should create css selectors with transform titles through fu
 
 exports[`standalone should generate all fonts with build-in template 1`] = `
 "@font-face {
+  font-display: auto;
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
-  font-display: auto;
   src: url(\\"./webfont.eot\\");
   src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"), url(\\"./webfont.ttf\\") format(\\"truetype\\"), url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
 }
@@ -372,10 +372,10 @@ exports[`standalone should generate all fonts with custom \`template\` with rela
 
 exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build-in template 1`] = `
 "@font-face {
+  font-display: auto;
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
-  font-display: auto;
   
   src: url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"); 
 }
@@ -499,10 +499,10 @@ exports[`standalone should load config and respect \`template\` option with buil
 
 
 @font-face {
+  font-display: block;
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
-  font-display: auto;
   src: url(\\"./webfont.eot\\");
   src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"), url(\\"./webfont.ttf\\") format(\\"truetype\\"), url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
 }
@@ -688,10 +688,10 @@ exports[`standalone should load config and respect \`template\` option with exte
 
 exports[`standalone should respect \`template\` options 1`] = `
 "@font-face {
+  font-display: auto;
   font-family: \\"bar\\";
   font-style: normal;
   font-weight: 400;
-  font-display: auto;
   src: url(\\"./foo-bar/bar.eot\\");
   src: url(\\"./foo-bar/bar.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./foo-bar/bar.woff2\\") format(\\"woff2\\"), url(\\"./foo-bar/bar.woff\\") format(\\"woff\\"), url(\\"./foo-bar/bar.ttf\\") format(\\"truetype\\"), url(\\"./foo-bar/bar.svg#bar\\") format(\\"svg\\");
 }

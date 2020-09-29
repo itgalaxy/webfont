@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import path from "path";
-import fs from "fs-extra";
+import fs from "fs";
 import meow from "meow";
 import resolveFrom from "resolve-from";
 import standalone from "./standalone";
@@ -52,7 +52,7 @@ const cli = meow(
 
         -t, --template
 
-            Type of template ('css', 'scss') or path to custom template.
+            Type of template ('css', 'scss', 'styl') or path to custom template.
 
         -s, --dest-template
 
@@ -122,7 +122,7 @@ const cli = meow(
 
         --start-unicode
 
-            The start unicode codepoint for unprefixed files [0xEA01].
+            The start unicode codepoint for files without prefix [0xEA01].
 
         --prepend-unicode
 
@@ -402,7 +402,8 @@ Promise.resolve()
             }
 
             const content = result[type];
-            let file = null;
+            // eslint-disable-next-line init-declarations
+            let file;
 
             if (type !== "template") {
               file = path.resolve(path.join(dest, `${fontName}.${type}`));
@@ -410,7 +411,9 @@ Promise.resolve()
               file = path.resolve(destTemplate);
             }
 
-            return fs.writeFile(file, content);
+            return fs.writeFile(file, content, () => {
+              Function.prototype();
+            });
           })
         )
       )

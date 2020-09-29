@@ -245,10 +245,7 @@ export default async function (initialOptions) {
       : {}
   );
 
-  result.hash = crypto
-    .createHash("md5")
-    .update(result.svg)
-    .digest("hex");
+  result.hash = crypto.createHash("md5").update(result.svg).digest("hex");
 
   if (options.formats.includes("eot")) {
     result.eot = toEot(result.ttf);
@@ -302,9 +299,9 @@ export default async function (initialOptions) {
       {
         className: options.templateClassName || options.fontName,
         fontName: options.templateFontName || options.fontName,
-        fontPath: options.templateFontPath.replace(/\/?$/, "/")
+        fontPath: options.templateFontPath.replace(/\/?$/, "/"),
       },
-      hashOption
+      hashOption,
     ]);
 
     result.template = nunjucks.render(templateFilePath, nunjucksOptions);

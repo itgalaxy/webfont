@@ -1,3 +1,4 @@
 {
-    "template": "scss"
+    "template": "scss",
+    "templateCacheString": "test"
 }

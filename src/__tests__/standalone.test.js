@@ -67,11 +67,11 @@ describe("standalone", () => {
       .update(result.woff2)
       .digest("hex");
 
-    expect(svgHash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
-    expect(ttfHash).toBe("8ffaa42f84b0835c7c250ec16e8f5d78");
-    expect(eotHash).toBe("cc86496a4fd871e31a79043a7ba96a07");
-    expect(woffHash).toBe("e90fb075e22ab56621e1caf13c52ef17");
-    expect(woff2Hash).toBe("c71b12c10bb6576528ef1a461c166e3a");
+    expect(svgHash).toBe("5babeea3094bba0b5e2001390b0811fd");
+    expect(ttfHash).toBe("dea1ee6d35ff9442f7586b60e045032f");
+    expect(eotHash).toBe("9ac8e63b19c5e58ef8ee6d95684cb9b6");
+    expect(woffHash).toBe("fbe22cb889122700687b51460222c3e3");
+    expect(woff2Hash).toBe("439ed126cdcd5b62361b30823f6ebaa3");
   });
 
   it("should generate only `svg`, `ttf` and `eot` fonts", async () => {
@@ -104,6 +104,7 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: "css",
+      templateCacheString: "test",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -119,6 +120,7 @@ describe("standalone", () => {
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["woff", "woff2"],
       template: "css",
+      templateCacheString: "test",
     });
 
     expect(result.svg).toBeUndefined();
@@ -133,6 +135,7 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: path.join(fixturesGlob, "templates/template.css"),
+      templateCacheString: "test",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -147,6 +150,7 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: "src/__tests__/fixtures/templates/template.css",
+      templateCacheString: "test",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -181,6 +185,7 @@ describe("standalone", () => {
     const result = await standalone({
       configFile,
       files: `${fixturesGlob}/svg-icons/**/*`,
+      templateCacheString: "test",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -345,6 +350,7 @@ describe("standalone", () => {
         return obj;
       },
       template: "css",
+      templateCacheString: "test",
     });
 
     expect(result.template).toMatchSnapshot();
@@ -357,6 +363,7 @@ describe("standalone", () => {
       templateClassName: "foo",
       templateFontName: "bar",
       templateFontPath: "./foo-bar",
+      templateCacheString: "test",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -385,7 +392,7 @@ describe("standalone", () => {
     return standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
     }).then((result) => {
-      expect(result.hash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
+      expect(result.hash).toBe("5babeea3094bba0b5e2001390b0811fd");
 
       return result;
     });

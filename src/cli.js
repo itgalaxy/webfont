@@ -221,7 +221,7 @@ const cli = meow(
       },
       "add-hash-in-font-url": {
         default: false,
-        type: "boolean"
+        type: "boolean",
       },
       verbose: {
         default: false,

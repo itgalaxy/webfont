@@ -133,54 +133,6 @@
       ]
     ]
   },
-  "eslintConfig": {
-    "parserOptions": {
-      "sourceType": "script"
-    },
-    "extends": [
-      "plugin:itgalaxy/node",
-      "plugin:itgalaxy/esnext",
-      "plugin:itgalaxy/jest",
-      "plugin:itgalaxy/markdown"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "src/**/*"
-        ],
-        "parserOptions": {
-          "sourceType": "module"
-        },
-        "rules": {
-          "node/no-unsupported-features/es-syntax": "off"
-        }
-      },
-      {
-        "files": [
-          "**/*.md"
-        ],
-        "parserOptions": {
-          "sourceType": "module",
-          "ecmaFeatures": {
-            "impliedStrict": true
-          }
-        },
-        "rules": {
-          "strict": "off",
-          "no-undef": "off",
-          "no-unused-vars": "off",
-          "no-process-env": "off",
-          "no-process-exit": "off",
-          "no-console": "off",
-          "import/no-unresolved": "off",
-          "import/extensions": "off",
-          "node/no-unpublished-require": "off",
-          "node/no-unsupported-features/es-syntax": "off"
-        }
-      }
-    ],
-    "root": true
-  },
   "remarkConfig": {
     "plugins": [
       "remark-preset-lint-itgalaxy"

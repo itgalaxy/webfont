@@ -131,6 +131,10 @@ const cli = meow(
         --metadata
 
             Content of the metadata tag.
+            
+        --add-hash-in-font-url
+          
+            Generated font url will be : [webfont].[ext]?v=[hash]
 `,
   {
     autoHelp: false,
@@ -214,6 +218,10 @@ const cli = meow(
       "template-font-path": {
         alias: "p",
         type: "string"
+      },
+      "add-hash-in-font-url": {
+        default: false,
+        type: "boolean"
       },
       verbose: {
         default: false,
@@ -333,6 +341,10 @@ if (cli.flags.sort === false) {
   optionsBase.sort = cli.flags.sort;
 }
 
+if (cli.flags.addHashInFontUrl) {
+  optionsBase.addHashInFontUrl = cli.flags.addHashInFontUrl;
+}
+
 if (cli.flags.help || cli.flags.h) {
   cli.showHelp();
 }
@@ -387,6 +399,8 @@ Promise.resolve()
           path.basename(result.config.template).replace(".njk", "")
         );
       }
+
+      delete result.hash;
     }
 
     return Promise.resolve()

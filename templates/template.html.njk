@@ -51,7 +51,7 @@
         font-weight: 400;
         font-display: auto;
         {% if formats.indexOf('eot')>-1 -%}
-          src: url("{{ fontPath }}{{ fontName }}.eot");
+          src: url("{{ fontPath }}{{ fontName }}.eot{% if hash %}?v={{ hash }}{% endif %}");
         {%- endif %}
         {%- set eotIndex = formats.indexOf('eot') -%}
         {%- set woff2Index = formats.indexOf('woff2') -%}
@@ -59,27 +59,27 @@
         {%- set ttfIndex = formats.indexOf('ttf') -%}
         {%- set svgIndex = formats.indexOf('svg') %}
         src: {% if eotIndex != -1 -%}
-          url("{{ fontPath }}{{ fontName }}.eot?#iefix") format("embedded-opentype")
+          url("{{ fontPath }}{{ fontName }}.eot?{% if hash %}v={{ hash }}{% endif %}#iefix") format("embedded-opentype")
           {%- set nothing = formats.splice(eotIndex, 1) -%}
           {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
         {%- endif -%}
         {%- if woff2Index != -1 -%}
-          url("{{ fontPath }}{{ fontName }}.woff2") format("woff2")
+          url("{{ fontPath }}{{ fontName }}.woff2{% if hash %}?v={{ hash }}{% endif %}") format("woff2")
           {%- set nothing = formats.splice(woff2Index, 1) -%}
           {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
         {%- endif -%}
         {%- if woffIndex != -1 -%}
-          url("{{ fontPath }}{{ fontName }}.woff") format("woff")
+          url("{{ fontPath }}{{ fontName }}.woff{% if hash %}?v={{ hash }}{% endif %}") format("woff")
           {%- set nothing = formats.splice(woffIndex, 1) -%}
           {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
         {%- endif -%}
         {%- if ttfIndex != -1 -%}
-          url("{{ fontPath }}{{ fontName }}.ttf") format("truetype")
+          url("{{ fontPath }}{{ fontName }}.ttf{% if hash %}?v={{ hash }}{% endif %}") format("truetype")
           {%- set nothing = formats.splice(ttfIndex, 1) -%}
           {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
         {%- endif -%}
         {%- if svgIndex != -1 -%}
-          url("{{ fontPath }}{{ fontName }}.svg#{{ fontName }}") format("svg");
+          url("{{ fontPath }}{{ fontName }}.svg{% if hash %}?v={{ hash }}{% endif %}#{{ fontName }}") format("svg");
         {%- endif %}
       }
 

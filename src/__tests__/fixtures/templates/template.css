@@ -1,13 +1,13 @@
 /* custom template */
 @font-face {
     font-family: {{ fontName }};
-    {% if formats.indexOf('eot')>-1 %}src: url("{{ fontPath }}{{ fontName }}.eot");{% endif %}
+    {% if formats.indexOf('eot')>-1 %}src: url("{{ fontPath }}{{ fontName }}.eot?{{ cacheString }}");{% endif %}
     src:
         {% if formats.indexOf('eot')>-1 %}url("{{ fontPath }}{{ fontName }}.eot?#iefix") format("embedded-opentype"),{% endif %}
-        {% if formats.indexOf('woff2')>-1 %}url("{{ fontPath }}{{ fontName }}.woff2") format("woff2"),{% endif %}
-        {% if formats.indexOf('woff')>-1 %}url("{{ fontPath }}{{ fontName }}.woff") format("woff"),{% endif %}
-        {% if formats.indexOf('ttf')>-1 %}url("{{ fontPath }}{{ fontName }}.ttf") format("truetype"),{% endif %}
-        {% if formats.indexOf('svg')>-1 %}url("{{ fontPath }}{{ fontName }}.svg#{{ fontName }}") format("svg");{% endif %}
+        {% if formats.indexOf('woff2')>-1 %}url("{{ fontPath }}{{ fontName }}.woff2?{{ cacheString }}") format("woff2"),{% endif %}
+        {% if formats.indexOf('woff')>-1 %}url("{{ fontPath }}{{ fontName }}.woff?{{ cacheString }}") format("woff"),{% endif %}
+        {% if formats.indexOf('ttf')>-1 %}url("{{ fontPath }}{{ fontName }}.ttf?{{ cacheString }}") format("truetype"),{% endif %}
+        {% if formats.indexOf('svg')>-1 %}url("{{ fontPath }}{{ fontName }}.svg?{{ cacheString }}#{{ fontName }}") format("svg");{% endif %}
     font-style: normal;
     font-weight: 400;
 }

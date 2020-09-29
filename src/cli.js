@@ -70,6 +70,10 @@ const cli = meow(
 
             Font name in css template.
 
+        --template-cache-string
+
+            Specify cache string in scss/css template.
+
         --no-sort
 
             Keeps the files in the same order of entry
@@ -131,9 +135,9 @@ const cli = meow(
         --metadata
 
             Content of the metadata tag.
-            
+
         --add-hash-in-font-url
-          
+
             Generated font url will be : [webfont].[ext]?v=[hash]
 `,
   {
@@ -223,6 +227,10 @@ const cli = meow(
         default: false,
         type: "boolean",
       },
+      "template-cache-string": {
+        default: "",
+        type: "string",
+      },
       verbose: {
         default: false,
         type: "boolean",
@@ -275,6 +283,10 @@ if (cli.flags.templateFontPath) {
 
 if (cli.flags.templateFontName) {
   optionsBase.templateFontName = cli.flags.templateFontName;
+}
+
+if (cli.flags.templateCacheString) {
+  optionsBase.templateCacheString = cli.flags.templateCacheString;
 }
 
 if (cli.flags.destTemplate) {

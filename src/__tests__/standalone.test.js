@@ -14,6 +14,7 @@ describe("standalone", () => {
     try {
       await standalone();
     } catch (error) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.message).toMatch("You must pass webfont a `files` glob");
     }
   });
@@ -26,6 +27,7 @@ describe("standalone", () => {
         files: `${fixturesGlob}/not-found-svg-icons/**/*`
       });
     } catch (error) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.message).toMatch(
         "Files glob patterns specified did not match any files"
       );
@@ -260,8 +262,8 @@ describe("standalone", () => {
       template: path.join(fixturesGlob, "templates/template-ordered.css")
     });
 
-    expect(templateOutput.replace(/(\n|\r|\s)/g, "")).toBe(
-      result.template.replace(/(\n|\r|\s)/g, "")
+    expect(templateOutput.replace(/(\s)/g, "")).toBe(
+      result.template.replace(/(\s)/g, "")
     );
   });
 
@@ -276,6 +278,7 @@ describe("standalone", () => {
         files: `${fixturesGlob}/bad-svg-icons/avatar.svg`
       });
     } catch (error) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.message).toMatch(/Unclosed root tag/);
     }
   });
@@ -291,6 +294,7 @@ describe("standalone", () => {
         files: `${fixturesGlob}/bad-svg-icons/avatar-1.svg`
       });
     } catch (error) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.message).toMatch(/Unterminated command at index/);
     }
   });
@@ -306,6 +310,7 @@ describe("standalone", () => {
         files: `${fixturesGlob}/bad-svg-icons/avatar-2.svg`
       });
     } catch (error) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.message).toMatch(/Unexpected character "N"/);
     }
   });
@@ -321,6 +326,7 @@ describe("standalone", () => {
         files: `${fixturesGlob}/bad-svg-icons/avatar-3.svg`
       });
     } catch (error) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.message).toMatch(/Empty file/);
     }
   });
@@ -336,6 +342,7 @@ describe("standalone", () => {
         files: `${fixturesGlob}/svg-icons/**/*`
       });
     } catch (error) {
+      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.code).toBe("ENOENT");
     }
   });

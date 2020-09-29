@@ -402,7 +402,7 @@ Promise.resolve()
             }
 
             const content = result[type];
-            // eslint-disable-next-line init-declarations
+
             let file;
 
             if (type !== "template") {

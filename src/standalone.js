@@ -55,6 +55,7 @@ function getGlyphsData(files, options) {
             const glyph = fs.createReadStream(srcPath);
             let glyphContents = "";
 
+            // eslint-disable-next-line no-promise-executor-return
             return glyph
               .on("error", glyphError => reject(glyphError))
               .on("data", data => {
@@ -215,9 +216,11 @@ export default async function(initialOptions) {
   });
 
   if (Object.keys(config).length > 0) {
+    // eslint-disable-next-line require-atomic-updates
     options = deepmerge(options, config.config, {
       arrayMerge: (_destinationArray, sourceArray, _opts) => sourceArray
     });
+    // eslint-disable-next-line require-atomic-updates
     options.filePath = config.filepath;
   }
 
@@ -262,7 +265,6 @@ export default async function(initialOptions) {
       styl: { path: path.join(templateDirectory, "template.styl.njk") }
     };
 
-    // eslint-disable-next-line init-declarations
     let templateFilePath;
 
     if (Object.keys(buildInTemplates).includes(options.template)) {

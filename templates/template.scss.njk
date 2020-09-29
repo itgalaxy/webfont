@@ -3,10 +3,10 @@
 {% endfor %}
 
 @font-face {
+  font-display: block;
   font-family: "{{ fontName }}";
   font-style: normal;
   font-weight: 400;
-  font-display: auto;
   {% if formats.indexOf('eot')>-1 -%}
     src: url("{{ fontPath }}{{ fontName }}.eot{% if hash %}?v={{ hash }}{% endif %}");
   {%- endif -%}

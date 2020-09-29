@@ -71,7 +71,7 @@
     "@babel/core": "^7.1.5",
     "@babel/preset-env": "^7.1.5",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "24.7.1",
+    "babel-jest": "26.3.0",
     "coveralls": "^3.0.0",
     "cross-env": "^5.0.0",
     "eslint": "^5.16.0",

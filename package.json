@@ -97,7 +97,7 @@
     "lint-staged": "^8.0.4",
     "npm-run-all": "^4.0.0",
     "nyc": "^14.0.0",
-    "prettier": "^1.17.0",
+    "prettier": "^2.1.2",
     "remark-cli": "^8.0.1",
     "remark-preset-lint-itgalaxy": "^15.0.0",
     "rimraf": "^3.0.2",
@@ -132,54 +132,6 @@
         }
       ]
     ]
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "sourceType": "script"
-    },
-    "extends": [
-      "plugin:itgalaxy/node",
-      "plugin:itgalaxy/esnext",
-      "plugin:itgalaxy/jest",
-      "plugin:itgalaxy/markdown"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "src/**/*"
-        ],
-        "parserOptions": {
-          "sourceType": "module"
-        },
-        "rules": {
-          "node/no-unsupported-features/es-syntax": "off"
-        }
-      },
-      {
-        "files": [
-          "**/*.md"
-        ],
-        "parserOptions": {
-          "sourceType": "module",
-          "ecmaFeatures": {
-            "impliedStrict": true
-          }
-        },
-        "rules": {
-          "strict": "off",
-          "no-undef": "off",
-          "no-unused-vars": "off",
-          "no-process-env": "off",
-          "no-process-exit": "off",
-          "no-console": "off",
-          "import/no-unresolved": "off",
-          "import/extensions": "off",
-          "node/no-unpublished-require": "off",
-          "node/no-unsupported-features/es-syntax": "off"
-        }
-      }
-    ],
-    "root": true
   },
   "remarkConfig": {
     "plugins": [

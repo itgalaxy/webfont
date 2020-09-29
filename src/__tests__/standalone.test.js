@@ -24,7 +24,7 @@ describe("standalone", () => {
 
     try {
       await standalone({
-        files: `${fixturesGlob}/not-found-svg-icons/**/*`
+        files: `${fixturesGlob}/not-found-svg-icons/**/*`,
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
@@ -36,7 +36,7 @@ describe("standalone", () => {
 
   it("should generate all fonts", async () => {
     const result = await standalone({
-      files: `${fixturesGlob}/svg-icons/**/*`
+      files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -49,7 +49,7 @@ describe("standalone", () => {
   // Need search better way to test `fs` delay
   it("should generate all fonts and will be deterministic", async () => {
     const result = await standalone({
-      files: `${fixturesGlob}/svg-icons/**/*`
+      files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -58,22 +58,10 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
 
-    const svgHash = crypto
-      .createHash("md5")
-      .update(result.svg)
-      .digest("hex");
-    const ttfHash = crypto
-      .createHash("md5")
-      .update(result.ttf)
-      .digest("hex");
-    const eotHash = crypto
-      .createHash("md5")
-      .update(result.eot)
-      .digest("hex");
-    const woffHash = crypto
-      .createHash("md5")
-      .update(result.woff)
-      .digest("hex");
+    const svgHash = crypto.createHash("md5").update(result.svg).digest("hex");
+    const ttfHash = crypto.createHash("md5").update(result.ttf).digest("hex");
+    const eotHash = crypto.createHash("md5").update(result.eot).digest("hex");
+    const woffHash = crypto.createHash("md5").update(result.woff).digest("hex");
     const woff2Hash = crypto
       .createHash("md5")
       .update(result.woff2)
@@ -89,7 +77,7 @@ describe("standalone", () => {
   it("should generate only `svg`, `ttf` and `eot` fonts", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      formats: ["svg", "ttf", "eot"]
+      formats: ["svg", "ttf", "eot"],
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -102,7 +90,7 @@ describe("standalone", () => {
   it("should generate only `woff2` font", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      formats: ["woff2"]
+      formats: ["woff2"],
     });
 
     expect(result.svg).toBeUndefined();
@@ -115,7 +103,7 @@ describe("standalone", () => {
   it("should generate all fonts with build-in template", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: "css"
+      template: "css",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -130,7 +118,7 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["woff", "woff2"],
-      template: "css"
+      template: "css",
     });
 
     expect(result.svg).toBeUndefined();
@@ -144,7 +132,7 @@ describe("standalone", () => {
   it("should generate all fonts with custom `template` with absolute path", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: path.join(fixturesGlob, "templates/template.css")
+      template: path.join(fixturesGlob, "templates/template.css"),
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -158,7 +146,7 @@ describe("standalone", () => {
   it("should generate all fonts with custom `template` with relative path", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: "src/__tests__/fixtures/templates/template.css"
+      template: "src/__tests__/fixtures/templates/template.css",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -173,7 +161,7 @@ describe("standalone", () => {
     const configFile = path.join(fixturesGlob, "configs/.webfontrc");
     const result = await standalone({
       configFile,
-      files: `${fixturesGlob}/svg-icons/**/*`
+      files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -192,7 +180,7 @@ describe("standalone", () => {
 
     const result = await standalone({
       configFile,
-      files: `${fixturesGlob}/svg-icons/**/*`
+      files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -211,7 +199,7 @@ describe("standalone", () => {
     );
     const result = await standalone({
       configFile,
-      files: `${fixturesGlob}/svg-icons/**/*`
+      files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -232,7 +220,7 @@ describe("standalone", () => {
     );
     const result = await standalone({
       configFile,
-      files: `${fixturesGlob}/svg-icons/**/*`
+      files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
     expect(result.svg).toBeUndefined();
@@ -256,10 +244,10 @@ describe("standalone", () => {
     const result = await standalone({
       files: [
         `${fixturesGlob}/svg-icons/envelope.svg`,
-        `${fixturesGlob}/svg-icons/avatar.svg`
+        `${fixturesGlob}/svg-icons/avatar.svg`,
       ],
       sort: false,
-      template: path.join(fixturesGlob, "templates/template-ordered.css")
+      template: path.join(fixturesGlob, "templates/template-ordered.css"),
     });
 
     expect(templateOutput.replace(/(\s)/g, "")).toBe(
@@ -275,7 +263,7 @@ describe("standalone", () => {
     try {
       await standalone({
         configFile,
-        files: `${fixturesGlob}/bad-svg-icons/avatar.svg`
+        files: `${fixturesGlob}/bad-svg-icons/avatar.svg`,
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
@@ -291,7 +279,7 @@ describe("standalone", () => {
     try {
       await standalone({
         configFile,
-        files: `${fixturesGlob}/bad-svg-icons/avatar-1.svg`
+        files: `${fixturesGlob}/bad-svg-icons/avatar-1.svg`,
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
@@ -307,7 +295,7 @@ describe("standalone", () => {
     try {
       await standalone({
         configFile,
-        files: `${fixturesGlob}/bad-svg-icons/avatar-2.svg`
+        files: `${fixturesGlob}/bad-svg-icons/avatar-2.svg`,
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
@@ -323,7 +311,7 @@ describe("standalone", () => {
     try {
       await standalone({
         configFile,
-        files: `${fixturesGlob}/bad-svg-icons/avatar-3.svg`
+        files: `${fixturesGlob}/bad-svg-icons/avatar-3.svg`,
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
@@ -339,7 +327,7 @@ describe("standalone", () => {
     try {
       await standalone({
         configFile,
-        files: `${fixturesGlob}/svg-icons/**/*`
+        files: `${fixturesGlob}/svg-icons/**/*`,
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
@@ -351,12 +339,12 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["eot"],
-      glyphTransformFn: obj => {
+      glyphTransformFn: (obj) => {
         obj.name += "_transform";
 
         return obj;
       },
-      template: "css"
+      template: "css",
     });
 
     expect(result.template).toMatchSnapshot();
@@ -368,7 +356,7 @@ describe("standalone", () => {
       template: "css",
       templateClassName: "foo",
       templateFontName: "bar",
-      templateFontPath: "./foo-bar"
+      templateFontPath: "./foo-bar",
     });
 
     expect(isSvg(result.svg)).toBe(true);
@@ -384,7 +372,7 @@ describe("standalone", () => {
   it("should export `glyphsData` in `result`", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: "css"
+      template: "css",
     });
 
     expect(Array.isArray(result.glyphsData)).toBe(true);
@@ -395,8 +383,8 @@ describe("standalone", () => {
     expect.assertions(1);
 
     return standalone({
-      files: `${fixturesGlob}/svg-icons/**/*`
-    }).then(result => {
+      files: `${fixturesGlob}/svg-icons/**/*`,
+    }).then((result) => {
       expect(result.hash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
 
       return result;

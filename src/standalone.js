@@ -42,14 +42,14 @@ function getGlyphsData(files, options) {
     options.metadataProvider ||
     defaultMetadataProvider({
       prependUnicode: options.prependUnicode,
-      startUnicode: options.startUnicode
+      startUnicode: options.startUnicode,
     });
 
   const xmlParser = new xml2js.Parser();
   const throttle = pLimit(options.maxConcurrency);
 
   return Promise.all(
-    files.map(srcPath =>
+    files.map((srcPath) =>
       throttle(
         () =>
           new Promise((resolve, reject) => {
@@ -58,8 +58,8 @@ function getGlyphsData(files, options) {
 
             // eslint-disable-next-line no-promise-executor-return
             return glyph
-              .on("error", glyphError => reject(glyphError))
-              .on("data", data => {
+              .on("error", (glyphError) => reject(glyphError))
+              .on("data", (data) => {
                 glyphContents += data.toString();
               })
               .on("end", () => {
@@ -68,14 +68,14 @@ function getGlyphsData(files, options) {
                   return reject(new Error(`Empty file ${srcPath}`));
                 }
 
-                return xmlParser.parseString(glyphContents, error => {
+                return xmlParser.parseString(glyphContents, (error) => {
                   if (error) {
                     return reject(error);
                   }
 
                   const glyphData = {
                     contents: glyphContents,
-                    srcPath
+                    srcPath,
                   };
 
                   return resolve(glyphData);
@@ -84,7 +84,7 @@ function getGlyphsData(files, options) {
           })
       )
     )
-  ).then(glyphsData => {
+  ).then((glyphsData) => {
     const sortedGlyphsData = options.sort
       ? glyphsData.sort((fileA, fileB) =>
           fileSorter(fileA.srcPath, fileB.srcPath)
@@ -93,7 +93,7 @@ function getGlyphsData(files, options) {
 
     return Promise.all(
       sortedGlyphsData.map(
-        glyphData =>
+        (glyphData) =>
           new Promise((resolve, reject) => {
             metadataProvider(glyphData.srcPath, (error, metadata) => {
               if (error) {
@@ -128,15 +128,15 @@ function toSvg(glyphsData, options) {
       log: options.verbose ? console.log.bind(console) : () => {},
       metadata: options.metadata,
       normalize: options.normalize,
-      round: options.round
+      round: options.round,
     })
       .on("finish", () => resolve(result))
-      .on("data", data => {
+      .on("data", (data) => {
         result += data;
       })
-      .on("error", error => reject(error));
+      .on("error", (error) => reject(error));
 
-    glyphsData.forEach(glyphData => {
+    glyphsData.forEach((glyphData) => {
       const glyphStream = new Readable();
 
       glyphStream.push(glyphData.contents);
@@ -167,7 +167,7 @@ function toWoff2(buffer) {
   return wawoff2.compress(buffer);
 }
 
-export default async function(initialOptions) {
+export default async function (initialOptions) {
   if (!initialOptions || !initialOptions.files) {
     throw new Error("You must pass webfont a `files` glob");
   }
@@ -189,8 +189,8 @@ export default async function(initialOptions) {
         ttf: {
           copyright: null,
           ts: null,
-          version: null
-        }
+          version: null,
+        },
       },
       glyphTransformFn: null,
       // Maybe allow setup from CLI
@@ -207,19 +207,19 @@ export default async function(initialOptions) {
       templateClassName: null,
       templateFontName: null,
       templateFontPath: "./",
-      verbose: false
+      verbose: false,
     },
     initialOptions
   );
 
   const config = await buildConfig({
-    configFile: options.configFile
+    configFile: options.configFile,
   });
 
   if (Object.keys(config).length > 0) {
     // eslint-disable-next-line require-atomic-updates
     options = deepmerge(options, config.config, {
-      arrayMerge: (_destinationArray, sourceArray, _opts) => sourceArray
+      arrayMerge: (_destinationArray, sourceArray, _opts) => sourceArray,
     });
     // eslint-disable-next-line require-atomic-updates
     options.filePath = config.filepath;
@@ -227,7 +227,7 @@ export default async function(initialOptions) {
 
   const foundFiles = await globby([].concat(options.files));
   const filteredFiles = foundFiles.filter(
-    foundFile => path.extname(foundFile) === ".svg"
+    (foundFile) => path.extname(foundFile) === ".svg"
   );
 
   if (filteredFiles.length === 0) {
@@ -245,10 +245,7 @@ export default async function(initialOptions) {
       : {}
   );
 
-  result.hash = crypto
-    .createHash("md5")
-    .update(result.svg)
-    .digest("hex");
+  result.hash = crypto.createHash("md5").update(result.svg).digest("hex");
 
   if (options.formats.includes("eot")) {
     result.eot = toEot(result.ttf);
@@ -268,7 +265,7 @@ export default async function(initialOptions) {
       css: { path: path.join(templateDirectory, "template.css.njk") },
       html: { path: path.join(templateDirectory, "template.html.njk") },
       scss: { path: path.join(templateDirectory, "template.scss.njk") },
-      styl: { path: path.join(templateDirectory, "template.styl.njk") }
+      styl: { path: path.join(templateDirectory, "template.styl.njk") },
     };
 
     let templateFilePath;
@@ -278,9 +275,7 @@ export default async function(initialOptions) {
 
       nunjucks.configure(path.resolve(__dirname, "../"));
 
-      templateFilePath = `${templateDirectory}/template.${
-        options.template
-      }.njk`;
+      templateFilePath = `${templateDirectory}/template.${options.template}.njk`;
     } else {
       const resolvedTemplateFilePath = path.resolve(options.template);
 
@@ -292,21 +287,21 @@ export default async function(initialOptions) {
     const hashOption = options.addHashInFontUrl ? { hash: result.hash } : {};
     const nunjucksOptions = deepmerge.all([
       {
-        glyphs: result.glyphsData.map(glyphData => {
+        glyphs: result.glyphsData.map((glyphData) => {
           if (typeof options.glyphTransformFn === "function") {
             glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
           }
 
           return glyphData.metadata;
-        })
+        }),
       },
       options,
       {
         className: options.templateClassName || options.fontName,
         fontName: options.templateFontName || options.fontName,
-        fontPath: options.templateFontPath.replace(/\/?$/, "/")
+        fontPath: options.templateFontPath.replace(/\/?$/, "/"),
       },
-      hashOption
+      hashOption,
     ]);
 
     result.template = nunjucks.render(templateFilePath, nunjucksOptions);

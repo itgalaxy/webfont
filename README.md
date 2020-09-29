@@ -51,14 +51,14 @@ const webfont = require("webfont").default;
 
 webfont({
   files: "src/svg-icons/**/*.svg",
-  fontName: "my-font-name"
+  fontName: "my-font-name",
 })
-  .then(result => {
+  .then((result) => {
     console.log(result);
 
     return result;
   })
-  .catch(error => {
+  .catch((error) => {
     throw error;
   });
 ```
@@ -70,14 +70,14 @@ import webfont from "webfont";
 
 webfont({
   files: "src/svg-icons/**/*.svg",
-  fontName: "my-font-name"
+  fontName: "my-font-name",
 })
-  .then(result => {
+  .then((result) => {
     console.log(result);
 
     return result;
   })
-  .catch(error => {
+  .catch((error) => {
     throw error;
   });
 ```
@@ -122,7 +122,7 @@ webfont({
 
   ```js
   webfont({
-    template: "./path/to/my-template.css"
+    template: "./path/to/my-template.css",
   });
   ```
 
@@ -130,7 +130,7 @@ webfont({
 
   ```js
   webfont({
-    template: path.resolve(__dirname, "./my-template.css")
+    template: path.resolve(__dirname, "./my-template.css"),
   });
   ```
 
@@ -138,7 +138,7 @@ webfont({
 
   ```js
   webfont({
-    template: path.resolve(__dirname, "./my-template.styl")
+    template: path.resolve(__dirname, "./my-template.styl"),
   });
   ```
 
@@ -172,18 +172,18 @@ webfont({
 
   webfont({
     files: "src/svg-icons/**/*.svg",
-    glyphTransformFn: obj => {
+    glyphTransformFn: (obj) => {
       obj.name += "_transform";
 
       return obj;
-    }
+    },
   })
-    .then(result => {
+    .then((result) => {
       console.log(result);
 
       return result;
     })
-    .catch(error => {
+    .catch((error) => {
       throw error;
     });
   ```

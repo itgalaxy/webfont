@@ -47,6 +47,6 @@ And, if you’re raising an issue, please understand that people involved with t
 
 - [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
 - [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://docs.github.com/)
+- [GitHub Help](https://docs.github.com)
 
 Thanks for contributing to `webfont`! 👏👌✨

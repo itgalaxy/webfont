@@ -435,6 +435,11 @@ If you're using cross-env:
         --metadata
 
             Content of the metadata tag.
+
+        --add-hash-in-font-url
+
+            Generated font url will be : [webfont].[ext]?v=[hash]
+
 ```
 
 ### CLI Exit Codes

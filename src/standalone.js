@@ -268,7 +268,9 @@ export default async function(initialOptions) {
 
       nunjucks.configure(path.resolve(__dirname, "../"));
 
-      templateFilePath = `${templateDirectory}/template.${options.template}.njk`;
+      templateFilePath = `${templateDirectory}/template.${
+        options.template
+      }.njk`;
     } else {
       const resolvedTemplateFilePath = path.resolve(options.template);
 

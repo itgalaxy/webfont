@@ -13,7 +13,7 @@ Features:
 - Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF` and `SVG`.
 - Support configuration Files - use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories.
 - Supported browsers: IE8+.
-- Allows using custom templates (example `css`, `scss` etc).
+- Allows using custom templates (example `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) etc).
 - No extra dependencies as `gulp`, `grunt` or other big tools.
 - Tested on all platforms (`linux`, `windows` and `osx`).
 - CLI.
@@ -117,7 +117,7 @@ webfont({
 
 - Type: `string`
 - Default: `null`
-- Possible values: `css`, `scss` (feel free to contribute more).
+- Possible values: `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) (feel free to contribute more).
 - Note: If you want to use a custom template use this option pass in a path `string` like this:
 
   ```js
@@ -131,6 +131,14 @@ webfont({
   ```js
   webfont({
     template: path.resolve(__dirname, "./my-template.css")
+  });
+  ```
+
+  Or
+
+  ```js
+  webfont({
+    template: path.resolve(__dirname, "./my-template.styl")
   });
   ```
 
@@ -348,8 +356,8 @@ If you're using cross-env:
 
         -t, --template
 
-            Type of template ('css', 'scss') or path to custom template.
-
+            Type of template (\`css\`, \`scss\`, \`styl\`) or path to custom template.
+'
         -s, --dest-template
 
             Destination for generated template. If not passed used \`dest\` argument value.
@@ -418,7 +426,7 @@ If you're using cross-env:
 
         --start-unicode
 
-            The start unicode codepoint for unprefixed files [0xEA01].
+            The start unicode codepoint for files without prefix [0xEA01].
 
         --prepend-unicode
 

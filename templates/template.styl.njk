@@ -1,5 +1,5 @@
 {% for glyph in glyphs
-%}${{ className }}-{{ glyph.name }}= "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
+%}${{ className }}-{{ glyph.name }} = "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
 {% endfor %}
 @font-face {
     font-family: {{ fontName }};
@@ -77,5 +77,5 @@
 %}
 
 .{{ className }}-{{ glyph.name }}::before {
-    content: "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";
+    content: ${{ className }}-{{ glyph.name }};
 }{% endfor %}

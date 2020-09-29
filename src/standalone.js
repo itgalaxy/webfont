@@ -258,10 +258,12 @@ export default async function(initialOptions) {
     const buildInTemplates = {
       css: { path: path.join(templateDirectory, "template.css.njk") },
       html: { path: path.join(templateDirectory, "template.html.njk") },
-      scss: { path: path.join(templateDirectory, "template.scss.njk") }
+      scss: { path: path.join(templateDirectory, "template.scss.njk") },
+      styl: { path: path.join(templateDirectory, "template.styl.njk") }
     };
 
-    let templateFilePath = null;
+    // eslint-disable-next-line init-declarations
+    let templateFilePath;
 
     if (Object.keys(buildInTemplates).includes(options.template)) {
       result.usedBuildInTemplate = true;

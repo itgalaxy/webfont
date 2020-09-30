@@ -68,10 +68,10 @@ describe("standalone", () => {
       .digest("hex");
 
     expect(svgHash).toBe("5babeea3094bba0b5e2001390b0811fd");
-    expect(ttfHash).toBe("dea1ee6d35ff9442f7586b60e045032f");
-    expect(eotHash).toBe("9ac8e63b19c5e58ef8ee6d95684cb9b6");
-    expect(woffHash).toBe("fbe22cb889122700687b51460222c3e3");
-    expect(woff2Hash).toBe("439ed126cdcd5b62361b30823f6ebaa3");
+    expect(ttfHash).toBe("c78d2714960175fdf8eaebd44b4159e9");
+    expect(eotHash).toBe("024ccffe146cfdbcc501241516479f16");
+    expect(woffHash).toBe("6a11601283f57dd7d016ac91bc33179a");
+    expect(woff2Hash).toBe("6f372f4721c1706c99fb6230f800ef0f");
   });
 
   it("should generate only `svg`, `ttf` and `eot` fonts", async () => {

@@ -57,3 +57,6 @@ lib/vendor
 
 # Package
 dist
+
+# Environment variables files
+.env

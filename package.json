@@ -93,7 +93,7 @@
     "is-woff": "^1.0.0",
     "is-woff2": "^1.0.0",
     "jest": "^26.4.2",
-    "lint-staged": "^8.0.4",
+    "lint-staged": "^10.4.0",
     "npm-run-all": "^4.0.0",
     "nyc": "^14.0.0",
     "prettier": "^2.1.2",

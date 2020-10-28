@@ -57,12 +57,12 @@
     "nunjucks": "^3.2.2",
     "p-limit": "^3.0.2",
     "resolve-from": "^5.0.0",
+    "snyk": "^1.316.1",
     "svg2ttf": "^5.0.0",
     "svgicons2svgfont": "^9.0.3",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",
     "wawoff2": "^1.0.2",
-    "snyk": "^1.316.1",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
@@ -85,6 +85,7 @@
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-react": "7.21.5",
     "eslint-plugin-unicorn": "21.0.0",
+    "esm": "^3.2.25",
     "husky": "^4.3.0",
     "is-eot": "^1.0.0",
     "is-svg": "^4.1.0",
@@ -94,6 +95,7 @@
     "jest": "^26.4.2",
     "lint-staged": "^10.4.0",
     "npm-run-all": "^4.0.0",
+    "nyc": "^15.1.0",
     "prettier": "^2.1.2",
     "remark-cli": "^9.0.0",
     "remark-preset-lint-itgalaxy": "^15.0.0",
@@ -116,7 +118,7 @@
     "release": "standard-version",
     "snyk-protect": "snyk protect",
     "test": "npm run test:only -- --coverage",
-    "test:only": "jest src"
+    "test:only": "nyc --clean jest src"
   },
   "babel": {
     "presets": [
@@ -136,7 +138,17 @@
     ]
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageReporters": [
+      "json"
+    ]
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "tempDirectory": "./coverage"
   },
   "engines": {
     "node": ">= 10.13.0"

@@ -1,4 +1,20 @@
+import pkg from "../../package.json";
+
 const cli = Object.create(null);
+
+cli.verbose = function () {
+  return `The provided icons do not have the same heights. This could lead to unexpected results. Using the normalize option may help.
+A fontHeight of at least than 1000 is recommended, otherwise further steps (rounding in svg2ttf) could lead to ugly results. Use the fontHeight option to scale icons.
+Font created`;
+};
+
+cli.error = function () {
+  return "Error: Files glob patterns specified did not match any files";
+};
+
+cli.showVersion = function () {
+  return pkg.version;
+};
 
 cli.showHelp = function () {
   return `
@@ -135,7 +151,6 @@ cli.showHelp = function () {
       --add-hash-in-font-url
 
           Generated font url will be : [webfont].[ext]?v=[hash]
-
 `;
 };
 

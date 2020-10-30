@@ -50,7 +50,7 @@
     "!**/__tests__"
   ],
   "dependencies": {
-    "cosmiconfig": "^5.2.0",
+    "cosmiconfig": "^6.0.0",
     "deepmerge": "^4.2.2",
     "globby": "^11.0.1",
     "meow": "^7.1.1",

@@ -103,7 +103,7 @@
     "standard-version": "^9.0.0"
   },
   "scripts": {
-    "build": "babel src -d dist --ignore '**/__tests__/**'",
+    "build": "babel src -d dist --ignore '**/__tests__/**', '**/__mocks__/**'",
     "demo": "npm run build && node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "fix": "npm-run-all -l prettify -p 'fix:**'",
     "fix:js": "npm run lint:js -- --fix",

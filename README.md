@@ -354,6 +354,10 @@ If you're using cross-env:
 
             Destination for generated fonts.
 
+        -m, --dest-create
+
+            Create destination directory if it does not exist.
+
         -t, --template
 
             Type of template (\`css\`, \`scss\`, \`styl\`) or path to custom template.

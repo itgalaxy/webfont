@@ -50,6 +50,10 @@ const cli = meow(
 
             Destination for generated fonts.
 
+        -m, --dest-create
+
+            Create destination directory if it does not exist.
+
         -t, --template
 
             Type of template ('css', 'scss', 'styl') or path to custom template.
@@ -161,6 +165,11 @@ const cli = meow(
         default: process.cwd(),
         type: "string",
       },
+      "dest-create": {
+        alias: "m",
+        default: false,
+        type: "boolean",
+      },
       "dest-template": {
         alias: "s",
         type: "string",
@@ -267,6 +276,10 @@ if (cli.flags.formats) {
 
 if (cli.flags.dest) {
   optionsBase.dest = cli.flags.dest;
+}
+
+if (cli.flags.destCreate) {
+  optionsBase.destCreate = cli.flags.destCreate;
 }
 
 if (cli.flags.template) {
@@ -389,7 +402,7 @@ Promise.resolve()
     });
   })
   .then((result) => {
-    const { fontName, dest } = result.config;
+    const { fontName, dest, destCreate } = result.config;
 
     let destTemplate = null;
 
@@ -415,35 +428,51 @@ Promise.resolve()
       delete result.hash;
     }
 
-    return Promise.resolve()
-      .then(() =>
-        Promise.all(
-          Object.keys(result).map((type) => {
-            if (
-              type === "config" ||
-              type === "usedBuildInTemplate" ||
-              type === "glyphsData"
-            ) {
-              return null;
-            }
-
-            const content = result[type];
-
-            let file;
-
-            if (type !== "template") {
-              file = path.resolve(path.join(dest, `${fontName}.${type}`));
-            } else {
-              file = path.resolve(destTemplate);
-            }
-
-            return fs.writeFile(file, content, () => {
-              Function.prototype();
-            });
-          })
+    return (
+      Promise.resolve()
+        .then(
+          () =>
+            new Promise((resolve, reject) => {
+              fs.access(dest, fs.constants.F_OK, (err) => reject(err));
+            })
         )
-      )
-      .then(() => Promise.resolve(result));
+        /* eslint-disable-next-line consistent-return */
+        .catch((error) => {
+          if (error && destCreate) {
+            return new Promise((resolve) => {
+              fs.mkdir(dest, { recursive: true }, () => resolve());
+            });
+          }
+        })
+        .finally(() =>
+          Promise.all(
+            Object.keys(result).map((type) => {
+              if (
+                type === "config" ||
+                type === "usedBuildInTemplate" ||
+                type === "glyphsData"
+              ) {
+                return null;
+              }
+
+              const content = result[type];
+
+              let file;
+
+              if (type !== "template") {
+                file = path.resolve(path.join(dest, `${fontName}.${type}`));
+              } else {
+                file = path.resolve(destTemplate);
+              }
+
+              return fs.writeFile(file, content, () => {
+                Function.prototype();
+              });
+            })
+          )
+        )
+        .then(() => Promise.resolve(result))
+    );
   })
   .catch((error) => {
     // eslint-disable-next-line no-console

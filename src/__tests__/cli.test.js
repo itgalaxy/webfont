@@ -306,12 +306,8 @@ describe("cli", () => {
         nonExistentDestination,
         { encoding: "utf-8" },
         (readdirError) => {
-          expect(() => {
-            throw readdirError;
-          }).toThrow(
-            new Error(
-              `ENOENT: no such file or directory, scandir '${nonExistentDestination}'`
-            )
+          expect(readdirError.message).toContain(
+            "ENOENT: no such file or directory, scandir"
           );
 
           done();

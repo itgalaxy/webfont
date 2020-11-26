@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 import path from "path";
-import fs from "fs-extra";
+import fs from "fs";
 import meow from "meow";
 import resolveFrom from "resolve-from";
 import standalone from "./standalone";
+
+import {FORMATS, TEMPLATES} from "./standalone"
 
 const cli = meow(
   `
@@ -44,7 +46,9 @@ const cli = meow(
 
         -r, --formats
 
-            Only this formats generate.
+            Limit output-formats to the specified types (${FORMATS.join(', ')}).
+            --formats ${FORMATS[0]}
+            --formats "${FORMATS[0]} ${FORMATS[FORMATS.length-1]}"
 
         -d, --dest
 
@@ -52,8 +56,12 @@ const cli = meow(
 
         -t, --template
 
-            Type of template ('css', 'scss', 'html') or path to custom template.
-            Comma-separated types or paths ('css, html') to process multiple templates.
+            Type of template (${TEMPLATES.join(', ')}) or path to custom template.
+            Whitespace-separated built-in template types "css html" to process multiple templates.
+            Path containing whitespaces require an separate use of this flag for each path.
+            --template ${TEMPLATES[0]}
+            --template "${TEMPLATES[0]} ${TEMPLATES[1]}"
+            -t "/templates/template name with whitespaces.${TEMPLATES[0]}.njk" -t "/templates/another template.${TEMPLATES[1]}.njk"
 
         -s, --dest-template
 
@@ -70,6 +78,10 @@ const cli = meow(
         -n, --template-font-name
 
             Font name in css template.
+
+        --template-cache-string
+
+            Specify cache string in scss/css template.
 
         --no-sort
 
@@ -123,7 +135,7 @@ const cli = meow(
 
         --start-unicode
 
-            The start unicode codepoint for unprefixed files [0xEA01].
+            The start unicode codepoint for files without prefix [0xEA01].
 
         --prepend-unicode
 
@@ -132,99 +144,112 @@ const cli = meow(
         --metadata
 
             Content of the metadata tag.
+
+        --add-hash-in-font-url
+
+            Generated font url will be : [webfont].[ext]?v=[hash]
 `,
   {
     autoHelp: false,
     autoVersion: false,
     flags: {
       ascent: {
-        type: "string"
+        type: "string",
       },
       "center-horizontally": {
-        type: "boolean"
+        type: "boolean",
       },
       config: {
-        default: null
+        default: null,
       },
       descent: {
-        type: "string"
+        type: "string",
       },
       dest: {
         alias: "d",
         default: process.cwd(),
-        type: "string"
+        type: "string",
       },
       "dest-template": {
         alias: "s",
-        type: "string"
+        type: "string",
       },
       "fixed-width": {
-        type: "boolean"
+        type: "boolean",
       },
       "font-height": {
-        type: "string"
+        type: "string",
       },
       "font-id": {
-        type: "string"
+        type: "string",
       },
       "font-name": {
         alias: "u",
-        type: "string"
+        type: "string",
       },
       "font-style": {
-        type: "string"
+        type: "string",
       },
       "font-weight": {
-        type: "string"
+        type: "string",
       },
       formats: {
-        alias: "f"
+        alias: "f",
       },
       help: {
         alias: "h",
-        type: "boolean"
+        type: "boolean",
       },
       normalize: {
-        type: "boolean"
+        type: "boolean",
       },
       "prepend-unicode": {
-        type: "boolean"
+        type: "boolean",
       },
       round: {
-        type: "string"
+        type: "string",
       },
       sort: {
         default: true,
-        type: "boolean"
+        type: "boolean",
       },
       "start-unicode": {
-        type: "string"
+        type: "string",
       },
       template: {
         alias: "t",
-        type: "string"
+        type: "string",
+        isMultiple: true,
       },
       "template-class-name": {
         alias: "c",
-        type: "string"
+        type: "string",
       },
       "template-font-name": {
         alias: "n",
-        type: "string"
+        type: "string",
       },
       "template-font-path": {
         alias: "p",
-        type: "string"
+        type: "string",
+      },
+      "add-hash-in-font-url": {
+        default: false,
+        type: "boolean",
+      },
+      "template-cache-string": {
+        default: "",
+        type: "string",
       },
       verbose: {
         default: false,
-        type: "boolean"
+        type: "boolean",
       },
       version: {
         alias: "v",
-        type: "boolean"
-      }
-    }
+        type: "boolean",
+      },
+    },
   }
 );
 
@@ -247,7 +272,7 @@ if (cli.flags.fontName) {
 }
 
 if (cli.flags.formats) {
-  optionsBase.formats = cli.flags.formats;
+  optionsBase.formats = parseMultipleValues('formats', /** @type {string} */ cli.flags.formats, FORMATS);
 }
 
 if (cli.flags.dest) {
@@ -255,7 +280,7 @@ if (cli.flags.dest) {
 }
 
 if (cli.flags.template) {
-  optionsBase.template = cli.flags.template;
+  optionsBase.template = parseMultipleValues('template', /** @type {string} */ cli.flags.template, TEMPLATES);
 }
 
 if (cli.flags.templateClassName) {
@@ -268,6 +293,10 @@ if (cli.flags.templateFontPath) {
 
 if (cli.flags.templateFontName) {
   optionsBase.templateFontName = cli.flags.templateFontName;
+}
+
+if (cli.flags.templateCacheString) {
+  optionsBase.templateCacheString = cli.flags.templateCacheString;
 }
 
 if (cli.flags.destTemplate) {
@@ -334,6 +363,10 @@ if (cli.flags.sort === false) {
   optionsBase.sort = cli.flags.sort;
 }
 
+if (cli.flags.addHashInFontUrl) {
+  optionsBase.addHashInFontUrl = cli.flags.addHashInFontUrl;
+}
+
 if (cli.flags.help || cli.flags.h) {
   cli.showHelp();
 }
@@ -345,7 +378,7 @@ if (cli.flags.version || cli.flags.v) {
 Promise.resolve()
   .then(() => {
     const options = Object.assign({}, optionsBase, {
-      files: cli.input
+      files: cli.input,
     });
 
     if (options.files.length === 0) {
@@ -362,19 +395,23 @@ Promise.resolve()
         Promise.all(
           result.fonts.map(
             renderResult => {
-              if (options.verbose) { console.log(`Writing font-file '${renderResult.format}' -> '${renderResult.destPath}' (${renderResult.content.length})`); }
-              return fs.outputFile(renderResult.destPath, renderResult.content)
+              if (options.verbose) { process.stdout.write(`Writing font-file '${renderResult.format}' -> '${renderResult.destPath}' (${renderResult.content.length})\n`); }
+
+              fs.mkdir(path.dirname(renderResult.destPath), { recursive: true }, (err) => {});
+              return fs.writeFile(renderResult.destPath, renderResult.content, (err) => {});
           })
             .concat(result.templates.map(
               renderResult => {
-                if (options.verbose) { console.log(`Writing template-file '${renderResult.input}' -> '${renderResult.destPath}' (${renderResult.content.length})`); }
-                return fs.outputFile(renderResult.destPath, renderResult.content)
+                if (options.verbose) { process.stdout.write(`Writing template-file '${renderResult.input}' -> '${renderResult.destPath}' (${renderResult.content.length})\n`); }
+
+                fs.mkdir(path.dirname(renderResult.destPath), { recursive: true }, (err) => {});
+                return fs.writeFile(renderResult.destPath, renderResult.content, (err) => {});
               }))
         )
       )
       .then(() => Promise.resolve(result));
   })
-  .catch(error => {
+  .catch((error) => {
     // eslint-disable-next-line no-console
     console.log(error.stack);
 
@@ -382,3 +419,55 @@ Promise.resolve()
 
     process.exit(exitCode);
   });
+
+/**
+ * Parses (multiple) values into an `string[]`.
+ *
+ * @param {string}               flag Flag-Name
+ * @param {string|string[]}      [values] Values
+ * @param {string[]} knownValues Known values for the flag.
+ *
+ * @example
+ * parseMultipleValues('formats'  , "svg", FORMATS)             -> ["svg"]
+ * parseMultipleValues('formats'  , "svg woff2", FORMATS)       -> ["svg", "woff2"]
+ * parseMultipleValues('formats'  , "[svg, woff2]", FORMATS)    -> ["svg", "woff2"]
+ * parseMultipleValues('formats'  , "[svg, unknown]", FORMATS)  -> ["[svg, unknown]"]
+ * parseMultipleValues('templates', "css", TEMPLATES)                                       -> ["css"]
+ * parseMultipleValues('templates', "css html", TEMPLATES)                                  -> ["css", "html"]
+ * parseMultipleValues('templates', "[css, html]", TEMPLATES)                               -> ["css", "html"]
+ * parseMultipleValues('templates', "[css, unknown]", TEMPLATES)                            -> ["[css, unknown]"]
+ * parseMultipleValues('templates', ["css html", "./templates/custom.html.njk"], TEMPLATES) -> ["css", "html", "./templates/custom.html.njk"]
+ *
+ * @returns {undefined|string[]}
+ */
+function parseMultipleValues( flag, values, knownValues )
+{
+  const knownValuesOnlyExp = new RegExp(`\\[?(\\s*(${knownValues.join('|')})\\s*,?)+\\]?`);
+  let  parsedValues       = [];
+
+  if (!values) { return void 0;}
+  else if (typeof values === 'string')
+  {
+    if (values.match(knownValuesOnlyExp))
+    {
+      // For backwards compatibility support "[value1 value2]" and "[value1, value2]" notation.
+      if (values.startsWith('[')) { values = values.substring(1, values.length-1); }
+      return values.split(/\s+|\s*,\s*/).filter(value => value.length > 0);
+    }
+    else
+    {
+      return [values];
+    }
+  }
+  else if (Array.isArray(values)) {
+    values.forEach((value) => {
+      parsedValues = parsedValues.concat(parseMultipleValues(flag, value, knownValues));
+    });
+
+    return parsedValues;
+  }
+
+  process.stderr.write(`Unsupported parameter value --${flag} ${values}\n`);
+
+  return void 0;
+}

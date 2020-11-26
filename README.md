@@ -13,13 +13,32 @@ Features:
 - Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF` and `SVG`.
 - Support configuration Files - use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories.
 - Supported browsers: IE8+.
-- Allows to use custom templates (example `css`, `scss` and `html` etc).
+- Allows using custom templates (example `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) etc).
 - No extra dependencies as `gulp`, `grunt` or other big tools.
 - Tested on all platforms (`linux`, `windows` and `osx`).
 - CLI.
 - [Webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin).
 
-## Install
+## Table Of Contents
+
+- [Webfont](#webfont)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Options](#options)
+  - [svgicons2svgfont](#svgicons2svgfont)
+- [Command Line Interface (CLI)](#command-line-interface)
+  - [Installation](#cli-installation)
+  - [Usage](#cli-usage)
+  - [Exit Codes](#cli-exit-codes)
+- [Related](#related)
+- [Roadmap](#roadmap)
+- [Contribution](#contribution)
+- [Changelog](#changelog)
+- [License](#license)
+
+---
+
+## Installation
 
 ```shell
 npm install --save-dev webfont
@@ -32,14 +51,14 @@ const webfont = require("webfont").default;
 
 webfont({
   files: "src/svg-icons/**/*.svg",
-  fontName: "my-font-name"
+  fontName: "my-font-name",
 })
-  .then(result => {
+  .then((result) => {
     console.log(result);
 
     return result;
   })
-  .catch(error => {
+  .catch((error) => {
     throw error;
   });
 ```
@@ -51,50 +70,55 @@ import webfont from "webfont";
 
 webfont({
   files: "src/svg-icons/**/*.svg",
-  fontName: "my-font-name"
+  fontName: "my-font-name",
 })
-  .then(result => {
+  .then((result) => {
     console.log(result);
 
     return result;
   })
-  .catch(error => {
+  .catch((error) => {
     throw error;
   });
 ```
 
-## Options
+### Options
 
-### `files`
+#### `files`
 
-A file glob, or array of file globs.
-Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
+- Type: `string` | `array`
+- Description: A file glob, or array of file globs. Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
+- Note: `node_modules` and `bower_components` are always ignored.
 
-`node_modules` and `bower_components` are always ignored.
+#### `configFile`
 
-### `configFile`
+- Type: `string`
+- Description: Path to a specific configuration file `(JSON, YAML, or CommonJS)` or the name of a module in `node_modules` that points to one.
+- Note: If you do not provide `configFile`, webfont will search up the directory tree for configuration file in the following places, in this order:
+  1. a `webfont` property in `package.json`
+  2. a `.webfontrc` file (with or without filename extension: `.json`, `.yaml`, and `.js` are available)
+  3. a `webfont.config.js` file exporting a JS `object`.
+     The search will begin in the working directory and move up the directory tree until it finds a configuration file.
 
-A `webfont` configuration object.
+#### `fontName`
 
-### `fontName`
+- Type: `string`
+- Default: `webfont`
+- Description: The font family name you want.
 
-Type: `String`
-Default: `webfont`
+#### `formats`
 
-The font family name you want.
+- Type: `array`,
+- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']`,
+- Possible values: `svg, ttf, eot, woff, woff2`,
+- Description: Font file types to generate.
 
-### `formats`
+#### `template`
 
-Type: `Array`
-Default value: `['svg', 'ttf', 'eot', 'woff', 'woff2']`
-Possible values: `svg, ttf, eot, woff, woff2`.
-
-Font file types to generate.
-
-### `template`
-
-Type: `string`, `string[]`, `WebfontTemplateOptions[]`
-Default: `null`
+- Type: `string`, `string[]`, `WebfontTemplateOptions[]`
+- Default: `null`
+- Possible values: `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) (feel free to contribute more).
+- Note: If you want to use a custom template use this option pass in a path `string` like this:
 
 Built-in template aliases: `css`, `scss`, `html` (feel free to contribute).<br/>
 If you want to use custom template(s), supply one or more paths.
@@ -103,20 +127,42 @@ If you want to use custom template(s), supply one or more paths.
 - API: `template: 'css, html'` or `template: ['css', 'html']`
 - API `WebfontTemplateOptions[]`: More flexible results can be achieved, if you specify options for each template separately.<br/>
   Missing properties will default to either the corresponding global- or generic predefined properties. 
-```js
-import webfont from "webfont";
 
-webfont({
-  files: "src/svg-icons/**/*.svg",
-  fontName: "my-font-name",
-  template: [
-    {file: 'css', outDir: './resources/css'},
-    {file: './templates/icon-list.html.njk', outDir: './resources/docs'}
-  ]
-});
-```
+ ```js
+  webfont({
+    template: "./path/to/my-template.css",
+  });
+  ```
 
-Example: `template: path.resolve(__dirname, './my-template.css')`.
+  Or
+
+  ```js
+  webfont({
+    template: path.resolve(__dirname, "./my-template.css"),
+  });
+  ```
+
+  Or
+
+  ```js
+  webfont({
+    template: path.resolve(__dirname, "./my-template.styl"),
+  });
+  ```
+  Or
+
+  ```js
+  import webfont from "webfont";
+  
+  webfont({
+    files: "src/svg-icons/**/*.svg",
+    fontName: "my-font-name",
+    template: [
+      {file: 'css', outDir: './resources/css'},
+      {file: './templates/icon-list.html.njk', outDir: './resources/docs'}
+    ]
+  });
+  ```
 
 #### `WebfontTemplateOptions`
 - `String` `file`:      Type or (relative) template path
@@ -124,105 +170,315 @@ Example: `template: path.resolve(__dirname, './my-template.css')`.
 - `String` `className`: Classname used for each font-icon class.    _Default_: `options.templateClassName`
 - `String` `fontPath`:  Path used as URI in the resulting template. _Default_: `options.templateFontPath`
 
-### `templateClassName`
+#### `templateClassName`
 
-Type: `string`
-Default: `null`
+- Type: `string`
+- Default: `null`
+- Description: Default font class name.
 
-Default font class name.
+#### `templateFontPath`
 
-### `templateFontPath`
+- Type: `string`
+- Default: `./`
+- Description: Path to generated fonts in the `CSS` file.
 
-Type: `string`
-Default: `./`
+#### `templateFontName`
 
-Path to generated fonts in the `CSS` file.
+- Type: `string`
+- Default: Gets is from `fontName` if not set, but you can specify any value.
+- Description: Template font family name you want.
 
-### `templateFontName`
+#### `glyphTransformFn`
 
-Type: `string`
+- Type: `function`
+- Default: `null`
+- Description: If you want to transform glyph metadata `(e.g. titles of CSS classes)` before transferring it in your style template for your icons, you can use this option with glyphs metadata object.
+- Example:
 
-Default value getting from `fontName` options, but you can specify any value.
+  ```js
+  import webfont from "webfont";
 
-### `glyphTransformFn`
+  webfont({
+    files: "src/svg-icons/**/*.svg",
+    glyphTransformFn: (obj) => {
+      obj.name += "_transform";
 
-Type: `function`
-Default: `null`
-
-If you need transform glyph metadata (e.g. titles of CSS classes) before transferred in style template for your icons, you can use this option with glyphs metadata object.
-
-Example:
-
-```js
-import webfont from "webfont";
-
-webfont({
-  files: "src/svg-icons/**/*.svg",
-  glyphTransformFn: obj => {
-    obj.name += "_transform";
-
-    return obj;
-  }
-})
-  .then(result => {
-    console.log(result);
-
-    return result;
+      return obj;
+    },
   })
-  .catch(error => {
-    throw error;
-  });
-```
+    .then((result) => {
+      console.log(result);
 
-### `sort`
+      return result;
+    })
+    .catch((error) => {
+      throw error;
+    });
+  ```
 
-Type: `bool`
-Default: `true`
+#### `sort`
 
-Default the icons are sorted by name, do not sort by setting this to `false`
+- Type: `bool`
+- Default: `true`
+- Description: Whether you want to sort the icons sorted by name.
 
-### `fontId`
+---
 
-### `fontStyle`
+## svgicons2svgfont
 
-### `fontWeight`
+### svgicons2svgfont options
 
-### `fixedWidth`
+These can be appended to [webfont options](#options). These are passed directly to [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
 
-### `centerHorizontally`
+#### `svgicons2svgfont.fontName`
 
-### `normalize`
+- Type: `string`
+- Default: Taken from the [webfont fontName option](#fontname)
+- Description: The font family name you want.
 
-### `fontHeight`
+#### `svgicons2svgfont.fontId`
 
-### `round`
+- Type: `string`
+- Default: The `fontName` value
+- Description: The font id you want.
 
-### `descent`
+#### `svgicons2svgfont.fontStyle`
 
-### `ascent`
+- Type: `string`
+- Default: `''`
+- Description: The font style you want.
 
-### `startUnicode`
+#### `svgicons2svgfont.fontWeight`
 
-### `prependUnicode`
+- Type: `string`
+- Default: `''`
+- Description: The font weight you want.
 
-Options that are passed directly to [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont).
-Option `fontName` for `svgicons2svgfont` taken from above `fontName` argument.
+#### `svgicons2svgfont.fixedWidth`
+
+- Type: `boolean`
+- Default: `false`
+- Description: Creates a monospace font of the width of the largest input icon.
+
+#### `svgicons2svgfont.centerHorizontally`
+
+- Type: `boolean`
+- Default: `false`
+- Description: Calculate the bounds of a glyph and center it horizontally.
+
+#### `svgicons2svgfont.normalize`
+
+- Type: `boolean`
+- Default: `false`
+- Description: Normalize icons by scaling them to the height of the highest icon.
+
+#### `svgicons2svgfont.fontHeight`
+
+- Type: `number`
+- Default: `MAX(icons.height)`
+- Description: The outputted font height (defaults to the height of the highest input icon).
+
+#### `svgicons2svgfont.round`
+
+- Type: `number`
+- Default: `10e12` Setup SVG path rounding.
+
+#### `svgicons2svgfont.descent`
+
+- Type: `number`
+- Default: `0`
+- Description: The font descent. It is useful to fix the font baseline yourself.
+- Warning: The descent is a positive value!.
+
+#### `svgicons2svgfont.ascent`
+
+- Type: `number`
+- Default: `fontHeight - descent`
+- Description: The font ascent. Use this options only if you know what you're doing. A suitable value for this is computed for you.
+
+#### `svgicons2svgfont.metadata`
+
+- Type: `string`
+- Default: `undefined`
+- Description: The font [metadata](http://www.w3.org/TR/SVG/metadata.html).
+  You can set any character data in, but this is the recommended place for a copyright mention.
+
+#### `svgicons2svgfont.log`
+
+- Type: `function`
+- Default: `console.log`
+- Description: Allows you to provide your own logging function. Set to `function(){}` to disable logging.
+
+---
 
 ## Command Line Interface
 
 The interface for command-line usage is fairly simplistic at this stage, as seen in the following usage section.
 
-### Usage
+### CLI Installation
 
-`webfont --help` prints the CLI documentation.
+Add the `cli` script to your `package.json` file's `scripts` object:
 
-### Exit codes
+```json
+{
+  "scripts": {
+    "webfont": "node node_modules/webfont/dist/cli.js"
+  }
+}
+```
+
+If you're using cross-env:
+
+```json
+{
+  "scripts": {
+    "webfont": "cross-env node_modules/webfont/dist/cli.js"
+  }
+}
+```
+
+### CLI Usage
+
+```shell
+    Usage: webfont [input] [options]
+
+    Input: File(s) or glob(s).
+
+        If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
+        for cross-platform glob support.
+
+    Options:
+
+        --config
+
+            Path to a specific configuration file (JSON, YAML, or CommonJS)
+            or the name of a module in \`node_modules\` that points to one.
+            If no \`--config\` argument is provided, webfont will search for
+            configuration  files in the following places, in this order:
+               - a \`webfont\` property in \`package.json\`
+               - a \`.webfontrc\` file (with or without filename extension:
+                   \`.json\`, \`.yaml\`, and \`.js\` are available)
+               - a \`webfont.config.js\` file exporting a JS object
+            The search will begin in the working directory and move up the
+            directory tree until a configuration file is found.
+
+        -f, --font-name
+
+            The font family name you want, default: "webfont".
+
+        -h, --help
+
+            Output usage information.
+
+        -v, --version
+
+            Output the version number.
+
+        -r, --formats
+
+            Only this formats generate.
+
+        -d, --dest
+
+            Destination for generated fonts.
+
+        -t, --template
+
+            Type of template (\`css\`, \`scss\`, \`styl\`) or path to custom template.
+'
+        -s, --dest-template
+
+            Destination for generated template. If not passed used \`dest\` argument value.
+
+        -c, --template-class-name
+
+            Class name in css template.
+
+        -p, --template-font-path
+
+            Font path in css template.
+
+        -n, --template-font-name
+
+            Font name in css template.
+
+        --no-sort
+
+            Keeps the files in the same order of entry
+
+        --verbose
+
+            Tell me everything!.
+
+    For "svgicons2svgfont":
+
+        --font-id
+
+            The font id you want, default as "--font-name".
+
+        --font-style
+
+            The font style you want.
+
+        --font-weight
+
+            The font weight you want.
+
+        --fixed-width
+
+            Creates a monospace font of the width of the largest input icon.
+
+        --center-horizontally
+
+            Calculate the bounds of a glyph and center it horizontally.
+
+        --normalize
+
+            Normalize icons by scaling them to the height of the highest icon.
+
+        --font-height
+
+            The outputted font height [MAX(icons.height)].
+
+        --round
+
+            Setup the SVG path rounding [10e12].
+
+        --descent
+
+            The font descent [0].
+
+        --ascent
+
+            The font ascent [height - descent].
+
+        --start-unicode
+
+            The start unicode codepoint for files without prefix [0xEA01].
+
+        --prepend-unicode
+
+            Prefix files with their automatically allocated unicode codepoint.
+
+        --metadata
+
+            Content of the metadata tag.
+
+        --add-hash-in-font-url
+
+            Generated font url will be : [webfont].[ext]?v=[hash]
+
+```
+
+### CLI Exit Codes
 
 The CLI can exit the process with the following exit codes:
 
 - 0: All ok.
 - 1: Something unknown went wrong.
 - Other: related to using packages.
+
+---
 
 ## Related
 
@@ -245,6 +501,10 @@ The CLI can exit the process with the following exit codes:
 
 Feel free to push your code if you agree with publishing under the MIT license.
 
-## [Changelog](CHANGELOG.md)
+## Changelog
 
-## [License](LICENSE)
+Check our [Changelog](CHANGELOG.md)
+
+## License
+
+Check our [License](LICENSE)

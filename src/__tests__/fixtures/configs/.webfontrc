@@ -1,4 +1,5 @@
 {
     "normalize": true,
-    "foo": "bar"
+    "foo": "bar",
+    "templateCacheString": "test"
 }

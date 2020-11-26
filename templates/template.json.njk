@@ -1,0 +1,7 @@
+[
+  {% for glyph in glyphs %}{
+    "id": "{{ glyph.name }}",
+    "name": "{{ glyph.name | replace("-", " ") | title }}",
+    "unicode": [{% for unicode in glyph.unicode %}"{% if unicode | length != 1 %}{{unicode}}{% else %}{{ unicode.charCodeAt(0).toString(16)}}{% endif %}"{{ ', ' if glyph.unicode | last != unicode }}{% endfor %}]
+  }{{ ',' if glyphs | last != glyph }}
+{% endfor %}]

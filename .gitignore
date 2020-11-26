@@ -57,3 +57,9 @@ lib/vendor
 
 # Package
 dist
+
+# Store temp files
+temp
+
+# Environment variables files
+.env

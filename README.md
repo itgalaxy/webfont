@@ -3,8 +3,6 @@
 [![NPM version](https://img.shields.io/npm/v/webfont.svg)](https://www.npmjs.org/package/webfont)
 [![Travis Build Status](https://img.shields.io/travis/itgalaxy/webfont/master.svg?label=build)](https://travis-ci.org/itgalaxy/webfont)
 [![Build status](https://ci.appveyor.com/api/projects/status/a8absovr2r44w1oc?svg=true)](https://ci.appveyor.com/project/evilebottnawi/webfont)
-[![dependencies Status](https://david-dm.org/itgalaxy/webfont/status.svg)](https://david-dm.org/itgalaxy/webfont)
-[![devDependencies Status](https://david-dm.org/itgalaxy/webfont/dev-status.svg)](https://david-dm.org/itgalaxy/webfont?type=dev)
 
 Generator of fonts from SVG icons.
 

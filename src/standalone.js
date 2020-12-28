@@ -306,6 +306,13 @@ export default async function (initialOptions) {
         fontPath: options.templateFontPath.replace(/\/?$/, "/"),
       },
       hashOption,
+      { fonts: {
+        eot: options.formats.includes("eot") ? result.eot.toString('base64') : undefined,
+        woff: options.formats.includes("woff") ? result.woff.toString('base64') : undefined,
+        woff2: options.formats.includes("woff2") ? Buffer.from(result.woff2).toString('base64') : undefined,
+        svg: options.formats.includes("svg") ? result.svg.toString('base64') : undefined,
+        ttf: options.formats.includes("ttf") ? result.ttf.toString('base64') : undefined
+      }}
     ]);
 
     result.template = nunjucks.render(templateFilePath, nunjucksOptions);

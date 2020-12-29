@@ -307,13 +307,16 @@ export default async function (initialOptions) {
       },
       hashOption,
       { 
-        fonts: options.formats.map((format) => {
-          if (format === "woff2") {
-            return {}[format] = Buffer.from(result.woff2).toString("base64");
-          } else {
-            return {}[format] = result[format].toString("base64")
-          }
-        })
+        fonts: Object.fromEntries(new Map(
+          options.formats.map(format => [
+            format, (() => {
+              if (format === "woff2") {
+                return Buffer.from(result.woff2).toString("base64");
+              } else {
+                return result[format].toString("base64");
+              }
+          })()])
+        ))  
       }
     ]);
 

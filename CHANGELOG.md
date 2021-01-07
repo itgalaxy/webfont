@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [10.0.0-alpha.0](https://github.com/itgalaxy/webfont/compare/v9.0.0...v10.0.0-alpha.0) (2021-01-07)
 
+### Breaking change
+
+* Drop support for Node.js 8;
 
 ### Features
 

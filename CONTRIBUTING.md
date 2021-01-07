@@ -6,7 +6,7 @@ This project has a [code of conduct](https://github.com/itgalaxy/webfont/blob/ma
 
 We’re excited that you’re interested in contributing! Take a moment to read the following guidelines.
 
-There’s several ways to contribute, not just by writing code:
+There are several ways to contribute, not just by writing code:
 
 ## Improving documentation
 

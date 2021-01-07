@@ -9,6 +9,11 @@
       "name": "Alexander Krasnoyarov",
       "email": "alexander.krasnoyarov@itgalaxy.company",
       "url": "https://vk.com/sterling_archer"
+    },
+    {
+      "name": "Jimmy Andrade",
+      "email": "webfont@jimmyandrade.com",
+      "url": "https://github.com/jimmyandrade"
     }
   ],
   "repository": {
@@ -59,7 +64,6 @@
     "nunjucks": "^3.2.2",
     "p-limit": "^3.0.2",
     "resolve-from": "^5.0.0",
-    "snyk": "^1.316.1",
     "svg2ttf": "^5.0.0",
     "svgicons2svgfont": "^9.0.3",
     "ttf2eot": "^2.0.0",
@@ -114,11 +118,10 @@
     "lint:md": "remark . -i .gitignore -f -q",
     "lint:prettier": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,md,yml,yaml}' --ignore-path .gitignore",
     "prebuild": "rimraf dist",
-    "prepare": "npm run snyk-protect && npm run build",
+    "prepare": "npm run build",
     "pretest": "npm run lint",
     "prettify": "npm run lint:prettier -- --write",
     "release": "standard-version",
-    "snyk-protect": "snyk protect",
     "test": "npm run test:only -- --coverage",
     "test:only": "nyc --clean jest src"
   },
@@ -154,6 +157,5 @@
   },
   "engines": {
     "node": ">= 10.13.0"
-  },
-  "snyk": true
+  }
 }

@@ -43,7 +43,9 @@
     "generator"
   ],
   "main": "dist/index.js",
-  "bin": "dist/cli.js",
+  "bin": {
+    "webfont": "dist/cli.js"
+  },
   "files": [
     "dist",
     "templates",

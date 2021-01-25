@@ -1,10 +1,8 @@
-#!/usr/bin/env node
-
 import path from "path";
 import fs from "fs";
 import meow from "meow";
 import resolveFrom from "resolve-from";
-import standalone from "./standalone";
+import { webfont } from "./standalone";
 
 const cli = meow(
   `
@@ -375,7 +373,7 @@ Promise.resolve()
       cli.showHelp();
     }
 
-    return standalone(options).then((result) => {
+    return webfont(options).then((result) => {
       result.config = Object.assign(
         {},
         {

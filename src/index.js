@@ -1,3 +1,4 @@
-import standalone from "./standalone";
+import { webfont } from "./standalone";
 
-export default standalone;
+export { webfont } from "./standalone";
+export default webfont;

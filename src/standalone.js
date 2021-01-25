@@ -16,7 +16,7 @@ import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
 import xml2js from "xml2js";
 
-async function buildConfig(options) {
+const buildConfig = async (options) => {
   let searchPath = process.cwd();
   let configPath = null;
 
@@ -37,7 +37,7 @@ async function buildConfig(options) {
   return config;
 }
 
-function getGlyphsData(files, options) {
+const getGlyphsData = (files, options) => {
   const metadataProvider =
     options.metadataProvider ||
     defaultMetadataProvider({
@@ -111,7 +111,7 @@ function getGlyphsData(files, options) {
   });
 }
 
-function toSvg(glyphsData, options) {
+const toSvg = (glyphsData, options) => {
   let result = "";
 
   return new Promise((resolve, reject) => {
@@ -152,23 +152,15 @@ function toSvg(glyphsData, options) {
   });
 }
 
-function toTtf(buffer, options) {
-  return Buffer.from(svg2ttf(buffer, options).buffer);
-}
+const toTtf = (buffer, options) => Buffer.from(svg2ttf(buffer, options).buffer)
 
-function toEot(buffer) {
-  return Buffer.from(ttf2eot(buffer).buffer);
-}
+const toEot = (buffer) => Buffer.from(ttf2eot(buffer).buffer)
 
-function toWoff(buffer, options) {
-  return Buffer.from(ttf2woff(buffer, options).buffer);
-}
+const toWoff = (buffer, options) => Buffer.from(ttf2woff(buffer, options).buffer)
 
-function toWoff2(buffer) {
-  return wawoff2.compress(buffer);
-}
+const toWoff2 = (buffer) => wawoff2.compress(buffer)
 
-export default async function (initialOptions) {
+export const webfont = async (initialOptions) => {
   if (!initialOptions || !initialOptions.files) {
     throw new Error("You must pass webfont a `files` glob");
   }
@@ -323,3 +315,5 @@ export default async function (initialOptions) {
 
   return result;
 }
+
+export default webfont;

@@ -106,6 +106,7 @@
     "remark-cli": "^9.0.0",
     "remark-preset-lint-itgalaxy": "^15.0.0",
     "rimraf": "^3.0.2",
+    "rollup": "2.38.0",
     "standard-version": "^9.0.0"
   },
   "scripts": {
@@ -117,6 +118,7 @@
     "lint:js": "eslint . --report-unused-disable-directives --ignore-path .gitignore --ext 'js,.mjs,.jsx,.md'",
     "lint:md": "remark . -i .gitignore -f -q",
     "lint:prettier": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,md,yml,yaml}' --ignore-path .gitignore",
+    "postbuild": "rollup -c",
     "prebuild": "rimraf dist",
     "prepare": "npm run build",
     "pretest": "npm run lint",

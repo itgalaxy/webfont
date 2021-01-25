@@ -124,6 +124,7 @@
     "pretest": "npm run lint",
     "prettify": "npm run lint:prettier -- --write",
     "preversion": "npm run test",
+    "push-tags": "git push origin --tags",
     "release": "standard-version",
     "release-alpha": "npm run release -- --prerelease alpha",
     "test": "npm run test:only -- --coverage",

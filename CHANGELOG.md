@@ -6,45 +6,44 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Breaking change
 
-* Drop support for Node.js 8;
+- Drop support for Node.js 8;
 
 ### Features
 
-* add support to ligatures and JSON template ([f622c44](https://github.com/itgalaxy/webfont/commit/f622c44561534f1d997d2ebd82a08e00ca2af86c))
-* **cli:** add support to `template-cache-string` argument ([ae8b050](https://github.com/itgalaxy/webfont/commit/ae8b0503506be2544cd5b5a5b0f2c420fec588b5))
-* **demo:** add styl file example ([3aa5180](https://github.com/itgalaxy/webfont/commit/3aa5180a63fffc8d1067803e63ba9f35097009b9))
-* **demo:** update fonts with ligatures support ([64b10d6](https://github.com/itgalaxy/webfont/commit/64b10d645f43c49f0ffe92ca2978739a3abb115c))
-* **json template and template cache string:** add json built-in template, and templateCacheString which defaults to unix timestamp. ([1e43bba](https://github.com/itgalaxy/webfont/commit/1e43bba3e7aab537b2ff601c5205bd9b4b136734))
-* **ligatures:** add ligature support ([9106a13](https://github.com/itgalaxy/webfont/commit/9106a139067141f9d57fe2726ff4f295af35e4b7))
-* **standalone:** add support to JSON template and cacheString ([ad64421](https://github.com/itgalaxy/webfont/commit/ad64421a9da9cadbaba96e423cc00c1c6be76572))
-* **templates:** add cacheString support ([f39d2c1](https://github.com/itgalaxy/webfont/commit/f39d2c1753f19474d1fc0defd7de37b5f9706ca5))
-* **templates:** add template for JSON ([3b704b3](https://github.com/itgalaxy/webfont/commit/3b704b391682a99262c8ffd1a6c2c1bb22b5df58))
-* add stylus template ([588a753](https://github.com/itgalaxy/webfont/commit/588a75320daead1e3340da18efd716d75db4d00d))
-* allow adding a hash in generated font file name ([@brunoroux](https://github.com/brunoroux)) ([1913c9a](https://github.com/itgalaxy/webfont/commit/1913c9a87ea868810d7ceac9d6f203f13d90a6ea))
-* allow to add a hash in generated font file name ([6ca0d9e](https://github.com/itgalaxy/webfont/commit/6ca0d9ea7cb190d677b03db8c591183cd93c9b19))
-* respect `formats` option when using external config ([29769b0](https://github.com/itgalaxy/webfont/commit/29769b0b7f9b10a1ae77e49b813e3be494e9b699))
-
+- add support to ligatures and JSON template ([f622c44](https://github.com/itgalaxy/webfont/commit/f622c44561534f1d997d2ebd82a08e00ca2af86c))
+- **cli:** add support to `template-cache-string` argument ([ae8b050](https://github.com/itgalaxy/webfont/commit/ae8b0503506be2544cd5b5a5b0f2c420fec588b5))
+- **demo:** add styl file example ([3aa5180](https://github.com/itgalaxy/webfont/commit/3aa5180a63fffc8d1067803e63ba9f35097009b9))
+- **demo:** update fonts with ligatures support ([64b10d6](https://github.com/itgalaxy/webfont/commit/64b10d645f43c49f0ffe92ca2978739a3abb115c))
+- **json template and template cache string:** add json built-in template, and templateCacheString which defaults to unix timestamp. ([1e43bba](https://github.com/itgalaxy/webfont/commit/1e43bba3e7aab537b2ff601c5205bd9b4b136734))
+- **ligatures:** add ligature support ([9106a13](https://github.com/itgalaxy/webfont/commit/9106a139067141f9d57fe2726ff4f295af35e4b7))
+- **standalone:** add support to JSON template and cacheString ([ad64421](https://github.com/itgalaxy/webfont/commit/ad64421a9da9cadbaba96e423cc00c1c6be76572))
+- **templates:** add cacheString support ([f39d2c1](https://github.com/itgalaxy/webfont/commit/f39d2c1753f19474d1fc0defd7de37b5f9706ca5))
+- **templates:** add template for JSON ([3b704b3](https://github.com/itgalaxy/webfont/commit/3b704b391682a99262c8ffd1a6c2c1bb22b5df58))
+- add stylus template ([588a753](https://github.com/itgalaxy/webfont/commit/588a75320daead1e3340da18efd716d75db4d00d))
+- allow adding a hash in generated font file name ([@brunoroux](https://github.com/brunoroux)) ([1913c9a](https://github.com/itgalaxy/webfont/commit/1913c9a87ea868810d7ceac9d6f203f13d90a6ea))
+- allow to add a hash in generated font file name ([6ca0d9e](https://github.com/itgalaxy/webfont/commit/6ca0d9ea7cb190d677b03db8c591183cd93c9b19))
+- respect `formats` option when using external config ([29769b0](https://github.com/itgalaxy/webfont/commit/29769b0b7f9b10a1ae77e49b813e3be494e9b699))
 
 ### Bug Fixes
 
-* **cli:** use `fs` instead of `fs-extra` for writing files ([e7bf9f5](https://github.com/itgalaxy/webfont/commit/e7bf9f567be4aa370193d32f0a167841aa7b1567))
-* **demo:** adopt `font-display: block` for a little better icon font loading ([0f9dbc0](https://github.com/itgalaxy/webfont/commit/0f9dbc012a65e0f05bec916986e27fa7322d6306))
-* **deps:** [Snyk] Fix for 1 vulnerabilities ([6e08d33](https://github.com/itgalaxy/webfont/commit/6e08d332797128dbcfba70a2c11a2d1db6f72649)), closes [#197](https://github.com/itgalaxy/webfont/issues/197)
-* **deps:** [Snyk] Fix for 1 vulnerable dependencies ([6e9e243](https://github.com/itgalaxy/webfont/commit/6e9e24369a7908c494c4fbf91eee5ccce212bd73)), closes [#188](https://github.com/itgalaxy/webfont/issues/188)
-* **deps:** [Snyk] Security upgrade meow from 5.0.0 to 6.1.0 ([b5f9021](https://github.com/itgalaxy/webfont/commit/b5f9021d9327eaad8aeaf86ea95f80e70f47f9da)), closes [#195](https://github.com/itgalaxy/webfont/issues/195)
-* **deps:** fix insecure dependency ([59a9604](https://github.com/itgalaxy/webfont/commit/59a96045b3ec2fd296ddc0c49d6ff856105617cb))
-* **deps:** fix/sort deps and scripts after `npm audit fix` ([cf5cfc4](https://github.com/itgalaxy/webfont/commit/cf5cfc467ca4b4d62071b3bcc5b937878f655777)), closes [#209](https://github.com/itgalaxy/webfont/issues/209)
-* **deps:** fix/sort deps and scripts after `npm audit fix` ([4118fcf](https://github.com/itgalaxy/webfont/commit/4118fcf5e816c2545bf149791c06457c5c27728f))
-* **deps:** pin/upgrade eslint dependencies, fix some errors ([9206e72](https://github.com/itgalaxy/webfont/commit/9206e72ec9294373532968253fe4376a718986f6)), closes [#225](https://github.com/itgalaxy/webfont/issues/225)
-* **deps:** sort/upgrade dependencies after npm audit fix ([0f976a9](https://github.com/itgalaxy/webfont/commit/0f976a930bb345af4401d4812bb37b7044c6a07d)), closes [#220](https://github.com/itgalaxy/webfont/issues/220)
-* **deps:** sort/upgrade dependencies after npm audit fix ([a1ba509](https://github.com/itgalaxy/webfont/commit/a1ba50959b36763543787478b22e836852e8ab10))
-* **deps:** upgrade `eslint` dependencies and plugins ([1e5a5ca](https://github.com/itgalaxy/webfont/commit/1e5a5cae0d4f488a45d076d9af6317135ab0ae7e))
-* **templates:** adopt `font-display: block` for better icon font loading ([4669891](https://github.com/itgalaxy/webfont/commit/4669891dc9e10ce836c13c4e99f5c8357ab7ae51))
-* .snyk, package.json & package-lock.json to reduce vulnerabilities ([2e387cc](https://github.com/itgalaxy/webfont/commit/2e387ccf780b79ae3efda07030f238e45eb43977))
-* package.json & package-lock.json to reduce vulnerabilities ([b02f52f](https://github.com/itgalaxy/webfont/commit/b02f52fa77b495ef5e19f14e849d4f886a2f584b))
-* package.json, package-lock.json & .snyk to reduce vulnerabilities ([c805812](https://github.com/itgalaxy/webfont/commit/c8058125bc1f7410c43c8d057f485c425aa739c9))
-* package.json, package-lock.json & .snyk to reduce vulnerabilities ([791e5f4](https://github.com/itgalaxy/webfont/commit/791e5f4c56466853e97c5874d74ca52dfee1fd9a))
-* package.json, package-lock.json & .snyk to reduce vulnerabilities ([8f037d5](https://github.com/itgalaxy/webfont/commit/8f037d50711d633d406a127ef76384662d40ff09))
+- **cli:** use `fs` instead of `fs-extra` for writing files ([e7bf9f5](https://github.com/itgalaxy/webfont/commit/e7bf9f567be4aa370193d32f0a167841aa7b1567))
+- **demo:** adopt `font-display: block` for a little better icon font loading ([0f9dbc0](https://github.com/itgalaxy/webfont/commit/0f9dbc012a65e0f05bec916986e27fa7322d6306))
+- **deps:** [Snyk] Fix for 1 vulnerabilities ([6e08d33](https://github.com/itgalaxy/webfont/commit/6e08d332797128dbcfba70a2c11a2d1db6f72649)), closes [#197](https://github.com/itgalaxy/webfont/issues/197)
+- **deps:** [Snyk] Fix for 1 vulnerable dependencies ([6e9e243](https://github.com/itgalaxy/webfont/commit/6e9e24369a7908c494c4fbf91eee5ccce212bd73)), closes [#188](https://github.com/itgalaxy/webfont/issues/188)
+- **deps:** [Snyk] Security upgrade meow from 5.0.0 to 6.1.0 ([b5f9021](https://github.com/itgalaxy/webfont/commit/b5f9021d9327eaad8aeaf86ea95f80e70f47f9da)), closes [#195](https://github.com/itgalaxy/webfont/issues/195)
+- **deps:** fix insecure dependency ([59a9604](https://github.com/itgalaxy/webfont/commit/59a96045b3ec2fd296ddc0c49d6ff856105617cb))
+- **deps:** fix/sort deps and scripts after `npm audit fix` ([cf5cfc4](https://github.com/itgalaxy/webfont/commit/cf5cfc467ca4b4d62071b3bcc5b937878f655777)), closes [#209](https://github.com/itgalaxy/webfont/issues/209)
+- **deps:** fix/sort deps and scripts after `npm audit fix` ([4118fcf](https://github.com/itgalaxy/webfont/commit/4118fcf5e816c2545bf149791c06457c5c27728f))
+- **deps:** pin/upgrade eslint dependencies, fix some errors ([9206e72](https://github.com/itgalaxy/webfont/commit/9206e72ec9294373532968253fe4376a718986f6)), closes [#225](https://github.com/itgalaxy/webfont/issues/225)
+- **deps:** sort/upgrade dependencies after npm audit fix ([0f976a9](https://github.com/itgalaxy/webfont/commit/0f976a930bb345af4401d4812bb37b7044c6a07d)), closes [#220](https://github.com/itgalaxy/webfont/issues/220)
+- **deps:** sort/upgrade dependencies after npm audit fix ([a1ba509](https://github.com/itgalaxy/webfont/commit/a1ba50959b36763543787478b22e836852e8ab10))
+- **deps:** upgrade `eslint` dependencies and plugins ([1e5a5ca](https://github.com/itgalaxy/webfont/commit/1e5a5cae0d4f488a45d076d9af6317135ab0ae7e))
+- **templates:** adopt `font-display: block` for better icon font loading ([4669891](https://github.com/itgalaxy/webfont/commit/4669891dc9e10ce836c13c4e99f5c8357ab7ae51))
+- .snyk, package.json & package-lock.json to reduce vulnerabilities ([2e387cc](https://github.com/itgalaxy/webfont/commit/2e387ccf780b79ae3efda07030f238e45eb43977))
+- package.json & package-lock.json to reduce vulnerabilities ([b02f52f](https://github.com/itgalaxy/webfont/commit/b02f52fa77b495ef5e19f14e849d4f886a2f584b))
+- package.json, package-lock.json & .snyk to reduce vulnerabilities ([c805812](https://github.com/itgalaxy/webfont/commit/c8058125bc1f7410c43c8d057f485c425aa739c9))
+- package.json, package-lock.json & .snyk to reduce vulnerabilities ([791e5f4](https://github.com/itgalaxy/webfont/commit/791e5f4c56466853e97c5874d74ca52dfee1fd9a))
+- package.json, package-lock.json & .snyk to reduce vulnerabilities ([8f037d5](https://github.com/itgalaxy/webfont/commit/8f037d50711d633d406a127ef76384662d40ff09))
 
 ## 9.0.0 - 2019-04-19
 

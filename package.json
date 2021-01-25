@@ -117,7 +117,7 @@
     "lint": "npm-run-all -l --parallel lint:*",
     "lint:js": "eslint . --report-unused-disable-directives --ignore-path .gitignore --ext 'js,.mjs,.jsx,.md'",
     "lint:md": "remark . -i .gitignore -f -q",
-    "lint:prettier": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,md,yml,yaml}' --ignore-path .gitignore",
+    "lint:prettier": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,yml,yaml}' --ignore-path .gitignore",
     "postbuild": "rollup -c",
     "prebuild": "rimraf dist",
     "prepare": "npm run build",

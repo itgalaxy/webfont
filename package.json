@@ -123,6 +123,7 @@
     "prepare": "npm run build",
     "pretest": "npm run lint",
     "prettify": "npm run lint:prettier -- --write",
+    "preversion": "npm run test",
     "release": "standard-version",
     "test": "npm run test:only -- --coverage",
     "test:only": "nyc --clean jest src"

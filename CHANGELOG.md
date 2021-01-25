@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-alpha.1](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.0...v10.0.0-alpha.1) (2021-01-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* Starting from version 10 stable, you should use webfont via named import, like this: `import { webfont } from "webfont"`.
+
+* adopt named import/export system ([31adbc7](https://github.com/itgalaxy/webfont/commit/31adbc7faa974c3d5a1ba9ffd4a5944bcab4fae8))
+
 ## [10.0.0-alpha.0](https://github.com/itgalaxy/webfont/compare/v9.0.0...v10.0.0-alpha.0) (2021-01-07)
 
 ### Breaking change

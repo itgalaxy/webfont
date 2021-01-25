@@ -8,9 +8,9 @@ const external = [
   "stream",
   "svgicons2svgfont/src/filesorter",
   "svgicons2svgfont/src/metadata",
-]
+];
 
-const dir = "dist/rollup"
+const dir = "dist/rollup";
 
 module.exports = [
   {
@@ -21,16 +21,17 @@ module.exports = [
       dir,
       exports: "auto",
       format: "cjs",
-      preserveModules: false
-    }
-  }, {
+      preserveModules: false,
+    },
+  },
+  {
     external,
     input: "src/index.js",
     output: {
       dir,
       exports: "named",
       format: "cjs",
-      preserveModules: true
-    }
-  }
+      preserveModules: true,
+    },
+  },
 ];

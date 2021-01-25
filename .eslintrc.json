@@ -1,6 +1,6 @@
 {
-  "parserOptions": {
-    "sourceType": "script"
+  "env": {
+    "es6": true
   },
   "extends": [
     "plugin:itgalaxy/node",
@@ -38,7 +38,32 @@
         "node/no-unpublished-require": "off",
         "node/no-unsupported-features/es-syntax": "off"
       }
+    },
+    {
+      "files": ["*dist/**/*.js"],
+      "rules": {
+        "camelcase": "off",
+        "dot-notation": "off",
+        "id-length": "off",
+        "max-statements-per-line": "off",
+        "new-cap": "off",
+        "no-underscore-dangle": "off",
+        "no-var": "off",
+        "quotes": "off",
+        "spaced-comment": "off",
+        "vars-on-top": "off"
+      }
+    },
+    {
+      "files": ["cli.js"],
+      "rules": {
+        "node/shebang": "off"
+      }
     }
   ],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
   "root": true
 }

@@ -60,7 +60,7 @@
     "cosmiconfig": "^5.2.0",
     "deepmerge": "^4.2.2",
     "globby": "^11.0.1",
-    "meow": "^7.1.1",
+    "meow": "^9.0.0",
     "nunjucks": "^3.2.2",
     "p-limit": "^3.0.2",
     "resolve-from": "^5.0.0",

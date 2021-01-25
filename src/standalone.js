@@ -35,7 +35,7 @@ const buildConfig = async (options) => {
   }
 
   return config;
-}
+};
 
 const getGlyphsData = (files, options) => {
   const metadataProvider =
@@ -109,7 +109,7 @@ const getGlyphsData = (files, options) => {
       )
     );
   });
-}
+};
 
 const toSvg = (glyphsData, options) => {
   let result = "";
@@ -150,15 +150,16 @@ const toSvg = (glyphsData, options) => {
 
     fontStream.end();
   });
-}
+};
 
-const toTtf = (buffer, options) => Buffer.from(svg2ttf(buffer, options).buffer)
+const toTtf = (buffer, options) => Buffer.from(svg2ttf(buffer, options).buffer);
 
-const toEot = (buffer) => Buffer.from(ttf2eot(buffer).buffer)
+const toEot = (buffer) => Buffer.from(ttf2eot(buffer).buffer);
 
-const toWoff = (buffer, options) => Buffer.from(ttf2woff(buffer, options).buffer)
+const toWoff = (buffer, options) =>
+  Buffer.from(ttf2woff(buffer, options).buffer);
 
-const toWoff2 = (buffer) => wawoff2.compress(buffer)
+const toWoff2 = (buffer) => wawoff2.compress(buffer);
 
 export const webfont = async (initialOptions) => {
   if (!initialOptions || !initialOptions.files) {
@@ -314,6 +315,6 @@ export const webfont = async (initialOptions) => {
   result.config = options;
 
   return result;
-}
+};
 
 export default webfont;

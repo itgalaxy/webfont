@@ -61,7 +61,7 @@
     "deepmerge": "^4.2.2",
     "globby": "^11.0.1",
     "meow": "^7.1.1",
-    "nunjucks": "^3.2.2",
+    "nunjucks": "^3.2.3",
     "p-limit": "^3.0.2",
     "resolve-from": "^5.0.0",
     "svg2ttf": "^5.0.0",

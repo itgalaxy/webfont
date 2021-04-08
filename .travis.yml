@@ -15,7 +15,7 @@ matrix:
   fast_finish: true
   include:
     - os: linux
-      node_js: "11"
+      node_js: "12"
       script: npm run $JOB_PART
       env: JOB_PART=test
     - os: linux
@@ -23,7 +23,7 @@ matrix:
       script: npm run $JOB_PART
       env: JOB_PART=test
     - os: osx
-      node_js: "11"
+      node_js: "12"
       script: npm run $JOB_PART
       env: JOB_PART=test
     - os: osx

@@ -50,5 +50,5 @@ Describe the tests that you ran to verify your changes:
 - [ ] My code follows the style guidelines of this project;
 - [ ] I have performed a self-review of my own code;
 - [ ] I have mapped technical debts found on my changes;
-- [ ] I have made corresponding changes to the documentation (if applicable);
+- [ ] I have made changes to the documentation (if applicable);
 - [ ] My changes generate no new warnings or errors;

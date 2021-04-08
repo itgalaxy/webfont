@@ -1,37 +1,43 @@
-const { dependencies } = require("./package.json");
+import commonjs from "@rollup/plugin-commonjs";
+import {dependencies} from "./package.json";
+import typescript from "@rollup/plugin-typescript";
+
+const dir = "dist";
 
 const external = [
   ...Object.keys(dependencies),
   "crypto",
   "fs",
+  "os",
   "path",
   "stream",
-  "svgicons2svgfont/src/filesorter",
-  "svgicons2svgfont/src/metadata",
+  "util",
 ];
 
-const dir = "dist/rollup";
+const plugins = [
+  typescript(),
+  commonjs(),
+];
 
 module.exports = [
   {
     external,
-    input: ["src/cli.js"],
+    input: "src/cli/index.ts",
     output: {
       banner: "#!/usr/bin/env node\n",
-      dir,
-      exports: "auto",
+      file: `${dir}/cli.js`,
       format: "cjs",
-      preserveModules: false,
     },
+    plugins,
   },
   {
     external,
-    input: "src/index.js",
+    input: "src/index.ts",
     output: {
       dir,
       exports: "named",
       format: "cjs",
-      preserveModules: true,
     },
+    plugins,
   },
 ];

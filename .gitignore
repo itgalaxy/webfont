@@ -63,3 +63,7 @@ temp
 
 # Environment variables files
 .env
+
+# Don't commit JavaScript generated files
+src/**/*.js
+src/**/*.d.ts

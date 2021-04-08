@@ -2,8 +2,95 @@
   "name": "webfont",
   "version": "10.0.0-alpha.2",
   "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
-  "license": "MIT",
+  "directories": {
+    "lib": "dist",
+    "source": "src"
+  },
+  "files": [
+    "dist",
+    "dist/src/index.d.ts",
+    "templates",
+    "README.md"
+  ],
+  "main": "dist/index.js",
+  "bin": "dist/cli.js",
+  "source": "src/index.ts",
+  "types": "dist/src/index.d.ts",
+  "typings": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "clean": "rm -rf dist/ temp/",
+    "demo": "node dist/cli.js './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
+    "lint": "eslint .",
+    "postbuild": "tsc --declaration --declarationDir dist --emitDeclarationOnly",
+    "prebuild": "npm run clean && npm run lint",
+    "predemo": "npm run build",
+    "pretest": "npm run build",
+    "prettify": "npm run lint --fix",
+    "preversion": "npm run test",
+    "push-tags": "git push origin --tags",
+    "release": "standard-version",
+    "release-alpha": "npm run release -- --prerelease alpha",
+    "test": "jest src",
+    "testc": "npm test -- --coverage",
+    "test-debug": "npm test --detectOpenHandles --runInBand",
+    "testu": "npm test -- -u"
+  },
+  "dependencies": {
+    "deepmerge": "latest",
+    "globby": "latest",
+    "meow": "latest",
+    "nunjucks": "latest",
+    "parse-json": "latest",
+    "p-limit": "latest",
+    "resolve-from": "latest",
+    "svg2ttf": "latest",
+    "svgicons2svgfont": "latest",
+    "ttf2eot": "latest",
+    "ttf2woff": "latest",
+    "wawoff2": "^1.0.2",
+    "xml2js": "latest"
+  },
+  "devDependencies": {
+    "@babel/eslint-plugin": "latest",
+    "@babel/preset-env": "latest",
+    "@babel/preset-typescript": "latest",
+    "@rollup/plugin-commonjs": "latest",
+    "@rollup/plugin-typescript": "latest",
+    "@types/jest": "latest",
+    "@types/node": "latest",
+    "@types/nunjucks": "latest",
+    "@types/rimraf": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "babel-jest": "latest",
+    "cosmiconfig": "^5.2.0",
+    "eslint": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-jest": "latest",
+    "eslint-plugin-markdown": "latest",
+    "eslint-plugin-node": "latest",
+    "eslint-plugin-promise": "latest",
+    "eslint-plugin-unicorn": "latest",
+    "husky": "latest",
+    "is-eot": "latest",
+    "is-svg": "latest",
+    "is-ttf": "latest",
+    "is-woff": "latest",
+    "is-woff2": "latest",
+    "jest": "latest",
+    "lint-staged": "latest",
+    "rimraf": "latest",
+    "rollup": "latest",
+    "standard-version": "latest",
+    "ts-node": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itgalaxy/webfont.git"
+  },
   "author": "itgalaxy <development@itgalaxy.company>",
+  "license": "MIT",
   "contributors": [
     {
       "name": "Alexander Krasnoyarov",
@@ -16,12 +103,13 @@
       "url": "https://github.com/jimmyandrade"
     }
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/itgalaxy/webfont.git"
+  "bugs": {
+    "url": "https://github.com/itgalaxy/webfont/issues"
   },
-  "homepage": "https://github.com/itgalaxy/webfont",
-  "bugs": "https://github.com/itgalaxy/webfonty/issues",
+  "homepage": "https://github.com/itgalaxy/webfont#readme",
+  "engines": {
+    "node": ">= 10.13.0"
+  },
   "keywords": [
     "cli",
     "standalone",
@@ -34,10 +122,6 @@
     "woff",
     "woff2",
     "otf",
-    "ttf",
-    "woff",
-    "eot",
-    "svg",
     "ttf2eot",
     "ttf2woff",
     "ttf2svg",
@@ -46,115 +130,5 @@
     "scss",
     "builder",
     "generator"
-  ],
-  "main": "dist/index.js",
-  "bin": {
-    "webfont": "dist/cli.js"
-  },
-  "files": [
-    "dist",
-    "templates",
-    "!**/__tests__"
-  ],
-  "dependencies": {
-    "cosmiconfig": "^5.2.0",
-    "deepmerge": "^4.2.2",
-    "globby": "^11.0.1",
-    "meow": "^7.1.1",
-    "nunjucks": "^3.2.2",
-    "p-limit": "^3.0.2",
-    "resolve-from": "^5.0.0",
-    "svg2ttf": "^5.0.0",
-    "svgicons2svgfont": "^9.0.3",
-    "ttf2eot": "^2.0.0",
-    "ttf2woff": "^2.0.0",
-    "wawoff2": "^1.0.2",
-    "xml2js": "^0.4.17"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.1.5",
-    "@babel/core": "^7.1.5",
-    "@babel/preset-env": "^7.1.5",
-    "babel-eslint": "10.1.0",
-    "babel-jest": "^26.3.0",
-    "cross-env": "^7.0.2",
-    "eslint": "7.14.0",
-    "eslint-plugin-ava": "11.0.0",
-    "eslint-plugin-html": "6.1.0",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-itgalaxy": "128.0.0",
-    "eslint-plugin-jest": "24.1.0",
-    "eslint-plugin-jsx-a11y": "6.4.1",
-    "eslint-plugin-lodash": "^7.1.0",
-    "eslint-plugin-markdown": "1.0.2",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-react": "7.21.5",
-    "eslint-plugin-unicorn": "21.0.0",
-    "esm": "^3.2.25",
-    "husky": "5.0.6",
-    "is-eot": "^1.0.0",
-    "is-svg": "^4.1.0",
-    "is-ttf": "^0.2.0",
-    "is-woff": "^1.0.0",
-    "is-woff2": "^1.0.0",
-    "jest": "^26.4.2",
-    "lint-staged": "^10.4.0",
-    "npm-run-all": "^4.0.0",
-    "nyc": "^15.1.0",
-    "prettier": "^2.1.2",
-    "remark-cli": "^9.0.0",
-    "remark-preset-lint-itgalaxy": "^15.0.0",
-    "rimraf": "^3.0.2",
-    "rollup": "2.38.0",
-    "standard-version": "^9.0.0",
-    "ts-node": "9.1.1"
-  },
-  "scripts": {
-    "build": "babel src -d dist --ignore '**/__tests__/**'",
-    "demo": "npm run build && node dist/cli.js './src/__tests__/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
-    "fix": "npm-run-all -l prettify -p 'fix:**'",
-    "fix:js": "npm run lint:js -- --fix",
-    "lint": "npm-run-all -l --parallel lint:*",
-    "lint:js": "eslint . --report-unused-disable-directives --ignore-path .gitignore --ext 'js,.mjs,.jsx,.md'",
-    "lint:md": "remark . -i .gitignore -f -q",
-    "lint:prettier": "prettier --list-different '{**/*,*}.{js,mjs,jsx,json,yml,yaml}' --ignore-path .gitignore",
-    "postbuild": "rollup -c",
-    "prebuild": "rimraf dist",
-    "prepare": "npm run build",
-    "pretest": "npm run lint",
-    "prettify": "npm run lint:prettier -- --write",
-    "preversion": "npm run test",
-    "push-tags": "git push origin --tags",
-    "release": "standard-version",
-    "release-alpha": "npm run release -- --prerelease alpha",
-    "test": "jest"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "8.9.0"
-          }
-        }
-      ]
-    ]
-  },
-  "remarkConfig": {
-    "plugins": [
-      "remark-preset-lint-itgalaxy"
-    ]
-  },
-  "nyc": {
-    "reporter": [
-      "lcov",
-      "text"
-    ],
-    "tempDirectory": "./coverage"
-  },
-  "engines": {
-    "node": ">= 10.13.0"
-  }
+  ]
 }

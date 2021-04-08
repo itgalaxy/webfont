@@ -6,15 +6,15 @@
 
 Generator of fonts from SVG icons.
 
-Features:
+## Features
 
-- Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF` and `SVG`.
-- Support configuration Files - use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories.
-- Supported browsers: IE8+.
-- Allows using custom templates (example `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) etc).
-- No extra dependencies as `gulp`, `grunt` or other big tools.
-- Tested on all platforms (`linux`, `windows` and `osx`).
-- CLI.
+- Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF` and `SVG`;
+- Support config files: use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories;
+- Support all popular browsers, including IE8+;
+- Allows using custom templates (example `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) etc);
+- No extra dependencies as `gulp`, `grunt` or other big tools;
+- Tested on all platforms (`linux`, `windows` and `osx`);
+- CLI;
 - [Webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin).
 
 ## Table Of Contents
@@ -45,25 +45,6 @@ npm install --save-dev webfont
 ## Usage
 
 ```js
-const webfont = require("webfont").default;
-
-webfont({
-  files: "src/svg-icons/**/*.svg",
-  fontName: "my-font-name",
-})
-  .then((result) => {
-    console.log(result);
-
-    return result;
-  })
-  .catch((error) => {
-    throw error;
-  });
-```
-
-Or
-
-```js
 import webfont from "webfont";
 
 webfont({
@@ -71,8 +52,29 @@ webfont({
   fontName: "my-font-name",
 })
   .then((result) => {
-    console.log(result);
+    // Do something with result
+    Function.prototype(result);
+    // Or return it
+    return result;
+  })
+  .catch((error) => {
+    throw error;
+  });
+```
 
+or
+
+```js
+const webfont = require("webfont").default;
+
+webfont({
+  files: "src/svg-icons/**/*.svg",
+  fontName: "my-font-name",
+})
+  .then((result) => {
+    // Do something with result
+    Function.prototype(result);
+    // Or return it
     return result;
   })
   .catch((error) => {
@@ -177,8 +179,9 @@ webfont({
     },
   })
     .then((result) => {
-      console.log(result);
-
+      // Do something with result
+      Function.prototype(result);
+      // Or return it
       return result;
     })
     .catch((error) => {
@@ -461,10 +464,10 @@ The CLI can exit the process with the following exit codes:
 
 ## Roadmap
 
-- The ability to generate from any type to any type.
-- More tests, include CLI test.
-- Improved docs.
-- Reduce package size (maybe implement `ttf2woff2` with native js library).
+- The ability to generate from any type to any type;
+- More tests, include CLI test;
+- Improved docs;
+- Reduce package size (maybe implement `ttf2woff2` with native js library);
 - Improve performance (maybe use cache for this).
 
 ## Contribution

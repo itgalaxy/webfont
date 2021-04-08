@@ -1,20 +1,20 @@
+import {GlyphTransformFn} from "../types/GlyphTransformFn";
 import crypto from "crypto";
-import path from "path";
 import isEot from "is-eot";
 import isSvg from "is-svg";
 import isTtf from "is-ttf";
 import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
+import path from "path";
 import standalone from "../standalone";
 
-const fixturesGlob = "src/__tests__/fixtures";
+const fixturesGlob = "src/fixtures";
 
 describe("standalone", () => {
   it("should throw error if `files` not passed", async () => {
     try {
       await standalone();
     } catch (error) {
-      // eslint-disable-next-line jest/no-conditional-expect
       expect(error.message).toMatch("You must pass webfont a `files` glob");
     }
   });
@@ -28,9 +28,7 @@ describe("standalone", () => {
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(
-        "Files glob patterns specified did not match any files"
-      );
+      expect(error.message).toMatch("Files glob patterns specified did not match any files");
     }
   });
 
@@ -58,14 +56,18 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
 
-    const svgHash = crypto.createHash("md5").update(result.svg).digest("hex");
-    const ttfHash = crypto.createHash("md5").update(result.ttf).digest("hex");
-    const eotHash = crypto.createHash("md5").update(result.eot).digest("hex");
-    const woffHash = crypto.createHash("md5").update(result.woff).digest("hex");
-    const woff2Hash = crypto
-      .createHash("md5")
-      .update(result.woff2)
-      .digest("hex");
+    const svgHash = crypto.createHash("md5").update(result.svg).
+      digest("hex");
+    const ttfHash = crypto.createHash("md5").update(result.ttf).
+      digest("hex");
+    const eotHash = crypto.createHash("md5").update(result.eot).
+      digest("hex");
+    const woffHash = crypto.createHash("md5").update(result.woff).
+      digest("hex");
+    const woff2Hash = crypto.
+      createHash("md5").
+      update(result.woff2).
+      digest("hex");
 
     expect(svgHash).toBe("5babeea3094bba0b5e2001390b0811fd");
     expect(ttfHash).toBe("c78d2714960175fdf8eaebd44b4159e9");
@@ -115,6 +117,7 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
+
   it("should generate only `woff` and `woff2` fonts with build-in template", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
@@ -149,7 +152,7 @@ describe("standalone", () => {
   it("should generate all fonts with custom `template` with relative path", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
-      template: "src/__tests__/fixtures/templates/template.css",
+      template: "src/fixtures/templates/template.css",
       templateCacheString: "test",
     });
 
@@ -173,14 +176,13 @@ describe("standalone", () => {
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     expect(result.config.foo).toBe("bar");
   });
 
   it("should load config and respect `template` option with build-in template value", async () => {
-    const configFile = path.join(
-      fixturesGlob,
-      "configs/.webfontrc-with-build-in-template"
-    );
+    const configFile = path.join(fixturesGlob, "configs/.webfontrc-with-build-in-template");
 
     const result = await standalone({
       configFile,
@@ -198,10 +200,7 @@ describe("standalone", () => {
   });
 
   it("should load config and respect `template` option with external template value", async () => {
-    const configFile = path.join(
-      fixturesGlob,
-      "configs/.webfontrc-with-external-template"
-    );
+    const configFile = path.join(fixturesGlob, "configs/.webfontrc-with-external-template");
     const result = await standalone({
       configFile,
       files: `${fixturesGlob}/svg-icons/**/*`,
@@ -212,17 +211,12 @@ describe("standalone", () => {
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    expect(result.config.template).toBe(
-      "src/__tests__/fixtures/templates/template.css"
-    );
+    expect(result.config.template).toBe("src/fixtures/templates/template.css");
     expect(result.template).toMatchSnapshot();
   });
 
   it("should load config and respect `formats` option", async () => {
-    const configFile = path.join(
-      fixturesGlob,
-      "configs/.webfontrc-with-custom-formats"
-    );
+    const configFile = path.join(fixturesGlob, "configs/.webfontrc-with-custom-formats");
     const result = await standalone({
       configFile,
       files: `${fixturesGlob}/svg-icons/**/*`,
@@ -255,9 +249,12 @@ describe("standalone", () => {
       template: path.join(fixturesGlob, "templates/template-ordered.css"),
     });
 
-    expect(templateOutput.replace(/(\s)/g, "")).toBe(
-      result.template.replace(/(\s)/g, "")
-    );
+    // eslint-disable-next-line prefer-named-capture-group
+    const actual = templateOutput.replace(/(\s)/gu, "");
+    // eslint-disable-next-line prefer-named-capture-group
+    const expected = result.template.replace(/(\s)/gu, "");
+
+    expect(actual).toBe(expected);
   });
 
   it("should throw error on bad svg images - `Unclosed root tag`", async () => {
@@ -272,7 +269,7 @@ describe("standalone", () => {
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Unclosed root tag/);
+      expect(error.message).toMatch(/Unclosed root tag/u);
     }
   });
 
@@ -288,11 +285,11 @@ describe("standalone", () => {
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Unterminated command at index/);
+      expect(error.message).toMatch(/Unterminated command at index/u);
     }
   });
 
-  it('should throw error on bad svg images - `Unexpected character "N"`', async () => {
+  it("should throw error on bad svg images - `Unexpected character \"N\"`", async () => {
     expect.assertions(1);
 
     const configFile = path.join(fixturesGlob, "configs/.webfontrc");
@@ -304,7 +301,7 @@ describe("standalone", () => {
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Unexpected character "N"/);
+      expect(error.message).toMatch(/Unexpected character "N"/u);
     }
   });
 
@@ -320,7 +317,7 @@ describe("standalone", () => {
       });
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Empty file/);
+      expect(error.message).toMatch(/Empty file/u);
     }
   });
 
@@ -341,14 +338,17 @@ describe("standalone", () => {
   });
 
   it("should create css selectors with transform titles through function", async () => {
+
+    const glyphTransformFn : GlyphTransformFn = (obj) => {
+      obj.name += "_transform";
+
+      return obj;
+    };
+
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       formats: ["eot"],
-      glyphTransformFn: (obj) => {
-        obj.name += "_transform";
-
-        return obj;
-      },
+      glyphTransformFn,
       template: "css",
       templateCacheString: "test",
     });
@@ -360,10 +360,10 @@ describe("standalone", () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: "css",
+      templateCacheString: "test",
       templateClassName: "foo",
       templateFontName: "bar",
       templateFontPath: "./foo-bar",
-      templateCacheString: "test",
     });
 
     expect(isSvg(result.svg)).toBe(true);

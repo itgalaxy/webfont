@@ -1,0 +1,30 @@
+import {Formats} from "./Format";
+
+export type OptionsBase = {
+  configFile?: string;
+  dest?: string;
+  fontName?: string | unknown;
+  formats?: Formats;
+  template?: "css" | string;
+  templateClassName?: string | unknown;
+  templateFontPath?: string;
+  templateFontName?: string | unknown;
+  templateCacheString?: string | unknown;
+  destTemplate?: string | unknown;
+  verbose?: boolean;
+  fontId?: string | unknown;
+  fontStyle?: string | unknown;
+  fontWeight?: string | unknown;
+  fixedWidth?: string | unknown;
+  centerHorizontally?: boolean | unknown;
+  normalize?: boolean;
+  fontHeight?: string | unknown;
+  round?: string | number;
+  descent?: string | number;
+  ascent?: string;
+  startUnicode?: string | unknown;
+  prependUnicode?: boolean | unknown;
+  metadata?: unknown;
+  sort?: boolean;
+  addHashInFontUrl?: boolean | unknown;
+};

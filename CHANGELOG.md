@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0-alpha.3](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.2...v10.0.0-alpha.3) (2021-04-08)
+
+
+### Features
+
+* migrate all codebase to TypeScript ([0b71779](https://github.com/itgalaxy/webfont/commit/0b71779a2a3b97eb27af65f64e936d6730dc5eb9))
+
 ## [10.0.0-alpha.2](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.1...v10.0.0-alpha.2) (2021-01-25)
 
 ## [10.0.0-alpha.1](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.0...v10.0.0-alpha.1) (2021-01-25)

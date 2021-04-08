@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.0.0](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.3...v10.0.0) (2021-04-08)
+
 ## [10.0.0-alpha.3](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.2...v10.0.0-alpha.3) (2021-04-08)
 
 

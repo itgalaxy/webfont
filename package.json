@@ -64,7 +64,7 @@
     "nunjucks": "^3.2.2",
     "p-limit": "^3.0.2",
     "resolve-from": "^5.0.0",
-    "svg2ttf": "^5.0.0",
+    "svg2ttf": "^5.2.0",
     "svgicons2svgfont": "^9.0.3",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^2.0.0",

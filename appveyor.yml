@@ -8,8 +8,8 @@ environment:
     - nodejs_version: 10
 
 version: "{build}"
-build: off
-deploy: off
+build: false
+deploy: false
 
 branches:
   only:

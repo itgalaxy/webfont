@@ -216,7 +216,7 @@ module.exports = {
     "node/no-unsupported-features/es-syntax": "off",
     "nonblock-statement-body-position": "error",
     "object-curly-newline": "error",
-    "object-curly-spacing": "error",
+    "object-curly-spacing": "off",
     "object-property-newline": "error",
     "object-shorthand": "error",
     "one-var": "off",

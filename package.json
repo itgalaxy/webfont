@@ -39,7 +39,7 @@
   "dependencies": {
     "deepmerge": "latest",
     "globby": "latest",
-    "meow": "latest",
+    "meow": "9.x",
     "nunjucks": "latest",
     "p-limit": "latest",
     "parse-json": "latest",
@@ -82,7 +82,8 @@
     "rimraf": "latest",
     "rollup": "latest",
     "standard-version": "latest",
-    "ts-node": "latest"
+    "ts-node": "latest",
+    "typescript": "latest"
   },
   "repository": {
     "type": "git",

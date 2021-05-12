@@ -7,7 +7,6 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:markdown/recommended",
   ],
   overrides: [
     {
@@ -42,7 +41,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["@babel", "@typescript-eslint", "import", "jest", "markdown", "node", "promise", "unicorn"],
+  plugins: ["@babel", "@typescript-eslint", "import", "jest", "node", "promise", "unicorn"],
   rules: {
     "accessor-pairs": "error",
     "array-bracket-newline": "error",

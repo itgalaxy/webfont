@@ -48,7 +48,7 @@
     "svgicons2svgfont": "latest",
     "ttf2eot": "latest",
     "ttf2woff": "latest",
-    "wawoff2": "^1.0.2",
+    "wawoff2": "^2.0.0",
     "xml2js": "latest"
   },
   "devDependencies": {

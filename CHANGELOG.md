@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [10.1.0](https://github.com/itgalaxy/webfont/compare/v10.0.1...v10.1.0) (2021-05-12)
+
+
+### Features
+
+* **cli:** create output folder if it's not present. ([#280](https://github.com/itgalaxy/webfont/issues/280)) ([d66a0d4](https://github.com/itgalaxy/webfont/commit/d66a0d457068b97a1bb747fb0f8ccc473721ff4a)), closes [#307](https://github.com/itgalaxy/webfont/issues/307)
+
+
+### Bug Fixes
+
+* **deps:** upgrade dependencies ([d623b06](https://github.com/itgalaxy/webfont/commit/d623b06dc8bd9afa5c83b27c5df57404c4b1a3f6))
+
 ### [10.0.1](https://github.com/itgalaxy/webfont/compare/v10.0.0...v10.0.1) (2021-05-12)
 
 ## [10.0.0](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.3...v10.0.0) (2021-04-08)

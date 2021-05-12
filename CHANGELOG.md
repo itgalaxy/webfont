@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.1.0](https://github.com/itgalaxy/webfont/compare/v11.0.0...v11.1.0) (2021-05-12)
+
+
+### Features
+
+* add support to base64 font strings on templates ([2a56338](https://github.com/itgalaxy/webfont/commit/2a56338c0eb74ec7c680ef80e99e5472d69919ab)), closes [#328](https://github.com/itgalaxy/webfont/issues/328) [#329](https://github.com/itgalaxy/webfont/issues/329)
+
 ## [11.0.0](https://github.com/itgalaxy/webfont/compare/v10.1.0...v11.0.0) (2021-05-12)
 
 

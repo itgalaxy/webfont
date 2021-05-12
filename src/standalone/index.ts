@@ -1,4 +1,5 @@
 import {getBuiltInTemplates, getTemplateFilePath} from "../../templates";
+import type {Format} from "../types/Format";
 import type {GlyphData} from "../types/GlyphData";
 import type {InitialOptions} from "../types/InitialOptions";
 import {Readable} from "stream";
@@ -238,10 +239,7 @@ export const webfont : Webfont = async (initialOptions) => {
     throw new Error("Files glob patterns specified did not match any files");
   }
 
-  const result : Result = {};
-
-  result.glyphsData = await getGlyphsData(filteredFiles, options) as Array<GlyphData>;
-  result.svg = await toSvg(result.glyphsData, options) as Result["svg"];
+  const glyphsData = await getGlyphsData(filteredFiles, options) as Array<GlyphData>;
 
   let ttfOptions = {};
 
@@ -249,21 +247,27 @@ export const webfont : Webfont = async (initialOptions) => {
     ttfOptions = options.formatsOptions.ttf;
   }
 
-  result.ttf = toTtf(result.svg, ttfOptions);
+  const svg = await toSvg(glyphsData, options) as Result["svg"];
+  const ttf = toTtf(svg, ttfOptions);
 
-  result.hash = crypto.createHash("md5").update(result.svg).
-    digest("hex");
+  const result : Result = {
+    glyphsData,
+    hash: crypto.createHash("md5").update(svg).
+      digest("hex"),
+    svg,
+    ttf,
+  };
 
   if (options.formats.includes("eot")) {
-    result.eot = toEot(result.ttf);
+    result.eot = toEot(ttf);
   }
 
   if (options.formats.includes("woff")) {
-    result.woff = toWoff(result.ttf, {metadata: options.metadata});
+    result.woff = toWoff(ttf, {metadata: options.metadata});
   }
 
   if (options.formats.includes("woff2")) {
-    result.woff2 = await toWoff2(result.ttf);
+    result.woff2 = await toWoff2(ttf);
   }
 
   if (options.template) {
@@ -311,6 +315,16 @@ export const webfont : Webfont = async (initialOptions) => {
         fontPath: options.templateFontPath.replace(/\/?$/u, "/"),
       },
       hashOption,
+      {
+        fonts: Object.fromEntries(new Map(options.formats.map((format: Format) => [
+          format, () => {
+            if (format === "woff2") {
+              return Buffer.from(result.woff2).toString("base64");
+            }
+            return result[format].toString("base64");
+          },
+        ]))),
+      },
     ]);
 
     result.template = nunjucks.render(templateFilePath, nunjucksOptions);

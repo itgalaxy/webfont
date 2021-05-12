@@ -10,6 +10,8 @@
     "dist",
     "dist/src/index.d.ts",
     "templates",
+    "!**/__tests__",
+    "!**/__mocks__",
     "README.md"
   ],
   "main": "dist/index.js",

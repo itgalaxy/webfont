@@ -3,6 +3,7 @@ import {Formats} from "./Format";
 export type OptionsBase = {
   configFile?: string;
   dest?: string;
+  destCreate?: boolean;
   fontName?: string | unknown;
   formats?: Formats;
   template?: "css" | string;

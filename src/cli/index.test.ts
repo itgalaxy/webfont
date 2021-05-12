@@ -264,4 +264,47 @@ describe("cli", () => {
 
   });
 
+
+  it("should create dest directory if it does not exist and --dest-create flag is provided", async (done) => {
+    const nonExistentDestination = `${destination}/that/does/not/exist`;
+    const output = await execCLI(`${source} -d ${nonExistentDestination} --dest-create`);
+
+    fs.access(nonExistentDestination, fs.constants.F_OK, (accessError) => {
+
+      const destinationWasCreated = !accessError;
+
+      expect(destinationWasCreated).toBe(true);
+      fs.readdir(nonExistentDestination, { encoding: "utf-8" }, (readdirError, files) => {
+        if (readdirError) {
+          done(readdirError);
+
+          return;
+        }
+
+        output.files = files.filter((file) => file !== "that");
+
+        expect(output.files).toEqual(files);
+        done();
+      });
+    });
+  });
+
+  it("should not create dest directory if it does not exist", async (done) => {
+    const nonExistentDestination = `${destination}/that/does/not/exist`;
+
+    await execCLI(`${source} -d ${nonExistentDestination}`);
+
+    fs.access(nonExistentDestination, fs.constants.F_OK, (accessError) => {
+
+      const destinationWasCreated = !accessError;
+
+      expect(destinationWasCreated).toBe(false);
+      fs.readdir(nonExistentDestination, { encoding: "utf-8" }, (readdirError) => {
+        expect(readdirError.message).toContain("ENOENT: no such file or directory, scandir");
+
+        done();
+      });
+    });
+  });
+
 });

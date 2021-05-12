@@ -44,6 +44,10 @@ const meowCLI = meow(`
 
             Destination for generated fonts.
 
+        -m, --dest-create
+
+            Create destination directory if it does not exist.
+
         -t, --template
 
             Type of template ('css', 'scss', 'styl') or path to custom template.
@@ -153,6 +157,11 @@ const meowCLI = meow(`
       alias: "d",
       default: process.cwd(),
       type: "string",
+    },
+    destCreate: {
+      alias: "m",
+      default: false,
+      type: "boolean",
     },
     destTemplate: {
       alias: "s",

@@ -39,9 +39,11 @@ if (cli.flags.formats) {
 }
 
 if (cli.flags.dest) {
-
   optionsBase.dest = cli.flags.dest;
+}
 
+if (cli.flags.destCreate) {
+  optionsBase.destCreate = cli.flags.destCreate;
 }
 
 if (cli.flags.template) {
@@ -216,7 +218,7 @@ Promise.resolve().
   }).
   then((result: Result) => {
 
-    const {fontName, dest} = result.config;
+    const {fontName, dest, destCreate} = result.config;
 
     let destTemplate = null;
 
@@ -245,40 +247,32 @@ Promise.resolve().
     }
 
     return Promise.resolve().
-      then(() => Promise.all(Object.keys(result).map((type) => {
-
-        if (
-          type === "config" ||
-              type === "usedBuildInTemplate" ||
-              type === "glyphsData"
-        ) {
-
-          return null;
-
+      then(() => new Promise((resolve, reject) => {
+        fs.access(dest, fs.constants.F_OK, (err) => reject(err));
+      })).
+      catch((error) => {
+        if (error && destCreate) {
+          return new Promise((resolve) => {
+            fs.mkdir(dest, { recursive: true }, () => resolve(destCreate));
+          });
         }
-
+        return error;
+      }).
+      finally(() => Promise.all(Object.keys(result).map((type) => {
+        if (type === "config" || type === "usedBuildInTemplate" || type === "glyphsData") {
+          return null;
+        }
         const content = result[type];
-
         // eslint-disable-next-line init-declarations
         let file;
-
         if (type === "template") {
-
           file = path.resolve(destTemplate);
-
-
         } else {
-
           file = path.resolve(path.join(dest, `${fontName}.${type}`));
-
         }
-
         return fs.writeFile(file, content, () => {
-
           Function.prototype();
-
         });
-
       }))).
       then(() => Promise.resolve(result));
 

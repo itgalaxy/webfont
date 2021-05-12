@@ -6,32 +6,17 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [10.0.0](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.3...v10.0.0) (2021-04-08)
 
-## [10.0.0-alpha.3](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.2...v10.0.0-alpha.3) (2021-04-08)
-
-
-### Features
-
-* migrate all codebase to TypeScript ([0b71779](https://github.com/itgalaxy/webfont/commit/0b71779a2a3b97eb27af65f64e936d6730dc5eb9))
-
-## [10.0.0-alpha.2](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.1...v10.0.0-alpha.2) (2021-01-25)
-
-## [10.0.0-alpha.1](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.0...v10.0.0-alpha.1) (2021-01-25)
-
-
 ### ⚠ BREAKING CHANGES
 
-* Starting from version 10 stable, you should use webfont via named import, like this: `import { webfont } from "webfont"`.
+- starting from version 10 stable, you should use webfont via named import, like this: `import { webfont } from "webfont"`.
 
-* adopt named import/export system ([31adbc7](https://github.com/itgalaxy/webfont/commit/31adbc7faa974c3d5a1ba9ffd4a5944bcab4fae8))
+- adopt named import/export system ([31adbc7](https://github.com/itgalaxy/webfont/commit/31adbc7faa974c3d5a1ba9ffd4a5944bcab4fae8))
 
-## [10.0.0-alpha.0](https://github.com/itgalaxy/webfont/compare/v9.0.0...v10.0.0-alpha.0) (2021-01-07)
-
-### Breaking change
-
-- Drop support for Node.js 8;
+- drop support for Node.js 8;
 
 ### Features
 
+- migrate all codebase to TypeScript ([0b71779](https://github.com/itgalaxy/webfont/commit/0b71779a2a3b97eb27af65f64e936d6730dc5eb9))
 - add support to ligatures and JSON template ([f622c44](https://github.com/itgalaxy/webfont/commit/f622c44561534f1d997d2ebd82a08e00ca2af86c))
 - **cli:** add support to `template-cache-string` argument ([ae8b050](https://github.com/itgalaxy/webfont/commit/ae8b0503506be2544cd5b5a5b0f2c420fec588b5))
 - **demo:** add styl file example ([3aa5180](https://github.com/itgalaxy/webfont/commit/3aa5180a63fffc8d1067803e63ba9f35097009b9))

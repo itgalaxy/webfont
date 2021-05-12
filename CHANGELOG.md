@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.0.0](https://github.com/itgalaxy/webfont/compare/v10.1.0...v11.0.0) (2021-05-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* We removed support for Node.js 11 and Node.js 10 at this version. Please upgrade your environment to Node.js 12 or higher.
+
+### ci
+
+* remove Node.js 10 and 11 support ([0f0dbf6](https://github.com/itgalaxy/webfont/commit/0f0dbf64a2b7ce15519bb9ada86fdb2941251a08))
+
 ## [10.1.0](https://github.com/itgalaxy/webfont/compare/v10.0.1...v10.1.0) (2021-05-12)
 
 

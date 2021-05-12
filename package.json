@@ -1,6 +1,6 @@
 {
   "name": "webfont",
-  "version": "10.1.0",
+  "version": "11.0.0",
   "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
   "directories": {
     "lib": "dist",
@@ -27,6 +27,7 @@
     "postbuild": "tsc --declaration --declarationDir dist --emitDeclarationOnly",
     "prebuild": "npm run clean && npm run lint",
     "predemo": "npm run build",
+    "prerelease": "npm run test",
     "pretest": "npm run build",
     "prettify": "npm run lint --fix",
     "preversion": "npm run test",

@@ -42,7 +42,7 @@
   "dependencies": {
     "deepmerge": "latest",
     "globby": "latest",
-    "meow": "9.x",
+    "meow": "10.x",
     "nunjucks": "latest",
     "p-limit": "latest",
     "parse-json": "latest",

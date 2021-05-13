@@ -86,6 +86,7 @@
     "rollup": "latest",
     "standard-version": "latest",
     "ts-node": "latest",
+    "tslib": "latest",
     "typescript": "latest"
   },
   "repository": {

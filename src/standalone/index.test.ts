@@ -73,7 +73,7 @@ describe("standalone", () => {
     expect(ttfHash).toBe("c78d2714960175fdf8eaebd44b4159e9");
     expect(eotHash).toBe("024ccffe146cfdbcc501241516479f16");
     expect(woffHash).toBe("6a11601283f57dd7d016ac91bc33179a");
-    expect(woff2Hash).toBe("6f372f4721c1706c99fb6230f800ef0f");
+    expect(woff2Hash).toBe("23c6010d69f43c96aa9c6bed0f5529bb");
   });
 
   it("should generate only `svg`, `ttf` and `eot` fonts", async () => {

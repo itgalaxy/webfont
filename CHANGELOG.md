@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.1.1](https://github.com/itgalaxy/webfont/compare/v11.1.0...v11.1.1) (2021-05-13)
+
+
+### Bug Fixes
+
+* **deps:** upgrade `wawoff2` dependency ([69a8dfb](https://github.com/itgalaxy/webfont/commit/69a8dfb3a70456aaa3777a8734ccccc41397a26c))
+
 ## [11.1.0](https://github.com/itgalaxy/webfont/compare/v11.0.0...v11.1.0) (2021-05-12)
 
 

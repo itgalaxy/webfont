@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 const importRules = {
   "import/extensions": [
     "error",
@@ -35,6 +34,13 @@ module.exports = {
       },
     },
     {
+      files: ["*.js"],
+      rules: {
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-unused-vars": "off",
+      },
+    },
+    {
       files: ["dist/cli.js", "src/cli/index.ts"],
       rules: {
         "no-process-exit": "off",
@@ -55,9 +61,9 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["@babel", "@typescript-eslint", "jest", "node", "promise", "unicorn"],
+  plugins: ["@babel", "@typescript-eslint", "import", "jest", "node", "promise", "unicorn"],
   rules: {
-    // ...importRules,
+    ...importRules,
     "accessor-pairs": "error",
     "array-bracket-newline": "error",
     "array-bracket-spacing": "error",

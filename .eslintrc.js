@@ -1,3 +1,17 @@
+// eslint-disable-next-line no-unused-vars
+const importRules = {
+  "import/extensions": [
+    "error",
+    "never",
+    {
+      pattern: {
+        json: "always",
+      },
+    },
+  ],
+  "import/no-unresolved": "off",
+};
+
 module.exports = {
   env: {
     es2021: true,
@@ -41,8 +55,9 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["@babel", "@typescript-eslint", "import", "jest", "node", "promise", "unicorn"],
+  plugins: ["@babel", "@typescript-eslint", "jest", "node", "promise", "unicorn"],
   rules: {
+    // ...importRules,
     "accessor-pairs": "error",
     "array-bracket-newline": "error",
     "array-bracket-spacing": "error",
@@ -85,16 +100,6 @@ module.exports = {
     "id-length": "error",
     "id-match": "error",
     "implicit-arrow-linebreak": "error",
-    "import/extensions": [
-      "error",
-      "never",
-      {
-        pattern: {
-          json: "always",
-        },
-      },
-    ],
-    "import/no-unresolved": "off",
     "indent": [
       "error",
       2,

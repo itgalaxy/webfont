@@ -164,7 +164,7 @@ webfont({
 
 - Type: `function`
 - Default: `null`
-- Description: If you want to transform glyph metadata `(e.g. titles of CSS classes)` before transferring it in your style template for your icons, you can use this option with glyphs metadata object.
+- Description: If you want to transform glyph metadata (e.g. titles of CSS classes or unicode) before transferring it in your style template for your icons, you can use this option with glyphs metadata object.
 - Example:
 
   ```js
@@ -174,6 +174,7 @@ webfont({
     files: "src/svg-icons/**/*.svg",
     glyphTransformFn: (obj) => {
       obj.name += "_transform";
+      something();
 
       return obj;
     },

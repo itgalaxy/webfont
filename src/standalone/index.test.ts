@@ -1,4 +1,4 @@
-import {GlyphTransformFn} from "../types/GlyphTransformFn";
+import type {GlyphMetadata, GlyphTransformFn} from "../types";
 import crypto from "crypto";
 import isEot from "is-eot";
 import isSvg from "is-svg";
@@ -354,6 +354,50 @@ describe("standalone", () => {
     });
 
     expect(result.template).toMatchSnapshot();
+  });
+
+
+  it("should change unicode symbols in the result using sync function", async () => {
+    const { template } = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      formats: ["eot"],
+      glyphTransformFn: (obj: GlyphMetadata) => {
+        obj.unicode = ["\u0001"];
+
+        return obj;
+      },
+      template: "css",
+    });
+    expect(template).toMatchSnapshot();
+  });
+
+  it("should change unicode symbols in the result using async function", async () => {
+    const { template } = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      formats: ["eot"],
+      glyphTransformFn: (obj: GlyphMetadata) => {
+        obj.unicode = ["\u0001"];
+
+        return Promise.resolve(obj);
+      },
+      template: "css",
+    });
+    expect(template).toMatchSnapshot();
+  });
+
+  it("should handle errors properly", async () => {
+    try {
+      await standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        formats: ["eot"],
+        glyphTransformFn: () => {
+          throw new Error("Name is invalid");
+        },
+        template: "css",
+      });
+    } catch (error) {
+      expect(error.message).toMatch("Name is invalid");
+    }
   });
 
   it("should respect `template` options", async () => {

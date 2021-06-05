@@ -1,27 +1,20 @@
+import type {Format, GlyphData, InitialOptions} from "../types";
 import {getBuiltInTemplates, getTemplateFilePath} from "../../templates";
-import type {Format} from "../types/Format";
-import type {GlyphData} from "../types/GlyphData";
-import type {InitialOptions} from "../types/InitialOptions";
 import {Readable} from "stream";
 import type {Result} from "../types/Result";
 import SVGIcons2SVGFontStream from "svgicons2svgfont";
-import type {WebfontOptions} from "../types/WebfontOptions";
 import cosmiconfig from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
-import fileSorter from "svgicons2svgfont/src/filesorter";
-import fs from "fs";
-import getMetadataService from "svgicons2svgfont/src/metadata";
+import {getGlyphsData} from "./glyphsData";
+import {getOptions} from "./options";
 import globby from "globby";
 import nunjucks from "nunjucks";
-import pLimit from "p-limit";
 import path from "path";
 import svg2ttf from "svg2ttf";
 import ttf2eot from "ttf2eot";
 import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
-import xml2js from "xml2js";
-
 
 const buildConfig = async (options) => {
   let searchPath = process.cwd();
@@ -45,70 +38,6 @@ const buildConfig = async (options) => {
   }
 
   return config;
-};
-
-const getGlyphsData = (files: Array<GlyphData["srcPath"]>, options) => {
-  const metadataProvider =
-    options.metadataProvider ||
-    getMetadataService({
-      prependUnicode: options.prependUnicode,
-      startUnicode: options.startUnicode,
-    });
-
-  const xmlParser = new xml2js.Parser();
-  const throttle = pLimit(options.maxConcurrency);
-
-  return Promise.all(files.map((srcPath: GlyphData["srcPath"]) => throttle(() => new Promise((resolve, reject) => {
-    const glyph = fs.createReadStream(srcPath);
-    let glyphContents = "";
-
-    // eslint-disable-next-line no-promise-executor-return
-    return glyph.
-      on("error", (glyphError) => reject(glyphError)).
-      on("data", (data) => {
-        glyphContents += data.toString();
-      }).
-      on("end", () => {
-        // Maybe bug in xml2js
-        if (glyphContents.length === 0) {
-          return reject(new Error(`Empty file ${srcPath}`));
-        }
-
-        return xmlParser.parseString(glyphContents, (error) => {
-          if (error) {
-            return reject(error);
-          }
-
-          const glyphData: GlyphData = {
-            contents: glyphContents,
-            srcPath,
-          };
-
-          return resolve(glyphData);
-        });
-      });
-  })))).then((glyphsData) => {
-
-    let sortedGlyphsData = glyphsData;
-
-    if (options.sort) {
-      const sortCallback = (fileA: GlyphData, fileB: GlyphData) => fileSorter(fileA.srcPath, fileB.srcPath);
-      sortedGlyphsData = glyphsData.sort(sortCallback);
-    }
-
-    return Promise.all(sortedGlyphsData.map((glyphData: GlyphData) => new Promise((resolve, reject) => {
-      metadataProvider(glyphData.srcPath, (error, metadata) => {
-        if (error) {
-          return reject(error);
-        }
-
-        metadata.unicode.push(metadata.name.replace(/-/gu, "_"));
-        glyphData.metadata = metadata;
-
-        return resolve(glyphData);
-      });
-    })));
-  });
 };
 
 const toSvg = (glyphsData, options) => {
@@ -175,60 +104,17 @@ const toWoff2 = (buffer) => wawoff2.compress(buffer);
 type Webfont = (initialOptions?: InitialOptions) => Promise<Result>;
 
 export const webfont : Webfont = async (initialOptions) => {
-  if (!initialOptions || !initialOptions.files) {
-    throw new Error("You must pass webfont a `files` glob");
-  }
 
-  let options : WebfontOptions = {
-    centerHorizontally: false,
-    descent: 0,
-    fixedWidth: false,
-    fontHeight: null,
-    fontId: null,
-    fontName: "webfont",
-    fontStyle: "",
-    fontWeight: "",
-    formats: ["svg", "ttf", "eot", "woff", "woff2"],
-    formatsOptions: {
-      ttf: {
-        copyright: null,
-        ts: null,
-        version: null,
-      },
-    },
-    glyphTransformFn: null,
-
-    /*
-     * Maybe allow setup from CLI
-     * This is usually less than file read maximums while staying performance
-     */
-    maxConcurrency: 100,
-    metadata: null,
-    metadataProvider: null,
-    normalize: false,
-    prependUnicode: false,
-    round: 10e12,
-    sort: true,
-    startUnicode: 0xea01,
-    template: null,
-    templateCacheString: null,
-    templateClassName: null,
-    templateFontName: null,
-    templateFontPath: "./",
-    verbose: false,
-    ...initialOptions,
-  };
+  let options = getOptions(initialOptions);
 
   const config = await buildConfig({
     configFile: options.configFile,
   });
 
   if (Object.keys(config).length > 0) {
-    // eslint-disable-next-line require-atomic-updates
     options = deepmerge(options, config.config, {
       arrayMerge: (_destinationArray, sourceArray) => sourceArray,
     });
-    // eslint-disable-next-line require-atomic-updates
     options.filePath = config.filepath;
   }
 
@@ -239,7 +125,19 @@ export const webfont : Webfont = async (initialOptions) => {
     throw new Error("Files glob patterns specified did not match any files");
   }
 
-  const glyphsData = await getGlyphsData(filteredFiles, options) as Array<GlyphData>;
+  let glyphsData = await getGlyphsData(filteredFiles, options) as GlyphData[];
+
+  if (options.glyphTransformFn && typeof options.glyphTransformFn === "function") {
+    const transformedGlyphs = glyphsData.map(async (glyphData: GlyphData) => {
+      const metadata = await options.glyphTransformFn(glyphData.metadata);
+
+      return {
+        ...glyphData,
+        metadata,
+      };
+    });
+    glyphsData = await Promise.all(transformedGlyphs);
+  }
 
   let ttfOptions = {};
 
@@ -299,13 +197,7 @@ export const webfont : Webfont = async (initialOptions) => {
 
     const nunjucksOptions = deepmerge.all([
       {
-        glyphs: result.glyphsData.map((glyphData) => {
-          if (typeof options.glyphTransformFn === "function") {
-            glyphData.metadata = options.glyphTransformFn(glyphData.metadata);
-          }
-
-          return glyphData.metadata;
-        }),
+        glyphs: result.glyphsData.map((glyph: GlyphData) => glyph.metadata),
       },
       options,
       {

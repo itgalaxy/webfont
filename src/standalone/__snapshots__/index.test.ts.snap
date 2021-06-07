@@ -6,7 +6,7 @@ exports[`standalone should change unicode symbols in the result using async func
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./webfont.eot?1622918409716\\");
+  src: url(\\"./webfont.eot?test\\");
   src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
 }
 
@@ -125,7 +125,7 @@ exports[`standalone should change unicode symbols in the result using sync funct
   font-family: \\"webfont\\";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./webfont.eot?1622918409690\\");
+  src: url(\\"./webfont.eot?1623094381568\\");
   src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
 }
 

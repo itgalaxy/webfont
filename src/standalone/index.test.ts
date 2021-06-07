@@ -381,6 +381,7 @@ describe("standalone", () => {
         return Promise.resolve(obj);
       },
       template: "css",
+      templateCacheString: "test",
     });
     expect(template).toMatchSnapshot();
   });

@@ -367,6 +367,7 @@ describe("standalone", () => {
         return obj;
       },
       template: "css",
+      templateCacheString: "test",
     });
     expect(template).toMatchSnapshot();
   });

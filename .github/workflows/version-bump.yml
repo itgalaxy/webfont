@@ -9,6 +9,10 @@ jobs:
       matrix:
         node-version: [14.x]
     steps:
+      - name: Set commit author email
+        run: git config --global user.email "development@itgalaxy.company"
+      - name: Set commit author name
+        run: git config --global user.name "itgalaxy"
       - name: Checkout repository
         uses: actions/checkout@v2
         with:

@@ -1,0 +1,27 @@
+name: Node.js Packages version bump
+on:
+  push:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: "0"
+      - name: Pull all tags from Lerna semantic release
+        run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install Lerna globally
+        run: npm install --global --loglevel=error lerna
+      - name: Install project dependencies
+        run: npm ci --no-optional
+      - name: Bump versions and create release
+        run: lerna version --conventional-commits --force-publish --yes

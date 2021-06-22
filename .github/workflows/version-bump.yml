@@ -29,3 +29,5 @@ jobs:
         run: npm run release
       - name: Push tags
         run: npm run push-tags
+      - name: Push commits
+        run: git push origin

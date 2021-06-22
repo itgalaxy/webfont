@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.2.0](https://github.com/itgalaxy/webfont/compare/v11.1.1...v11.2.0) (2021-06-22)
+
+
+### Features
+
+* add new transformation function ([6a0c60c](https://github.com/itgalaxy/webfont/commit/6a0c60c794616abd041aa7da6f9fdc4bd5a4ad6a)), closes [#183](https://github.com/itgalaxy/webfont/issues/183)
+* add standalone glyphs data getter ([0cfe581](https://github.com/itgalaxy/webfont/commit/0cfe5819d5e3b8efdc7f35e4437d9bcb88c6e8ee))
+* **types:** add `unicode` key to `GlyphMetadata` ([33fa7cb](https://github.com/itgalaxy/webfont/commit/33fa7cbf618463970f5c38ee23c4f3603678aff8))
+* **types:** allow `unicode` key and Promise as `GlyphTransformFn` output ([a3bde0c](https://github.com/itgalaxy/webfont/commit/a3bde0ccc86e4ca25f5e76cbae9e8e5f202abb56))
+* add standalone options getter ([13b8596](https://github.com/itgalaxy/webfont/commit/13b8596587279f57af2adff2428ca9ac05261714))
+
+
+### Bug Fixes
+
+* **deps:** fix security issue ([3abc00a](https://github.com/itgalaxy/webfont/commit/3abc00a50d6c1d107046301d77dcc9f92cc33e16))
+* **deps:** fixed 1 package vulnerability ([feda633](https://github.com/itgalaxy/webfont/commit/feda633a7c20731ce5514891adb3c14c4d9a8323))
+* **deps:** pin `svgicons2svgfont` to `10.0.1` ([87789d3](https://github.com/itgalaxy/webfont/commit/87789d35b02db36537d26cac3ab9e0e0924d7c81))
+
 ### [11.1.1](https://github.com/itgalaxy/webfont/compare/v11.1.0...v11.1.1) (2021-05-13)
 
 

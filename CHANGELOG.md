@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.2.3](https://github.com/itgalaxy/webfont/compare/v11.2.2...v11.2.3) (2021-06-23)
+
 ### [11.2.2](https://github.com/itgalaxy/webfont/compare/v11.2.1...v11.2.2) (2021-06-22)
 
 ### [11.2.1](https://github.com/itgalaxy/webfont/compare/v11.2.0...v11.2.1) (2021-06-22)

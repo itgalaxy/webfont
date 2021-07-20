@@ -48,7 +48,7 @@
     "parse-json": "latest",
     "resolve-from": "latest",
     "svg2ttf": "latest",
-    "svgicons2svgfont": "10.0.1",
+    "svgicons2svgfont": "10.0.3",
     "ttf2eot": "latest",
     "ttf2woff": "latest",
     "wawoff2": "^2.0.0",

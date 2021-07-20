@@ -80,7 +80,7 @@
     "is-ttf": "latest",
     "is-woff": "latest",
     "is-woff2": "latest",
-    "jest": "26.x",
+    "jest": "27.x",
     "lint-staged": "latest",
     "rimraf": "latest",
     "rollup": "latest",

@@ -69,11 +69,11 @@ describe("standalone", () => {
       update(result.woff2).
       digest("hex");
 
-    expect(svgHash).toBe("5babeea3094bba0b5e2001390b0811fd");
-    expect(ttfHash).toBe("c78d2714960175fdf8eaebd44b4159e9");
-    expect(eotHash).toBe("024ccffe146cfdbcc501241516479f16");
-    expect(woffHash).toBe("6a11601283f57dd7d016ac91bc33179a");
-    expect(woff2Hash).toBe("23c6010d69f43c96aa9c6bed0f5529bb");
+    expect(svgHash).toBe("1154313a3843c5f5ec70890715e8a527");
+    expect(ttfHash).toBe("a78de3c54fa46d77540c2c96c4194f16");
+    expect(eotHash).toBe("90ed04c53c7534b2e66979f6c0a94afe");
+    expect(woffHash).toBe("20d0a901f75c638e7be9df714a93d5a0");
+    expect(woff2Hash).toBe("60fe7d6d658fef07b9e8af362e4b8f36");
   });
 
   it("should generate only `svg`, `ttf` and `eot` fonts", async () => {
@@ -438,7 +438,7 @@ describe("standalone", () => {
     return standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
     }).then((result) => {
-      expect(result.hash).toBe("5babeea3094bba0b5e2001390b0811fd");
+      expect(result.hash).toBe("1154313a3843c5f5ec70890715e8a527");
 
       return result;
     });

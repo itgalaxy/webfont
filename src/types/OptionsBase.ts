@@ -27,5 +27,6 @@ export type OptionsBase = {
   prependUnicode?: boolean | unknown;
   metadata?: unknown;
   sort?: boolean;
+  ligatures?: boolean;
   addHashInFontUrl?: boolean | unknown;
 };

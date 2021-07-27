@@ -27,6 +27,7 @@ export const getOptions: OptionsGetter = (initialOptions) => {
       },
     },
     glyphTransformFn: null,
+    ligatures: true,
 
     /*
      * Maybe allow setup from CLI

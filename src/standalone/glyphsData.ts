@@ -57,13 +57,18 @@ export const getGlyphsData : GlyphsDataGetter = (files, options) => {
       sortedGlyphsData = glyphsData.sort(sortCallback);
     }
 
+    const { ligatures } = options;
+
     return Promise.all(sortedGlyphsData.map((glyphData: GlyphData) => new Promise((resolve, reject) => {
       metadataProvider(glyphData.srcPath, (error, metadata) => {
         if (error) {
           return reject(error);
         }
 
-        metadata.unicode.push(metadata.name.replace(/-/gu, "_"));
+        if (ligatures) {
+          metadata.unicode.push(metadata.name.replace(/-/gu, "_"));
+        }
+
         glyphData.metadata = metadata;
 
         return resolve(glyphData);

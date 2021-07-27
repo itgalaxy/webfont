@@ -432,6 +432,21 @@ describe("standalone", () => {
     expect(result.glyphsData.length > 0).toBe(true);
   });
 
+  it("should remove ligature unicode when `ligatures` set to `false`", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      ligatures: false,
+      template: "css",
+    });
+
+    expect(Array.isArray(result.glyphsData)).toBe(true);
+    expect(result.glyphsData.length > 0).toBe(true);
+
+    result.glyphsData.forEach((glyph) => {
+      expect(glyph.metadata?.unicode).toHaveLength(1);
+    });
+  });
+
   it("should export `hash` in `result`", () => {
     expect.assertions(1);
 

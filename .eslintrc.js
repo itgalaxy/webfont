@@ -30,7 +30,7 @@ module.exports = {
       rules: {
         "max-lines": ["error", 510],
         "max-lines-per-function": ["error", 495],
-        "max-statements": ["error", 27],
+        "max-statements": ["error", 28],
       },
     },
     {

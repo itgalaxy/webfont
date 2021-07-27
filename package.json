@@ -40,19 +40,19 @@
     "testu": "npm test -- -u"
   },
   "dependencies": {
-    "deepmerge": "latest",
-    "globby": "latest",
-    "meow": "9.x",
-    "nunjucks": "latest",
-    "p-limit": "latest",
-    "parse-json": "latest",
-    "resolve-from": "latest",
-    "svg2ttf": "latest",
-    "svgicons2svgfont": "10.0.1",
-    "ttf2eot": "latest",
-    "ttf2woff": "latest",
+    "deepmerge": "^4.2.2",
+    "globby": "^11.0.0",
+    "meow": "^9.0.0",
+    "nunjucks": "^3.2.3",
+    "p-limit": "^3.1.0",
+    "parse-json": "^5.2.0",
+    "resolve-from": "^5.0.0",
+    "svg2ttf": "^6.0.2",
+    "svgicons2svgfont": "^10.0.3",
+    "ttf2eot": "^2.0.0",
+    "ttf2woff": "^2.0.2",
     "wawoff2": "^2.0.0",
-    "xml2js": "latest"
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "@babel/eslint-plugin": "latest",

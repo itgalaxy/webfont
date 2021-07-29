@@ -41,6 +41,7 @@
     "testu": "npm test -- -u"
   },
   "dependencies": {
+    "cosmiconfig": "^5.2.0",
     "deepmerge": "^4.2.2",
     "globby": "^11.0.0",
     "meow": "^9.0.0",
@@ -68,7 +69,6 @@
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "babel-jest": "27.0.6",
-    "cosmiconfig": "^5.2.0",
     "eslint": "latest",
     "eslint-plugin-import": "latest",
     "eslint-plugin-jest": "latest",

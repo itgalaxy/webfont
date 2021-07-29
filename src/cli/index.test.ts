@@ -1,3 +1,4 @@
+import * as fsPromise from "fs/promises";
 import cli from "./meow";
 import {execCLI} from "../lib/execCLI";
 import fs from "fs";
@@ -130,7 +131,7 @@ describe("cli", () => {
 
   });
 
-  it("should generate all fonts with build-in template", async (done) => {
+  it("should generate all fonts with build-in template", async () => {
 
     // eslint-disable-next-line max-len
     const output = await execCLI(`${source} -d ${destination} --template css --templateCacheString test`);
@@ -145,24 +146,11 @@ describe("cli", () => {
     ]);
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
-    fs.readFile(`${destination}/webfont.css`, {encoding: "utf-8"}, (err, data) => {
-
-      if (err) {
-
-        done(err);
-
-        return;
-
-      }
-
-      expect(data).toMatchSnapshot();
-      done();
-
-    });
-
+    const data = await fsPromise.readFile(`${destination}/webfont.css`, {encoding: "utf-8"});
+    expect(data).toMatchSnapshot();
   });
 
-  it("should respect `template` options", async (done) => {
+  it("should respect `template` options", async () => {
 
     // eslint-disable-next-line max-len
     const output = await execCLI(`${source} -d ${destination} --template css --templateClassName foo --templateCacheString test --templateFontPath test/path --templateFontName testname`);
@@ -177,21 +165,8 @@ describe("cli", () => {
     ]);
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
-    fs.readFile(`${destination}/webfont.css`, {encoding: "utf-8"}, (err, data) => {
-
-      if (err) {
-
-        done(err);
-
-        return;
-
-      }
-
-      expect(data).toMatchSnapshot();
-      done();
-
-    });
-
+    const data = await fsPromise.readFile(`${destination}/webfont.css`, {encoding: "utf-8"});
+    expect(data).toMatchSnapshot();
   });
 
   it("can set font name", async () => {
@@ -211,7 +186,7 @@ describe("cli", () => {
 
   });
 
-  it("should respect `font` options", async (done) => {
+  it("should respect `font` options", async () => {
 
     // eslint-disable-next-line max-len
     const output = await execCLI(`${source} -d ${destination} --fontId testId --fontStyle italic --fontWeight 500 --fontHeight 15`);
@@ -226,21 +201,8 @@ describe("cli", () => {
     ]);
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
-    fs.readFile(`${destination}/webfont.svg`, {encoding: "utf-8"}, (err, data) => {
-
-      if (err) {
-
-        done(err);
-
-        return;
-
-      }
-
-      expect(data).toMatchSnapshot();
-      done();
-
-    });
-
+    const data = await fsPromise.readFile(`${destination}/webfont.svg`, {encoding: "utf-8"});
+    expect(data).toMatchSnapshot();
   });
 
   it("can be verbose", async () => {
@@ -264,47 +226,39 @@ describe("cli", () => {
 
   });
 
-
-  it("should create dest directory if it does not exist and --dest-create flag is provided", async (done) => {
+  it("should create dest directory if it does not exist and --dest-create flag is provided", async () => {
     const nonExistentDestination = `${destination}/that/does/not/exist`;
     const output = await execCLI(`${source} -d ${nonExistentDestination} --dest-create`);
 
-    fs.access(nonExistentDestination, fs.constants.F_OK, (accessError) => {
+    await fsPromise.access(nonExistentDestination, fs.constants.F_OK);
 
-      const destinationWasCreated = !accessError;
+    const files = await fsPromise.readdir(nonExistentDestination, { encoding: "utf-8" });
 
-      expect(destinationWasCreated).toBe(true);
-      fs.readdir(nonExistentDestination, { encoding: "utf-8" }, (readdirError, files) => {
-        if (readdirError) {
-          done(readdirError);
+    output.files = files.filter((file) => file !== "that");
 
-          return;
-        }
-
-        output.files = files.filter((file) => file !== "that");
-
-        expect(output.files).toEqual(files);
-        done();
-      });
-    });
+    expect(output.files).toEqual(files);
   });
 
-  it("should not create dest directory if it does not exist", async (done) => {
+  it("should not create dest directory if it does not exist", async () => {
     const nonExistentDestination = `${destination}/that/does/not/exist`;
 
     await execCLI(`${source} -d ${nonExistentDestination}`);
 
-    fs.access(nonExistentDestination, fs.constants.F_OK, (accessError) => {
+    let destinationWasCreated = true;
+    try {
+      await fsPromise.access(nonExistentDestination, fs.constants.F_OK);
+    } catch (exception) {
+      destinationWasCreated = false;
+    }
+    expect(destinationWasCreated).toBe(false);
 
-      const destinationWasCreated = !accessError;
-
-      expect(destinationWasCreated).toBe(false);
-      fs.readdir(nonExistentDestination, { encoding: "utf-8" }, (readdirError) => {
-        expect(readdirError.message).toContain("ENOENT: no such file or directory, scandir");
-
-        done();
-      });
-    });
+    let error: Record<string, unknown> = {};
+    try {
+      await fsPromise.readdir(nonExistentDestination, { encoding: "utf-8" });
+    } catch (readdirError) {
+      error = readdirError;
+    }
+    expect(error.message).toContain("ENOENT: no such file or directory, scandir");
   });
 
 });

@@ -1,6 +1,6 @@
 {
   "name": "webfont",
-  "version": "11.2.19",
+  "version": "11.2.20",
   "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
   "directories": {
     "lib": "dist",

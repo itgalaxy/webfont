@@ -67,7 +67,7 @@
     "@types/rimraf": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
-    "babel-jest": "latest",
+    "babel-jest": "27.0.6",
     "cosmiconfig": "^5.2.0",
     "eslint": "latest",
     "eslint-plugin-import": "latest",

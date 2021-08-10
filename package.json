@@ -52,7 +52,7 @@
     "svg2ttf": "^6.0.2",
     "svgicons2svgfont": "^10.0.3",
     "ttf2eot": "^2.0.0",
-    "ttf2woff": "^2.0.2",
+    "ttf2woff": "^3.0.0",
     "wawoff2": "^2.0.0",
     "xml2js": "^0.4.23"
   },

@@ -62,7 +62,7 @@
     "@babel/preset-typescript": "latest",
     "@rollup/plugin-commonjs": "latest",
     "@rollup/plugin-typescript": "latest",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.0.1",
     "@types/node": "15.14.5",
     "@types/nunjucks": "latest",
     "@types/rimraf": "latest",

@@ -1,6 +1,6 @@
 {
   "name": "webfont",
-  "version": "11.2.36",
+  "version": "11.2.37",
   "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
   "directories": {
     "lib": "dist",
@@ -63,7 +63,7 @@
     "@rollup/plugin-commonjs": "latest",
     "@rollup/plugin-typescript": "latest",
     "@types/jest": "26.0.24",
-    "@types/node": "15.14.5",
+    "@types/node": "15.14.9",
     "@types/nunjucks": "latest",
     "@types/rimraf": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
@@ -81,7 +81,7 @@
     "is-ttf": "latest",
     "is-woff": "latest",
     "is-woff2": "latest",
-    "jest": "27.0.6",
+    "jest": "27.1.0",
     "lint-staged": "11.1.1",
     "rimraf": "latest",
     "rollup": "2.55.1",

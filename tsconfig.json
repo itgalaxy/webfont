@@ -6,5 +6,6 @@
     "resolveJsonModule": true,
     "rootDir": ".",
     "skipLibCheck": false
-  }
+  },
+  "exclude": ["jest.config.ts"]
 }

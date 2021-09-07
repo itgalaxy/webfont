@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [11.4.0](https://github.com/itgalaxy/webfont/compare/v11.2.37...v11.4.0) (2021-09-07)
+
+
+### Features
+
+* adding config option to prevent ligature unicode generation ([642deb9](https://github.com/itgalaxy/webfont/commit/642deb9235ca88c164e7faa9424aa8d895ecb862)), closes [#457](https://github.com/itgalaxy/webfont/issues/457)
+
 ## [11.3.0](https://github.com/itgalaxy/webfont/compare/v11.2.37...v11.3.0) (2021-09-07)
 
 

@@ -76,6 +76,10 @@ const meowCLI = meow(`
 
             Keeps the files in the same order of entry
 
+        --no-ligatures
+
+            Prevents adding ligature unicode
+
         --verbose
 
             Tell me everything!.
@@ -191,6 +195,10 @@ const meowCLI = meow(`
     },
     help: {
       alias: "h",
+      type: "boolean",
+    },
+    ligatures: {
+      default: true,
       type: "boolean",
     },
     normalize: {

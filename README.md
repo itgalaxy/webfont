@@ -160,6 +160,12 @@ webfont({
 - Default: Gets is from `fontName` if not set, but you can specify any value.
 - Description: Template font family name you want.
 
+#### `ligatures`
+
+- Type: `boolean`
+- Default: `true`
+- Description: Turn on/off adding ligature unicode
+
 #### `glyphTransformFn`
 
 - Type: `function`

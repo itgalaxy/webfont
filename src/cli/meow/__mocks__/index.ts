@@ -88,6 +88,10 @@ meowMock.showHelp = () => `
 
           Keeps the files in the same order of entry
 
+      --no-ligatures
+
+          Prevents adding ligature unicode
+
       --verbose
 
           Tell me everything!.

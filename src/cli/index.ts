@@ -172,6 +172,12 @@ if (cli.flags.sort === false) {
 
 }
 
+if (cli.flags.ligatures === false) {
+
+  optionsBase.ligatures = cli.flags.ligatures;
+
+}
+
 if (cli.flags.addHashInFontUrl) {
 
   optionsBase.addHashInFontUrl = cli.flags.addHashInFontUrl;

@@ -3,7 +3,7 @@ import {getBuiltInTemplates, getTemplateFilePath} from "../../templates";
 import {Readable} from "stream";
 import type {Result} from "../types/Result";
 import SVGIcons2SVGFontStream from "svgicons2svgfont";
-import cosmiconfig from "cosmiconfig";
+import { cosmiconfig } from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
 import {getGlyphsData} from "./glyphsData";
@@ -34,7 +34,7 @@ const buildConfig = async (options) => {
   }
 
   if (!config) {
-    return {};
+    return {} as any;
   }
 
   return config;

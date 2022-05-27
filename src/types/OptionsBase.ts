@@ -18,6 +18,7 @@ export type OptionsBase = {
   fontWeight?: string | unknown;
   fixedWidth?: string | unknown;
   centerHorizontally?: boolean | unknown;
+  centerVertically?: boolean | unknown;
   normalize?: boolean;
   fontHeight?: string | unknown;
   round?: string | number;

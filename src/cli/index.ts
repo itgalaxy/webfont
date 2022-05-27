@@ -118,6 +118,12 @@ if (cli.flags.centerHorizontally) {
 
 }
 
+if (cli.flags.centerVertically) {
+
+  optionsBase.centerVertically = cli.flags.centerVertically;
+
+}
+
 if (cli.flags.normalize) {
 
   optionsBase.normalize = cli.flags.normalize;

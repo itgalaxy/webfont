@@ -246,6 +246,12 @@ These can be appended to [webfont options](#options). These are passed directly 
 - Default: `false`
 - Description: Calculate the bounds of a glyph and center it horizontally.
 
+#### `svgicons2svgfont.centerVertically`
+
+- Type: `boolean`
+- Default: `false`
+- Description: Centers the glyphs vertically in the generated font.
+
 #### `svgicons2svgfont.normalize`
 
 - Type: `boolean`
@@ -414,6 +420,10 @@ If you're using cross-env:
         --center-horizontally
 
             Calculate the bounds of a glyph and center it horizontally.
+
+        --center-vertically
+
+            centers the glyphs vertically in the generated font.
 
         --normalize
 

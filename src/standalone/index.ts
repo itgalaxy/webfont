@@ -57,6 +57,7 @@ const toSvg = (glyphsData, options) => {
     const fontStream = new SVGIcons2SVGFontStream({
       ascent: options.ascent,
       centerHorizontally: options.centerHorizontally,
+      centerVertically: options.centerVertically,
       descent: options.descent,
       fixedWidth: options.fixedWidth,
       fontHeight: options.fontHeight,

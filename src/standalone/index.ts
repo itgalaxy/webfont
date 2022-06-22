@@ -51,7 +51,7 @@ const toSvg = (glyphsData, options) => {
 
     if (options.verbose) {
       // eslint-disable-next-line no-console
-      log = console.log.bind(console);
+      log = options.log || console.log.bind(console);
     }
 
     const fontStream = new SVGIcons2SVGFontStream({

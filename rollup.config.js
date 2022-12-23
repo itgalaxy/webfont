@@ -15,7 +15,9 @@ const external = [
 ];
 
 const plugins = [
-  typescript(),
+  typescript({
+    exclude: ["**/*.test*.ts"]
+  }),
   commonjs(),
 ];
 

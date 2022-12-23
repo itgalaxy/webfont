@@ -8,7 +8,7 @@ import crypto from "crypto";
 import deepmerge from "deepmerge";
 import {getGlyphsData} from "./glyphsData";
 import {getOptions} from "./options";
-import globby from "globby";
+import {globby} from "globby";
 import nunjucks from "nunjucks";
 import path from "path";
 import svg2ttf from "svg2ttf";

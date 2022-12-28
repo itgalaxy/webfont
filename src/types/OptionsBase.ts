@@ -29,4 +29,5 @@ export type OptionsBase = {
   sort?: boolean;
   ligatures?: boolean;
   addHashInFontUrl?: boolean | unknown;
+  log?: () => void;
 };

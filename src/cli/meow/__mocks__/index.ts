@@ -118,6 +118,10 @@ meowMock.showHelp = () => `
 
           Calculate the bounds of a glyph and center it horizontally.
 
+      --centerVertically
+
+          Centers the glyphs vertically in the generated font.
+
       --normalize
 
           Normalize icons by scaling them to the height of the highest icon.

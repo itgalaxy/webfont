@@ -11,6 +11,7 @@ export const getOptions: OptionsGetter = (initialOptions) => {
 
   return {
     centerHorizontally: false,
+    centerVertically: false,
     descent: 0,
     fixedWidth: false,
     fontHeight: null,

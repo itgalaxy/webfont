@@ -106,6 +106,10 @@ const meowCLI = meow(`
 
             Calculate the bounds of a glyph and center it horizontally.
 
+        --centerVertically
+
+            Centers the glyphs vertically in the generated font.
+
         --normalize
 
             Normalize icons by scaling them to the height of the highest icon.
@@ -149,6 +153,9 @@ const meowCLI = meow(`
       type: "string",
     },
     centerHorizontally: {
+      type: "boolean",
+    },
+    centerVertically: {
       type: "boolean",
     },
     config: {

@@ -24,7 +24,7 @@ const meowCLI = meow(`
             The search will begin in the working directory and move up the
             directory tree until a configuration file is found.
 
-        -f, --fontName
+        -u, --fontName
 
             The font family name you want, default: "webfont".
 
@@ -36,7 +36,7 @@ const meowCLI = meow(`
 
             Output the version number.
 
-        -r, --formats
+        -f, --formats
 
             Only this formats generate.
 

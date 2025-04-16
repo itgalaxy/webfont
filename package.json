@@ -61,6 +61,7 @@
     "@babel/preset-env": "latest",
     "@babel/preset-typescript": "latest",
     "@rollup/plugin-commonjs": "latest",
+    "@rollup/plugin-node-resolve": "latest",
     "@rollup/plugin-typescript": "latest",
     "@types/jest": "26.0.24",
     "@types/node": "15.14.9",

@@ -1,6 +1,7 @@
 import commonjs from "@rollup/plugin-commonjs";
 import {dependencies} from "./package.json";
 import typescript from "@rollup/plugin-typescript";
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 
 const dir = "dist";
 
@@ -17,6 +18,7 @@ const external = [
 const plugins = [
   typescript(),
   commonjs(),
+  nodeResolve(),
 ];
 
 module.exports = [

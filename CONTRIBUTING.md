@@ -43,6 +43,15 @@ And, if you’re raising an issue, please understand that people involved with t
 - Lint and test before submitting code by running `$ npm test`;
 - Write a [convincing description](https://github.com/itgalaxy/webfont/blob/master/.github/pull_request_template.md) of why we should land your pull request: it’s your job to convince us.
 
+### CI changes
+
+Pull requests that change CI configuration (for example, GitHub Actions workflows) must follow these conventions:
+
+- **Branch name:** use the `ci/` prefix (e.g. `ci/update-node-version`).
+- **Commit message:** use the `ci:` type in [Conventional Commits](https://www.conventionalcommits.org/) format (e.g. `ci: upgrade GitHub Actions to Node 22/24`).
+
+Do not use `chore:` or `chore(ci):` for CI-only changes.
+
 ## Resources
 
 - [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)

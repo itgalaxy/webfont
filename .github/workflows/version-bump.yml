@@ -5,24 +5,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [14.x]
     steps:
       - name: Set commit author email
         run: git config --global user.email "development@itgalaxy.company"
       - name: Set commit author name
         run: git config --global user.name "itgalaxy"
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Pull all tags from Lerna semantic release
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
+          cache: npm
       - name: Install project dependencies
         run: npm ci --no-optional
       - name: Bump versions and create release

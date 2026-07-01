@@ -4,7 +4,10 @@ on:
     branches: [ master ]
 jobs:
   build:
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release)') }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Set commit author email
         run: git config --global user.email "development@itgalaxy.company"
@@ -23,6 +26,22 @@ jobs:
           cache: npm
       - name: Install project dependencies
         run: npm ci --no-optional
+      - name: Sync package version with latest git tag
+        run: |
+          LATEST=$(git tag -l 'v*' --sort=-v:refname | head -1 | sed 's/^v//')
+          node -e "
+            const fs = require('fs');
+            const semver = require('semver');
+            const latest = process.argv[1];
+            for (const file of ['package.json', 'package-lock.json']) {
+              const pkg = JSON.parse(fs.readFileSync(file, 'utf8'));
+              if (semver.gt(latest, pkg.version)) {
+                console.log('Syncing ' + file + ' from ' + pkg.version + ' to ' + latest);
+                pkg.version = latest;
+                fs.writeFileSync(file, JSON.stringify(pkg, null, 2) + '\n');
+              }
+            }
+          " "$LATEST"
       - name: Bump versions and create release
         run: npm run release
       - name: Push tags

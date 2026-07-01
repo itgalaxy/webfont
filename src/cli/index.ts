@@ -252,35 +252,46 @@ Promise.resolve().
 
     }
 
-    return Promise.resolve().
-      then(() => new Promise((resolve, reject) => {
-        fs.access(dest, fs.constants.F_OK, (err) => reject(err));
-      })).
-      catch((error) => {
-        if (error && destCreate) {
-          return new Promise((resolve) => {
-            fs.mkdir(dest, { recursive: true }, () => resolve(destCreate));
+    const ensureDest = () => new Promise<void>((resolve, reject) => {
+      fs.access(dest, fs.constants.F_OK, (err) => {
+        if (!err) {
+          resolve();
+          return;
+        }
+
+        if (destCreate) {
+          fs.mkdir(dest, {recursive: true}, (mkdirErr) => {
+            if (mkdirErr) {
+              reject(mkdirErr);
+              return;
+            }
+            resolve();
           });
+          return;
         }
-        return error;
-      }).
-      finally(() => Promise.all(Object.keys(result).map((type) => {
-        if (type === "config" || type === "usedBuildInTemplate" || type === "glyphsData") {
-          return null;
-        }
-        const content = result[type];
-        // eslint-disable-next-line init-declarations
-        let file;
-        if (type === "template") {
-          file = path.resolve(destTemplate);
-        } else {
-          file = path.resolve(path.join(dest, `${fontName}.${type}`));
-        }
-        return fs.writeFile(file, content, () => {
-          Function.prototype();
-        });
-      }))).
-      then(() => Promise.resolve(result));
+
+        reject(new Error(`Destination directory "${dest}" does not exist. Use --dest-create (-m) to create it.`));
+      });
+    });
+
+    const writeFiles = () => Promise.all(Object.keys(result).map((type) => {
+      if (type === "config" || type === "usedBuildInTemplate" || type === "glyphsData") {
+        return null;
+      }
+      const content = result[type];
+      // eslint-disable-next-line init-declarations
+      let file;
+      if (type === "template") {
+        file = path.resolve(destTemplate);
+      } else {
+        file = path.resolve(path.join(dest, `${fontName}.${type}`));
+      }
+      return fs.promises.writeFile(file, content);
+    }));
+
+    return ensureDest().
+      then(() => writeFiles()).
+      then(() => result);
 
   }).
   catch((error) => {

@@ -1,5 +1,6 @@
 import fs from "fs";
 import * as fsPromise from "fs/promises";
+import path from "path";
 import rimraf from "rimraf";
 import { execCLI } from "../lib/execCLI";
 import cli from "./meow";
@@ -11,20 +12,33 @@ jest.setTimeout(timeout);
 const destination = "temp/cli";
 const fixturesGlob = "src/fixtures";
 const source = `${fixturesGlob}/svg-icons`;
+const configPackageLink = path.join("node_modules", "webfont-fixture-config");
+const configPackageSource = path.resolve(fixturesGlob, "config-package");
 
 describe("cli", () => {
   beforeAll(
     () =>
-      new Promise((resolve, reject) => {
+      new Promise<void>((resolve, reject) => {
         fs.mkdir(destination, { recursive: true }, (err) => {
           if (err) {
             return reject(err);
           }
 
-          return resolve(err);
+          fs.mkdirSync(path.dirname(configPackageLink), { recursive: true });
+          if (!fs.existsSync(configPackageLink)) {
+            fs.symlinkSync(configPackageSource, configPackageLink, "dir");
+          }
+
+          return resolve();
         });
       }),
   );
+
+  afterAll(() => {
+    if (fs.existsSync(configPackageLink) && fs.lstatSync(configPackageLink).isSymbolicLink()) {
+      fs.unlinkSync(configPackageLink);
+    }
+  });
 
   beforeEach(
     () =>
@@ -139,6 +153,32 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
     const data = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
     expect(data).toMatchSnapshot();
+  });
+
+  it("should load config via --config with a relative path", async () => {
+    const configPath = `${fixturesGlob}/configs/.webfontrc-cli.json`;
+    const output = await execCLI(`${source} -d ${destination} --config ${configPath}`);
+
+    expect(output.files).toEqual(["cli-config-font.hash", "cli-config-font.woff2"]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
+  it("should load config via --config with an absolute path", async () => {
+    const configPath = path.resolve(fixturesGlob, "configs/.webfontrc-cli.json");
+    const output = await execCLI(`${source} -d ${destination} --config ${configPath}`);
+
+    expect(output.files).toEqual(["cli-config-font.hash", "cli-config-font.woff2"]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
+  it("should load config via --config with a node_modules package name", async () => {
+    const output = await execCLI(`${source} -d ${destination} --config webfont-fixture-config`);
+
+    expect(output.files).toEqual(["config-node-module.hash", "config-node-module.woff2"]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
   });
 
   it("should generate built-in html template", async () => {

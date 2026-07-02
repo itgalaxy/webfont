@@ -4,6 +4,7 @@ export type OptionsBase = {
   configFile?: string;
   dest?: string;
   destCreate?: boolean;
+  filePath?: string;
   fontName?: string | unknown;
   formats?: Formats;
   template?: "css" | string;

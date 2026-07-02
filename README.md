@@ -23,6 +23,7 @@ Generator of fonts from SVG icons.
   - [Installation](#installation)
   - [Usage](#usage)
   - [Options](#options)
+  - [Result](#result)
   - [svgicons2svgfont](#svgicons2svgfont)
 - [Command Line Interface (CLI)](#command-line-interface)
   - [Installation](#cli-installation)
@@ -99,6 +100,7 @@ webfont({
   2. a `.webfontrc` file (with or without filename extension: `.json`, `.yaml`, and `.js` are available)
   3. a `webfont.config.js` file exporting a JS `object`.
      The search will begin in the working directory and move up the directory tree until it finds a configuration file.
+- Note: When a configuration file is discovered or loaded, the resolved absolute path is available on `result.config.filePath` (see [Result](#result)).
 
 #### `fontName`
 
@@ -201,6 +203,26 @@ webfont({
 - Type: `bool`
 - Default: `true`
 - Description: Whether you want to sort the icons sorted by name.
+
+### Result
+
+`webfont()` resolves to an object with generated font buffers (and optional `template` output). The `config` property contains the **effective options** used for the run (defaults, discovered config, and any options you passed in).
+
+#### `result.config.filePath`
+
+- Type: `string` | `undefined`
+- Description: Absolute path to the configuration file that was discovered (`search`) or loaded (`configFile` / CLI `--config`). Omitted when no configuration file was found and defaults were used.
+- Example:
+
+  ```js
+  const result = await webfont({
+    files: "src/svg-icons/**/*.svg",
+  });
+
+  if (result.config?.filePath) {
+    console.log(`Loaded config from ${result.config.filePath}`);
+  }
+  ```
 
 ---
 

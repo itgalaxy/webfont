@@ -65,8 +65,6 @@ npx lefthook run pre-commit
 npx lefthook run pre-push
 ```
 
-To skip hooks for a single command: `LEFTHOOK=0 git commit` or `LEFTHOOK=0 git push`.
-
 See [ADR 0003](docs/adr/0003-lefthook-instead-of-husky-lint-staged.md) for rationale.
 
 ### Dependencies

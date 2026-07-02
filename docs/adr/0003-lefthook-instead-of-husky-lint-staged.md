@@ -69,7 +69,7 @@ pre-push:
 ### Negative / trade-offs
 
 - New dependency and YAML config to learn (small surface).
-- `pre-push` runs full `npm test` (~8–10 s); can be skipped locally with `LEFTHOOK=0 git push` when needed.
+- `pre-push` runs full `npm test` (~8–10 s); plan for that before pushing.
 - ADR 0001 still mentions lint-staged historically; hook behavior is defined by this ADR.
 
 ### Follow-up

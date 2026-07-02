@@ -139,6 +139,7 @@ See [ADR 0003](docs/adr/0003-lefthook-instead-of-husky-lint-staged.md) for ratio
 - When upgrading a dependency, pin its `@types/<package>` counterpart in the same pull request when one exists.
 - Update both `package.json` and `package-lock.json` in the same pull request.
 - [Dependabot](.github/dependabot.yml) opens upgrade PRs for pinned dependencies; do not use open ranges to get updates.
+- Run `npm run depcheck` before pushing when you add, remove, or move imports — it runs [Knip](https://knip.dev/) to find unused dependencies, unlisted imports, and dead exports (see [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md)). CI runs the same check on every pull request.
 
 ### CI changes
 

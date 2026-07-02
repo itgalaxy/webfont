@@ -122,6 +122,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 ## General
 
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.
+- Run `npm run depcheck` (Knip) when changing imports or `package.json` dependencies; see [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md).
 - Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `ci`).
 - Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 - Keep changes focused; match surrounding code style and tooling (Biome, Vitest, Lefthook).

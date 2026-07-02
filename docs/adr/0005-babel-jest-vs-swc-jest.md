@@ -98,7 +98,7 @@ Keep **Jest 27** as the test runner ([ADR 0002](./0002-jest-vs-vitest-testing.md
 
 ### Follow-up
 
-- Revisit **Jest 29.x** upgrade separately; `@swc/jest` should carry forward.
+- Revisit **Jest 29.x** upgrade separately; `@swc/jest` should carry forward. *(Done: Jest upgraded to **30.4.2** in `chore/jest-30.4.2`.)*
 - Re-benchmark if the test suite grows substantially (e.g. 3× more integration tests) or if transform time becomes a measurable fraction of CI.
 
 ## References

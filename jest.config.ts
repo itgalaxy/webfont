@@ -17,7 +17,6 @@ const config: Config.InitialOptions = {
     "<rootDir>/node_modules",
     "<rootDir>/temp",
   ],
-  name: "webfont",
 
   /**
    * If test environment is not set to "node", you may receive an error message when testing `wawoff2` module.

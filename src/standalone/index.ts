@@ -4,15 +4,14 @@ import deepmerge from "deepmerge";
 import nunjucks from "nunjucks";
 import path from "path";
 import { Readable } from "stream";
-import ttf2woff from "ttf2woff";
-import wawoff2 from "wawoff2";
 import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
 import { resolveInputSources } from "../lib/inputSource";
 import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2svgfont";
-import convertTtfToEot from "../lib/ttf2eot";
+import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
 import type { Format, GlyphData, GlyphMetadata, InitialOptions, WebfontOptions } from "../types";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
+import { convertTtfInput } from "./convertTtfInput";
 import { convertWebfontInput } from "./convertWebfontInput";
 import { getGlyphsData } from "./glyphsData";
 import { assertSvgPipelineFormats, classifyInputFiles, filterInputFilesByMode } from "./inputMode";
@@ -78,11 +77,11 @@ const toSvg = (glyphsData: GlyphData[], options: WebfontOptions) => {
   });
 };
 
-const toEot = (buffer: Buffer) => convertTtfToEot(buffer);
+const toEot = (buffer: Buffer) => encodeTtfToEot(buffer);
 
-const toWoff = (buffer: Buffer, options: { metadata?: string }) => Buffer.from(ttf2woff(buffer, options).buffer);
+const toWoff = (buffer: Buffer, options: { metadata?: string }) => encodeTtfToWoff(buffer, options);
 
-const toWoff2 = (buffer: Buffer) => wawoff2.compress(buffer);
+const toWoff2 = (buffer: Buffer) => encodeTtfToWoff2(buffer);
 
 type Webfont = (_initialOptions?: InitialOptions) => Promise<Result>;
 
@@ -115,7 +114,7 @@ export const webfont: Webfont = async (initialOptions) => {
   const inputMode = classifyInputFiles(foundFiles);
 
   if (inputMode === "mixed") {
-    throw new Error("Cannot mix SVG icons with WOFF/WOFF2 font files in the same run");
+    throw new Error("Cannot mix SVG icons, TTF fonts, and WOFF/WOFF2 files in the same run");
   }
 
   if (inputMode === "empty") {
@@ -125,6 +124,17 @@ export const webfont: Webfont = async (initialOptions) => {
   if (inputMode === "webfont") {
     const fontFiles = filterInputFilesByMode(foundFiles, inputMode);
     const result = await convertWebfontInput(fontFiles, options);
+
+    if (discoveredConfigPath) {
+      result.config = { ...options, filePath: discoveredConfigPath };
+    }
+
+    return result;
+  }
+
+  if (inputMode === "ttf") {
+    const fontFiles = filterInputFilesByMode(foundFiles, inputMode);
+    const result = await convertTtfInput(fontFiles, options);
 
     if (discoveredConfigPath) {
       result.config = { ...options, filePath: discoveredConfigPath };

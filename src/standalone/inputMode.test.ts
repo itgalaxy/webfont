@@ -2,6 +2,7 @@ import {
   assertSvgPipelineFormats,
   classifyInputFiles,
   filterInputFilesByMode,
+  resolveTtfConversionFormats,
   resolveWebfontConversionFormats,
 } from "./inputMode";
 
@@ -25,6 +26,22 @@ describe("classifyInputFiles", () => {
   it("should classify mixed woff and woff2 as webfont mode", () => {
     expect(classifyInputFiles(["src/fixtures/fonts/iconfont.woff", "src/fixtures/fonts/iconfont.woff2"])).toBe(
       "webfont",
+    );
+  });
+
+  it("should classify ttf-only globs as ttf mode", () => {
+    expect(classifyInputFiles(["src/fixtures/fonts/iconfont.ttf"])).toBe("ttf");
+  });
+
+  it("should reject mixed svg and ttf inputs", () => {
+    expect(classifyInputFiles(["src/fixtures/svg-icons/avatar.svg", "src/fixtures/fonts/iconfont.ttf"])).toBe(
+      "mixed",
+    );
+  });
+
+  it("should reject mixed ttf and webfont inputs", () => {
+    expect(classifyInputFiles(["src/fixtures/fonts/iconfont.ttf", "src/fixtures/fonts/iconfont.woff2"])).toBe(
+      "mixed",
     );
   });
 
@@ -80,6 +97,12 @@ describe("filterInputFilesByMode", () => {
     ).toEqual(["src/fixtures/fonts/iconfont.woff2"]);
   });
 
+  it("should filter ttf files in ttf mode", () => {
+    expect(
+      filterInputFilesByMode(["src/fixtures/fonts/iconfont.ttf", "src/fixtures/fonts/iconfont.woff2"], "ttf"),
+    ).toEqual(["src/fixtures/fonts/iconfont.ttf"]);
+  });
+
   it("should return an empty list for unsupported modes", () => {
     expect(filterInputFilesByMode(["src/fixtures/fonts/iconfont.woff2"], "empty")).toEqual([]);
   });
@@ -101,6 +124,26 @@ describe("resolveWebfontConversionFormats", () => {
   it("should reject conversion runs without ttf or otf output formats", () => {
     expect(() => resolveWebfontConversionFormats(["woff2"])).toThrow(
       'formats must include "ttf" and/or "otf" when converting WOFF/WOFF2 input',
+    );
+  });
+});
+
+describe("resolveTtfConversionFormats", () => {
+  it("should default to woff and woff2 when svg pipeline formats are still configured", () => {
+    expect(resolveTtfConversionFormats(["svg", "ttf", "eot", "woff", "woff2"])).toEqual(["woff", "woff2"]);
+  });
+
+  it("should keep explicit webfont output requests", () => {
+    expect(resolveTtfConversionFormats(["ttf", "woff2"])).toEqual(["ttf", "woff2"]);
+  });
+
+  it("should deduplicate explicit encode formats", () => {
+    expect(resolveTtfConversionFormats(["woff2", "woff2", "woff"])).toEqual(["woff2", "woff"]);
+  });
+
+  it("should reject ttf runs without webfont output formats", () => {
+    expect(() => resolveTtfConversionFormats(["svg"])).toThrow(
+      'formats must include at least one of "ttf", "eot", "woff", or "woff2" when converting TTF input',
     );
   });
 });

@@ -558,4 +558,21 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
     expect(output.files).toEqual(expect.arrayContaining(["iconfont-woff.ttf", "iconfont-woff2.ttf"]));
   });
+
+  it("should encode ttf input to woff and woff2 via the CLI", async () => {
+    const conversionDest = "temp/cli-ttf-encode";
+    const output = await execCLI(
+      `src/fixtures/fonts/iconfont.ttf -d ${conversionDest} -f woff,woff2 -u iconfont --dest-create`,
+      conversionDest,
+    );
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    expect(output.files).toEqual(expect.arrayContaining(["iconfont.woff", "iconfont.woff2"]));
+
+    const woff = await fsPromise.readFile(`${conversionDest}/iconfont.woff`);
+    const woff2 = await fsPromise.readFile(`${conversionDest}/iconfont.woff2`);
+    expect(woff.length).toBeGreaterThan(0);
+    expect(woff2.length).toBeGreaterThan(0);
+  });
 });

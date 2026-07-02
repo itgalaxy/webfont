@@ -3,7 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/webfont.svg)](https://www.npmjs.org/package/webfont)
 [![Node.js CI](https://github.com/itgalaxy/webfont/actions/workflows/pr.yml/badge.svg)](https://github.com/itgalaxy/webfont/actions/workflows/pr.yml)
 
-Generator of fonts from SVG icons, with a separate mode to **decompress** WOFF/WOFF2 containers to the TTF or OTF inside.
+Generator of fonts from SVG icons, with separate modes to **encode** TTF to web formats and **decompress** WOFF/WOFF2 containers to the TTF or OTF inside.
 
 See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is stable, in progress, or planned).
 
@@ -16,6 +16,7 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 ## Features
 
 - **SVG icon pipeline** (default): `.svg` icons → `svg`, `ttf`, `eot`, `woff`, `woff2` (not `otf`);
+- **TTF encoding**: one or more `.ttf` files → `ttf` (pass-through), `eot`, `woff`, and/or `woff2` (auto-detected — no extra flag);
 - **Webfont decompression**: one `.woff` or `.woff2` file → `ttf` and/or `otf` matching the **embedded SFNT flavor** (decompress only — not TTF ↔ OTF transcoding);
 - Config files: `JavaScript`, `JSON`, or `YAML` via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig);
 - Built-in and custom CSS templates (`css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/));
@@ -24,21 +25,23 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 
 ## Input modes
 
-webfont runs one of two pipelines depending on matched input files. They cannot be mixed in a single run.
+webfont runs one of three pipelines depending on matched input files. They cannot be mixed in a single run.
 
 | Mode | Input | Outputs | Notes |
 |------|--------|---------|--------|
 | **SVG icons** | One or more `.svg` files | `svg`, `ttf`, `eot`, `woff`, `woff2` | Default. Builds TrueType via `svg2ttf`. **`otf` is rejected** — use `ttf`. |
+| **TTF encoding** | One or more `.ttf` files | `ttf`, `eot`, `woff`, and/or `woff2` per input | Auto-detected. Default when SVG-pipeline `formats` are still configured: `woff` + `woff2`. No templates. |
 | **Webfont decompress** | One or more `.woff` / `.woff2` paths, globs, or `http(s)` URLs | `ttf` and/or `otf` per input | One output file per source (basename from filename; collisions get `-woff`/`-woff2`). Not a single merged font. |
 
 **Not supported today**
 
 - Renaming or re-wrapping without matching the real outline format (e.g. requesting `otf` when the WOFF2 holds TrueType).
 - Converting TTF to OTF (or OTF to TTF) — use [FontForge](https://fontforge.org/) or similar.
-- Templates, `glyphTransformFn`, or merged multi-weight SFNT output in webfont decompress mode.
+- `.otf` as input for webfont encoding (TrueType `.ttf` only today).
+- Templates, `glyphTransformFn`, or merged multi-weight SFNT output in TTF encoding or webfont decompress mode.
 - Globs that match extension-less or unsupported files together with fonts (the run fails instead of silently ignoring extras).
 
-Every matched path must end in `.svg`, `.woff`, or `.woff2`. See [FEATURES.md](./FEATURES.md) for test-backed criteria.
+Every matched path must end in `.svg`, `.ttf`, `.woff`, or `.woff2`. See [FEATURES.md](./FEATURES.md) for test-backed criteria.
 
 ### Font licensing
 
@@ -116,6 +119,30 @@ webfont({
   });
 ```
 
+### TTF encoding examples
+
+```js
+import webfont from "webfont";
+
+// Single local TTF → WOFF + WOFF2 (default when formats unset)
+const encoded = await webfont({
+  files: "path/to/font.ttf",
+});
+
+// Explicit formats
+const subset = await webfont({
+  files: "path/to/font.ttf",
+  formats: ["woff2"],
+});
+
+// Batch: multiple TTF files in one run
+const batch = await webfont({
+  files: ["fonts/Inter-Regular.ttf", "fonts/Inter-Bold.ttf"],
+  formats: ["woff", "woff2"],
+});
+// batch.transcodedFonts → [{ source, woff, woff2 }, …]
+```
+
 ### Webfont decompress examples
 
 ```js
@@ -148,9 +175,10 @@ const remote = await webfont({
 - Type: `string` | `array`
 - Description: A file glob, or array of file globs. Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
 - **SVG mode**: one or more `.svg` icon paths or globs (default pipeline).
+- **TTF encoding mode**: one or more `.ttf` paths or globs.
 - **Webfont decompress mode**: one or more `.woff` / `.woff2` paths, globs, or `https://…` URLs (see [`formats`](#formats) and [Input modes](#input-modes)).
-- Do not mix `.svg` with `.woff` / `.woff2` in the same run.
-- Every matched file must have a supported extension (`.svg`, `.woff`, `.woff2`); extension-less files such as `LICENSE` are not ignored when matched by a broad glob.
+- Do not mix `.svg`, `.ttf`, and `.woff` / `.woff2` in the same run.
+- Every matched file must have a supported extension (`.svg`, `.ttf`, `.woff`, `.woff2`); extension-less files such as `LICENSE` are not ignored when matched by a broad glob.
 - `node_modules` and `bower_components` are always ignored.
 
 #### `configFile`
@@ -173,10 +201,11 @@ const remote = await webfont({
 #### `formats`
 
 - Type: `array`
-- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']` (SVG input). For WOFF/WOFF2 input, defaults to `['ttf']` when SVG-pipeline formats are still configured.
+- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']` (SVG input). For TTF input, defaults to `['woff', 'woff2']` when SVG-pipeline formats are still configured. For WOFF/WOFF2 input, defaults to `['ttf']` when SVG-pipeline formats are still configured.
 - Possible values: `svg`, `ttf`, `otf`, `eot`, `woff`, `woff2`
 - Description: Font file types to generate.
   - **SVG input**: `svg`, `ttf`, `eot`, `woff`, `woff2` only. **`otf` is not supported** (pipeline uses TrueType outlines).
+  - **TTF input**: `ttf`, `eot`, `woff`, and/or `woff2` only. **`svg` and `otf` are not produced** in this mode.
   - **WOFF/WOFF2 input**: `ttf` and/or `otf` only — must match the decompressed SFNT flavor inside the file (not arbitrary transcoding). `eot`, `woff`, `woff2`, and `svg` are not produced in this mode.
 - CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
 

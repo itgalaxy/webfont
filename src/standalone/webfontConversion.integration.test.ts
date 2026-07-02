@@ -62,7 +62,7 @@ describe("webfont WOFF/WOFF2 conversion", () => {
         files: ["src/fixtures/svg-icons/avatar.svg", fixtureWoff2],
         formats: ["ttf"],
       }),
-    ).rejects.toThrow("Cannot mix SVG icons with WOFF/WOFF2 font files");
+    ).rejects.toThrow("Cannot mix SVG icons, TTF fonts, and WOFF/WOFF2 files");
   });
 
   it("should reject unsupported input extensions", async () => {

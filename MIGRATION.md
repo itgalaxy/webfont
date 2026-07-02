@@ -6,6 +6,49 @@ See also [CHANGELOG.md](./CHANGELOG.md) for the full release history.
 
 ---
 
+## Next release — TTF to WOFF/WOFF2 encoding ([#13](https://github.com/itgalaxy/webfont/issues/13))
+
+**Minimum version:** *pending*
+
+### What changed
+
+webfont auto-detects **`.ttf` input** (no new flag). One or more TrueType files can be encoded to `eot`, `woff`, and/or `woff2`. Default output when SVG-pipeline `formats` are still configured: `woff` + `woff2`.
+
+### Before
+
+TTF files were rejected (`did not match any supported files`). Users relied on external tools or manual `ttf2woff` / `wawoff2` scripts.
+
+### After
+
+```shell
+webfont path/to/font.ttf -d dist/fonts -f woff,woff2
+```
+
+Programmatic:
+
+```js
+const result = await webfont({
+  files: "fonts/MyFont.ttf",
+  formats: ["woff", "woff2"],
+});
+// result.woff, result.woff2
+```
+
+Batch runs expose `result.transcodedFonts` (`{ source, ttf?, eot?, woff?, woff2? }[]`).
+
+### Workaround on older versions
+
+Use `ttf2woff`, `wawoff2`, or FontForge outside webfont, or decompress from an existing WOFF/WOFF2 container if you only need the SFNT inside.
+
+### After upgrading
+
+```shell
+npm install webfont@<version>
+webfont "fonts/*.ttf" -d dist/webfonts -f woff,woff2 --dest-create
+```
+
+---
+
 ## Next release — CLI `--round` numeric strings ([#569](https://github.com/itgalaxy/webfont/issues/569))
 
 **Minimum version:** *pending*

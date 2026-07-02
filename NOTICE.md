@@ -43,7 +43,18 @@ If you build a font from **`.svg` icons**, you must have the right to use those 
 
 Generated font files may be subject to the same restrictions as the source icons and to any third-party notices you embed via options such as `metadata` / `copyright`.
 
-### 3.2 WOFF / WOFF2 decompression
+### 3.3 TTF to webfont encoding
+
+If you **encode** one or more `.ttf` files to `eot`, `woff`, or `woff2`, you are re-wrapping font data you already hold. That operation:
+
+- does **not** make a restricted or commercial font free to use or share;
+- does **not** bypass foundry EULAs or redistribution terms;
+- preserves copyright/metadata embedded in the source TTF;
+- does **not** merge multiple weights into one file — each input yields separate outputs.
+
+**Only process fonts you are authorized to convert and redistribute** under their license.
+
+### 3.4 WOFF / WOFF2 decompression
 
 If you **decompress** one or more `.woff` or `.woff2` files (from disk or from an `http(s)` URL) to `.ttf` or `.otf`, you are extracting the **SFNT payload** inside each container. That operation:
 
@@ -54,7 +65,7 @@ If you **decompress** one or more `.woff` or `.woff2` files (from disk or from a
 
 **Only process fonts you are authorized to use and download** under their license. For remote URLs, you must also have permission to fetch and store those bytes.
 
-### 3.3 Redistribution of output
+### 3.5 Redistribution of output
 
 Publishing, shipping, or sublicensing fonts produced or extracted with webfont (in apps, websites, PDFs, design assets, npm packages, etc.) is **your responsibility**. The MIT license on webfont does **not** apply to those font files.
 

@@ -21,7 +21,7 @@ export interface WebfontOptions extends InitialOptions {
   metadataProvider?: MetadataProvider;
   normalize: boolean;
   prependUnicode: boolean;
-  round: number;
+  round: string | number;
   sort: boolean;
   startUnicode: number;
   template?: string;

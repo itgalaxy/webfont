@@ -6,35 +6,38 @@ See also [CHANGELOG.md](./CHANGELOG.md) for the full release history.
 
 ---
 
-## Next release — CLI `--round` as number ([#569](https://github.com/itgalaxy/webfont/issues/569))
+## Next release — CLI `--round` numeric strings ([#569](https://github.com/itgalaxy/webfont/issues/569))
 
 **Minimum version:** *pending*
 
-### Before
+### What changed
 
-`--round` was passed through as a string (`"4"`), which caused `svg-pathdata` to throw:
+`--round` and `round` in config/API still accept **number or string** (no breaking change). Numeric strings (for example `"4"` from the CLI) are coerced to numbers before `svgicons2svgfont` runs.
+
+### Before (bug)
+
+`webfont icons/*.svg --round 4` could throw:
 
 ```text
 Error: assertNumbers arguments[0] is not a number. string == typeof 4
 ```
 
-### After
+### After (fix)
 
-`--round` is parsed as a number before reaching the SVG pipeline (meow `type: "number"` + `Number()` in the CLI).
-
-### Workaround on older versions
-
-Use the programmatic API with a numeric `round`:
-
-```js
-await webfont({ files: "icons/*.svg", round: 4 });
-```
+Same CLI and config shapes work; coercion happens at the SVG pipeline boundary only.
 
 ### After upgrading
 
 ```shell
 npm install webfont@<version>
 webfont "icons/*.svg" --round 4 -d dist/icons
+```
+
+Programmatic usage unchanged:
+
+```js
+await webfont({ files: "icons/*.svg", round: 4 });
+await webfont({ files: "icons/*.svg", round: "4" });
 ```
 
 ---

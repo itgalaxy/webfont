@@ -189,7 +189,7 @@ describe("cli/meow", () => {
       expect(cli.flags.centerHorizontally).toBe(true);
       expect(cli.flags.normalize).toBe(true);
       expect(cli.flags.fontHeight).toBe("100");
-      expect(cli.flags.round).toBe(1);
+      expect(cli.flags.round).toBe("1");
       expect(cli.flags.descent).toBe("5");
       expect(cli.flags.ascent).toBe("10");
       expect(cli.flags.startUnicode).toBe("0xea01");
@@ -277,7 +277,7 @@ describe("cli/meow", () => {
       expect(options.centerHorizontally).toBe(true);
       expect(options.normalize).toBe(true);
       expect(options.fontHeight).toBe("100");
-      expect(options.round).toBe(1);
+      expect(options.round).toBe("1");
       expect(options.descent).toBe("5");
       expect(options.ascent).toBe("10");
       expect(options.startUnicode).toBe("0xea01");

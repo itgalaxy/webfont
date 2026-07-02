@@ -14,6 +14,25 @@ export const getMetadataServiceOptions = (options: WebfontOptions): MetadataServ
   startUnicode: Number(options.startUnicode),
 });
 
+/** Coerce `round` for svgicons2svgfont; accepts number or numeric string (CLI/config). */
+export const normalizeRoundOption = (round: string | number | undefined): number | undefined => {
+  if (round === undefined) {
+    return undefined;
+  }
+
+  if (typeof round === "number") {
+    return round;
+  }
+
+  const parsed = Number(round);
+
+  if (Number.isNaN(parsed)) {
+    return undefined;
+  }
+
+  return parsed;
+};
+
 export const getFontStreamOptions = (options: WebfontOptions): Partial<SVGIcons2SVGFontStreamOptions> =>
   ({
     ascent: options.ascent,
@@ -27,5 +46,5 @@ export const getFontStreamOptions = (options: WebfontOptions): Partial<SVGIcons2
     fontWeight: options.fontWeight,
     metadata: options.metadata,
     normalize: options.normalize,
-    round: options.round,
+    round: normalizeRoundOption(options.round),
   }) as unknown as Partial<SVGIcons2SVGFontStreamOptions>;

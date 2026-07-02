@@ -226,7 +226,7 @@ export const webfontMeowFlags = {
     type: "boolean",
   },
   round: {
-    type: "number",
+    type: "string",
   },
   sort: {
     default: true,

@@ -2,6 +2,69 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.0.0](https://github.com/itgalaxy/webfont/compare/webfont-v11.5.21...webfont-v12.0.0) (2026-07-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* We removed support for Node.js 11 and Node.js 10 at this version. Please upgrade your environment to Node.js 12 or higher.
+* Starting from version 10 stable, you should use webfont via named import, like this: `import { webfont } from "webfont"`.
+
+### Features
+
+* add new transformation function ([6a0c60c](https://github.com/itgalaxy/webfont/commit/6a0c60c794616abd041aa7da6f9fdc4bd5a4ad6a)), closes [#183](https://github.com/itgalaxy/webfont/issues/183)
+* add standalone glyphs data getter ([0cfe581](https://github.com/itgalaxy/webfont/commit/0cfe5819d5e3b8efdc7f35e4437d9bcb88c6e8ee))
+* add standalone options getter ([13b8596](https://github.com/itgalaxy/webfont/commit/13b8596587279f57af2adff2428ca9ac05261714))
+* add support to base64 font strings on templates ([2a56338](https://github.com/itgalaxy/webfont/commit/2a56338c0eb74ec7c680ef80e99e5472d69919ab))
+* add support to ligatures and JSON template ([f622c44](https://github.com/itgalaxy/webfont/commit/f622c44561534f1d997d2ebd82a08e00ca2af86c))
+* adding config option to prevent ligature unicode generation ([642deb9](https://github.com/itgalaxy/webfont/commit/642deb9235ca88c164e7faa9424aa8d895ecb862)), closes [#457](https://github.com/itgalaxy/webfont/issues/457)
+* batch decompress and URL input for WOFF/WOFF2 ([#691](https://github.com/itgalaxy/webfont/issues/691)) ([4bd4400](https://github.com/itgalaxy/webfont/commit/4bd440002606a3b05fa9f2ff0cfe8b163d88618a))
+* **cli:** add support to `template-cache-string` argument ([ae8b050](https://github.com/itgalaxy/webfont/commit/ae8b0503506be2544cd5b5a5b0f2c420fec588b5))
+* **cli:** create output folder if it's not present. ([#280](https://github.com/itgalaxy/webfont/issues/280)) ([d66a0d4](https://github.com/itgalaxy/webfont/commit/d66a0d457068b97a1bb747fb0f8ccc473721ff4a))
+* convert WOFF/WOFF2 input to TTF or OTF output ([#689](https://github.com/itgalaxy/webfont/issues/689)) ([7edf787](https://github.com/itgalaxy/webfont/commit/7edf787cacbb53baa94c5e8f6a2b7786f49cd4d1))
+* **demo:** update fonts with ligatures support ([64b10d6](https://github.com/itgalaxy/webfont/commit/64b10d645f43c49f0ffe92ca2978739a3abb115c))
+* **deps:** upgrade cosmiconfig to 7.1.0 ([d83a422](https://github.com/itgalaxy/webfont/commit/d83a4227964fa7f6283ef51c2340467e36969989)), closes [#572](https://github.com/itgalaxy/webfont/issues/572)
+* migrate all codebase to TypeScript ([0b71779](https://github.com/itgalaxy/webfont/commit/0b71779a2a3b97eb27af65f64e936d6730dc5eb9))
+* **standalone:** add support to JSON template and cacheString ([ad64421](https://github.com/itgalaxy/webfont/commit/ad64421a9da9cadbaba96e423cc00c1c6be76572))
+* strict TypeScript, CLI hardening, expanded tests, and docs ([#670](https://github.com/itgalaxy/webfont/issues/670)) ([cc20bfc](https://github.com/itgalaxy/webfont/commit/cc20bfcf1798c8809d5b0ed9a6e5e0f6960cc415))
+* **templates:** add cacheString support ([f39d2c1](https://github.com/itgalaxy/webfont/commit/f39d2c1753f19474d1fc0defd7de37b5f9706ca5))
+* **templates:** add template for JSON ([3b704b3](https://github.com/itgalaxy/webfont/commit/3b704b391682a99262c8ffd1a6c2c1bb22b5df58))
+* **types:** add `unicode` key to `GlyphMetadata` ([33fa7cb](https://github.com/itgalaxy/webfont/commit/33fa7cbf618463970f5c38ee23c4f3603678aff8))
+* **types:** allow `unicode` key and Promise as `GlyphTransformFn` output ([a3bde0c](https://github.com/itgalaxy/webfont/commit/a3bde0ccc86e4ca25f5e76cbae9e8e5f202abb56))
+
+
+### Bug Fixes
+
+* allow CommonJS in fixture config files for Biome ([ef53ada](https://github.com/itgalaxy/webfont/commit/ef53ada7cae595e4feb6be560d7ff7ed0c6b21f1))
+* **cli:** fail clearly when destination directory is missing ([#626](https://github.com/itgalaxy/webfont/issues/626)) ([7cf273c](https://github.com/itgalaxy/webfont/commit/7cf273c1a73ed1a131b6f770bbf6f69c5621aa3f))
+* **deps:** adapt p-limit v7 ESM for Jest and runtime ([77f669f](https://github.com/itgalaxy/webfont/commit/77f669f24be581f05fa27b308d0a9a045869f9f2))
+* **deps:** adapt ttf2eot adapter for v3 Uint8Array API ([fb5316a](https://github.com/itgalaxy/webfont/commit/fb5316aa7dcf3b4549205df7feb2df6099402a5e))
+* **deps:** bump svgicons2svgfont to 16.0.0 ([c52d79c](https://github.com/itgalaxy/webfont/commit/c52d79ce703eaab07e0ea8997ad55ce098a4429a))
+* **deps:** fix insecure dependency ([59a9604](https://github.com/itgalaxy/webfont/commit/59a96045b3ec2fd296ddc0c49d6ff856105617cb))
+* **deps:** fix security issue ([3abc00a](https://github.com/itgalaxy/webfont/commit/3abc00a50d6c1d107046301d77dcc9f92cc33e16))
+* **deps:** fixed 1 package vulnerability ([feda633](https://github.com/itgalaxy/webfont/commit/feda633a7c20731ce5514891adb3c14c4d9a8323))
+* **deps:** pin @types/nunjucks and document [@types](https://github.com/types) pinning ([8f1a39b](https://github.com/itgalaxy/webfont/commit/8f1a39b311ce69ef8f36bb57e00694d2ec9df74c))
+* **deps:** pin `svgicons2svgfont` to `10.0.1` ([87789d3](https://github.com/itgalaxy/webfont/commit/87789d35b02db36537d26cac3ab9e0e0924d7c81))
+* **deps:** remove unsafe `eslint-plugin-markdown` dep ([dfa5251](https://github.com/itgalaxy/webfont/commit/dfa5251c4e2aadf7e95878047c383d511e9dc7ee))
+* **deps:** switch out from latest versions in dependencies ([67efe05](https://github.com/itgalaxy/webfont/commit/67efe057f109b6f02efd62dd84f091e1ed138a9f)), closes [#464](https://github.com/itgalaxy/webfont/issues/464)
+* **deps:** upgrade `wawoff2` dependency ([69a8dfb](https://github.com/itgalaxy/webfont/commit/69a8dfb3a70456aaa3777a8734ccccc41397a26c))
+* **deps:** upgrade dependencies ([d623b06](https://github.com/itgalaxy/webfont/commit/d623b06dc8bd9afa5c83b27c5df57404c4b1a3f6))
+* **deps:** upgrade nunjucks to 3.2.4 ([090f737](https://github.com/itgalaxy/webfont/commit/090f7375b16596e4cb176eda3d62811fb59752e5))
+* exclude test files from production build output ([#663](https://github.com/itgalaxy/webfont/issues/663)) ([de9954f](https://github.com/itgalaxy/webfont/commit/de9954fa9c51e2070abe121790b7dafffd629e81))
+* model filePath as result-only metadata ([f557233](https://github.com/itgalaxy/webfont/commit/f5572338f249b5deb2a7b9e1a794b81eb1000978))
+* upgrade globby to 16.2.0 with named import ([#664](https://github.com/itgalaxy/webfont/issues/664)) ([ae00488](https://github.com/itgalaxy/webfont/commit/ae0048841ea1007fa0e477c97886a40e8ecf6d8d))
+* upgrade xml2js to 0.6.2 (CVE-2023-0842) with security tests ([#615](https://github.com/itgalaxy/webfont/issues/615)) ([df6ceb4](https://github.com/itgalaxy/webfont/commit/df6ceb4a5dff2e66ccf265aa854662df0aef2e9d))
+
+
+### Code Refactoring
+
+* adopt named import/export system ([31adbc7](https://github.com/itgalaxy/webfont/commit/31adbc7faa974c3d5a1ba9ffd4a5944bcab4fae8))
+
+
+### Continuous Integration
+
+* remove Node.js 10 and 11 support ([0f0dbf6](https://github.com/itgalaxy/webfont/commit/0f0dbf64a2b7ce15519bb9ada86fdb2941251a08))
+
 ### [11.5.21](https://github.com/itgalaxy/webfont/compare/v11.5.20...v11.5.21) (2026-07-02)
 
 

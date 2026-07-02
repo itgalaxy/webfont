@@ -44,6 +44,8 @@ Example: `glyphsData.test.ts` — `describe("svg xml validation via xml2js")` do
 
 Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract (via `fast-xml-parser`), negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
 
+Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract (via `@xmldom/xmldom`), invalid version options, early pipeline rejection before conversion, and when `result.ttf` is absent vs validated (`isTtf(result.ttf)`).
+
 Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
 
 ### CLI integration tests (`execCLI`)

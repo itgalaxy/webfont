@@ -81,6 +81,7 @@ New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md)
 | **Explicit, not implicit** | Name tests after the invariant they protect (for example, why a guard exists). If a dependency quirk motivated the code, add a small test that documents the quirk. |
 | **Pipeline ordering** | When step B must not run if step A fails, assert B was not called (spy/mock), not only that the final promise rejected. |
 | **Fixtures** | Reuse fixtures under `src/fixtures/` for file-based cases; add a fixture when the scenario is stable and reusable. |
+| **Test titles** | Every `it(...)` description must include **`should`** or **`should not`** (for example, `should return default options`, `should not call metadataProvider when parse fails`). Avoid bare verbs (`returns`, `throws`, `accepts`) or prefixes like `documents that` without `should`. |
 
 Run `npm test` before pushing. Integration-only coverage for a localized guard is incomplete.
 

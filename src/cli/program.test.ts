@@ -18,9 +18,14 @@ import {
   writeResultFiles,
 } from "./program";
 
-vi.mock("../standalone", () => ({
-  webfont: vi.fn(),
-}));
+vi.mock("../standalone", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../standalone")>();
+
+  return {
+    ...actual,
+    webfont: vi.fn(),
+  };
+});
 
 const mockedWebfont = vi.mocked(webfont);
 

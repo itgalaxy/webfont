@@ -1,0 +1,5 @@
+{
+  "fontName": "config-files-font",
+  "formats": ["woff2"],
+  "files": ["src/fixtures/svg-icons/envelope.svg", "src/fixtures/svg-icons/avatar.svg"]
+}

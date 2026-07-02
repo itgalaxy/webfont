@@ -143,3 +143,72 @@ If the path contains `cursor-sandbox-cache` (or similar), the IDE injected it �
 4. **CI and plain shells** outside Cursor are unaffected; no change is required there.
 
 This warning does not indicate a broken install or a webfont bug.
+
+---
+
+## Config `files` ignored when using `--config`
+
+### What error appeared
+
+You pass `--config webfont.config.json` with a `files` array in the config, but webfont only processes SVG paths from the command line — or shows help when you omit positional arguments.
+
+Example config:
+
+```json
+{
+  "files": ["src/icons/a.svg", "src/icons/b.svg"],
+  "dest": "dist/icons",
+  "fontName": "my-icons"
+}
+```
+
+**Older releases (before the fix in [#696](https://github.com/itgalaxy/webfont/pull/696)):**
+
+```shell
+webfont --config webfont.config.json -d dist/icons
+# Shows help or does not pick up both files from config
+```
+
+If you also pass SVG paths on the CLI while `files` is set in the config, older releases may silently prefer CLI input only.
+
+**After the fix ships** (upgrade required), combining both causes a clear error:
+
+```text
+Error: Cannot specify input files on the command line when `files` is set in the config file
+```
+
+### Why it usually happens
+
+- **The CLI treated positional arguments as the only input source.** Config `files` was merged inside `webfont()`, but the CLI required at least one path on the command line before running.
+- **`files` in config and CLI input are mutually exclusive by design** — use one or the other to avoid ambiguity about which globs win.
+
+### Steps to try to resolve
+
+1. **Upgrade webfont** to a version that includes the fix for [#2](https://github.com/itgalaxy/webfont/issues/2) (see release notes / [#696](https://github.com/itgalaxy/webfont/pull/696)). Then run **without** positional SVG arguments:
+
+   ```shell
+   webfont --config webfont.config.json -d dist/icons
+   ```
+
+2. **Until you upgrade**, pass all globs on the command line and use the config only for other options (`fontName`, `dest`, `formats`, etc.):
+
+   ```shell
+   webfont "src/icons/a.svg" "src/icons/b.svg" --config webfont.config.json -d dist/icons
+   ```
+
+   Ensure the config file does **not** contain a `files` key in this mode.
+
+3. **Programmatic API** — pass `files` directly (config discovery still merges other keys):
+
+   ```js
+   import { webfont } from "webfont";
+
+   await webfont({
+     files: ["src/icons/a.svg", "src/icons/b.svg"],
+     configFile: "webfont.config.json",
+   });
+   ```
+
+4. **Do not mix** CLI positional paths with `files` in the config after upgrading — pick one source of truth.
+
+If the problem persists after upgrading, open an issue with your config file, full command, and webfont version (`webfont --version` or `npm ls webfont`).

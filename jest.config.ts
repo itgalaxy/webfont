@@ -23,6 +23,22 @@ const config: Config.InitialOptions = {
    * If test environment is not set to "node", you may receive an error message when testing `wawoff2` module.
    */
   testEnvironment: "node",
+  transform: {
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+          },
+          target: "es2020",
+        },
+        module: {
+          type: "commonjs",
+        },
+      },
+    ],
+  },
   transformIgnorePatterns: [`/node_modules/(?!${esmNodeModules}/)`],
   verbose: true,
 };

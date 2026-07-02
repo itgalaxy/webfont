@@ -1,7 +1,9 @@
 import type {GlyphData, GlyphMetadata, WebfontOptions} from "../types";
-import {fileSorter, getMetadataService, getMetadataServiceOptions} from "../lib/svgicons2svgfont";
 import {createReadStream} from "fs";
-import pLimit from "p-limit";
+/* eslint-disable sort-imports -- default and named imports from lib adapters */
+import {fileSorter, getMetadataService, getMetadataServiceOptions} from "../lib/svgicons2svgfont";
+import pLimit from "../lib/p-limit";
+/* eslint-enable sort-imports */
 import xml2js from "xml2js";
 
 const normalizeUnicode = (unicode: GlyphMetadata["unicode"]): string[] => {

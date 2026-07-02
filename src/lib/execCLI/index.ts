@@ -27,7 +27,7 @@ export type ExecCLI = (_args?: string, _destination?: string) => Promise<Output>
  */
 export const execCLI: ExecCLI = (args = "", destination = "temp/cli") =>
   new Promise((resolve, reject) => {
-    const command = `node dist/cli.js ${args}`;
+    const command = `node dist/cli.mjs ${args}`;
 
     exec(command, { encoding: "utf-8" }, (error, stdout, stderr) => {
       fs.readdir(destination, { encoding: "utf-8" }, (err, files: string[]) => {

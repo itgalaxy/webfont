@@ -1,6 +1,7 @@
 import type { Config } from "@jest/types";
 
 const esmNodeModules = [
+  "meow",
   "p-limit",
   "svgicons2svgfont",
   "svg-pathdata",

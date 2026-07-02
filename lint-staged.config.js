@@ -1,6 +1,3 @@
 module.exports = {
-  "*.{ts}": [
-    "eslint --report-unused-disable-directives",
-    "git add",
-  ],
+  "*.{ts,js,json}": ["biome check --write --no-errors-on-unmatched", "git add"],
 };

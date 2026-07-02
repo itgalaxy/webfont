@@ -61,9 +61,16 @@ dist
 # Store temp files
 temp
 
+# CLI output when run from repo root without --dest (default cwd)
+/webfont.svg
+
 # Environment variables files
 .env
 
+# Lefthook local overrides (see ADR 0003)
+lefthook-local.yml
+
 # Don't commit JavaScript generated files
 src/**/*.js
+!src/fixtures/**/*.js
 src/**/*.d.ts

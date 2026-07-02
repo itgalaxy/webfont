@@ -1,5 +1,6 @@
-name: Node.js Package
+name: npm publish
 
+# Runs when Release Please creates a GitHub Release (see release-please.yml and ADR 0004).
 on:
   release:
     types: [created]
@@ -8,9 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 12
+          node-version: 24.x
+          cache: npm
       - run: npm ci
       - run: npm test

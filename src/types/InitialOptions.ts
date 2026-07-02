@@ -1,8 +1,9 @@
-import {GlyphTransformFn} from "./GlyphTransformFn";
-import {OptionsBase} from "./OptionsBase";
+import type { GlyphTransformFn } from "./GlyphTransformFn";
+import type { MetadataProvider } from "./MetadataProvider";
+import type { OptionsBase } from "./OptionsBase";
 
 export type InitialOptions = OptionsBase & {
-  filePath?: string;
   files: string | Array<string>;
   glyphTransformFn?: GlyphTransformFn;
+  metadataProvider?: MetadataProvider;
 };

@@ -1,4 +1,4 @@
-import {ExecException, exec} from "child_process";
+import { ExecException, exec } from "child_process";
 import fs from "fs";
 
 export type Output = {
@@ -7,10 +7,9 @@ export type Output = {
   files: string[];
   stderr?: string;
   stdout?: string;
-}
+};
 
-// eslint-disable-next-line no-unused-vars
-export type ExecCLI = (args?: string, destination?: string) => Promise<Output>;
+export type ExecCLI = (_args?: string, _destination?: string) => Promise<Output>;
 
 /**
  * @name execCLI
@@ -26,37 +25,35 @@ export type ExecCLI = (args?: string, destination?: string) => Promise<Output>;
  * })
  *
  */
-export const execCLI : ExecCLI = (
-  args = "",
-  destination = "temp/cli",
-) => new Promise((resolve, reject) => {
-  const command = `node dist/cli.js ${args}`;
+export const execCLI: ExecCLI = (args = "", destination = "temp/cli") =>
+  new Promise((resolve, reject) => {
+    const command = `node dist/cli.js ${args}`;
 
-  exec(command, {encoding: "utf-8"}, (error, stdout, stderr) => {
-    fs.readdir(destination, {encoding: "utf-8"}, (err, files: string[]) => {
-      if (err) {
-        reject(err);
-        throw err;
-      }
+    exec(command, { encoding: "utf-8" }, (error, stdout, stderr) => {
+      fs.readdir(destination, { encoding: "utf-8" }, (err, files: string[]) => {
+        if (err) {
+          reject(err);
+          throw err;
+        }
 
-      let outputCode = 0;
-      if (error && error.code) {
-        outputCode = error.code;
-      }
+        let outputCode = 0;
+        if (error?.code) {
+          outputCode = error.code;
+        }
 
-      const output : Output = {
-        code: outputCode,
-        error,
-        files,
-        stderr,
+        const output: Output = {
+          code: outputCode,
+          error,
+          files,
+          stderr,
 
-        /**
-         * Remove new line created by console.log;
-         */
-        stdout: stdout.replace(/\n$/u, ""),
-      };
+          /**
+           * Remove new line created by console.log;
+           */
+          stdout: stdout.replace(/\n$/u, ""),
+        };
 
-      resolve(output);
+        resolve(output);
+      });
     });
   });
-});

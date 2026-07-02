@@ -1,6 +1,80 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
+
+### [11.5.21](https://github.com/itgalaxy/webfont/compare/v11.5.20...v11.5.21) (2026-07-02)
+
+
+### Bug Fixes
+
+* allow CommonJS in fixture config files for Biome ([ef53ada](https://github.com/itgalaxy/webfont/commit/ef53ada7cae595e4feb6be560d7ff7ed0c6b21f1))
+* model filePath as result-only metadata ([f557233](https://github.com/itgalaxy/webfont/commit/f5572338f249b5deb2a7b9e1a794b81eb1000978))
+
+### [11.5.20](https://github.com/itgalaxy/webfont/compare/v11.5.19...v11.5.20) (2026-07-02)
+
+### [11.5.19](https://github.com/itgalaxy/webfont/compare/v11.5.18...v11.5.19) (2026-07-02)
+
+### [11.5.18](https://github.com/itgalaxy/webfont/compare/v11.5.16...v11.5.18) (2026-07-02)
+
+### [11.5.16](https://github.com/itgalaxy/webfont/compare/v11.5.15...v11.5.16) (2026-07-02)
+
+### [11.5.15](https://github.com/itgalaxy/webfont/compare/v11.5.14...v11.5.15) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** pin @types/nunjucks and document [@types](https://github.com/types) pinning ([8f1a39b](https://github.com/itgalaxy/webfont/commit/8f1a39b311ce69ef8f36bb57e00694d2ec9df74c))
+* **deps:** upgrade nunjucks to 3.2.4 ([090f737](https://github.com/itgalaxy/webfont/commit/090f7375b16596e4cb176eda3d62811fb59752e5)), closes [#651](https://github.com/itgalaxy/webfont/issues/651)
+
+### [11.5.14](https://github.com/itgalaxy/webfont/compare/v11.5.13...v11.5.14) (2026-07-02)
+
+### [11.5.13](https://github.com/itgalaxy/webfont/compare/v11.5.12...v11.5.13) (2026-07-02)
+
+### [11.5.12](https://github.com/itgalaxy/webfont/compare/v11.5.11...v11.5.12) (2026-07-02)
+
+### [11.5.11](https://github.com/itgalaxy/webfont/compare/v11.5.10...v11.5.11) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** adapt ttf2eot adapter for v3 Uint8Array API ([fb5316a](https://github.com/itgalaxy/webfont/commit/fb5316aa7dcf3b4549205df7feb2df6099402a5e)), closes [#646](https://github.com/itgalaxy/webfont/issues/646)
+
+### [11.5.10](https://github.com/itgalaxy/webfont/compare/v11.5.9...v11.5.10) (2026-07-02)
+
+### [11.5.9](https://github.com/itgalaxy/webfont/compare/v11.5.8...v11.5.9) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** adapt p-limit v7 ESM for Jest and runtime ([77f669f](https://github.com/itgalaxy/webfont/commit/77f669f24be581f05fa27b308d0a9a045869f9f2)), closes [#640](https://github.com/itgalaxy/webfont/issues/640)
+
+### [11.5.8](https://github.com/itgalaxy/webfont/compare/v11.5.7...v11.5.8) (2026-07-02)
+
+### [11.5.7](https://github.com/itgalaxy/webfont/compare/v11.5.6...v11.5.7) (2026-07-02)
+
+### [11.5.6](https://github.com/itgalaxy/webfont/compare/v11.5.5...v11.5.6) (2026-07-02)
+
+### [11.5.5](https://github.com/itgalaxy/webfont/compare/v11.5.4...v11.5.5) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** bump svgicons2svgfont to 16.0.0 ([c52d79c](https://github.com/itgalaxy/webfont/commit/c52d79ce703eaab07e0ea8997ad55ce098a4429a))
+
+### [11.5.4](https://github.com/itgalaxy/webfont/compare/v11.5.3...v11.5.4) (2026-07-02)
+
+### [11.5.3](https://github.com/itgalaxy/webfont/compare/v11.5.2...v11.5.3) (2026-07-02)
+
+### [11.5.2](https://github.com/itgalaxy/webfont/compare/v11.5.1...v11.5.2) (2026-07-02)
+
+### [11.5.1](https://github.com/itgalaxy/webfont/compare/v11.5.0...v11.5.1) (2026-07-01)
+
+## [11.5.0](https://github.com/itgalaxy/webfont/compare/v11.2.37...v11.5.0) (2026-07-01)
+
+
+### Features
+
+* adding config option to prevent ligature unicode generation ([642deb9](https://github.com/itgalaxy/webfont/commit/642deb9235ca88c164e7faa9424aa8d895ecb862)), closes [#457](https://github.com/itgalaxy/webfont/issues/457)
 
 ## [11.3.0](https://github.com/itgalaxy/webfont/compare/v11.2.37...v11.3.0) (2021-09-07)
 

@@ -1,13 +1,17 @@
-import type {Config} from "@jest/types";
+import type { Config } from "@jest/types";
+
+const esmNodeModules = "p-limit|svgicons2svgfont|svg-pathdata|transformation-matrix|yerror|yocto-queue";
 
 const config: Config.InitialOptions = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageReporters: ["json"],
   displayName: "Webfont",
+  moduleNameMapper: {
+    "^globby$": "<rootDir>/jest/globby-stub.ts",
+  },
   modulePathIgnorePatterns: [
     "<rootDir>/.github",
-    "<rootDir>/.husky",
     "<rootDir>/coverage",
     "<rootDir>/dist",
     "<rootDir>/node_modules",
@@ -19,6 +23,23 @@ const config: Config.InitialOptions = {
    * If test environment is not set to "node", you may receive an error message when testing `wawoff2` module.
    */
   testEnvironment: "node",
+  transform: {
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        jsc: {
+          parser: {
+            syntax: "typescript",
+          },
+          target: "es2020",
+        },
+        module: {
+          type: "commonjs",
+        },
+      },
+    ],
+  },
+  transformIgnorePatterns: [`/node_modules/(?!${esmNodeModules}/)`],
   verbose: true,
 };
 

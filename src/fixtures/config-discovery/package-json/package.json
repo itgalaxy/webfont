@@ -1,0 +1,10 @@
+{
+  "name": "webfont-config-fixture",
+  "private": true,
+  "webfont": {
+    "fontName": "config-package-json",
+    "formats": [
+      "woff2"
+    ]
+  }
+}

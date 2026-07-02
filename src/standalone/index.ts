@@ -1,89 +1,71 @@
-import type {Format, GlyphData, InitialOptions} from "../types";
-import {getBuiltInTemplates, getTemplateFilePath} from "../../templates";
-import {Readable} from "stream";
-import type {Result} from "../types/Result";
-import SVGIcons2SVGFontStream from "svgicons2svgfont";
-import cosmiconfig from "cosmiconfig";
+import { cosmiconfig } from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
-import {getGlyphsData} from "./glyphsData";
-import {getOptions} from "./options";
-import globby from "globby";
+import { globby } from "globby";
 import nunjucks from "nunjucks";
 import path from "path";
+import { Readable } from "stream";
 import svg2ttf from "svg2ttf";
-import ttf2eot from "ttf2eot";
 import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
+import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
+import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2svgfont";
+import convertTtfToEot from "../lib/ttf2eot";
+import type { Format, GlyphData, GlyphMetadata, InitialOptions, WebfontOptions } from "../types";
+import type { Result } from "../types/Result";
+import type { ResultConfig } from "../types/ResultConfig";
+import { getGlyphsData } from "./glyphsData";
+import { getOptions } from "./options";
+import { getTemplateFontBase64 } from "./templateFonts";
 
-const buildConfig = async (options) => {
-  let searchPath = process.cwd();
-  let configPath = null;
+type CosmiconfigLoaded = NonNullable<Awaited<ReturnType<ReturnType<typeof cosmiconfig>["search"]>>>;
+
+const isCosmiconfigLoaded = (value: CosmiconfigLoaded | Record<string, never>): value is CosmiconfigLoaded =>
+  "filepath" in value;
+
+const buildConfig = async (options: {
+  configFile?: string;
+}): Promise<CosmiconfigLoaded | Record<string, never>> => {
+  const configExplorer = cosmiconfig("webfont", {
+    // v9 defaults to `none` (cwd only); keep walking up to home/stopDir like v8.
+    searchStrategy: "global",
+  });
 
   if (options.configFile) {
-    searchPath = null;
-    configPath = path.resolve(process.cwd(), options.configFile);
+    const configPath = path.resolve(process.cwd(), options.configFile);
+    const config = await configExplorer.load(configPath);
+
+    return config ?? {};
   }
 
-  const configExplorer = cosmiconfig("webfont");
+  const config = await configExplorer.search(process.cwd());
 
-  let config = await configExplorer.search(searchPath);
-
-  if (configPath) {
-    config = await configExplorer.load(configPath);
-  }
-
-  if (!config) {
-    return {};
-  }
-
-  return config;
+  return config ?? {};
 };
 
-const toSvg = (glyphsData, options) => {
+type GlyphReadable = Readable & { metadata: GlyphMetadata };
+
+const toSvg = (glyphsData: GlyphData[], options: WebfontOptions) => {
   let result = "";
 
-  return new Promise((resolve, reject) => {
-
-    let log = () => {
-      Function.prototype();
-    };
-
+  return new Promise<string>((resolve, reject) => {
     if (options.verbose) {
-      // eslint-disable-next-line no-console
-      log = console.log.bind(console);
+      console.log("Generating SVG font...");
     }
 
-    const fontStream = new SVGIcons2SVGFontStream({
-      ascent: options.ascent,
-      centerHorizontally: options.centerHorizontally,
-      descent: options.descent,
-      fixedWidth: options.fixedWidth,
-      fontHeight: options.fontHeight,
-      fontId: options.fontId,
-      fontName: options.fontName,
-      fontStyle: options.fontStyle,
-      fontWeight: options.fontWeight,
-      log,
-      metadata: options.metadata,
-      normalize: options.normalize,
-      round: options.round,
-    }).
-      on("finish", () => resolve(result)).
-      on("data", (data) => {
+    const fontStream = new SVGIcons2SVGFontStream(getFontStreamOptions(options))
+      .on("finish", () => resolve(result))
+      .on("data", (data) => {
         result += data;
-      }).
-      on("error", (error) => reject(error));
+      })
+      .on("error", (error) => reject(error));
 
     glyphsData.forEach((glyphData) => {
-      const glyphStream: Readable = new Readable();
+      const glyphStream: GlyphReadable = new Readable() as GlyphReadable;
 
       glyphStream.push(glyphData.contents);
       glyphStream.push(null);
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      glyphStream.metadata = glyphData.metadata;
+      glyphStream.metadata = glyphData.metadata ?? { name: "", unicode: [] };
 
       fontStream.write(glyphStream);
     });
@@ -92,44 +74,54 @@ const toSvg = (glyphsData, options) => {
   });
 };
 
-const toTtf = (buffer, options) => Buffer.from(svg2ttf(buffer, options).buffer);
+const toTtf = (buffer: string, options: Record<string, unknown>) => Buffer.from(svg2ttf(buffer, options).buffer);
 
-const toEot = (buffer) => Buffer.from(ttf2eot(buffer).buffer);
+const toEot = (buffer: Buffer) => convertTtfToEot(buffer);
 
-const toWoff = (buffer, options) => Buffer.from(ttf2woff(buffer, options).buffer);
+const toWoff = (buffer: Buffer, options: { metadata?: string }) => Buffer.from(ttf2woff(buffer, options).buffer);
 
-const toWoff2 = (buffer) => wawoff2.compress(buffer);
+const toWoff2 = (buffer: Buffer) => wawoff2.compress(buffer);
 
-// eslint-disable-next-line no-unused-vars
-type Webfont = (initialOptions?: InitialOptions) => Promise<Result>;
+type Webfont = (_initialOptions?: InitialOptions) => Promise<Result>;
 
-export const webfont : Webfont = async (initialOptions) => {
-
+export const webfont: Webfont = async (initialOptions) => {
   let options = getOptions(initialOptions);
+  delete (options as Partial<ResultConfig>).filePath;
 
   const config = await buildConfig({
     configFile: options.configFile,
   });
 
-  if (Object.keys(config).length > 0) {
+  let discoveredConfigPath: string | undefined;
+
+  if (isCosmiconfigLoaded(config)) {
     options = deepmerge(options, config.config, {
       arrayMerge: (_destinationArray, sourceArray) => sourceArray,
     });
-    options.filePath = config.filepath;
+    discoveredConfigPath = config.filepath;
   }
 
-  const foundFiles = await globby([].concat(options.files));
+  let filePatterns: string[];
+
+  if (Array.isArray(options.files)) {
+    filePatterns = options.files;
+  } else {
+    filePatterns = [options.files];
+  }
+
+  const foundFiles = await globby(filePatterns);
   const filteredFiles = foundFiles.filter((foundFile) => path.extname(foundFile) === ".svg");
 
   if (filteredFiles.length === 0) {
     throw new Error("Files glob patterns specified did not match any files");
   }
 
-  let glyphsData = await getGlyphsData(filteredFiles, options) as GlyphData[];
+  let glyphsData = (await getGlyphsData(filteredFiles, options)) as GlyphData[];
 
-  if (options.glyphTransformFn && typeof options.glyphTransformFn === "function") {
+  if (options.glyphTransformFn) {
+    const glyphTransformFn = options.glyphTransformFn;
     const transformedGlyphs = glyphsData.map(async (glyphData: GlyphData) => {
-      const metadata = await options.glyphTransformFn(glyphData.metadata);
+      const metadata = await glyphTransformFn(glyphData.metadata ?? { name: "", unicode: [] });
 
       return {
         ...glyphData,
@@ -141,39 +133,44 @@ export const webfont : Webfont = async (initialOptions) => {
 
   let ttfOptions = {};
 
-  if (options.formatsOptions && options.formatsOptions.ttf) {
+  if (options.formatsOptions?.ttf) {
     ttfOptions = options.formatsOptions.ttf;
   }
 
-  const svg = await toSvg(glyphsData, options) as Result["svg"];
+  const svg = await toSvg(glyphsData, options);
   const ttf = toTtf(svg, ttfOptions);
 
-  const result : Result = {
+  const result: Result = {
     glyphsData,
-    hash: crypto.createHash("md5").update(svg).
-      digest("hex"),
+    hash: crypto.createHash("md5").update(svg).digest("hex"),
     svg,
     ttf,
   };
 
-  if (options.formats.includes("eot")) {
+  const { formats } = options;
+
+  if (formats.includes("eot")) {
     result.eot = toEot(ttf);
   }
 
-  if (options.formats.includes("woff")) {
-    result.woff = toWoff(ttf, {metadata: options.metadata});
+  if (formats.includes("woff")) {
+    let metadata: string | undefined;
+
+    if (typeof options.metadata === "string") {
+      metadata = options.metadata;
+    }
+
+    result.woff = toWoff(ttf, { metadata });
   }
 
-  if (options.formats.includes("woff2")) {
-    result.woff2 = await toWoff2(ttf);
+  if (formats.includes("woff2")) {
+    result.woff2 = Buffer.from(await toWoff2(ttf));
   }
 
   if (options.template) {
-
     const builtInTemplates = getBuiltInTemplates();
 
-    // eslint-disable-next-line init-declarations
-    let templateFilePath;
+    let templateFilePath: string;
 
     if (Object.keys(builtInTemplates).includes(options.template)) {
       result.usedBuildInTemplate = true;
@@ -181,7 +178,6 @@ export const webfont : Webfont = async (initialOptions) => {
       const builtInPath = path.resolve(__dirname, "../..");
       nunjucks.configure(builtInPath);
       templateFilePath = getTemplateFilePath(options.template);
-
     } else {
       const resolvedTemplateFilePath = path.resolve(options.template);
 
@@ -192,12 +188,12 @@ export const webfont : Webfont = async (initialOptions) => {
     let hashOption = {};
 
     if (options.addHashInFontUrl) {
-      hashOption = {hash: result.hash};
+      hashOption = { hash: result.hash };
     }
 
     const nunjucksOptions = deepmerge.all([
       {
-        glyphs: result.glyphsData.map((glyph: GlyphData) => glyph.metadata),
+        glyphs: result.glyphsData?.map((glyph: GlyphData) => glyph.metadata) ?? [],
       },
       options,
       {
@@ -208,29 +204,28 @@ export const webfont : Webfont = async (initialOptions) => {
       },
       hashOption,
       {
-        fonts: Object.fromEntries(new Map(options.formats.map((format: Format) => [
-          format, () => {
-            if (format === "woff2") {
-              return Buffer.from(result.woff2).toString("base64");
-            }
-            return result[format].toString("base64");
-          },
-        ]))),
+        fonts: Object.fromEntries(
+          new Map(formats.map((format: Format) => [format, () => getTemplateFontBase64(format, result)])),
+        ),
       },
     ]);
 
     result.template = nunjucks.render(templateFilePath, nunjucksOptions);
   }
 
-  if (!options.formats.includes("svg")) {
+  if (!formats.includes("svg")) {
     delete result.svg;
   }
 
-  if (!options.formats.includes("ttf")) {
+  if (!formats.includes("ttf")) {
     delete result.ttf;
   }
 
-  result.config = options;
+  if (discoveredConfigPath) {
+    result.config = { ...options, filePath: discoveredConfigPath };
+  } else {
+    result.config = options;
+  }
 
   return result;
 };

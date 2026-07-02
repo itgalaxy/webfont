@@ -409,6 +409,55 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
+  it("should generate built-in html template", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "html",
+      templateCacheString: "test",
+    });
+
+    expect(result.usedBuildInTemplate).toBe(true);
+    expect(result.template).toContain("<!doctype html>");
+    expect(result.template).toMatchSnapshot();
+  });
+
+  it("should generate built-in json template", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "json",
+      templateCacheString: "test",
+    });
+
+    expect(result.usedBuildInTemplate).toBe(true);
+    expect(JSON.parse(result.template)).toMatchSnapshot();
+    expect(result.template).toMatchSnapshot();
+  });
+
+  it("should generate built-in styl template", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "styl",
+      templateCacheString: "test",
+    });
+
+    expect(result.usedBuildInTemplate).toBe(true);
+    expect(result.template).toMatchSnapshot();
+  });
+
+  it("should include font hash in template URLs when addHashInFontUrl is enabled", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "css",
+      templateCacheString: "test",
+      addHashInFontUrl: true,
+      formats: ["woff2"],
+    });
+
+    expect(result.hash).toBeTruthy();
+    expect(result.template).toContain(`&v=${result.hash}`);
+    expect(result.template).toMatchSnapshot();
+  });
+
   it("should export `glyphsData` in `result`", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

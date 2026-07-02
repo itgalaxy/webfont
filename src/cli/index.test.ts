@@ -141,6 +141,44 @@ describe("cli", () => {
     expect(data).toMatchSnapshot();
   });
 
+  it("should generate built-in html template", async () => {
+    const output = await execCLI(`${source} -d ${destination} --template html --templateCacheString test`);
+
+    expect(output.files).toEqual([
+      "webfont.eot",
+      "webfont.html",
+      "webfont.svg",
+      "webfont.ttf",
+      "webfont.woff",
+      "webfont.woff2",
+    ]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    const data = await fsPromise.readFile(`${destination}/webfont.html`, { encoding: "utf-8" });
+    expect(data).toContain("<!doctype html>");
+    expect(data).toMatchSnapshot();
+  });
+
+  it("should include font hash in template when addHashInFontUrl is enabled", async () => {
+    const output = await execCLI(
+      `${source} -d ${destination} --template css --templateCacheString test --addHashInFontUrl`,
+    );
+
+    expect(output.files).toEqual([
+      "webfont.css",
+      "webfont.eot",
+      "webfont.svg",
+      "webfont.ttf",
+      "webfont.woff",
+      "webfont.woff2",
+    ]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
+    expect(css).toMatch(/&v=[a-f0-9]{32}/u);
+    expect(css).toMatchSnapshot();
+  });
+
   it("can set font name", async () => {
     const output = await execCLI(`${source} -d ${destination} --fontName foobar`);
 

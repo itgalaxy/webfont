@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.5.15](https://github.com/itgalaxy/webfont/compare/v11.5.14...v11.5.15) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** pin @types/nunjucks and document [@types](https://github.com/types) pinning ([8f1a39b](https://github.com/itgalaxy/webfont/commit/8f1a39b311ce69ef8f36bb57e00694d2ec9df74c))
+* **deps:** upgrade nunjucks to 3.2.4 ([090f737](https://github.com/itgalaxy/webfont/commit/090f7375b16596e4cb176eda3d62811fb59752e5)), closes [#651](https://github.com/itgalaxy/webfont/issues/651)
+
 ### [11.5.14](https://github.com/itgalaxy/webfont/compare/v11.5.13...v11.5.14) (2026-07-02)
 
 ### [11.5.13](https://github.com/itgalaxy/webfont/compare/v11.5.12...v11.5.13) (2026-07-02)

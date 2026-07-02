@@ -166,17 +166,17 @@ export const webfontMeowFlags = {
     type: "string",
   },
   dest: {
-    alias: "d",
+    shortFlag: "d",
     default: process.cwd(),
     type: "string",
   },
   destCreate: {
-    alias: "m",
+    shortFlag: "m",
     default: false,
     type: "boolean",
   },
   destTemplate: {
-    alias: "s",
+    shortFlag: "s",
     type: "string",
   },
   fixedWidth: {
@@ -189,7 +189,7 @@ export const webfontMeowFlags = {
     type: "string",
   },
   fontName: {
-    alias: "u",
+    shortFlag: "u",
     type: "string",
   },
   fontStyle: {
@@ -199,11 +199,11 @@ export const webfontMeowFlags = {
     type: "string",
   },
   formats: {
-    alias: "f",
+    shortFlag: "f",
     type: "string",
   },
   help: {
-    alias: "h",
+    shortFlag: "h",
     type: "boolean",
   },
   ligatures: {
@@ -230,15 +230,15 @@ export const webfontMeowFlags = {
     type: "string",
   },
   template: {
-    alias: "t",
+    shortFlag: "t",
     type: "string",
   },
   templateClassName: {
-    alias: "c",
+    shortFlag: "c",
     type: "string",
   },
   templateFontName: {
-    alias: "n",
+    shortFlag: "n",
     type: "string",
   },
   addHashInFontUrl: {
@@ -246,7 +246,7 @@ export const webfontMeowFlags = {
     type: "boolean",
   },
   templateFontPath: {
-    alias: "p",
+    shortFlag: "p",
     type: "string",
   },
   templateCacheString: {
@@ -258,7 +258,7 @@ export const webfontMeowFlags = {
     type: "boolean",
   },
   version: {
-    alias: "v",
+    shortFlag: "v",
     type: "boolean",
   },
 } as const;

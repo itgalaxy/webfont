@@ -337,7 +337,7 @@ Add the `cli` script to your `package.json` file's `scripts` object:
 ```json
 {
   "scripts": {
-    "webfont": "node node_modules/webfont/dist/cli.js"
+    "webfont": "node node_modules/webfont/dist/cli.mjs"
   }
 }
 ```
@@ -347,7 +347,7 @@ If you're using cross-env:
 ```json
 {
   "scripts": {
-    "webfont": "cross-env node_modules/webfont/dist/cli.js"
+    "webfont": "cross-env node_modules/webfont/dist/cli.mjs"
   }
 }
 ```

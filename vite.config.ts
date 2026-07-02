@@ -32,11 +32,17 @@ export default defineConfig(({ mode }) => {
   let entry = libraryEntry;
   let outputFileName = "index.js";
   let banner: string | undefined;
+  let outputFormat: "cjs" | "es" = "cjs";
 
   if (isCliBuild) {
     entry = cliEntry;
-    outputFileName = "cli.js";
-    banner = "#!/usr/bin/env node\n";
+    outputFileName = "cli.mjs";
+    banner = `#!/usr/bin/env node
+import { fileURLToPath as __webfontFileURLToPath } from "node:url";
+const __filename = __webfontFileURLToPath(import.meta.url);
+const __dirname = __webfontFileURLToPath(new URL(".", import.meta.url));
+`;
+    outputFormat = "es";
   }
 
   let plugins: PluginOption[] = libraryPlugins;
@@ -51,7 +57,7 @@ export default defineConfig(({ mode }) => {
       lib: {
         entry,
         fileName: () => outputFileName,
-        formats: ["cjs"],
+        formats: [outputFormat],
       },
       outDir: "dist",
       rolldownOptions: {

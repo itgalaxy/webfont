@@ -45,7 +45,7 @@ And, if you’re raising an issue, please understand that people involved with t
 
 ### User-facing changes and documentation
 
-Before opening or updating a pull request, check whether your change affects **how people use webfont** — via the CLI (`webfont` / `dist/cli.js`), the programmatic API (`webfont({ ... })`), or config files (`.webfontrc`, `package.json` `webfont` key, etc.).
+Before opening or updating a pull request, check whether your change affects **how people use webfont** — via the CLI (`webfont` / `dist/cli.mjs`), the programmatic API (`webfont({ ... })`), or config files (`.webfontrc`, `package.json` `webfont` key, etc.).
 
 When it does, update documentation in the same PR:
 

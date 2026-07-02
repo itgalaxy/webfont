@@ -51,11 +51,11 @@ const wrapCli = (argv: readonly string[]): CliLike => {
 const expectedHelpStdout = (): string => createMeowCli([]).help.replace(/\n$/u, "");
 
 describe("cli/meow", () => {
-  it("should load the meow package as a callable function", () => {
-    // Guards CJS interop regressions in the Jest + Vite toolchain.
-    const meow = jest.requireActual<typeof import("meow")>("meow");
+  it("should load the meow package as a callable default export", async () => {
+    // meow 14+ is ESM-only; Jest resolves the default export object.
+    const meow = await import("meow");
 
-    expect(typeof meow).toBe("function");
+    expect(typeof meow.default).toBe("function");
   });
 
   it("should expose the same flag keys that program.ts reads from CliLike", () => {
@@ -184,15 +184,15 @@ describe("cli/meow", () => {
 
       expect(cli.flags.fontId).toBe("id");
       expect(cli.flags.fontStyle).toBe("italic");
-      expect(cli.flags.fontWeight).toBe(700);
+      expect(cli.flags.fontWeight).toBe("700");
       expect(cli.flags.fixedWidth).toBe(true);
       expect(cli.flags.centerHorizontally).toBe(true);
       expect(cli.flags.normalize).toBe(true);
-      expect(cli.flags.fontHeight).toBe(100);
+      expect(cli.flags.fontHeight).toBe("100");
       expect(cli.flags.round).toBe("1");
       expect(cli.flags.descent).toBe("5");
       expect(cli.flags.ascent).toBe("10");
-      expect(cli.flags.startUnicode).toBe(59905);
+      expect(cli.flags.startUnicode).toBe("0xea01");
       expect(cli.flags.prependUnicode).toBe(true);
       expect(cli.flags.metadata).toBe("meta");
       expect(cli.flags.addHashInFontUrl).toBe(true);
@@ -272,15 +272,15 @@ describe("cli/meow", () => {
       expect(options.verbose).toBe(true);
       expect(options.fontId).toBe("id");
       expect(options.fontStyle).toBe("italic");
-      expect(options.fontWeight).toBe(700);
+      expect(options.fontWeight).toBe("700");
       expect(options.fixedWidth).toBe(true);
       expect(options.centerHorizontally).toBe(true);
       expect(options.normalize).toBe(true);
-      expect(options.fontHeight).toBe(100);
+      expect(options.fontHeight).toBe("100");
       expect(options.round).toBe("1");
       expect(options.descent).toBe("5");
       expect(options.ascent).toBe("10");
-      expect(options.startUnicode).toBe(59905);
+      expect(options.startUnicode).toBe("0xea01");
       expect(options.prependUnicode).toBe(true);
       expect(options.metadata).toBe("meta");
       expect(options.sort).toBe(false);

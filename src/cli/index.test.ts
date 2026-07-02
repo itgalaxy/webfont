@@ -423,6 +423,8 @@ describe("cli", () => {
     output.files = files.filter((file) => file !== "that");
 
     expect(output.files).toEqual(files);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
   });
 
   it("should not create dest directory if it does not exist", async () => {
@@ -435,6 +437,7 @@ describe("cli", () => {
     expect(output.stdout).toContain(nonExistentDestination);
     expect(output.stdout).toContain("does not exist");
     expect(output.stdout).toContain("--dest-create");
+    expect(output.stderr).toBe("");
 
     let destinationWasCreated = true;
     try {
@@ -456,6 +459,7 @@ describe("cli", () => {
     expect(output.stdout).toContain(nonExistentDestination);
     expect(output.stdout).toContain("does not exist");
     expect(output.stdout).toContain("--dest-create");
+    expect(output.stderr).toBe("");
 
     let destinationWasCreated = true;
     try {

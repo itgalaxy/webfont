@@ -43,9 +43,6 @@ jspm_packages
 .idea
 *.iml
 
-#VSCode metadata
-.vscode
-
 # Mac files
 .DS_Store
 

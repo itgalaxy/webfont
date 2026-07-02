@@ -138,20 +138,7 @@ If the path contains `cursor-sandbox-cache` (or similar), the IDE injected it �
    unset npm_config_devdir
    ```
 
-3. **Cursor / VS Code integrated terminal** — add to your **local** `.vscode/settings.json` (this folder is gitignored in webfont):
-
-   ```json
-   {
-     "terminal.integrated.env.osx": {
-       "npm_config_devdir": ""
-     },
-     "terminal.integrated.env.linux": {
-       "npm_config_devdir": ""
-     }
-   }
-   ```
-
-   Open a **new** terminal or reload the window (*Developer: Reload Window*) so the setting applies. Existing terminals keep the old environment.
+3. **Cursor / VS Code integrated terminal** — this repo ships `.vscode/settings.json` with `npm_config_devdir` cleared. Open a **new** terminal or reload the window (*Developer: Reload Window*) so the setting applies. Existing terminals keep the old environment.
 
 4. **CI and plain shells** outside Cursor are unaffected; no change is required there.
 

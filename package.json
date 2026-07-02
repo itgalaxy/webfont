@@ -37,7 +37,7 @@
     "testu": "npm test -- -u"
   },
   "dependencies": {
-    "cosmiconfig": "^5.2.0",
+    "cosmiconfig": "7.1.0",
     "deepmerge": "^4.2.2",
     "globby": "^11.0.0",
     "meow": "^9.0.0",

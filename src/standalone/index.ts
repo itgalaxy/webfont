@@ -1,4 +1,4 @@
-import cosmiconfig from "cosmiconfig";
+import { cosmiconfig } from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
 import globby from "globby";
@@ -18,28 +18,26 @@ import type { ResultConfig } from "../types/ResultConfig";
 import { getGlyphsData } from "./glyphsData";
 import { getOptions } from "./options";
 
-const buildConfig = async (options) => {
-  let searchPath = process.cwd();
-  let configPath = null;
+type CosmiconfigLoaded = NonNullable<Awaited<ReturnType<ReturnType<typeof cosmiconfig>["search"]>>>;
 
-  if (options.configFile) {
-    searchPath = null;
-    configPath = path.resolve(process.cwd(), options.configFile);
-  }
+const isCosmiconfigLoaded = (value: CosmiconfigLoaded | Record<string, never>): value is CosmiconfigLoaded =>
+  "filepath" in value;
 
+const buildConfig = async (options: {
+  configFile?: string;
+}): Promise<CosmiconfigLoaded | Record<string, never>> => {
   const configExplorer = cosmiconfig("webfont");
 
-  let config = await configExplorer.search(searchPath);
+  if (options.configFile) {
+    const configPath = path.resolve(process.cwd(), options.configFile);
+    const config = await configExplorer.load(configPath);
 
-  if (configPath) {
-    config = await configExplorer.load(configPath);
+    return config ?? {};
   }
 
-  if (!config) {
-    return {};
-  }
+  const config = await configExplorer.search(process.cwd());
 
-  return config;
+  return config ?? {};
 };
 
 const toSvg = (glyphsData, options) => {
@@ -96,7 +94,7 @@ export const webfont: Webfont = async (initialOptions) => {
 
   let discoveredConfigPath: string | undefined;
 
-  if (Object.keys(config).length > 0) {
+  if (isCosmiconfigLoaded(config)) {
     options = deepmerge(options, config.config, {
       arrayMerge: (_destinationArray, sourceArray) => sourceArray,
     });

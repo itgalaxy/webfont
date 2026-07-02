@@ -1,6 +1,7 @@
 import type { Config } from "@jest/types";
 
-const esmNodeModules = "p-limit|svgicons2svgfont|svg-pathdata|transformation-matrix|yerror|yocto-queue";
+const esmNodeModules =
+  "p-limit|svgicons2svgfont|svg-pathdata|transformation-matrix|yerror|yocto-queue|is-svg|@file-type/xml|strtok3|peek-readable|@tokenizer/token";
 
 const config: Config.InitialOptions = {
   collectCoverage: true,
@@ -9,6 +10,7 @@ const config: Config.InitialOptions = {
   displayName: "Webfont",
   moduleNameMapper: {
     "^globby$": "<rootDir>/jest/globby-stub.ts",
+    "^@file-type/xml$": "<rootDir>/node_modules/@file-type/xml/lib/index.js",
   },
   modulePathIgnorePatterns: [
     "<rootDir>/.github",

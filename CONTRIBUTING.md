@@ -150,6 +150,8 @@ Pull requests that change CI configuration (for example, GitHub Actions workflow
 
 Do not use `chore:` or `chore(ci):` for CI-only changes.
 
+**AppVeyor:** a legacy project may still receive GitHub webhooks. Root `appveyor.yml` disables builds via a non-matching branch filter (`appveyor-disabled`) because maintainers may lack AppVeyor dashboard access. Do not delete it until the AppVeyor project is removed upstream.
+
 ### Releases
 
 Versioning is automated with [Release Please](https://github.com/googleapis/release-please) (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).

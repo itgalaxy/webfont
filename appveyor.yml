@@ -1,0 +1,9 @@
+# Legacy AppVeyor project is still linked to this repository (no dashboard access).
+# Branch filter: no real branch matches, so push/PR webhooks do not start builds.
+# build/test off: if a build is forced from the UI, skip MSBuild auto-discovery.
+branches:
+  only:
+    - appveyor-disabled
+
+build: off
+test: off

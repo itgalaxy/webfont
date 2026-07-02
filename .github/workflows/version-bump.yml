@@ -14,13 +14,13 @@ jobs:
       - name: Set commit author name
         run: git config --global user.name "itgalaxy"
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: "0"
       - name: Pull all tags from Lerna semantic release
         run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22.x
           cache: npm

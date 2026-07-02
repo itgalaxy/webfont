@@ -6,10 +6,11 @@ import { webfont } from "../standalone";
 import type { DecompressedFont } from "../types/DecompressedFont";
 import type { InitialOptions } from "../types/InitialOptions";
 import type { OptionsBase } from "../types/OptionsBase";
+import type { RenderedTemplate } from "../types/RenderedTemplate";
 import type { Result } from "../types/Result";
-import type { ResultConfig } from "../types/ResultConfig";
 import type { TranscodedFont } from "../types/TranscodedFont";
 import { parseFormatsFlag } from "./parseFormatsFlag";
+import { parseTemplateFlag } from "./parseTemplateFlag";
 import { resolveCliFiles } from "./resolveCliFiles";
 
 export type CliLike = {
@@ -79,7 +80,7 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
   }
 
   if (cli.flags.template) {
-    optionsBase.template = cli.flags.template;
+    optionsBase.template = parseTemplateFlag(cli.flags.template);
   }
 
   if (cli.flags.templateClassName) {
@@ -196,29 +197,69 @@ export const mergeCliDestIntoConfig = (
   return result;
 };
 
+export const resolveTemplateOutputPath = (
+  template: string,
+  config: ResultConfig,
+  usedBuiltIn: boolean,
+): string => {
+  const dest = config.dest ?? process.cwd();
+  let destTemplate = dest;
+
+  if (typeof config.destTemplate === "string") {
+    destTemplate = config.destTemplate;
+  }
+
+  if (usedBuiltIn) {
+    return path.join(destTemplate, `${config.fontName}.${template}`);
+  }
+
+  return path.join(destTemplate, path.basename(template).replace(".njk", ""));
+};
+
+const getPrimaryTemplateOption = (template: ResultConfig["template"]): string | undefined => {
+  if (Array.isArray(template)) {
+    return template[0];
+  }
+
+  return template;
+};
+
 export const resolveDestTemplate = (result: Result, config: ResultConfig): string | undefined => {
   if (!result.template) {
     return undefined;
   }
 
+  const primaryTemplate = getPrimaryTemplateOption(config.template);
+
+  if (result.usedBuildInTemplate && primaryTemplate) {
+    return resolveTemplateOutputPath(primaryTemplate, config, true);
+  }
+
+  if (primaryTemplate) {
+    return resolveTemplateOutputPath(primaryTemplate, config, false);
+  }
+
   const dest = config.dest ?? process.cwd();
-  let destTemplate: string;
 
   if (typeof config.destTemplate === "string") {
-    destTemplate = config.destTemplate;
-  } else {
-    destTemplate = dest;
+    return config.destTemplate;
   }
 
-  if (result.usedBuildInTemplate && typeof config.template === "string") {
-    return path.join(destTemplate, `${config.fontName}.${config.template}`);
-  }
+  return dest;
+};
 
-  if (typeof config.template === "string") {
-    return path.join(destTemplate, path.basename(config.template).replace(".njk", ""));
-  }
+export const writeRenderedTemplates = async (
+  templates: readonly RenderedTemplate[],
+  config: ResultConfig,
+): Promise<void> => {
+  await Promise.all(
+    templates.map(async (entry) => {
+      const file = path.resolve(resolveTemplateOutputPath(entry.template, config, Boolean(entry.builtIn)));
 
-  return destTemplate;
+      await fs.promises.mkdir(path.dirname(file), { recursive: true });
+      await fs.promises.writeFile(file, entry.content);
+    }),
+  );
 };
 
 export const getResultOutputPath = (
@@ -343,6 +384,10 @@ export const writeResultFiles = async (result: Result): Promise<Result> => {
 
   await ensureDestExists(dest, config.destCreate);
 
+  if (result.templates && result.templates.length > 0) {
+    await writeRenderedTemplates(result.templates, config);
+  }
+
   if (result.transcodedFonts && result.transcodedFonts.length > 1) {
     await writeTranscodedFontFiles(result.transcodedFonts, config, dest);
     return result;
@@ -355,7 +400,13 @@ export const writeResultFiles = async (result: Result): Promise<Result> => {
 
   await Promise.all(
     resultFileKeys
-      .filter((type) => result[type] !== undefined)
+      .filter((type) => {
+        if (type === "template" && result.templates && result.templates.length > 0) {
+          return false;
+        }
+
+        return result[type] !== undefined;
+      })
       .map(async (type) => {
         const content = result[type];
 

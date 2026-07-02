@@ -72,4 +72,13 @@ describe("validateWebfontOptions", () => {
       }),
     ).toThrow("fontName must be a string");
   });
+
+  it("should accept template as an array (#158)", () => {
+    expect(
+      validateWebfontOptions({
+        ...baseOptions(),
+        template: ["html", "scss"],
+      }).template,
+    ).toEqual(["html", "scss"]);
+  });
 });

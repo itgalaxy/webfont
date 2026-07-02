@@ -174,6 +174,24 @@ describe("cli program", () => {
       expect(destTemplate).toBe(path.join("temp/out", "webfont.css"));
     });
 
+    it("should resolve the first template when template is an array (#158)", () => {
+      const config = {
+        dest: "temp/out",
+        fontName: "webfont",
+        template: ["html", "scss"],
+      };
+
+      const destTemplate = resolveDestTemplate(
+        {
+          template: "html-content",
+          usedBuildInTemplate: true,
+        },
+        config as never,
+      );
+
+      expect(destTemplate).toBe(path.join("temp/out", "webfont.html"));
+    });
+
     it("should resolve destTemplate when provided explicitly", () => {
       const config = {
         dest: "temp/out",
@@ -384,6 +402,32 @@ describe("cli program", () => {
 
       await fsPromise.access(path.join(destination, "webfont.css"));
       expect(await fsPromise.readFile(path.join(destination, "webfont.css"), "utf8")).toBe("body { color: red; }");
+    });
+
+    it("should write multiple template files (#158)", async () => {
+      const result: Result = {
+        config: {
+          dest: destination,
+          files: "icons/*.svg",
+          fontName: "webfont",
+          formats: ["svg"],
+          formatsOptions: {},
+          maxConcurrency: 1,
+          template: ["html", "scss"],
+        },
+        svg: Buffer.from("svg"),
+        template: "<html></html>",
+        templates: [
+          { template: "html", content: "<html></html>", builtIn: "html" },
+          { template: "scss", content: "$x: 1;", builtIn: "scss" },
+        ],
+        usedBuildInTemplate: true,
+      };
+
+      await writeResultFiles(result);
+
+      expect(await fsPromise.readFile(path.join(destination, "webfont.html"), "utf8")).toBe("<html></html>");
+      expect(await fsPromise.readFile(path.join(destination, "webfont.scss"), "utf8")).toBe("$x: 1;");
     });
 
     it("should create destination when destCreate is enabled", async () => {

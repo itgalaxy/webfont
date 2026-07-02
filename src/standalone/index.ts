@@ -1,14 +1,12 @@
 import { cosmiconfig } from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
-import nunjucks from "nunjucks";
 import path from "path";
 import { Readable } from "stream";
-import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
 import { resolveInputSources } from "../lib/inputSource";
 import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2svgfont";
 import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
-import type { Format, GlyphData, GlyphMetadata, InitialOptions, WebfontOptions } from "../types";
+import type { GlyphData, GlyphMetadata, InitialOptions, WebfontOptions } from "../types";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
 import { convertTtfInput } from "./convertTtfInput";
@@ -16,7 +14,7 @@ import { convertWebfontInput } from "./convertWebfontInput";
 import { getGlyphsData } from "./glyphsData";
 import { assertSvgPipelineFormats, classifyInputFiles, filterInputFilesByMode } from "./inputMode";
 import { getOptions } from "./options";
-import { getTemplateFontBase64 } from "./templateFonts";
+import { renderTemplates } from "./renderTemplates";
 import toTtf from "./toTtf";
 import { validateWebfontOptions } from "./validateWebfontOptions";
 
@@ -215,49 +213,13 @@ export const webfont: Webfont = async (initialOptions) => {
   }
 
   if (options.template) {
-    const builtInTemplates = getBuiltInTemplates();
+    const { templates, usedBuildInTemplate } = renderTemplates(options, result, formats);
 
-    let templateFilePath: string;
-
-    if (Object.keys(builtInTemplates).includes(options.template)) {
-      result.usedBuildInTemplate = true;
-
-      const builtInPath = path.resolve(__dirname, "../..");
-      nunjucks.configure(builtInPath);
-      templateFilePath = getTemplateFilePath(options.template);
-    } else {
-      const resolvedTemplateFilePath = path.resolve(options.template);
-
-      nunjucks.configure(path.dirname(resolvedTemplateFilePath));
-      templateFilePath = path.resolve(resolvedTemplateFilePath);
+    if (templates.length > 0) {
+      result.templates = templates;
+      result.template = templates[0]?.content;
+      result.usedBuildInTemplate = usedBuildInTemplate;
     }
-
-    let hashOption = {};
-
-    if (options.addHashInFontUrl) {
-      hashOption = { hash: result.hash };
-    }
-
-    const nunjucksOptions = deepmerge.all([
-      {
-        glyphs: result.glyphsData?.map((glyph: GlyphData) => glyph.metadata) ?? [],
-      },
-      options,
-      {
-        cacheString: options.templateCacheString || Date.now(),
-        className: options.templateClassName || options.fontName,
-        fontName: options.templateFontName || options.fontName,
-        fontPath: options.templateFontPath.replace(/\/?$/u, "/"),
-      },
-      hashOption,
-      {
-        fonts: Object.fromEntries(
-          new Map(formats.map((format: Format) => [format, () => getTemplateFontBase64(format, result)])),
-        ),
-      },
-    ]);
-
-    result.template = nunjucks.render(templateFilePath, nunjucksOptions);
   }
 
   if (!formats.includes("svg")) {

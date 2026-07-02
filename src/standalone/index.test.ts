@@ -421,6 +421,22 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
+  it("should generate multiple built-in templates (#158)", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      formats: ["woff2"],
+      template: ["html", "scss"],
+      templateCacheString: "test",
+    });
+
+    expect(result.templates).toHaveLength(2);
+    expect(result.templates?.[0]?.builtIn).toBe("html");
+    expect(result.templates?.[1]?.builtIn).toBe("scss");
+    expect(result.template).toBe(result.templates?.[0]?.content);
+    expect(result.templates?.[0]?.content).toContain("<!doctype html>");
+    expect(result.templates?.[1]?.content).toContain("$webfont-");
+  });
+
   it("should generate built-in html template", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

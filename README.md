@@ -212,9 +212,11 @@ const remote = await webfont({
 
 #### `template`
 
-- Type: `string`
+- Type: `string` or `string[]`
 - Default: `null`
-- Possible values: `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) (feel free to contribute more).
+- Possible values: `css`, `scss`, `styl`, `html`, `json` (feel free to contribute more), or a path to a custom `.njk` template.
+- Pass an **array** to generate multiple outputs in one run (for example `['html', 'scss']` for preview + styles, #158).
+- CLI: pass `-t` / `--template` as a single name, a JSON array (`'["html","scss"]'`), or a comma-separated list (`html,scss`).
 - Note: If you want to use a custom template use this option pass in a path `string` like this:
 
   ```js

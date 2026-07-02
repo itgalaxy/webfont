@@ -65,7 +65,8 @@ export const webfontCliHelpText = `
 
         -t, --template
 
-            Type of template ('css', 'scss', 'styl') or path to custom template.
+            Built-in template name(s) ('css', 'scss', 'styl', 'html', 'json') or path to a custom template.
+            Pass a JSON array (e.g. '["html","scss"]') or comma-separated list for multiple outputs.
 
         -s, --destTemplate
 

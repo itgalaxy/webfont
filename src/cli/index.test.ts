@@ -290,6 +290,21 @@ describe("cli", () => {
     expect(data).toMatchSnapshot();
   });
 
+  it("should generate multiple built-in templates (#158)", async () => {
+    const output = await execCLI(`${source} -d ${destination} -t '["html","scss"]' --templateCacheString test`);
+
+    expect(output.files).toEqual(
+      expect.arrayContaining(["webfont.html", "webfont.scss", "webfont.woff2", "webfont.woff", "webfont.ttf"]),
+    );
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+
+    const html = await fsPromise.readFile(`${destination}/webfont.html`, { encoding: "utf-8" });
+    const scss = await fsPromise.readFile(`${destination}/webfont.scss`, { encoding: "utf-8" });
+    expect(html).toContain("<!doctype html>");
+    expect(scss).toContain("$webfont-");
+  });
+
   it("should respect `template` options", async () => {
     const output = await execCLI(
       `${source} -d ${destination} --template css --templateClassName foo --templateCacheString test --templateFontPath test/path --templateFontName testname`,

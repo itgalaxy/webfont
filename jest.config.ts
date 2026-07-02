@@ -7,6 +7,9 @@ const config: Config.InitialOptions = {
   coverageDirectory: "coverage",
   coverageReporters: ["json"],
   displayName: "Webfont",
+  moduleNameMapper: {
+    "^globby$": "<rootDir>/jest/globby-stub.ts",
+  },
   modulePathIgnorePatterns: [
     "<rootDir>/.github",
     "<rootDir>/coverage",

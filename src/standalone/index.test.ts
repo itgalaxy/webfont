@@ -171,6 +171,7 @@ describe("standalone", () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     expect(result.config.foo).toBe("bar");
+    expect(result.config.filePath).toBe(path.resolve(configFile));
   });
 
   it("should load config and respect `template` option with build-in template value", async () => {

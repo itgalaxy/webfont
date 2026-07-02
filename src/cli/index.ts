@@ -19,7 +19,7 @@ if (typeof cli.flags.config === "string") {
    * in `process.cwd()`.
    */
   optionsBase.configFile =
-    resolveFrom(process.cwd(), cli.flags.config) || path.join(process.cwd(), cli.flags.config);
+    resolveFrom.silent(process.cwd(), cli.flags.config) || path.join(process.cwd(), cli.flags.config);
 }
 
 if (cli.flags.fontName) {

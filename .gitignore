@@ -69,4 +69,5 @@ lefthook-local.yml
 
 # Don't commit JavaScript generated files
 src/**/*.js
+!src/fixtures/**/*.js
 src/**/*.d.ts

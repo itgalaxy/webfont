@@ -237,16 +237,19 @@ export const getResultOutputPath = (
   return path.resolve(path.join(dest, `${fontName}.${type}`));
 };
 
+export const createMissingDestError = (dest: string): Error =>
+  new Error(`Destination directory "${dest}" does not exist. Use --dest-create (-m) to create it.`);
+
 export const ensureDestExists = async (dest: string, destCreate?: boolean): Promise<void> => {
   try {
     await fs.promises.access(dest, fs.constants.F_OK);
-  } catch (error) {
+  } catch {
     if (destCreate) {
       await fs.promises.mkdir(dest, { recursive: true });
       return;
     }
 
-    throw error;
+    throw createMissingDestError(dest);
   }
 };
 

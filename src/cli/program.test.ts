@@ -234,7 +234,9 @@ describe("cli program", () => {
     it("should reject when destination is missing and destCreate is disabled", async () => {
       const { ensureDestExists } = await import("./program");
 
-      await expect(ensureDestExists(destination, false)).rejects.toMatchObject({ code: "ENOENT" });
+      await expect(ensureDestExists(destination, false)).rejects.toThrow(
+        `Destination directory "${destination}" does not exist. Use --dest-create (-m) to create it.`,
+      );
     });
   });
 
@@ -310,6 +312,47 @@ describe("cli program", () => {
 
       await fsPromise.access(nestedDestination);
       await fsPromise.access(path.join(nestedDestination, "webfont.svg"));
+    });
+
+    it("should reject with a clear error when destination is missing and destCreate is disabled", async () => {
+      const missingDestination = path.join(destination, "missing", "fonts");
+      const result: Result = {
+        config: {
+          dest: missingDestination,
+          files: "icons/*.svg",
+          fontName: "webfont",
+          formats: ["svg"],
+          formatsOptions: {},
+          maxConcurrency: 1,
+        },
+        svg: Buffer.from("svg"),
+      };
+
+      await expect(writeResultFiles(result)).rejects.toThrow(
+        `Destination directory "${missingDestination}" does not exist. Use --dest-create (-m) to create it.`,
+      );
+      await expect(fsPromise.access(missingDestination)).rejects.toMatchObject({ code: "ENOENT" });
+    });
+
+    it("should not write files when destination is missing", async () => {
+      const missingDestination = path.join(destination, "missing-no-write");
+      const writeSpy = jest.spyOn(fs.promises, "writeFile");
+      const result: Result = {
+        config: {
+          dest: missingDestination,
+          files: "icons/*.svg",
+          fontName: "webfont",
+          formats: ["svg"],
+          formatsOptions: {},
+          maxConcurrency: 1,
+        },
+        svg: Buffer.from("svg"),
+        woff2: Buffer.from("woff2"),
+      };
+
+      await expect(writeResultFiles(result)).rejects.toThrow(/Destination directory/u);
+      expect(writeSpy).not.toHaveBeenCalled();
+      writeSpy.mockRestore();
     });
 
     it("should propagate write errors", async () => {
@@ -413,6 +456,34 @@ describe("cli program", () => {
       expect(result.config?.dest).toBe(destination);
       expect(await fsPromise.readFile(path.join(destination, "webfont.svg"))).toBeTruthy();
     });
+
+    it("should fail with a clear error when destination is missing", async () => {
+      const missingDestination = "temp/cli-program-missing-dest";
+
+      mockedWebfont.mockResolvedValue({
+        config: {
+          dest: missingDestination,
+          files: "icons/*.svg",
+          fontName: "webfont",
+          formats: ["svg"],
+          formatsOptions: {},
+          maxConcurrency: 1,
+        },
+        svg: Buffer.from("svg"),
+      });
+
+      await expect(
+        runCli(
+          createCli({
+            flags: {
+              dest: missingDestination,
+            },
+          }),
+        ),
+      ).rejects.toThrow(
+        `Destination directory "${missingDestination}" does not exist. Use --dest-create (-m) to create it.`,
+      );
+    });
   });
 
   describe("startCli", () => {
@@ -426,12 +497,68 @@ describe("cli program", () => {
 
       startCli(cli);
 
-      await new Promise((resolve) => {
-        setImmediate(resolve);
+      await new Promise<void>((resolve) => {
+        const waitForExit = (): void => {
+          if (exitSpy.mock.calls.length > 0) {
+            resolve();
+            return;
+          }
+
+          setImmediate(waitForExit);
+        };
+
+        waitForExit();
       });
 
       expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("Missing config in webfont result"));
       expect(exitSpy).toHaveBeenCalledWith(7);
+
+      exitSpy.mockRestore();
+      logSpy.mockRestore();
+    });
+
+    it("should exit with code 1 and log a clear error when destination is missing", async () => {
+      const exitSpy = jest.spyOn(process, "exit").mockImplementation((() => undefined) as typeof process.exit);
+      const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+      const missingDestination = "temp/cli-program-missing-start";
+      const cli = createCli({
+        flags: {
+          dest: missingDestination,
+        },
+      });
+
+      mockedWebfont.mockResolvedValue({
+        config: {
+          dest: missingDestination,
+          files: "icons/*.svg",
+          fontName: "webfont",
+          formats: ["svg"],
+          formatsOptions: {},
+          maxConcurrency: 1,
+        },
+        svg: Buffer.from("svg"),
+      });
+
+      startCli(cli);
+
+      await new Promise<void>((resolve) => {
+        const waitForExit = (): void => {
+          if (exitSpy.mock.calls.length > 0) {
+            resolve();
+            return;
+          }
+
+          setImmediate(waitForExit);
+        };
+
+        waitForExit();
+      });
+
+      expect(logSpy).toHaveBeenCalledWith(
+        expect.stringContaining(`Destination directory "${missingDestination}" does not exist`),
+      );
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("--dest-create"));
+      expect(exitSpy).toHaveBeenCalledWith(1);
 
       exitSpy.mockRestore();
       logSpy.mockRestore();

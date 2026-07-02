@@ -423,12 +423,21 @@ describe("cli", () => {
     output.files = files.filter((file) => file !== "that");
 
     expect(output.files).toEqual(files);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
   });
 
   it("should not create dest directory if it does not exist", async () => {
     const nonExistentDestination = `${destination}/that/does/not/exist`;
 
-    await execCLI(`${source} -d ${nonExistentDestination}`);
+    const output = await execCLI(`${source} -d ${nonExistentDestination}`);
+
+    expect(output.code).toBe(1);
+    expect(output.stdout).toContain("Destination directory");
+    expect(output.stdout).toContain(nonExistentDestination);
+    expect(output.stdout).toContain("does not exist");
+    expect(output.stdout).toContain("--dest-create");
+    expect(output.stderr).toBe("");
 
     let destinationWasCreated = true;
     try {
@@ -437,13 +446,27 @@ describe("cli", () => {
       destinationWasCreated = false;
     }
     expect(destinationWasCreated).toBe(false);
+  });
 
-    let error: Record<string, unknown> = {};
+  it("should fail with a clear error when dest does not exist and verbose is enabled", async () => {
+    const nonExistentDestination = `${destination}/verbose/missing/dest`;
+
+    const output = await execCLI(`${source} -d ${nonExistentDestination} --verbose`);
+
+    expect(output.code).toBe(1);
+    expect(output.stdout).toContain("Generating SVG font...");
+    expect(output.stdout).toContain("Destination directory");
+    expect(output.stdout).toContain(nonExistentDestination);
+    expect(output.stdout).toContain("does not exist");
+    expect(output.stdout).toContain("--dest-create");
+    expect(output.stderr).toBe("");
+
+    let destinationWasCreated = true;
     try {
-      await fsPromise.readdir(nonExistentDestination, { encoding: "utf-8" });
-    } catch (readdirError) {
-      error = readdirError;
+      await fsPromise.access(nonExistentDestination, fs.constants.F_OK);
+    } catch {
+      destinationWasCreated = false;
     }
-    expect(error.message).toContain("ENOENT: no such file or directory, scandir");
+    expect(destinationWasCreated).toBe(false);
   });
 });

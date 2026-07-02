@@ -36,3 +36,13 @@ When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract 
 - Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 - Keep changes focused; match surrounding code style and tooling (Biome, Jest, Lefthook).
 - Do not commit unless explicitly asked.
+
+## Pull requests
+
+When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
+
+1. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
+2. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first.
+3. **Return the PR URL** in the final response.
+
+Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only / no code changes.

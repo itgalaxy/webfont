@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.0.1](https://github.com/itgalaxy/webfont/compare/v12.0.0...v12.0.1) (2026-07-02)
+
+
+### Bug Fixes
+
+* **cli:** support files glob from config without CLI input ([#2](https://github.com/itgalaxy/webfont/issues/2)) ([#696](https://github.com/itgalaxy/webfont/issues/696)) ([26d8c3d](https://github.com/itgalaxy/webfont/commit/26d8c3d60000c5032b5426fd37e9628bbb490602))
+
 ## [12.0.0](https://github.com/itgalaxy/webfont/compare/v11.5.21...v12.0.0) (2026-07-02)
 
 

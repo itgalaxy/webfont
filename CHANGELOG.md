@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.5.21](https://github.com/itgalaxy/webfont/compare/v11.5.20...v11.5.21) (2026-07-02)
+
+
+### Bug Fixes
+
+* allow CommonJS in fixture config files for Biome ([ef53ada](https://github.com/itgalaxy/webfont/commit/ef53ada7cae595e4feb6be560d7ff7ed0c6b21f1))
+* model filePath as result-only metadata ([f557233](https://github.com/itgalaxy/webfont/commit/f5572338f249b5deb2a7b9e1a794b81eb1000978))
+
 ### [11.5.20](https://github.com/itgalaxy/webfont/compare/v11.5.19...v11.5.20) (2026-07-02)
 
 ### [11.5.19](https://github.com/itgalaxy/webfont/compare/v11.5.18...v11.5.19) (2026-07-02)

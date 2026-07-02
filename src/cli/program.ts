@@ -46,9 +46,9 @@ export type CliLike = {
   showVersion: () => void;
 };
 
-export type ResultFileKey = "eot" | "hash" | "svg" | "template" | "ttf" | "woff" | "woff2";
+export type ResultFileKey = "eot" | "hash" | "otf" | "svg" | "template" | "ttf" | "woff" | "woff2";
 
-export const resultFileKeys: ResultFileKey[] = ["svg", "ttf", "eot", "woff", "woff2", "hash", "template"];
+export const resultFileKeys: ResultFileKey[] = ["svg", "ttf", "otf", "eot", "woff", "woff2", "hash", "template"];
 
 export const buildOptionsBase = (cli: CliLike): OptionsBase => {
   const optionsBase: OptionsBase = {};

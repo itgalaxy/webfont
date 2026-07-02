@@ -51,10 +51,11 @@ When it does, update documentation in the same PR:
 
 | What changed | Update |
 |--------------|--------|
-| CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section and `src/cli/meow/index.ts` help text |
-| `webfont()` options, defaults, or return shape | [README.md](./README.md) Options / Result sections |
-| New or removed public options | README + TypeScript types under `src/types/` |
-| Internal-only refactors with no usage change | No README change; say so in the PR **Testing** section |
+| CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section, `src/cli/meow/cliOptions.ts` help text, and [FEATURES.md](./FEATURES.md) when capability changes |
+| `webfont()` options, defaults, return shape, or supported inputs/outputs | [README.md](./README.md) Options / Result / Input modes, [FEATURES.md](./FEATURES.md) |
+| New or removed public options or pipelines | README + [FEATURES.md](./FEATURES.md) + TypeScript types under `src/types/` |
+| Legal notices, font licensing copy, attribution, or dependency license table | [NOTICE.md](./NOTICE.md); link from README as needed |
+| Internal-only refactors with no usage change | No README or FEATURES change; say so in the PR **Testing** section |
 
 Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.md) (“Documentation”).
 

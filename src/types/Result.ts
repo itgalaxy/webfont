@@ -6,6 +6,7 @@ export type Result = {
   eot?: Buffer;
   glyphsData?: Array<GlyphData>;
   hash?: string;
+  otf?: Buffer;
   svg?: string | Buffer;
   template?: string;
   ttf?: Buffer;

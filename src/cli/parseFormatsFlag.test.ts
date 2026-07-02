@@ -1,6 +1,11 @@
 import { parseFormatsFlag } from "./parseFormatsFlag";
 
 describe("parseFormatsFlag", () => {
+  it("should parse otf as a valid format", () => {
+    expect(parseFormatsFlag("otf")).toEqual(["otf"]);
+    expect(parseFormatsFlag('["ttf", "otf"]')).toEqual(["ttf", "otf"]);
+  });
+
   it("should parse JSON array flags", () => {
     expect(parseFormatsFlag('["woff2"]')).toEqual(["woff2"]);
     expect(parseFormatsFlag('["svg", "ttf", "eot"]')).toEqual(["svg", "ttf", "eot"]);

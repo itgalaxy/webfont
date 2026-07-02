@@ -14,6 +14,10 @@ export const webfontCliHelpText = `
 
     Input: File(s) or glob(s).
 
+        SVG icons: one or more \`.svg\` files (default pipeline).
+        Webfont conversion: a single \`.woff\` or \`.woff2\` file to decompress to TTF/OTF.
+            You must have rights to any font file you process (see NOTICE.md).
+
         If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
         for cross-platform glob support.
 
@@ -48,6 +52,8 @@ export const webfontCliHelpText = `
 
             Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
             comma-separated list (e.g. woff2 or svg, ttf, woff2).
+            SVG input: svg, ttf, eot, woff, woff2 (not otf).
+            WOFF/WOFF2 input: ttf and/or otf matching the embedded SFNT flavor.
 
         -d, --dest
 

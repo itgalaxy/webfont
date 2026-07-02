@@ -1,7 +1,7 @@
 {
   "name": "webfont",
   "version": "11.5.21",
-  "description": "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
+  "description": "Generator of fonts from SVG icons; decompress WOFF/WOFF2 to embedded TTF/OTF (not TTF↔OTF transcoding)",
   "directories": {
     "lib": "dist",
     "source": "src"
@@ -12,7 +12,8 @@
     "templates",
     "!**/__tests__",
     "!**/__mocks__",
-    "README.md"
+    "README.md",
+    "NOTICE.md"
   ],
   "main": "dist/index.js",
   "bin": "dist/cli.mjs",
@@ -38,6 +39,7 @@
   "dependencies": {
     "cosmiconfig": "9.0.2",
     "deepmerge": "^4.2.2",
+    "fontverter": "2.0.0",
     "globby": "16.2.0",
     "meow": "14.1.0",
     "nunjucks": "3.2.4",
@@ -48,12 +50,11 @@
     "svgicons2svgfont": "^16.0.0",
     "ttf2eot": "3.1.0",
     "ttf2woff": "^3.0.0",
-    "wawoff2": "^2.0.0",
+    "wawoff2": "2.0.0",
     "xml2js": "0.6.2"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
-    "@vitest/coverage-v8": "4.1.9",
     "@types/node": "^22.15.0",
     "@types/nunjucks": "3.2.6",
     "@types/rimraf": "latest",
@@ -62,12 +63,12 @@
     "@types/ttf2woff": "2.0.4",
     "@types/wawoff2": "1.0.2",
     "@types/xml2js": "0.4.14",
+    "@vitest/coverage-v8": "4.1.9",
     "is-eot": "latest",
     "is-svg": "6.1.0",
     "is-ttf": "latest",
     "is-woff": "latest",
     "is-woff2": "latest",
-    "vitest": "4.1.9",
     "lefthook": "2.1.9",
     "rimraf": "latest",
     "ts-node": "latest",
@@ -75,12 +76,14 @@
     "typescript": "6.0.3",
     "vite": "8.1.3",
     "vite-plugin-checker": "0.14.4",
-    "vite-plugin-dts": "5.0.3"
+    "vite-plugin-dts": "5.0.3",
+    "vitest": "4.1.9"
   },
   "overrides": {
     "fast-glob": "3.2.12",
     "minimatch": "10.2.5",
-    "test-exclude": "7.0.2"
+    "test-exclude": "7.0.2",
+    "woff2sfnt-sfnt2woff": "1.0.0"
   },
   "repository": {
     "type": "git",

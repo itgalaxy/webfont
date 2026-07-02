@@ -42,6 +42,10 @@ When production code works around a library quirk or adds a defensive guard, add
 
 Example: `glyphsData.test.ts` — `describe("svg xml validation via xml2js")` documents that `xml2js` accepts empty input without error, then unit-tests the empty-file guard and malformed-xml rejection before metadata lookup.
 
+Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract (via `fast-xml-parser`), negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
+
+Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract (via `@xmldom/xmldom`), invalid version options, early pipeline rejection before conversion, and when `result.ttf` is absent vs validated (`isTtf(result.ttf)`).
+
 Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
 
 ### CLI integration tests (`execCLI`)
@@ -98,11 +102,29 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 
 When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
 
-1. **Create a branch** from `master` (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`).
-2. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
-3. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
-4. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
-5. **Return the PR URL** in the final response.
+1. **Check whether the current branch is already merged** (see [Merged branches](#merged-branches) below). If it is, create a **new branch from `master`** — do not push follow-up commits to a merged PR branch.
+2. **Create a branch** from `master` (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`).
+3. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
+4. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
+5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
+6. **Return the PR URL** in the final response.
+
+### Merged branches
+
+**Before every push**, confirm the target branch is still the right vehicle for the work:
+
+| Check | Command / action |
+|-------|------------------|
+| PR state | `gh pr view --head <branch> --json state,mergedAt,url` (or `gh pr list --head <branch>`) |
+| Branch contained in `master` | `git fetch origin master && git log --oneline origin/master..origin/<branch>` — if empty after your last merge, or PR `state` is `MERGED`, stop using that branch |
+
+**If the PR is merged (or the branch is obsolete):**
+
+1. **Do not** push new commits to that branch expecting them to land via the old PR.
+2. **Do** `git fetch origin master`, branch from `origin/master` (e.g. `test/font-output-contracts`), cherry-pick or re-apply only the commits not yet on `master`, then push and **`gh pr create`** a **new** PR.
+3. **Prefer one focused PR per follow-up** after merge — tests, docs, and unrelated fixes on top of merged work belong on a new branch, not on `fix/...` or `feat/...` branches whose PRs are already closed.
+
+Example mistake to avoid: pushing `test: add is-svg coverage` to `fix/cli-missing-dest` after PR #626 merged — those commits stay orphaned until opened on a fresh branch.
 
 ### Template sections (be selective)
 

@@ -144,8 +144,12 @@ When a task produces branch changes intended for review (features, fixes, CI, do
 2. **Create a branch** from `master` using a **lowercase** name (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`). The entire branch name must stay lowercase — no camelCase or uppercase segments (avoid names like `test/toTtf-unit-tests`).
 3. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
 4. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
-5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
+5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template. **PR title must follow [Conventional Commits](https://www.conventionalcommits.org/)** (`type: description`, optional scope — e.g. `chore(deps): bump svg2ttf to 6.1.0`). Strip bot prefixes (`[Snyk]`, `[Dependabot]`) and rewrite to the correct type.
 6. **Return the PR URL** in the final response.
+
+**Squash merge only.** Routine merges to `master` use **Squash and merge** so the PR title is the single commit on `master` (Release Please depends on this). Do not use merge commits or rebase-merge unless a maintainer explicitly requests it.
+
+**Fix PR titles proactively.** When working on an open PR, check the title with `gh pr view --json title`. If it does not match Conventional Commits (wrong type, vendor prefix, or scope drift after new commits), run `gh pr edit --title "type(scope): description"` **without asking** — same as push. Re-read the title after every push that changes PR scope.
 
 **Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. **Never** close a turn with prompts like “Quer que eu faça o push?” / “Should I push?” after committing on an open PR branch; push first, then summarize. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
 
@@ -182,6 +186,7 @@ Keep the template **headings and order**, but write each section critically — 
 
 ### Scope, title, and description
 
+- **PR title = Conventional Commits.** Match commit style (`feat:`, `fix:`, `chore(deps):`, `docs:`, `test:`, `ci:`, …). When the PR is open and the title is wrong, fix it with `gh pr edit` before ending the task.
 - **Re-read the PR title and body whenever the branch scope changes.** After adding commits, update the title and **Proposed changes** section so reviewers see the full picture — not just the first commit message.
 - **Split when it grows too much.** If a branch picks up unrelated fixes, large test extractions, or docs on top of the original goal, prefer **separate PRs** for follow-up work rather than one ever-growing branch. This PR accumulated extra scope before that rule was written; use smaller PRs from here on.
 - **Explain why when closing a PR.** Leave an English comment (superseded, obsolete, duplicate, out of scope, etc.) — do not close without context. See [CONTRIBUTING.md](./CONTRIBUTING.md) (“Closing pull requests”).

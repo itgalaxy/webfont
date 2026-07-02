@@ -60,6 +60,7 @@ temp
 
 # CLI output when run from repo root without --dest (default cwd)
 /webfont.svg
+output/
 
 # Environment variables files
 .env

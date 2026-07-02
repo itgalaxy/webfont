@@ -1,8 +1,8 @@
 import type {Format, GlyphData, InitialOptions} from "../types";
+import {SVGIcons2SVGFontStream, getFontStreamOptions} from "../lib/svgicons2svgfont";
 import {getBuiltInTemplates, getTemplateFilePath} from "../../templates";
 import {Readable} from "stream";
 import type {Result} from "../types/Result";
-import SVGIcons2SVGFontStream from "svgicons2svgfont";
 import cosmiconfig from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
@@ -45,30 +45,7 @@ const toSvg = (glyphsData, options) => {
 
   return new Promise((resolve, reject) => {
 
-    let log = () => {
-      Function.prototype();
-    };
-
-    if (options.verbose) {
-      // eslint-disable-next-line no-console
-      log = console.log.bind(console);
-    }
-
-    const fontStream = new SVGIcons2SVGFontStream({
-      ascent: options.ascent,
-      centerHorizontally: options.centerHorizontally,
-      descent: options.descent,
-      fixedWidth: options.fixedWidth,
-      fontHeight: options.fontHeight,
-      fontId: options.fontId,
-      fontName: options.fontName,
-      fontStyle: options.fontStyle,
-      fontWeight: options.fontWeight,
-      log,
-      metadata: options.metadata,
-      normalize: options.normalize,
-      round: options.round,
-    }).
+    const fontStream = new SVGIcons2SVGFontStream(getFontStreamOptions(options)).
       on("finish", () => resolve(result)).
       on("data", (data) => {
         result += data;

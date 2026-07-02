@@ -10,7 +10,7 @@ Production bundles are built with **Rollup 2.56.3** and plugins pinned to `"late
 
 | Output | Entry | Format |
 |--------|-------|--------|
-| CLI (`dist/cli.js`, `bin`) | `src/cli/index.ts` | CJS + `#!/usr/bin/env node` banner |
+| CLI (`dist/cli.mjs`, `bin`) | `src/cli/index.ts` | ESM + `#!/usr/bin/env node` banner (`meow` 14 is ESM-only) |
 | Library (`dist/index.js`, `main`) | `src/index.ts` | CJS, named exports |
 
 `postbuild` runs `tsc --declaration --emitDeclarationOnly` for `dist/src/index.d.ts` (unchanged).
@@ -30,7 +30,7 @@ Production bundles are built with **Rollup 2.56.3** and plugins pinned to `"late
 
 - **Stable include/exclude:** Vite/esbuild transpile TypeScript entry graphs without `picomatch` extglob on the default plugin include list.
 - **Explicit bundler:** Pin `vite` to an exact version (`save-exact=true`); remove Rollup and `"latest"` Rollup plugins.
-- **Same publish surface:** Keep `dist/cli.js`, `dist/index.js`, `package.json` `bin` / `main` / `types`, and declaration emit under `dist/src/index.d.ts` (via `vite-plugin-dts` after follow-up).
+- **Same publish surface:** Keep `dist/cli.mjs`, `dist/index.js`, `package.json` `bin` / `main` / `types`, and declaration emit under `dist/src/index.d.ts` (via `vite-plugin-dts` after follow-up).
 - **Tests unchanged:** Jest remains the test runner ([ADR 0002](./0002-jest-vs-vitest-testing.md)); only the `npm run build` implementation changes.
 
 ## Decision
@@ -38,7 +38,7 @@ Production bundles are built with **Rollup 2.56.3** and plugins pinned to `"late
 **Replace Rollup with Vite 8 library mode.**
 
 1. Add `vite.config.ts` with `build.lib.entry` for `cli` and `index`, `formats: ['cjs']`, dependency + Node builtin `external`, and a CLI shebang `banner`.
-2. Change `package.json` `build` script to **two passes** — `vite build --mode library` then `vite build --mode cli` — so each artifact is self-contained (no shared hashed chunks between `dist/index.js` and `dist/cli.js`, matching the old dual Rollup outputs).
+2. Change `package.json` `build` script to **two passes** — `vite build --mode library` then `vite build --mode cli` — so each artifact is self-contained (no shared hashed chunks between `dist/index.js` and `dist/cli.mjs`, matching the old dual Rollup outputs).
 3. Remove `rollup.config.js`, `rollup`, `@rollup/plugin-commonjs`, and `@rollup/plugin-typescript`.
 4. Keep `prebuild` (clean + lint). A follow-up adds `vite-plugin-dts` and `vite-plugin-checker` on the library pass and removes `postbuild` `tsc`.
 
@@ -50,8 +50,8 @@ Production bundles are built with **Rollup 2.56.3** and plugins pinned to `"late
 build: {
   lib: {
     entry: resolve(__dirname, mode === 'cli' ? 'src/cli/index.ts' : 'src/index.ts'),
-    formats: ['cjs'],
-    fileName: () => (mode === 'cli' ? 'cli.js' : 'index.js'),
+    formats: [mode === 'cli' ? 'es' : 'cjs'],
+    fileName: () => (mode === 'cli' ? 'cli.mjs' : 'index.js'),
   },
   rolldownOptions: {
     external: [...dependencies, ...nodeBuiltins],

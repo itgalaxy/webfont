@@ -22,6 +22,10 @@ const assertConversionOptions = (options: WebfontOptions): void => {
   if (options.glyphTransformFn) {
     throw new Error("glyphTransformFn is not supported when converting WOFF/WOFF2 input");
   }
+
+  if (options.glyphContentTransformFn) {
+    throw new Error("glyphContentTransformFn is not supported when converting WOFF/WOFF2 input");
+  }
 };
 
 type AssignSfntOutputOptions = {

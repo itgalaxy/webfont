@@ -128,6 +128,17 @@ describe("convertWebfontInput", () => {
     ).rejects.toThrow("glyphTransformFn is not supported when converting WOFF/WOFF2 input");
   });
 
+  it("should reject glyphContentTransformFn for webfont conversion", async () => {
+    await expect(
+      convertWebfontInput(
+        [fixtureWoff2],
+        getConversionOptions({
+          glyphContentTransformFn: async () => "<svg></svg>",
+        }),
+      ),
+    ).rejects.toThrow("glyphContentTransformFn is not supported when converting WOFF/WOFF2 input");
+  });
+
   it("should log verbose progress when verbose is enabled", async () => {
     const sfnt = await fsPromise.readFile(fixtureTtf);
     mockedConvert.mockResolvedValue(sfnt);

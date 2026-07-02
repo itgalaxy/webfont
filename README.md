@@ -38,7 +38,7 @@ webfont runs one of three pipelines depending on matched input files. They canno
 - Renaming or re-wrapping without matching the real outline format (e.g. requesting `otf` when the WOFF2 holds TrueType).
 - Converting TTF to OTF (or OTF to TTF) — use [FontForge](https://fontforge.org/) or similar.
 - `.otf` as input for webfont encoding (TrueType `.ttf` only today).
-- Templates, `glyphTransformFn`, or merged multi-weight SFNT output in TTF encoding or webfont decompress mode.
+- Templates, `glyphTransformFn`, `glyphContentTransformFn`, or merged multi-weight SFNT output in TTF encoding or webfont decompress mode.
 - Globs that match extension-less or unsupported files together with fonts (the run fails instead of silently ignoring extras).
 
 Every matched path must end in `.svg`, `.ttf`, `.woff`, or `.woff2`. See [FEATURES.md](./FEATURES.md) for test-backed criteria.
@@ -328,6 +328,25 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
       throw error;
     });
   ```
+
+#### `glyphContentTransformFn`
+
+- Type: `function`
+- Default: `null`
+- Description: Transform each SVG glyph **before** font generation (SVG pipeline only). Use this to preprocess stroke-based icons into filled paths, for example with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke). `glyphTransformFn` only changes metadata; this hook receives the full `GlyphData` (`contents`, `srcPath`, optional `metadata`) and must return the new SVG string.
+- Example (stroke icons, #144):
+
+  ```js
+  import outlineStroke from "svg-outline-stroke";
+  import webfont from "webfont";
+
+  await webfont({
+    files: "src/svg-icons/**/*.svg",
+    glyphContentTransformFn: async (glyph) => outlineStroke(glyph.contents),
+  });
+  ```
+
+  For better trace quality with `svg-outline-stroke`, use a larger `width` / `height` / `viewBox` on the source SVG (see the library README).
 
 #### `metadataProvider`
 

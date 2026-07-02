@@ -30,7 +30,7 @@ Production bundles are built with **Rollup 2.56.3** and plugins pinned to `"late
 
 - **Stable include/exclude:** Vite/esbuild transpile TypeScript entry graphs without `picomatch` extglob on the default plugin include list.
 - **Explicit bundler:** Pin `vite` to an exact version (`save-exact=true`); remove Rollup and `"latest"` Rollup plugins.
-- **Same publish surface:** Keep `dist/cli.js`, `dist/index.js`, `package.json` `bin` / `main` / `types`, and the `tsc` declaration step.
+- **Same publish surface:** Keep `dist/cli.js`, `dist/index.js`, `package.json` `bin` / `main` / `types`, and declaration emit under `dist/src/index.d.ts` (via `vite-plugin-dts` after follow-up).
 - **Tests unchanged:** Jest remains the test runner ([ADR 0002](./0002-jest-vs-vitest-testing.md)); only the `npm run build` implementation changes.
 
 ## Decision
@@ -40,7 +40,7 @@ Production bundles are built with **Rollup 2.56.3** and plugins pinned to `"late
 1. Add `vite.config.ts` with `build.lib.entry` for `cli` and `index`, `formats: ['cjs']`, dependency + Node builtin `external`, and a CLI shebang `banner`.
 2. Change `package.json` `build` script to **two passes** — `vite build --mode library` then `vite build --mode cli` — so each artifact is self-contained (no shared hashed chunks between `dist/index.js` and `dist/cli.js`, matching the old dual Rollup outputs).
 3. Remove `rollup.config.js`, `rollup`, `@rollup/plugin-commonjs`, and `@rollup/plugin-typescript`.
-4. Keep `prebuild` (clean + lint) and `postbuild` (`tsc` declarations).
+4. Keep `prebuild` (clean + lint). A follow-up adds `vite-plugin-dts` and `vite-plugin-checker` on the library pass and removes `postbuild` `tsc`.
 
 ### Configuration sketch
 
@@ -76,11 +76,11 @@ build: {
 
 - **New devDependency:** `vite` adds install size; acceptable for a build-only tool.
 - **Rolldown under the hood:** Vite 8 uses Rolldown; `build.rollupOptions` is an alias — prefer `rolldownOptions` in config.
-- **Declarations still via `tsc`:** No `vite-plugin-dts` in this change; `postbuild` keeps the existing declaration layout (`dist/src/index.d.ts`).
+- **Declarations still via `tsc`:** Addressed in follow-up — `vite-plugin-dts` emits declarations during the library Vite pass; `vite-plugin-checker` runs full `tsc` diagnostics on build.
 
 ### Follow-up
 
-- If declaration emit moves under Vite, evaluate `vite-plugin-dts` and simplify `postbuild`.
+- ~~If declaration emit moves under Vite, evaluate `vite-plugin-dts` and simplify `postbuild`.~~ Done: `vite-plugin-dts@5.0.3` + `vite-plugin-checker@0.14.4` on `--mode library`; `postbuild` `tsc` removed.
 - Re-run Dependabot `micromatch` / `picomatch` upgrades after merge to confirm CI stays green.
 
 ## References

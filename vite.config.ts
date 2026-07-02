@@ -1,6 +1,8 @@
 import { builtinModules } from "node:module";
 import { resolve } from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig, type PluginOption } from "vite";
+import checker from "vite-plugin-checker";
+import dts from "vite-plugin-dts";
 import { dependencies } from "./package.json";
 
 const nodeBuiltins = [...builtinModules, ...builtinModules.map((moduleName) => `node:${moduleName}`)];
@@ -9,6 +11,21 @@ const external = [...Object.keys(dependencies), ...nodeBuiltins, "crypto", "fs",
 
 const libraryEntry = resolve(__dirname, "src/index.ts");
 const cliEntry = resolve(__dirname, "src/cli/index.ts");
+
+const libraryPlugins: PluginOption[] = [
+  checker({
+    enableBuild: true,
+    typescript: {
+      tsconfigPath: "tsconfig.json",
+    },
+  }),
+  dts({
+    entryRoot: ".",
+    outDirs: "dist",
+    strictOutput: true,
+    tsconfigPath: "tsconfig.json",
+  }),
+];
 
 export default defineConfig(({ mode }) => {
   const isCliBuild = mode === "cli";
@@ -20,6 +37,12 @@ export default defineConfig(({ mode }) => {
     entry = cliEntry;
     outputFileName = "cli.js";
     banner = "#!/usr/bin/env node\n";
+  }
+
+  let plugins: PluginOption[] = libraryPlugins;
+
+  if (isCliBuild) {
+    plugins = [];
   }
 
   return {
@@ -40,5 +63,6 @@ export default defineConfig(({ mode }) => {
       },
       target: "es2020",
     },
+    plugins,
   };
 });

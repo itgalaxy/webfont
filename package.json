@@ -81,7 +81,8 @@
   },
   "overrides": {
     "fast-glob": "3.2.12",
-    "minimatch": "10.2.5"
+    "minimatch": "10.2.5",
+    "test-exclude": "7.0.2"
   },
   "repository": {
     "type": "git",

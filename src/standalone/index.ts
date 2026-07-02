@@ -25,7 +25,10 @@ const isCosmiconfigLoaded = (value: CosmiconfigLoaded | Record<string, never>): 
 const buildConfig = async (options: {
   configFile?: string;
 }): Promise<CosmiconfigLoaded | Record<string, never>> => {
-  const configExplorer = cosmiconfig("webfont");
+  const configExplorer = cosmiconfig("webfont", {
+    // v9 defaults to `none` (cwd only); keep walking up to home/stopDir like v8.
+    searchStrategy: "global",
+  });
 
   if (options.configFile) {
     const configPath = path.resolve(process.cwd(), options.configFile);

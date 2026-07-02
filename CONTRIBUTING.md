@@ -157,9 +157,29 @@ Versioning is automated with [Release Please](https://github.com/googleapis/rele
 1. Merge changes to `master` using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `ci:`, etc.).
 2. Release Please opens or updates a **Release PR** with the next version, `CHANGELOG.md`, and `package.json` updates.
 3. Review and merge the Release PR to create the git tag and GitHub Release.
-4. The `npm-publish` workflow runs when a GitHub Release is created.
+4. The [`npm-publish`](.github/workflows/npm-publish.yml) workflow runs on the published release: `npm test`, then `npm publish --access public` (the `prepublishOnly` script builds before upload).
 
 Do not run local `npm version` or push version tags manually unless coordinating an emergency release with maintainers.
+
+#### npm publishing prerequisites
+
+Before the first automated publish to [npm](https://www.npmjs.com/package/webfont), configure a repository secret:
+
+- **`NPM_TOKEN`** — npm access token with publish permission for the `webfont` package (Automation or Granular Access Token).
+
+Add it under **Settings → Secrets and variables → Actions** for this repository.
+
+If CI publish is unavailable, maintainers can publish manually from the release tag:
+
+```shell
+git fetch origin --tags
+git checkout v12.0.0   # use the tag created by Release Please
+npm ci
+npm test
+npm publish --access public
+```
+
+Automated publishing does **not** retroactively upload versions that already exist as git tags only (for example `11.5.x` never published to npm).
 
 ## Resources
 

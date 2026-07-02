@@ -87,7 +87,7 @@ The project already uses [Conventional Commits](https://www.conventionalcommits.
 
 ### Follow-up
 
-- If npm registry publish should run automatically, extend `npm-publish.yml` with `npm publish` and `NPM_TOKEN` (today it only runs `npm test` on `release: created`).
+- ~~If npm registry publish should run automatically, extend `npm-publish.yml` with `npm publish` and `NPM_TOKEN` (today it only runs `npm test` on `release: created`).~~ Done in PR [#639](https://github.com/itgalaxy/webfont/pull/639): publish on `release: published` with `NPM_TOKEN`.
 
 ## References
 

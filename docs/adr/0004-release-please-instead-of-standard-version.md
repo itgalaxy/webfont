@@ -46,6 +46,7 @@ The project already uses [Conventional Commits](https://www.conventionalcommits.
 ```json
 // release-please-config.json
 {
+  "include-component-in-tag": false,
   "packages": {
     ".": {
       "release-type": "node",
@@ -54,6 +55,14 @@ The project already uses [Conventional Commits](https://www.conventionalcommits.
   }
 }
 ```
+
+### Git tag format
+
+Release tags use the **`v{semver}`** pattern (for example `v12.0.0`), matching tags created before Release Please (`v11.5.21`, `v11.2.26`, …).
+
+Release Please defaults to prefixing the package name in tags (`webfont-v12.0.0`) when `package-name` is set. For this single-package repo, **`include-component-in-tag: false`** in `release-please-config.json` (and the same flag on `release-please-action`) keeps tags and GitHub Releases aligned with the historical `v*` convention.
+
+Do not rename release tags casually: npm publish, `npm-publish.yml`, and changelog compare links all reference the tag name.
 
 ```json
 // .release-please-manifest.json

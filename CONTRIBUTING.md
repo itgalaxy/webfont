@@ -159,6 +159,8 @@ Versioning is automated with [Release Please](https://github.com/googleapis/rele
 3. Review and merge the Release PR to create the git tag and GitHub Release on GitHub.
 4. Publish to npm (see **npm publishing** below). The [`npm-publish`](.github/workflows/npm-publish.yml) workflow listens for `release: published`, but releases created with the default `GITHUB_TOKEN` usually **do not** trigger downstream workflows — use manual publish or re-run the workflow from the Actions tab if needed.
 
+**Git tags** created by Release Please follow **`v{semver}`** (for example `v12.0.0`). The config sets `include-component-in-tag: false` so tags are not prefixed with the package name (`webfont-v12.0.0`). See [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md).
+
 Do not run local `npm version` or push version tags manually unless coordinating an emergency release with maintainers.
 
 #### npm publishing

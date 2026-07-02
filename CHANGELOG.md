@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
-## [12.0.0](https://github.com/itgalaxy/webfont/compare/webfont-v11.5.21...webfont-v12.0.0) (2026-07-02)
+## [12.0.0](https://github.com/itgalaxy/webfont/compare/v11.5.21...v12.0.0) (2026-07-02)
 
 
 ### ⚠ BREAKING CHANGES

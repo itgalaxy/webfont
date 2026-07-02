@@ -15,49 +15,60 @@ const source = `${fixturesGlob}/svg-icons`;
 const configPackageLink = path.join("node_modules", "webfont-fixture-config");
 const configPackageSource = path.resolve(fixturesGlob, "config-package");
 
+const rimrafAsync = (pattern: string) =>
+  new Promise<void>((resolve, reject) => {
+    rimraf(pattern, (err) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve();
+    });
+  });
+
+const isENOENT = (error: unknown): error is NodeJS.ErrnoException =>
+  typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT";
+
 describe("cli", () => {
-  beforeAll(
-    () =>
-      new Promise<void>((resolve, reject) => {
-        fs.mkdir(destination, { recursive: true }, (err) => {
-          if (err) {
-            return reject(err);
-          }
+  beforeAll(async () => {
+    await fsPromise.mkdir(destination, { recursive: true });
+    await fsPromise.mkdir(path.dirname(configPackageLink), { recursive: true });
 
-          fs.mkdirSync(path.dirname(configPackageLink), { recursive: true });
-          if (!fs.existsSync(configPackageLink)) {
-            fs.symlinkSync(configPackageSource, configPackageLink, "dir");
-          }
+    try {
+      await fsPromise.lstat(configPackageLink);
+    } catch (error) {
+      if (!isENOENT(error)) {
+        throw error;
+      }
 
-          return resolve();
-        });
-      }),
-  );
-
-  afterAll(() => {
-    if (fs.existsSync(configPackageLink) && fs.lstatSync(configPackageLink).isSymbolicLink()) {
-      fs.unlinkSync(configPackageLink);
+      await fsPromise.symlink(configPackageSource, configPackageLink, "dir");
     }
   });
 
-  beforeEach(
-    () =>
-      new Promise((resolve, reject) => {
-        rimraf(`${destination}/*`, (err) => {
-          if (err) {
-            return reject(err);
-          }
+  afterAll(async () => {
+    try {
+      const stat = await fsPromise.lstat(configPackageLink);
 
-          return fs.readdir(destination, (fileReadError, files) => {
-            if (files.length !== 0) {
-              throw new Error(`${destination} did not empty before the test.`);
-            }
+      if (stat.isSymbolicLink()) {
+        await fsPromise.unlink(configPackageLink);
+      }
+    } catch (error) {
+      if (!isENOENT(error)) {
+        throw error;
+      }
+    }
+  });
 
-            resolve(fileReadError);
-          });
-        });
-      }),
-  );
+  beforeEach(async () => {
+    await rimrafAsync(`${destination}/*`);
+
+    const files = await fsPromise.readdir(destination);
+
+    if (files.length !== 0) {
+      throw new Error(`${destination} did not empty before the test.`);
+    }
+  });
 
   it("exits with code 2 and displays --help if no argument parameters are passed", async () => {
     const output = await execCLI();

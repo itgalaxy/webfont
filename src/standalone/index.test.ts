@@ -37,6 +37,15 @@ describe("standalone", () => {
     );
   });
 
+  it("should reject unknown format names before running the pipeline (#133)", async () => {
+    await expect(
+      standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        formats: ["icon"],
+      }),
+    ).rejects.toThrow('Invalid format "icon". Expected one of: eot, otf, svg, ttf, woff, woff2');
+  });
+
   it("should generate all fonts", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

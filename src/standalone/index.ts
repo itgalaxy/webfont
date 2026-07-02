@@ -18,6 +18,7 @@ import { assertSvgPipelineFormats, classifyInputFiles, filterInputFilesByMode } 
 import { getOptions } from "./options";
 import { getTemplateFontBase64 } from "./templateFonts";
 import toTtf from "./toTtf";
+import { validateWebfontOptions } from "./validateWebfontOptions";
 
 type CosmiconfigLoaded = NonNullable<Awaited<ReturnType<ReturnType<typeof cosmiconfig>["search"]>>>;
 
@@ -101,6 +102,8 @@ export const webfont: Webfont = async (initialOptions) => {
     });
     discoveredConfigPath = config.filepath;
   }
+
+  options = validateWebfontOptions(options);
 
   let filePatterns: string[];
 

@@ -184,6 +184,14 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
+    it("should reject unknown format names on the CLI (#133)", async () => {
+      const output = await execCLI(`${source} -d ${destination} -f icon`);
+
+      expect(output.code).toBe(1);
+      expect(output.stderr).toBe("");
+      expect(output.stdout).toContain('Invalid format "icon"');
+    });
+
     it("should set template with -t", async () => {
       const output = await execCLI(`${source} -d ${destination} -t css --templateCacheString test`);
 

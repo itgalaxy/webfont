@@ -208,6 +208,7 @@ const remote = await webfont({
   - **TTF input**: `ttf`, `eot`, `woff`, and/or `woff2` only. **`svg` and `otf` are not produced** in this mode.
   - **WOFF/WOFF2 input**: `ttf` and/or `otf` only — must match the decompressed SFNT flavor inside the file (not arbitrary transcoding). `eot`, `woff`, `woff2`, and `svg` are not produced in this mode.
 - CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
+- API and config files: `formats` must be an array of the values above; unknown names (for example `icon`) throw before the pipeline runs.
 
 #### `template`
 

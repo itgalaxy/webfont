@@ -87,4 +87,9 @@ Keep the template **headings and order**, but write each section critically — 
 | **Test configuration** | Include Node/npm versions only when the change is version-sensitive or CI-related; otherwise `N/A` or omit the bullet values. |
 | **Checklist** | Mark `[x]` only for items you completed. Leave maintainer-only items (labels) unchecked. |
 
+### Scope, title, and description
+
+- **Re-read the PR title and body whenever the branch scope changes.** After adding commits, update the title and **Proposed changes** section so reviewers see the full picture — not just the first commit message.
+- **Split when it grows too much.** If a branch picks up unrelated fixes, large test extractions, or docs on top of the original goal, prefer **separate PRs** for follow-up work rather than one ever-growing branch. This PR accumulated extra scope before that rule was written; use smaller PRs from here on.
+
 Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only / no code changes.

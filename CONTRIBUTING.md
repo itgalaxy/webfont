@@ -55,7 +55,15 @@ When it does, update documentation in the same PR:
 | Internal-only refactors with no usage change | No README change; say so in the PR **Testing** section |
 
 Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.md) (“Documentation”).
-- **Write pull request titles, descriptions, and review comments in English** (commits and code comments in English as well);
+
+### Pull request title and description
+
+- **Write pull request titles, descriptions, and review comments in English** (commits and code comments in English as well).
+- **Keep the PR title and body in sync with the actual diff.** When new commits change what the PR does (extra fixes, tests, docs, refactors), update the title and description before asking for review — do not leave a narrow title like “enable strictNullChecks” on a PR that also ships CLI bug fixes and README changes.
+- **Prefer focused PRs.** If the scope keeps growing (unrelated fixes, large test refactors, docs, and feature work in one branch), stop stacking and **split follow-up work into separate PRs** instead. Land the original change first, then open new branches for the rest.
+
+See [AGENTS.md](./AGENTS.md) (“Pull requests”) for agents and automation.
+
 - Lint and test before submitting code by running `$ npm test`;
 - Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;
 - Write a [convincing description](https://github.com/itgalaxy/webfont/blob/master/.github/pull_request_template.md) of why we should land your pull request: it’s your job to convince us.

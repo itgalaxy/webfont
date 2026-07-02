@@ -6,7 +6,12 @@ const dir = "dist";
 
 const external = [...Object.keys(dependencies), "crypto", "fs", "os", "path", "stream", "util"];
 
-const plugins = [typescript(), commonjs()];
+const plugins = [
+  typescript({
+    exclude: ["src/**/*.test.ts"],
+  }),
+  commonjs(),
+];
 
 module.exports = [
   {

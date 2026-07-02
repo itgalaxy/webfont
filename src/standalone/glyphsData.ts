@@ -1,8 +1,6 @@
 import { createReadStream } from "fs";
-/* eslint-enable sort-imports */
 import xml2js from "xml2js";
 import pLimit from "../lib/p-limit";
-/* eslint-disable sort-imports -- default and named imports from lib adapters */
 import { fileSorter, getMetadataService, getMetadataServiceOptions } from "../lib/svgicons2svgfont";
 import type { GlyphData, GlyphMetadata, WebfontOptions } from "../types";
 
@@ -22,8 +20,7 @@ const toGlyphMetadata = (metadata: {
   unicode: normalizeUnicode(metadata.unicode as GlyphMetadata["unicode"]),
 });
 
-// eslint-disable-next-line no-unused-vars
-type GlyphsDataGetter = (files: Array<GlyphData["srcPath"]>, options: WebfontOptions) => unknown;
+type GlyphsDataGetter = (_files: Array<GlyphData["srcPath"]>, _options: WebfontOptions) => unknown;
 
 export const getGlyphsData: GlyphsDataGetter = (files, options) => {
   const metadataProvider = options.metadataProvider || getMetadataService(getMetadataServiceOptions(options));
@@ -39,8 +36,7 @@ export const getGlyphsData: GlyphsDataGetter = (files, options) => {
             const glyph = createReadStream(srcPath);
             let glyphContents = "";
 
-            // eslint-disable-next-line no-promise-executor-return
-            return glyph
+            glyph
               .on("error", (glyphError) => reject(glyphError))
               .on("data", (data) => {
                 glyphContents += data.toString();

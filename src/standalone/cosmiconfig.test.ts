@@ -3,6 +3,9 @@ import isWoff2 from "is-woff2";
 import path from "path";
 import standalone from "../standalone";
 import type { InitialOptions } from "../types";
+import type { ResultConfig } from "../types/ResultConfig";
+
+type DiscoveredRcConfig = ResultConfig & { foo: string };
 
 const fixturesRoot = path.join(__dirname, "../fixtures");
 const svgFiles = path.join(fixturesRoot, "svg-icons/*.svg");
@@ -156,9 +159,7 @@ describe("cosmiconfig", () => {
       });
 
       expect(result.config?.filePath).toBe(path.resolve(configFile));
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      expect(result.config?.foo).toBe("bar");
+      expect((result.config as DiscoveredRcConfig).foo).toBe("bar");
     });
   });
 });

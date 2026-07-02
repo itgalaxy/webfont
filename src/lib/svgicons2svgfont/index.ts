@@ -1,8 +1,5 @@
-/* eslint-disable sort-imports, no-duplicate-imports -- type and value imports from svgicons2svgfont */
-
 import type { SVGIcons2SVGFontStreamOptions } from "svgicons2svgfont";
 import { fileSorter, getMetadataService, SVGIcons2SVGFontStream } from "svgicons2svgfont";
-/* eslint-enable sort-imports, no-duplicate-imports */
 import type { WebfontOptions } from "../../types";
 
 export { fileSorter, getMetadataService, SVGIcons2SVGFontStream };

@@ -37,6 +37,16 @@ When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract 
 - Keep changes focused; match surrounding code style and tooling (Biome, Jest, Lefthook).
 - Do not commit unless explicitly asked.
 
+### Lint and type hygiene
+
+- **No `eslint-disable*` comments.** ESLint is not used; Biome is the linter ([ADR 0001](docs/adr/0001-eslint-vs-biome-linting.md)). Delete stale ESLint suppressions; use `biome-ignore` only when a rule cannot be satisfied by a small code change.
+- **No `@ts-expect-error` or `@ts-ignore`.** Resolve types properly:
+  - Config fixtures with extra keys: `ResultConfig & { key: Type }` + cast in tests.
+  - Mocks: import the `__mocks__` module for assertions, or a small helper type when a cast is unavoidable (`as unknown as MockType`).
+  - Expected rejections: `await expect(fn()).rejects.toThrow(...)` (not `try/catch` + conditional expects).
+  - Unused parameters: `_name` prefix on the parameter or property.
+- After edits, run `npm test` and confirm `rg 'eslint-disable|@ts-expect-error|@ts-ignore'` returns no matches.
+
 ## Pull requests
 
 When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):

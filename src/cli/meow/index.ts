@@ -1,4 +1,3 @@
-/* eslint-disable max-len, sort-keys */
 import meow from "meow";
 
 const meowCLI = meow(

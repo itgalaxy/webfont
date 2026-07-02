@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.5.5](https://github.com/itgalaxy/webfont/compare/v11.5.4...v11.5.5) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** bump svgicons2svgfont to 16.0.0 ([c52d79c](https://github.com/itgalaxy/webfont/commit/c52d79ce703eaab07e0ea8997ad55ce098a4429a))
+
 ### [11.5.4](https://github.com/itgalaxy/webfont/compare/v11.5.3...v11.5.4) (2026-07-02)
 
 ### [11.5.3](https://github.com/itgalaxy/webfont/compare/v11.5.2...v11.5.3) (2026-07-02)

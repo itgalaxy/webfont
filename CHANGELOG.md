@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [11.5.9](https://github.com/itgalaxy/webfont/compare/v11.5.8...v11.5.9) (2026-07-02)
+
+
+### Bug Fixes
+
+* **deps:** adapt p-limit v7 ESM for Jest and runtime ([77f669f](https://github.com/itgalaxy/webfont/commit/77f669f24be581f05fa27b308d0a9a045869f9f2)), closes [#640](https://github.com/itgalaxy/webfont/issues/640)
+
 ### [11.5.8](https://github.com/itgalaxy/webfont/compare/v11.5.7...v11.5.8) (2026-07-02)
 
 ### [11.5.7](https://github.com/itgalaxy/webfont/compare/v11.5.6...v11.5.7) (2026-07-02)

@@ -460,4 +460,56 @@ describe("standalone", () => {
       return result;
     });
   });
+
+  it("should accept files as a single glob string", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/avatar.svg`,
+    });
+
+    expect(isSvg(result.svg)).toBe(true);
+    expect(result.glyphsData).toHaveLength(1);
+  });
+
+  it("should log progress when verbose is enabled", async () => {
+    const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+
+    await standalone({
+      files: `${fixturesGlob}/svg-icons/avatar.svg`,
+      verbose: true,
+    });
+
+    expect(logSpy).toHaveBeenCalledWith("Generating SVG font...");
+    logSpy.mockRestore();
+  });
+
+  it("should pass string metadata to woff generation", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/avatar.svg`,
+      formats: ["woff"],
+      metadata: "custom-metadata",
+    });
+
+    expect(Buffer.isBuffer(result.woff)).toBe(true);
+    expect(result.woff?.length).toBeGreaterThan(0);
+    expect(result.svg).toBeUndefined();
+  });
+
+  it("should render templates using embedded font buffers", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/avatar.svg`,
+      formats: ["woff2"],
+      template: `${fixturesGlob}/templates/template-fonts-base64.njk`,
+    });
+
+    expect(result.template.length).toBeGreaterThan(0);
+    expect(Buffer.from(result.template, "base64").length).toBeGreaterThan(0);
+  });
+
+  it("should throw when template rendering requests a missing font buffer", async () => {
+    const { getTemplateFontBase64 } = await import("./templateFonts");
+
+    expect(() => getTemplateFontBase64("eot", { woff2: Buffer.from("x") })).toThrow(
+      "Missing eot buffer for template rendering",
+    );
+  });
 });

@@ -12,8 +12,8 @@ export const getOptions: OptionsGetter = (initialOptions) => {
     centerHorizontally: false,
     descent: 0,
     fixedWidth: false,
-    fontHeight: null,
-    fontId: null,
+    fontHeight: undefined,
+    fontId: undefined,
     fontName: "webfont",
     fontStyle: "",
     fontWeight: "",
@@ -25,7 +25,6 @@ export const getOptions: OptionsGetter = (initialOptions) => {
         version: null,
       },
     },
-    glyphTransformFn: null,
     ligatures: true,
 
     /*
@@ -33,19 +32,14 @@ export const getOptions: OptionsGetter = (initialOptions) => {
      * This is usually less than file read maximums while staying performance
      */
     maxConcurrency: 100,
-    metadata: null,
-    metadataProvider: null,
+    metadata: undefined,
     normalize: false,
     prependUnicode: false,
     round: 10e12,
     sort: true,
     startUnicode: 0xea01,
-    template: null,
-    templateCacheString: null,
-    templateClassName: null,
-    templateFontName: null,
     templateFontPath: "./",
     verbose: false,
     ...initialOptions,
-  };
+  } as WebfontOptions;
 };

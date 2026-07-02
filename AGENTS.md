@@ -29,6 +29,22 @@ Calling `fs.mkdirSync` / `fs.rmSync` directly in an `async` `it(...)` block is a
 
 When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract a small `promisify` helper and use it from `async` hooks instead of nesting callbacks.
 
+### CLI and async I/O
+
+- **Parse CLI flags into real runtime types.** Do not cast meow string flags (for example `--formats`) directly to array types. Parse JSON arrays or comma-separated values into typed structures before passing them to `webfont` (see `parseFormatsFlag`).
+- **Await filesystem writes in async CLI flows.** Use `fs.promises.writeFile` (or promisified equivalents) inside `async` functions and `await Promise.all(...)`. Do not wrap callback-based `fs.writeFile` in `Promise.all` — the callback form returns `void`, so the CLI can exit before writes finish and write errors are lost.
+- **Model optional runtime hooks accurately.** If code supports an optional callback such as `metadataProvider`, type it as `metadataProvider?: MetadataProvider` — not `null` — so callers and `strictNullChecks` stay aligned.
+
+## Documentation
+
+When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:
+
+1. **Check for user impact** before finishing — compare CLI help (`src/cli/meow/index.ts`), [README.md](./README.md) (Options + CLI sections), and any examples or fixtures that show usage.
+2. **Update README.md** when behavior, accepted input formats, or public options change. Keep CLI flag names and short aliases aligned with `meow` (`-f` / `--formats`, `-u` / `--fontName`, etc.).
+3. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
+
+See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and documentation”.
+
 ## General
 
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.
@@ -70,5 +86,10 @@ Keep the template **headings and order**, but write each section critically — 
 | **How to test** | Steps a reviewer can follow. For non-user-facing changes, describe what you ran (`npm test`, `npm run lint`, file review). |
 | **Test configuration** | Include Node/npm versions only when the change is version-sensitive or CI-related; otherwise `N/A` or omit the bullet values. |
 | **Checklist** | Mark `[x]` only for items you completed. Leave maintainer-only items (labels) unchecked. |
+
+### Scope, title, and description
+
+- **Re-read the PR title and body whenever the branch scope changes.** After adding commits, update the title and **Proposed changes** section so reviewers see the full picture — not just the first commit message.
+- **Split when it grows too much.** If a branch picks up unrelated fixes, large test extractions, or docs on top of the original goal, prefer **separate PRs** for follow-up work rather than one ever-growing branch. This PR accumulated extra scope before that rule was written; use smaller PRs from here on.
 
 Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only / no code changes.

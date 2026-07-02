@@ -110,10 +110,11 @@ webfont({
 
 #### `formats`
 
-- Type: `array`,
-- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']`,
-- Possible values: `svg, ttf, eot, woff, woff2`,
+- Type: `array`
+- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']`
+- Possible values: `svg`, `ttf`, `eot`, `woff`, `woff2`
 - Description: Font file types to generate.
+- CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
 
 #### `template`
 
@@ -196,6 +197,23 @@ webfont({
     .catch((error) => {
       throw error;
     });
+  ```
+
+#### `metadataProvider`
+
+- Type: `function`
+- Default: built-in metadata service (reads icon names and unicode from SVG files)
+- Description: Custom callback to resolve glyph metadata for each source file. Receives the file path and a Node-style callback `(error, metadata)` where `metadata` is `{ name: string, unicode?: string | string[] }`. When omitted, webfont uses its default metadata reader.
+
+  ```js
+  import webfont from "webfont";
+
+  webfont({
+    files: "src/svg-icons/**/*.svg",
+    metadataProvider: (srcPath, callback) => {
+      callback(null, { name: "custom-icon-name" });
+    },
+  });
   ```
 
 #### `sort`
@@ -359,7 +377,7 @@ If you're using cross-env:
             The search will begin in the working directory and move up the
             directory tree until a configuration file is found.
 
-        -f, --font-name
+        -u, --fontName
 
             The font family name you want, default: "webfont".
 
@@ -371,9 +389,10 @@ If you're using cross-env:
 
             Output the version number.
 
-        -r, --formats
+        -f, --formats
 
-            Only this formats generate.
+            Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
+            comma-separated list (e.g. woff2 or svg, ttf, woff2).
 
         -d, --dest
 

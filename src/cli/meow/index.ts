@@ -1,6 +1,39 @@
 import meow from "meow";
 
-const meowCLI = meow(
+type WebfontCliFlags = {
+  ascent: { type: "string" };
+  addHashInFontUrl: { default: false; type: "boolean" };
+  centerHorizontally: { type: "boolean" };
+  config: { type: "string" };
+  descent: { type: "string" };
+  dest: { alias: "d"; default: string; type: "string" };
+  destCreate: { alias: "m"; default: false; type: "boolean" };
+  destTemplate: { alias: "s"; type: "string" };
+  fixedWidth: { type: "boolean" };
+  fontHeight: { type: "string" };
+  fontId: { type: "string" };
+  fontName: { alias: "u"; type: "string" };
+  fontStyle: { type: "string" };
+  fontWeight: { type: "string" };
+  formats: { alias: "f"; type: "string" };
+  help: { alias: "h"; type: "boolean" };
+  ligatures: { default: true; type: "boolean" };
+  metadata: { type: "string" };
+  normalize: { type: "boolean" };
+  prependUnicode: { type: "boolean" };
+  round: { type: "string" };
+  sort: { default: true; type: "boolean" };
+  startUnicode: { type: "string" };
+  template: { alias: "t"; type: "string" };
+  templateCacheString: { default: ""; type: "string" };
+  templateClassName: { alias: "c"; type: "string" };
+  templateFontName: { alias: "n"; type: "string" };
+  templateFontPath: { alias: "p"; type: "string" };
+  verbose: { default: false; type: "boolean" };
+  version: { alias: "v"; type: "boolean" };
+};
+
+const meowCLI = meow<WebfontCliFlags>(
   `
     Usage: webfont [input] [options]
 
@@ -24,7 +57,7 @@ const meowCLI = meow(
             The search will begin in the working directory and move up the
             directory tree until a configuration file is found.
 
-        -f, --fontName
+        -u, --fontName
 
             The font family name you want, default: "webfont".
 
@@ -36,9 +69,10 @@ const meowCLI = meow(
 
             Output the version number.
 
-        -r, --formats
+        -f, --formats
 
-            Only this formats generate.
+            Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
+            comma-separated list (e.g. woff2 or svg, ttf, woff2).
 
         -d, --dest
 
@@ -153,7 +187,7 @@ const meowCLI = meow(
         type: "boolean",
       },
       config: {
-        default: null,
+        type: "string",
       },
       descent: {
         type: "string",
@@ -193,6 +227,7 @@ const meowCLI = meow(
       },
       formats: {
         alias: "f",
+        type: "string",
       },
       help: {
         alias: "h",
@@ -201,6 +236,9 @@ const meowCLI = meow(
       ligatures: {
         default: true,
         type: "boolean",
+      },
+      metadata: {
+        type: "string",
       },
       normalize: {
         type: "boolean",

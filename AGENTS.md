@@ -64,6 +64,8 @@ Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contrac
 
 Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract (via `@xmldom/xmldom`), invalid version options, early pipeline rejection before conversion, and when `result.ttf` is absent vs validated (`isTtf(result.ttf)`).
 
+Example: `toTtf.test.ts` — unit-tests the `toTtf` wrapper with a `svg2ttf` spy and asserts every `formatsOptions.ttf` field is forwarded.
+
 Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
 
 ### Dependency error assertions
@@ -144,6 +146,8 @@ When a task produces branch changes intended for review (features, fixes, CI, do
 5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
 6. **Return the PR URL** in the final response.
 
+**Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
+
 ### Merged branches
 
 **Before every push**, confirm the target branch is still the right vehicle for the work:
@@ -180,5 +184,3 @@ Keep the template **headings and order**, but write each section critically — 
 - **Re-read the PR title and body whenever the branch scope changes.** After adding commits, update the title and **Proposed changes** section so reviewers see the full picture — not just the first commit message.
 - **Split when it grows too much.** If a branch picks up unrelated fixes, large test extractions, or docs on top of the original goal, prefer **separate PRs** for follow-up work rather than one ever-growing branch. This PR accumulated extra scope before that rule was written; use smaller PRs from here on.
 - **Explain why when closing a PR.** Leave an English comment (superseded, obsolete, duplicate, out of scope, etc.) — do not close without context. See [CONTRIBUTING.md](./CONTRIBUTING.md) (“Closing pull requests”).
-
-Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only / no code changes.

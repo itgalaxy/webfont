@@ -84,27 +84,24 @@ describe("svg2ttf output validation", () => {
       expect(mockedSvg2ttf).toHaveBeenCalled();
     });
 
-    it("should forward formatsOptions.ttf to svg2ttf", async () => {
+    it("should forward every formatsOptions.ttf field to svg2ttf", async () => {
+      const ttfOptions = {
+        copyright: "test copyright",
+        description: "test description",
+        ts: 1457357570,
+        url: "https://example.com/fonts",
+        version: "2.0",
+      };
+
       await standalone({
         files: `${svgIconsGlob}/avatar.svg`,
         formats: ["ttf"],
         formatsOptions: {
-          ttf: {
-            copyright: "test copyright",
-            ts: 1457357570,
-            version: "2.0",
-          },
+          ttf: ttfOptions,
         },
       });
 
-      expect(mockedSvg2ttf).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          copyright: "test copyright",
-          ts: 1457357570,
-          version: "2.0",
-        }),
-      );
+      expect(mockedSvg2ttf).toHaveBeenCalledWith(expect.any(String), ttfOptions);
     });
 
     it("should run svg2ttf internally even when ttf is omitted from formats", async () => {

@@ -179,6 +179,8 @@ Do not run local `npm version` or push version tags manually unless coordinating
 
 #### npm publishing
 
+> **Blocked on maintainer:** npm package settings access is required to enable Trusted Publishing. Track progress in [#703](https://github.com/itgalaxy/webfont/issues/703).
+
 Publishing from GitHub Actions uses **[npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers)** (OIDC) — not long-lived publish tokens with bypass 2FA.
 
 **One-time setup on npmjs.com** (package maintainer):

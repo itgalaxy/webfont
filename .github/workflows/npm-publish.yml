@@ -1,7 +1,7 @@
 name: npm publish
 
 # Publishes via npm Trusted Publishing (OIDC). Configure the trusted publisher on
-# npmjs.com for workflow filename npm-publish.yml (see CONTRIBUTING.md).
+# npmjs.com for workflow filename npm-publish.yml (see CONTRIBUTING.md, issue #703).
 on:
   release:
     types: [published]

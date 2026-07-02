@@ -42,6 +42,8 @@ When production code works around a library quirk or adds a defensive guard, add
 
 Example: `glyphsData.test.ts` — `describe("svg xml validation via xml2js")` documents that `xml2js` accepts empty input without error, then unit-tests the empty-file guard and malformed-xml rejection before metadata lookup.
 
+Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract (via `fast-xml-parser`), negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
+
 Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
 
 ### CLI integration tests (`execCLI`)

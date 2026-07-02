@@ -9,6 +9,8 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 
 **Legal / licensing:** [NOTICE.md](./NOTICE.md) — font copyright, disclaimers, attribution guidelines, and third-party library notices.
 
+**Troubleshooting:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — common errors, why they happen, and steps to fix them.
+
 ## Features
 
 - **SVG icon pipeline** (default): `.svg` icons → `svg`, `ttf`, `eot`, `woff`, `woff2` (not `otf`);

@@ -16,6 +16,17 @@ As a user of this project you’re perfect for helping us improve our docs: typo
 
 Some [issues lack information](https://github.com/itgalaxy/webfont/issues?q=is%3Aopen+is%3Aissue+label%3A%22need+more+info%22), aren’t reproducible, or are just [invalid](https://github.com/itgalaxy/webfont/issues?q=is%3Aopen+is%3Aissue+label%3Ainvalid). Help make them easier to resolve.
 
+**Common errors:** see [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) for symptoms, causes, and step-by-step fixes before opening a duplicate issue.
+
+### Maintainer backlog (open issues)
+
+When working through the issue tracker (see also [AGENTS.md](./AGENTS.md) — “GitHub issues workflow”):
+
+1. Triage: assignee, milestone `next`, type label (`bug`, `enhancement`, etc.).
+2. Fix PR: tests where needed, code change, and for **bugs/errors** an entry in [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) (error → why → steps, including workarounds before the fix ships).
+3. After merge: comment on the issue in English that the fix is on `master` and planned for the next release; **leave the issue open** until npm publish.
+4. On release: comment with the **version number** and the exact steps from TROUBLESHOOTING/README, then **close** the issue.
+
 ## Giving feedback on issues
 
 We’re always looking for more opinions on discussions in the issue tracker.
@@ -54,6 +65,7 @@ When it does, update documentation in the same PR:
 | CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section, `src/cli/meow/cliOptions.ts` help text, and [FEATURES.md](./FEATURES.md) when capability changes |
 | `webfont()` options, defaults, return shape, or supported inputs/outputs | [README.md](./README.md) Options / Result / Input modes, [FEATURES.md](./FEATURES.md) |
 | New or removed public options or pipelines | README + [FEATURES.md](./FEATURES.md) + TypeScript types under `src/types/` |
+| Bug fixes or recurring user-facing errors (especially from issues) | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — error, cause, steps (include workarounds before release and steps after upgrade) |
 | Legal notices, font licensing copy, attribution, or dependency license table | [NOTICE.md](./NOTICE.md); link from README as needed |
 | Internal-only refactors with no usage change | No README or FEATURES change; say so in the PR **Testing** section |
 

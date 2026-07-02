@@ -6,6 +6,39 @@ See also [CHANGELOG.md](./CHANGELOG.md) for the full release history.
 
 ---
 
+## Next release — CLI `--round` as number ([#569](https://github.com/itgalaxy/webfont/issues/569))
+
+**Minimum version:** *pending*
+
+### Before
+
+`--round` was passed through as a string (`"4"`), which caused `svg-pathdata` to throw:
+
+```text
+Error: assertNumbers arguments[0] is not a number. string == typeof 4
+```
+
+### After
+
+`--round` is parsed as a number before reaching the SVG pipeline (meow `type: "number"` + `Number()` in the CLI).
+
+### Workaround on older versions
+
+Use the programmatic API with a numeric `round`:
+
+```js
+await webfont({ files: "icons/*.svg", round: 4 });
+```
+
+### After upgrading
+
+```shell
+npm install webfont@<version>
+webfont "icons/*.svg" --round 4 -d dist/icons
+```
+
+---
+
 ## 12.0.1 — CLI `files` from config ([#2](https://github.com/itgalaxy/webfont/issues/2))
 
 **Minimum version:** `12.0.1`

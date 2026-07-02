@@ -33,7 +33,7 @@ export type CliLike = {
     metadata?: string;
     normalize?: boolean;
     prependUnicode?: boolean;
-    round?: string;
+    round?: number;
     sort?: boolean;
     startUnicode?: string;
     template?: string;
@@ -133,8 +133,8 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
     optionsBase.fontHeight = cli.flags.fontHeight;
   }
 
-  if (cli.flags.round) {
-    optionsBase.round = cli.flags.round;
+  if (cli.flags.round !== undefined) {
+    optionsBase.round = Number(cli.flags.round);
   }
 
   if (cli.flags.descent) {

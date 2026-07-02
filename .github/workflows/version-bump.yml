@@ -2,6 +2,11 @@ name: Node.js Packages version bump
 on:
   push:
     branches: [ master ]
+
+concurrency:
+  group: version-bump-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   build:
     if: ${{ !startsWith(github.event.head_commit.message, 'chore(release)') }}
@@ -44,7 +49,8 @@ jobs:
           " "$LATEST"
       - name: Bump versions and create release
         run: npm run release
-      - name: Push tags
-        run: npm run push-tags
-      - name: Push commits
-        run: git push origin
+      - name: Push release commits and tags
+        run: |
+          git fetch origin master
+          git pull --rebase origin master
+          git push --follow-tags origin HEAD:master

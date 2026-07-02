@@ -1,8 +1,8 @@
 import type { GlyphData } from "./GlyphData";
-import type { OptionsBase } from "./OptionsBase";
+import type { ResultConfig } from "./ResultConfig";
 
 export type Result = {
-  config?: OptionsBase;
+  config?: ResultConfig;
   eot?: Buffer;
   glyphsData?: Array<GlyphData>;
   hash?: string;

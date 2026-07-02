@@ -75,26 +75,45 @@ describe("cosmiconfig", () => {
       const nestedDir = path.join(discoveryRoot, "walkup", "nested");
       fs.mkdirSync(nestedDir, { recursive: true });
 
-      await withCwd(nestedDir, async () => {
-        const result = await standalone({ files: svgFiles });
+      try {
+        await withCwd(nestedDir, async () => {
+          const result = await standalone({ files: svgFiles });
 
-        expect(result.config?.fontName).toBe("config-walkup");
-        expect(result.config?.filePath).toMatch(/\.webfontrc\.json$/u);
-        expect(isWoff2(result.woff2)).toBe(true);
+          expect(result.config?.fontName).toBe("config-walkup");
+          expect(result.config?.filePath).toMatch(/\.webfontrc\.json$/u);
+          expect(isWoff2(result.woff2)).toBe(true);
+        });
+      } finally {
+        fs.rmSync(nestedDir, { recursive: true, force: true });
+      }
+    });
+
+    it("should ignore filePath passed as input when no config is loaded", async () => {
+      const result = await standalone({
+        files: svgFiles,
+        formats: ["woff2"],
+        // @ts-expect-error filePath is result metadata, not an input option
+        filePath: "/fake/config/path.json",
       });
+
+      expect(result.config?.filePath).toBeUndefined();
     });
 
     it("should run with defaults when no config is discoverable", async () => {
       const emptyDir = path.join("temp", "no-webfont-config");
       fs.mkdirSync(emptyDir, { recursive: true });
 
-      await withCwd(emptyDir, async () => {
-        const result = await standalone({ files: svgFiles, formats: ["woff2"] });
+      try {
+        await withCwd(emptyDir, async () => {
+          const result = await standalone({ files: svgFiles, formats: ["woff2"] });
 
-        expect(result.config?.filePath).toBeUndefined();
-        expect(result.config?.fontName).toBe("webfont");
-        expect(isWoff2(result.woff2)).toBe(true);
-      });
+          expect(result.config?.filePath).toBeUndefined();
+          expect(result.config?.fontName).toBe("webfont");
+          expect(isWoff2(result.woff2)).toBe(true);
+        });
+      } finally {
+        fs.rmSync(emptyDir, { recursive: true, force: true });
+      }
     });
   });
 

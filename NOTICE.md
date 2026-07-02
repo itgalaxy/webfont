@@ -104,7 +104,6 @@ webfont depends on the following **runtime** npm packages (direct dependencies).
 | [meow](https://github.com/sindresorhus/meow) | MIT | CLI argument parsing |
 | [nunjucks](https://github.com/mozilla/nunjucks) | BSD-2-Clause | CSS / SCSS / Styl templates |
 | [p-limit](https://github.com/sindresorhus/p-limit) | MIT | Concurrency limiting |
-| [parse-json](https://github.com/sindresorhus/parse-json) | MIT | JSON parsing |
 | [resolve-from](https://github.com/sindresorhus/resolve-from) | MIT | Module resolution |
 | [svg2ttf](https://github.com/fontello/svg2ttf) | MIT | SVG font → TTF |
 | [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) | MIT | SVG icons → SVG font |

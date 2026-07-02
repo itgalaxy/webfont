@@ -48,6 +48,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - Default `formats` when SVG-pipeline defaults are still configured: `['ttf']`.
   - `template` and `glyphTransformFn` are not supported in this mode.
   - **Licensing:** decompression does not grant rights to the font; users must comply with the font’s license for input and extracted output. Copyright/metadata in the SFNT is preserved. See [NOTICE.md](./NOTICE.md) §3.2.
+  - **Architecture:** see [ADR 0007](docs/adr/0007-woff-woff2-decompression-pipeline.md).
 - **Test Criteria**:
   - [x] `.woff2` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
   - [x] `.woff` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "src/cli/index.ts",
+    "src/types/index.ts",
+    "templates/index.ts",
+    "vitest/globby-stub.ts",
+    "src/fixtures/config-discovery/js-config/webfont.config.js",
+    "src/fixtures/config-discovery/js-rc/.webfontrc.js",
+    "src/fixtures/config-package/index.js"
+  ],
+  "project": ["src/**/*.{ts,js}", "templates/**/*.{ts,js}", "vitest/**/*.ts"],
+  "exclude": ["duplicates"],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  },
+  "ignoreIssues": {
+    "src/cli/meow/index.ts": ["exports"],
+    "src/cli/program.ts": ["exports"],
+    "templates/index.ts": ["exports"],
+    "src/index.ts": ["exports"],
+    "src/standalone/index.ts": ["exports"],
+    "src/lib/execCLI/index.ts": ["types"],
+    "src/standalone/toTtf.ts": ["types"],
+    "src/types/index.ts": ["types"],
+    "src/types/Result.ts": ["types"]
+  }
+}

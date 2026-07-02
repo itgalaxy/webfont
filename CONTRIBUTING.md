@@ -43,6 +43,12 @@ And, if you’re raising an issue, please understand that people involved with t
 - Lint and test before submitting code by running `$ npm test`;
 - Write a [convincing description](https://github.com/itgalaxy/webfont/blob/master/.github/pull_request_template.md) of why we should land your pull request: it’s your job to convince us.
 
+### Dependencies
+
+- Pin exact versions in `package.json` (no `^`, `~`, or `latest` ranges).
+- The repository sets `save-exact=true` in `.npmrc`, so `npm install <package>` records exact versions automatically.
+- When upgrading a dependency, update both `package.json` and `package-lock.json` in the same pull request.
+
 ### CI changes
 
 Pull requests that change CI configuration (for example, GitHub Actions workflows) must follow these conventions:

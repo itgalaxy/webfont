@@ -1,6 +1,7 @@
 name: npm publish
 
-# Runs when a GitHub Release is published, or manually via workflow_dispatch (see CONTRIBUTING.md).
+# Publishes via npm Trusted Publishing (OIDC). Configure the trusted publisher on
+# npmjs.com for workflow filename npm-publish.yml (see CONTRIBUTING.md).
 on:
   release:
     types: [published]
@@ -12,6 +13,10 @@ on:
 
 env:
   RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   build:
@@ -30,8 +35,6 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v6
         with:
@@ -40,8 +43,6 @@ jobs:
         with:
           node-version: 24.x
           registry-url: https://registry.npmjs.org/
-          cache: npm
+          package-manager-cache: false
       - run: npm ci
       - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

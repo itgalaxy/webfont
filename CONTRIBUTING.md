@@ -179,19 +179,28 @@ Do not run local `npm version` or push version tags manually unless coordinating
 
 #### npm publishing
 
-Configure this repository secret under **Settings → Secrets and variables → Actions**:
+Publishing from GitHub Actions uses **[npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers)** (OIDC) — not long-lived publish tokens with bypass 2FA.
 
-- **`NPM_TOKEN`** — npm access token with publish permission for the `webfont` package (Automation or Granular Access Token).
+**One-time setup on npmjs.com** (package maintainer):
 
-After merging the Release PR, publish from the release tag (recommended):
+1. Open [webfont package settings](https://www.npmjs.com/package/webfont) → **Trusted publishing** → **GitHub Actions**.
+2. Set **Repository** to `itgalaxy/webfont`.
+3. Set **Workflow filename** to `npm-publish.yml` (filename only, including `.yml`).
+4. Save. Allow action **npm publish** if prompted.
+
+**Workflow:** [`.github/workflows/npm-publish.yml`](.github/workflows/npm-publish.yml) requests `id-token: write` and runs `npm publish` without `NPM_TOKEN`. Releases created by `github-actions[bot]` usually do not trigger downstream workflows — use **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.0.1`) after merging a Release PR.
+
+**Manual publish** from a maintainer machine (browser/web auth or local npm login) is still supported:
 
 ```shell
 git fetch origin --tags
-git checkout v12.0.0   # use the tag created by Release Please
+git checkout v12.0.1   # tag from Release Please
 npm ci
 npm test
 npm publish --access public
 ```
+
+Do not create npm tokens with **bypass 2FA** for CI — npm flags that as insecure; use Trusted Publishing instead.
 
 Automated publishing does **not** retroactively upload versions that already exist as git tags only (for example `11.5.x` never published to npm).
 

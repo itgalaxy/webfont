@@ -96,7 +96,7 @@ Do not rename release tags casually: npm publish, `npm-publish.yml`, and changel
 
 ### Follow-up
 
-- ~~If npm registry publish should run automatically, extend `npm-publish.yml` with `npm publish` and `NPM_TOKEN` (today it only runs `npm test` on `release: created`).~~ Done in PR [#639](https://github.com/itgalaxy/webfont/pull/639): publish on `release: published` with `NPM_TOKEN`.
+- ~~If npm registry publish should run automatically, extend `npm-publish.yml` with `npm publish` and `NPM_TOKEN` (today it only runs `npm test` on `release: created`).~~ Done in PR [#639](https://github.com/itgalaxy/webfont/pull/639): publish on `release: published`. CI uses [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC), not long-lived publish tokens — see `CONTRIBUTING.md`.
 
 ## References
 

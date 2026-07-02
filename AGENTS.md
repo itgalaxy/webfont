@@ -60,7 +60,7 @@ When production code works around a library quirk or adds a defensive guard, add
 
 Example: `glyphsData.test.ts` — `describe("svg xml validation via xml2js")` documents that `xml2js` accepts empty input without error, then unit-tests the empty-file guard and malformed-xml rejection before metadata lookup.
 
-Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract (via `fast-xml-parser`), negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
+Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract, negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
 
 Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract (via `@xmldom/xmldom`), invalid version options, early pipeline rejection before conversion, and when `result.ttf` is absent vs validated (`isTtf(result.ttf)`).
 

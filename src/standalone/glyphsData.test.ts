@@ -215,21 +215,21 @@ describe("glyphsData", () => {
   });
 
   describe("svg xml validation via xml2js", () => {
-    it("documents that xml2js accepts empty input without error (requires explicit empty-file guard)", async () => {
+    it("should document that xml2js accepts empty input without error (requires explicit empty-file guard)", async () => {
       const { error, result } = await parseWithXml2js("");
 
       expect(error).toBeNull();
       expect(result).toBeNull();
     });
 
-    it("documents that xml2js rejects malformed xml", async () => {
+    it("should document that xml2js rejects malformed xml", async () => {
       const contents = await fsPromise.readFile(malformedXmlFile, "utf8");
       const { error } = await parseWithXml2js(contents);
 
       expect(error?.message).toMatch(/Unclosed root tag/u);
     });
 
-    it("documents that xml2js accepts well-formed xml used by later pipeline errors", async () => {
+    it("should document that xml2js accepts well-formed xml used by later pipeline errors", async () => {
       const contents = await fsPromise.readFile(wellFormedXmlFile, "utf8");
       const { error, result } = await parseWithXml2js(contents);
 
@@ -237,11 +237,11 @@ describe("glyphsData", () => {
       expect(result).not.toBeNull();
     });
 
-    it("rejects empty svg files before xml2js can treat them as valid", async () => {
+    it("should reject empty svg files before xml2js can treat them as valid", async () => {
       await expect(getGlyphsData([emptySvgFile], getTestOptions(1))).rejects.toThrow(`Empty file ${emptySvgFile}`);
     });
 
-    it("rejects empty svg files without calling parseString", async () => {
+    it("should reject empty svg files without calling parseString", async () => {
       const parseStringSpy = jest.spyOn(xml2js.Parser.prototype, "parseString");
 
       try {
@@ -252,7 +252,7 @@ describe("glyphsData", () => {
       }
     });
 
-    it("rejects empty svg files without calling metadataProvider", async () => {
+    it("should reject empty svg files without calling metadataProvider", async () => {
       const metadataProvider = jest.fn();
 
       await expect(
@@ -264,11 +264,11 @@ describe("glyphsData", () => {
       expect(metadataProvider).not.toHaveBeenCalled();
     });
 
-    it("rejects malformed xml via xml2js parse errors", async () => {
+    it("should reject malformed xml via xml2js parse errors", async () => {
       await expect(getGlyphsData([malformedXmlFile], getTestOptions(1))).rejects.toThrow(/Unclosed root tag/u);
     });
 
-    it("rejects malformed xml without calling metadataProvider", async () => {
+    it("should reject malformed xml without calling metadataProvider", async () => {
       const metadataProvider = jest.fn();
 
       await expect(
@@ -290,13 +290,13 @@ describe("glyphsData", () => {
       deletePollutionMarker();
     });
 
-    it("requires xml2js >= 0.5.0 so assignOrPush uses defineProperty instead of obj[key] assignment", () => {
+    it("should require xml2js >= 0.5.0 so assignOrPush uses defineProperty instead of obj[key] assignment", () => {
       const { version } = jest.requireActual<{ version: string }>("xml2js/package.json");
 
       expect(version).not.toMatch(/^0\.4\./u);
     });
 
-    it("documents the null-prototype PropertyDescriptor pattern that replaces direct obj[key] assignment", () => {
+    it("should document the null-prototype PropertyDescriptor pattern that replaces direct obj[key] assignment", () => {
       const target: Record<string, unknown> = {};
       const descriptor = Object.create(null) as PropertyDescriptor & Record<string, unknown>;
 
@@ -312,7 +312,7 @@ describe("glyphsData", () => {
       expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
     });
 
-    it("stores __proto__ elements as own properties without polluting Object.prototype when parsing xml", async () => {
+    it("should store __proto__ elements as own properties without polluting Object.prototype when parsing xml", async () => {
       const { error, result } = await parseWithXml2js(
         `<root><__proto__><${pollutionMarker}>polluted</${pollutionMarker}></__proto__></root>`,
       );
@@ -323,7 +323,7 @@ describe("glyphsData", () => {
       expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
     });
 
-    it("does not pollute Object.prototype when getGlyphsData parses svg with a __proto__ element", async () => {
+    it("should not pollute Object.prototype when getGlyphsData parses svg with a __proto__ element", async () => {
       await getGlyphsData([protoElementSvgFile], {
         ...getTestOptions(1),
         metadataProvider: (_srcPath, callback) => {
@@ -334,7 +334,7 @@ describe("glyphsData", () => {
       expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
     });
 
-    it("does not pollute Object.prototype when getGlyphsData rejects malformed xml", async () => {
+    it("should not pollute Object.prototype when getGlyphsData rejects malformed xml", async () => {
       await expect(getGlyphsData([malformedXmlFile], getTestOptions(1))).rejects.toThrow(/Unclosed root tag/u);
 
       expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();

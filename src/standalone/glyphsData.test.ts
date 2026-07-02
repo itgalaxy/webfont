@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { GlyphData } from "../types";
+import type { GlyphData, WebfontOptions } from "../types";
 import { getGlyphsData } from "./glyphsData";
 import { getOptions } from "./options";
 
@@ -11,13 +11,14 @@ const svgFiles = [
   path.join(fixturesDir, "phone-call.svg"),
 ];
 
-const getTestOptions = (maxConcurrency: number) => ({
+const getTestOptions = (maxConcurrency: number, overrides: Partial<WebfontOptions> = {}): WebfontOptions => ({
   ...getOptions({
     files: "unused",
     ligatures: false,
     sort: false,
   }),
   maxConcurrency,
+  ...overrides,
 });
 
 describe("glyphsData", () => {
@@ -97,5 +98,91 @@ describe("glyphsData", () => {
     } finally {
       createReadStreamSpy.mockRestore();
     }
+  });
+
+  it("should sort glyphs when sort is enabled", async () => {
+    const glyphsData = (await getGlyphsData(svgFiles, getTestOptions(2, { sort: true }))) as GlyphData[];
+
+    expect(glyphsData.map((glyph) => path.basename(glyph.srcPath))).toEqual([
+      "avatar.svg",
+      "envelope.svg",
+      "phone-call.svg",
+    ]);
+  });
+
+  it("should add ligature unicode when ligatures is enabled", async () => {
+    const glyphsData = (await getGlyphsData(
+      svgFiles.slice(0, 1),
+      getTestOptions(1, { ligatures: true }),
+    )) as GlyphData[];
+
+    expect(glyphsData[0].metadata?.unicode?.length).toBeGreaterThan(1);
+    expect(glyphsData[0].metadata?.unicode).toContain("avatar");
+  });
+
+  it("should normalize string unicode values from metadata provider", async () => {
+    const glyphsData = (await getGlyphsData(svgFiles.slice(0, 1), {
+      ...getTestOptions(1),
+      metadataProvider: (_srcPath, callback) => {
+        callback(null, { name: "custom-glyph", unicode: "\u0001" });
+      },
+    })) as GlyphData[];
+
+    expect(glyphsData[0].metadata?.unicode).toEqual(["\u0001"]);
+  });
+
+  it("should normalize metadata without unicode values", async () => {
+    const glyphsData = (await getGlyphsData(svgFiles.slice(0, 1), {
+      ...getTestOptions(1),
+      metadataProvider: (_srcPath, callback) => {
+        callback(null, { name: "no-unicode-glyph" });
+      },
+    })) as GlyphData[];
+
+    expect(glyphsData[0].metadata?.unicode).toEqual([]);
+  });
+
+  it("should reject when metadata provider returns no metadata", async () => {
+    await expect(
+      getGlyphsData(svgFiles.slice(0, 1), {
+        ...getTestOptions(1),
+        metadataProvider: (_srcPath, callback) => {
+          callback(null, undefined);
+        },
+      }),
+    ).rejects.toThrow(`Missing metadata for ${svgFiles[0]}`);
+  });
+
+  it("should reject when metadata provider returns an error", async () => {
+    await expect(
+      getGlyphsData(svgFiles.slice(0, 1), {
+        ...getTestOptions(1),
+        metadataProvider: (_srcPath, callback) => {
+          callback(new Error("metadata failed"), undefined);
+        },
+      }),
+    ).rejects.toThrow("metadata failed");
+  });
+
+  it("should reject when svg file read fails", async () => {
+    const originalCreateReadStream = fs.createReadStream;
+
+    const createReadStreamSpy = jest.spyOn(fs, "createReadStream").mockImplementation((...args) => {
+      const stream = originalCreateReadStream.apply(fs, args);
+      stream.emit("error", new Error("read failed"));
+      return stream;
+    });
+
+    try {
+      await expect(getGlyphsData(svgFiles.slice(0, 1), getTestOptions(1))).rejects.toThrow("read failed");
+    } finally {
+      createReadStreamSpy.mockRestore();
+    }
+  });
+
+  it("should reject empty svg files", async () => {
+    const emptyFile = path.join(__dirname, "../fixtures/bad-svg-icons/avatar-3.svg");
+
+    await expect(getGlyphsData([emptyFile], getTestOptions(1))).rejects.toThrow(/Empty file/u);
   });
 });

@@ -16,6 +16,7 @@ import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
 import { getGlyphsData } from "./glyphsData";
 import { getOptions } from "./options";
+import { getTemplateFontBase64 } from "./templateFonts";
 
 type CosmiconfigLoaded = NonNullable<Awaited<ReturnType<ReturnType<typeof cosmiconfig>["search"]>>>;
 
@@ -204,24 +205,7 @@ export const webfont: Webfont = async (initialOptions) => {
       hashOption,
       {
         fonts: Object.fromEntries(
-          new Map(
-            formats.map((format: Format) => [
-              format,
-              () => {
-                if (format === "woff2") {
-                  return Buffer.from(result.woff2 as Buffer).toString("base64");
-                }
-
-                const fontBuffer = result[format];
-
-                if (!fontBuffer) {
-                  throw new Error(`Missing ${format} buffer for template rendering`);
-                }
-
-                return fontBuffer.toString("base64");
-              },
-            ]),
-          ),
+          new Map(formats.map((format: Format) => [format, () => getTemplateFontBase64(format, result)])),
         ),
       },
     ]);

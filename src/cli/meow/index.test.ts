@@ -77,9 +77,7 @@ describe("cli/meow", () => {
 
     it("should expose help text that matches the bundled CLI stdout contract", () => {
       expect(expectedHelpStdout()).toContain("Usage: webfont [input] [options]");
-      expect(expectedHelpStdout()).toContain(
-        "Generator of fonts from svg icons, svg icons to svg font, svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
-      );
+      expect(expectedHelpStdout()).toContain("Generator of fonts from svg icons; convert WOFF/WOFF2 to TTF/OTF");
     });
 
     it("should parse --help and --version flags", () => {

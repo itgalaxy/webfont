@@ -32,6 +32,7 @@ When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract 
 ## General
 
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.
-- Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`).
+- Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `ci`).
+- Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 - Keep changes focused; match surrounding code style and tooling (Biome, Jest, Lefthook).
 - Do not commit unless explicitly asked.

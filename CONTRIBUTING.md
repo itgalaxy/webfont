@@ -84,6 +84,17 @@ Pull requests that change CI configuration (for example, GitHub Actions workflow
 
 Do not use `chore:` or `chore(ci):` for CI-only changes.
 
+### Releases
+
+Versioning is automated with [Release Please](https://github.com/googleapis/release-please) (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
+
+1. Merge changes to `master` using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `ci:`, etc.).
+2. Release Please opens or updates a **Release PR** with the next version, `CHANGELOG.md`, and `package.json` updates.
+3. Review and merge the Release PR to create the git tag and GitHub Release.
+4. The `npm-publish` workflow runs when a GitHub Release is created.
+
+Do not run local `npm version` or push version tags manually unless coordinating an emergency release with maintainers.
+
 ## Resources
 
 - [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)

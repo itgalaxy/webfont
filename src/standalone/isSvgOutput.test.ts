@@ -8,9 +8,9 @@ const fixturesGlob = "src/fixtures/svg-icons";
 describe("is-svg output validation", () => {
   describe("is-svg library contract (dev dependency)", () => {
     it("should document that is-svg throws TypeError for non-string input", () => {
-      expect(() => isSvg(null as unknown as string)).toThrow("Expected a `string`, got `object`");
-      expect(() => isSvg(undefined as unknown as string)).toThrow("Expected a `string`, got `undefined`");
-      expect(() => isSvg(Buffer.from("") as unknown as string)).toThrow("Expected a `string`, got `object`");
+      expect(() => isSvg(null as unknown as string)).toThrow(TypeError);
+      expect(() => isSvg(undefined as unknown as string)).toThrow(TypeError);
+      expect(() => isSvg(Buffer.from("") as unknown as string)).toThrow(TypeError);
     });
 
     it("should document that is-svg returns false for empty string input", () => {
@@ -50,7 +50,7 @@ describe("is-svg output validation", () => {
       });
 
       expect(woff2).toBeDefined();
-      expect(() => isSvg(woff2 as unknown as string)).toThrow("Expected a `string`, got `object`");
+      expect(() => isSvg(woff2 as unknown as string)).toThrow(TypeError);
     });
   });
 
@@ -100,7 +100,7 @@ describe("is-svg output validation", () => {
 
     it("should document that absent result.svg must be asserted with toBeUndefined, not is-svg", () => {
       // is-svg 6 throws on undefined; callers must check result.svg before validating.
-      expect(() => isSvg(undefined as unknown as string)).toThrow("Expected a `string`, got `undefined`");
+      expect(() => isSvg(undefined as unknown as string)).toThrow(TypeError);
       expect(undefined).toBeUndefined();
     });
   });

@@ -66,6 +66,23 @@ Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract
 
 Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
 
+### Dependency error assertions
+
+When a test documents a **third-party library contract** (for example `is-svg`, `svg2ttf`, `xml2js`), assert the **error type** or a **loose regex** — not the dependency’s full error message string. Patch and minor releases often reword messages; the behavioral contract is usually the type or a stable fragment.
+
+```ts
+// Good — contract is "non-string input throws TypeError"
+expect(() => isSvg(null as unknown as string)).toThrow(TypeError);
+
+// Good — stable fragment from our pipeline or a documented library quirk
+await expect(getGlyphsData([malformedXmlFile], options)).rejects.toThrow(/Unclosed root tag/u);
+
+// Avoid for dependency-owned messages — brittle across releases
+expect(() => isSvg(null as unknown as string)).toThrow("Expected a `string`, got `object`");
+```
+
+Exact message strings are fine for **errors thrown by this repository** when the message is part of the public CLI or API contract under test.
+
 ### CLI integration tests (`execCLI`)
 
 Integration tests in `src/cli/index.test.ts` run the built CLI via `child_process.exec` and capture **stdout**, **stderr**, and the exit code.

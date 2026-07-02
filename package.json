@@ -53,16 +53,15 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "@babel/preset-env": "latest",
-    "@babel/preset-typescript": "latest",
     "@biomejs/biome": "2.5.2",
     "@rollup/plugin-commonjs": "latest",
     "@rollup/plugin-typescript": "latest",
+    "@swc/core": "1.15.11",
+    "@swc/jest": "0.2.39",
     "@types/jest": "26.0.24",
     "@types/node": "^22.15.0",
     "@types/nunjucks": "3.2.6",
     "@types/rimraf": "latest",
-    "babel-jest": "27.1.0",
     "is-eot": "latest",
     "is-svg": "latest",
     "is-ttf": "latest",

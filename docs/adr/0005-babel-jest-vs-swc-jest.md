@@ -6,7 +6,7 @@
 
 ## Context
 
-The project uses **Jest 27.1.0** with **`babel-jest`** and Babel presets (`@babel/preset-env`, `@babel/preset-typescript`, `babel.config.js`) to transpile TypeScript test files. Babel is **only** used on the Jest path — production code is built with Rollup + `@rollup/plugin-typescript` and `tsc` declarations ([ADR 0002](./0002-jest-vs-vitest-testing.md)).
+The project uses **Jest 30** with **`@swc/jest`** to run TypeScript tests. Tests run on every `npm test` via `pretest` → `npm run build` (clean, lint, Vite library build, declaration emit) and then `jest src`. Production code is built with Vite library mode and `tsc` declarations ([ADR 0006](./0006-vite-instead-of-rollup.md)).
 
 Test surface today (v11.5.21):
 

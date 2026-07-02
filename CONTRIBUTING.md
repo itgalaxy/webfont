@@ -23,7 +23,7 @@ Some [issues lack information](https://github.com/itgalaxy/webfont/issues?q=is%3
 When working through the issue tracker (see also [AGENTS.md](./AGENTS.md) — “GitHub issues workflow”):
 
 1. Triage: assignee, milestone `next`, type label (`bug`, `enhancement`, etc.).
-2. Fix PR: tests where needed, code change, and for **issue fixes that change behavior across releases** an entry in [MIGRATION.md](./MIGRATION.md) (before → after → workaround → steps after upgrade).
+2. Fix PR: tests where needed, code change, and for **issue fixes that change behavior across releases** an entry in [MIGRATION.md](./MIGRATION.md) following the [entry structure](./MIGRATION.md#entry-structure) (before → after → **workaround on older versions** when applicable → steps after upgrade).
 3. After merge: comment on the issue in English that the fix is on `master` and planned for the next release; **leave the issue open** until npm publish.
 4. On release: comment with the **version number** and the exact steps from MIGRATION.md, then **close** the issue.
 
@@ -65,7 +65,7 @@ When it does, update documentation in the same PR:
 | CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section, `src/cli/meow/cliOptions.ts` help text, and [FEATURES.md](./FEATURES.md) when capability changes |
 | `webfont()` options, defaults, return shape, or supported inputs/outputs | [README.md](./README.md) Options / Result / Input modes, [FEATURES.md](./FEATURES.md) |
 | New or removed public options or pipelines | README + [FEATURES.md](./FEATURES.md) + TypeScript types under `src/types/` |
-| Bug fixes or recurring user-facing errors (especially from issues) | [MIGRATION.md](./MIGRATION.md) when behavior changes across versions; [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when the fix applies the same on all releases |
+| Bug fixes or recurring user-facing errors (especially from issues) | [MIGRATION.md](./MIGRATION.md) ([entry structure](./MIGRATION.md#entry-structure), including **Workaround on older versions** when users can mitigate without upgrading); [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when the fix applies the same on all releases |
 | Legal notices, font licensing copy, attribution, or dependency license table | [NOTICE.md](./NOTICE.md); link from README as needed |
 | Internal-only refactors with no usage change | No README or FEATURES change; say so in the PR **Testing** section |
 

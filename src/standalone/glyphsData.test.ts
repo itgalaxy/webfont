@@ -11,6 +11,12 @@ const badFixturesDir = path.join(__dirname, "../fixtures/bad-svg-icons");
 const emptySvgFile = path.join(badFixturesDir, "avatar-3.svg");
 const malformedXmlFile = path.join(badFixturesDir, "avatar.svg");
 const wellFormedXmlFile = path.join(badFixturesDir, "avatar-1.svg");
+const protoElementSvgFile = path.join(badFixturesDir, "proto-element.svg");
+const pollutionMarker = "webfontXml2jsPollutionMarker";
+
+const deletePollutionMarker = (): void => {
+  delete (Object.prototype as Record<string, unknown>)[pollutionMarker];
+};
 
 const parseWithXml2js = (input: string): Promise<{ error: Error | null; result: unknown }> =>
   new Promise((resolve) => {
@@ -272,6 +278,66 @@ describe("glyphsData", () => {
         }),
       ).rejects.toThrow(/Unclosed root tag/u);
       expect(metadataProvider).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("prototype pollution hardening (CVE-2023-0842 / SNYK-JS-XML2JS-5414874)", () => {
+    beforeEach(() => {
+      deletePollutionMarker();
+    });
+
+    afterEach(() => {
+      deletePollutionMarker();
+    });
+
+    it("requires xml2js >= 0.5.0 so assignOrPush uses defineProperty instead of obj[key] assignment", () => {
+      const { version } = jest.requireActual<{ version: string }>("xml2js/package.json");
+
+      expect(version).not.toMatch(/^0\.4\./u);
+    });
+
+    it("documents the null-prototype PropertyDescriptor pattern that replaces direct obj[key] assignment", () => {
+      const target: Record<string, unknown> = {};
+      const descriptor = Object.create(null) as PropertyDescriptor & Record<string, unknown>;
+
+      descriptor.value = { [pollutionMarker]: "polluted" };
+      descriptor.writable = true;
+      descriptor.enumerable = true;
+      descriptor.configurable = true;
+
+      Object.defineProperty(target, "__proto__", descriptor);
+
+      expect(Object.getPrototypeOf(descriptor)).toBeNull();
+      expect(Object.hasOwn(target, "__proto__")).toBe(true);
+      expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
+    });
+
+    it("stores __proto__ elements as own properties without polluting Object.prototype when parsing xml", async () => {
+      const { error, result } = await parseWithXml2js(
+        `<root><__proto__><${pollutionMarker}>polluted</${pollutionMarker}></__proto__></root>`,
+      );
+
+      expect(error).toBeNull();
+      expect(result).not.toBeNull();
+      expect(Object.hasOwn(result?.root, "__proto__")).toBe(true);
+      expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
+    });
+
+    it("does not pollute Object.prototype when getGlyphsData parses svg with a __proto__ element", async () => {
+      await getGlyphsData([protoElementSvgFile], {
+        ...getTestOptions(1),
+        metadataProvider: (_srcPath, callback) => {
+          callback(null, { name: "proto-element-icon" });
+        },
+      });
+
+      expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
+    });
+
+    it("does not pollute Object.prototype when getGlyphsData rejects malformed xml", async () => {
+      await expect(getGlyphsData([malformedXmlFile], getTestOptions(1))).rejects.toThrow(/Unclosed root tag/u);
+
+      expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
     });
   });
 });

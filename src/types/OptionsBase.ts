@@ -1,3 +1,4 @@
+import type { TemplateOption } from "../lib/parseTemplateOption";
 import type { Formats } from "./Format";
 
 export type OptionsBase = {
@@ -6,7 +7,7 @@ export type OptionsBase = {
   destCreate?: boolean;
   fontName?: string | unknown;
   formats?: Formats;
-  template?: "css" | string;
+  template?: TemplateOption;
   templateClassName?: string | unknown;
   templateFontPath?: string;
   templateFontName?: string | unknown;

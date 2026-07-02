@@ -1,3 +1,4 @@
+import type { TemplateOption } from "../lib/parseTemplateOption";
 import type { Formats, FormatsOptions } from "./Format";
 import type { GlyphContentTransformFn } from "./GlyphContentTransformFn";
 import type { GlyphTransformFn } from "./GlyphTransformFn";
@@ -26,7 +27,7 @@ export interface WebfontOptions extends InitialOptions {
   round: string | number;
   sort: boolean;
   startUnicode: number;
-  template?: string;
+  template?: TemplateOption;
   templateCacheString?: unknown;
   templateClassName?: unknown;
   templateFontName?: unknown;

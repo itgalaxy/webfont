@@ -1,4 +1,5 @@
 import { assertFormatsOption } from "../lib/parseFormats";
+import { normalizeTemplateOption } from "../lib/parseTemplateOption";
 import type { WebfontOptions } from "../types/WebfontOptions";
 
 const assertStringOption = (name: string, value: unknown): void => {
@@ -39,7 +40,9 @@ export const validateWebfontOptions = (options: WebfontOptions): WebfontOptions 
   assertFilesOption(options.files);
   options.formats = assertFormatsOption(options.formats);
   assertStringOption("fontName", options.fontName);
-  assertStringOption("template", options.template);
+  if (options.template !== undefined) {
+    normalizeTemplateOption(options.template);
+  }
   assertStringOption("templateFontPath", options.templateFontPath);
 
   return options;

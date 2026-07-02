@@ -145,6 +145,16 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - [x] Unit tests in `validateWebfontOptions.test.ts`
   - [x] Standalone and CLI integration tests for unknown format names (#133)
 
+### Multiple templates
+
+- **Stability**: stable
+- **Description**: Generate more than one style/preview template per run.
+- **Properties**:
+  - `template` accepts a string or array of built-in names (`css`, `html`, `scss`, `styl`, `json`) or custom template paths.
+  - `result.templates` lists each rendered output; `result.template` remains the first entry for backward compatibility.
+- **Test Criteria**:
+  - [x] Standalone and CLI tests for `template: ['html', 'scss']` (#158)
+
 ### Glyph metadata hooks
 
 - **Stability**: stable

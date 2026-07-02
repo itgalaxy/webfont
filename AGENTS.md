@@ -41,8 +41,11 @@ When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract 
 
 When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
 
-1. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
-2. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first.
-3. **Return the PR URL** in the final response.
+1. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and **fill every section** of the template (do not substitute a shorter custom format).
+2. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
+3. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so checklists and headings match the template exactly.
+4. **Return the PR URL** in the final response.
+
+Required sections from the template: **Proposed changes**, **Related issue**, **Dependencies added/removed** (or “None”), **Testing** checklists, **How to test**, **Test configuration**, and the **Checklist** at the bottom. Mark completed items with `[x]`.
 
 Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only / no code changes.

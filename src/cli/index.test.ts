@@ -70,7 +70,7 @@ describe("cli", () => {
     }
   });
 
-  it("exits with code 2 and displays --help if no argument parameters are passed", async () => {
+  it("should exit with code 2 and displays --help if no argument parameters are passed", async () => {
     const output = await execCLI();
 
     expect(output.code).toBe(2);
@@ -78,7 +78,7 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
-  it("can show help", async () => {
+  it("should show help", async () => {
     const output = await execCLI("--help");
 
     expect(output.code).toBe(2);
@@ -86,7 +86,7 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
-  it("can show version with --version", async () => {
+  it("should show version with --version", async () => {
     const output = await execCLI("--version");
 
     expect(output.code).toBe(0);
@@ -95,7 +95,7 @@ describe("cli", () => {
   });
 
   describe("short options", () => {
-    it("can show help with -h", async () => {
+    it("should show help with -h", async () => {
       const output = await execCLI("-h");
 
       expect(output.code).toBe(2);
@@ -103,7 +103,7 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
-    it("can show version with -v", async () => {
+    it("should show version with -v", async () => {
       const output = await execCLI("-v");
 
       expect(output.code).toBe(0);
@@ -111,7 +111,7 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
-    it("can set destination with -d", async () => {
+    it("should set destination with -d", async () => {
       const output = await execCLI(`${source} -d ${destination}`);
 
       expect(output.files).toEqual([
@@ -126,7 +126,7 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
-    it("can create destination with -m", async () => {
+    it("should create destination with -m", async () => {
       const nonExistentDestination = `${destination}/short-option/missing-dest`;
       const output = await execCLI(`${source} -d ${nonExistentDestination} -m`);
 
@@ -141,7 +141,7 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
-    it("can set destTemplate with -s", async () => {
+    it("should set destTemplate with -s", async () => {
       const templateDest = `${destination}/template-output`;
       await fsPromise.mkdir(templateDest, { recursive: true });
 
@@ -158,7 +158,7 @@ describe("cli", () => {
       expect(css).toMatchSnapshot();
     });
 
-    it("can set font name with -u", async () => {
+    it("should set font name with -u", async () => {
       const output = await execCLI(`${source} -d ${destination} -u foobar`);
 
       expect(output.files).toEqual([
@@ -173,7 +173,7 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
-    it("can set formats with -f", async () => {
+    it("should set formats with -f", async () => {
       const output = await execCLI(`${source} -d ${destination} -f '["woff2"]'`);
 
       expect(output.files).toEqual(["webfont.hash", "webfont.woff2"]);
@@ -181,7 +181,7 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
-    it("can set template with -t", async () => {
+    it("should set template with -t", async () => {
       const output = await execCLI(`${source} -d ${destination} -t css --templateCacheString test`);
 
       expect(output.files).toEqual([
@@ -196,7 +196,7 @@ describe("cli", () => {
       expect(output.stderr).toBe("");
     });
 
-    it("can set templateClassName with -c", async () => {
+    it("should set templateClassName with -c", async () => {
       const output = await execCLI(
         `${source} -d ${destination} -t css -c short-option-class --templateCacheString test`,
       );
@@ -208,7 +208,7 @@ describe("cli", () => {
       expect(css).toContain(".short-option-class");
     });
 
-    it("can set templateFontName with -n", async () => {
+    it("should set templateFontName with -n", async () => {
       const output = await execCLI(
         `${source} -d ${destination} -t css -n short-option-font --templateCacheString test`,
       );
@@ -220,7 +220,7 @@ describe("cli", () => {
       expect(css).toContain("short-option-font");
     });
 
-    it("can set templateFontPath with -p", async () => {
+    it("should set templateFontPath with -p", async () => {
       const output = await execCLI(`${source} -d ${destination} -t css -p short/path --templateCacheString test`);
 
       expect(output.code).toBe(0);
@@ -362,7 +362,7 @@ describe("cli", () => {
     expect(css).toMatchSnapshot();
   });
 
-  it("can set font name", async () => {
+  it("should set font name", async () => {
     const output = await execCLI(`${source} -d ${destination} --fontName foobar`);
 
     expect(output.files).toEqual([
@@ -396,7 +396,7 @@ describe("cli", () => {
     expect(data).toMatchSnapshot();
   });
 
-  it("can be verbose", async () => {
+  it("should run in verbose mode", async () => {
     const output = await execCLI(`${source} -d ${destination} --verbose`);
 
     expect(output.files).toEqual([

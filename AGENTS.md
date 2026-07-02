@@ -29,6 +29,24 @@ Calling `fs.mkdirSync` / `fs.rmSync` directly in an `async` `it(...)` block is a
 
 When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract a small `promisify` helper and use it from `async` hooks instead of nesting callbacks.
 
+### `it` descriptions must use `should` or `should not`
+
+Every `it("...")` title in this repo must read as a behavior statement with **`should`** or **`should not`**. This keeps Jest output scannable and consistent across unit, contract, and CLI integration tests.
+
+```ts
+// Good
+it("should return default webfont options", () => { ... });
+it("should not emit result.svg when only woff2 is requested", async () => { ... });
+it("should document that is-svg throws TypeError for non-string input", () => { ... });
+
+// Avoid
+it("returns default webfont options", () => { ... });
+it("documents that is-svg throws TypeError for non-string input", () => { ... });
+it("throws when given binary font buffers", async () => { ... });
+```
+
+When adding or renaming tests, follow this rule even in contract-style `describe` blocks that document library behavior.
+
 ### Document guards and error paths with explicit unit tests
 
 When production code works around a library quirk or adds a defensive guard, add **unit tests that name the reason** — not only integration tests through the full pipeline.
@@ -42,7 +60,7 @@ When production code works around a library quirk or adds a defensive guard, add
 
 Example: `glyphsData.test.ts` — `describe("svg xml validation via xml2js")` documents that `xml2js` accepts empty input without error, then unit-tests the empty-file guard and malformed-xml rejection before metadata lookup.
 
-Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract (via `fast-xml-parser`), negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
+Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract, negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
 
 Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract (via `@xmldom/xmldom`), invalid version options, early pipeline rejection before conversion, and when `result.ttf` is absent vs validated (`isTtf(result.ttf)`).
 

@@ -4,25 +4,25 @@ import { webfont } from "../standalone";
 import { createMeowCli } from "./meow/createMeowCli";
 import { runCli } from "./program";
 
-jest.mock("../standalone", () => ({
-  webfont: jest.fn(),
+vi.mock("../standalone", () => ({
+  webfont: vi.fn(),
 }));
 
-const mockedWebfont = webfont as jest.MockedFunction<typeof webfont>;
+const mockedWebfont = vi.mocked(webfont);
 
 const wrapMeowCli = (argv: readonly string[]) => {
   const meowCli = createMeowCli(argv);
 
   return {
     ...meowCli,
-    showHelp: jest.fn(),
-    showVersion: jest.fn(),
+    showHelp: vi.fn(),
+    showVersion: vi.fn(),
   };
 };
 
 describe("cli program with createMeowCli argv", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should forward parsed flags and input globs to webfont", async () => {

@@ -31,7 +31,7 @@ Production bundles are built with **Rollup 2.56.3** and plugins pinned to `"late
 - **Stable include/exclude:** Vite/esbuild transpile TypeScript entry graphs without `picomatch` extglob on the default plugin include list.
 - **Explicit bundler:** Pin `vite` to an exact version (`save-exact=true`); remove Rollup and `"latest"` Rollup plugins.
 - **Same publish surface:** Keep `dist/cli.mjs`, `dist/index.js`, `package.json` `bin` / `main` / `types`, and declaration emit under `dist/src/index.d.ts` (via `vite-plugin-dts` after follow-up).
-- **Tests unchanged:** Jest remains the test runner ([ADR 0002](./0002-jest-vs-vitest-testing.md)); only the `npm run build` implementation changes.
+- **Tests unchanged:** Vitest is the test runner ([ADR 0002](./0002-jest-vs-vitest-testing.md)); only the `npm run build` implementation changes.
 
 ## Decision
 

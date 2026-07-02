@@ -16,23 +16,23 @@ import {
   writeResultFiles,
 } from "./program";
 
-jest.mock("../standalone", () => ({
-  webfont: jest.fn(),
+vi.mock("../standalone", () => ({
+  webfont: vi.fn(),
 }));
 
-const mockedWebfont = webfont as jest.MockedFunction<typeof webfont>;
+const mockedWebfont = vi.mocked(webfont);
 
 const createCli = (overrides: Partial<CliLike> = {}): CliLike => ({
   flags: {},
   input: ["src/fixtures/svg-icons/*.svg"],
-  showHelp: jest.fn(),
-  showVersion: jest.fn(),
+  showHelp: vi.fn(),
+  showVersion: vi.fn(),
   ...overrides,
 });
 
 describe("cli program", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe("buildOptionsBase", () => {
@@ -355,7 +355,7 @@ describe("cli program", () => {
 
     it("should not write files when destination is missing", async () => {
       const missingDestination = path.join(destination, "missing-no-write");
-      const writeSpy = jest.spyOn(fs.promises, "writeFile");
+      const writeSpy = vi.spyOn(fs.promises, "writeFile");
       const result: Result = {
         config: {
           dest: missingDestination,
@@ -375,7 +375,7 @@ describe("cli program", () => {
     });
 
     it("should propagate write errors", async () => {
-      const writeSpy = jest.spyOn(fs.promises, "writeFile").mockRejectedValueOnce(new Error("disk full"));
+      const writeSpy = vi.spyOn(fs.promises, "writeFile").mockRejectedValueOnce(new Error("disk full"));
       const result: Result = {
         config: {
           dest: destination,
@@ -507,8 +507,8 @@ describe("cli program", () => {
 
   describe("startCli", () => {
     it("should exit with the resolved code when runCli fails", async () => {
-      const exitSpy = jest.spyOn(process, "exit").mockImplementation((() => undefined) as typeof process.exit);
-      const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+      const exitSpy = vi.spyOn(process, "exit").mockImplementation((() => undefined) as typeof process.exit);
+      const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
       const cli = createCli();
       const error = Object.assign(new Error("Missing config in webfont result"), { code: 7 });
 
@@ -537,8 +537,8 @@ describe("cli program", () => {
     });
 
     it("should exit with code 1 and log a clear error when destination is missing", async () => {
-      const exitSpy = jest.spyOn(process, "exit").mockImplementation((() => undefined) as typeof process.exit);
-      const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+      const exitSpy = vi.spyOn(process, "exit").mockImplementation((() => undefined) as typeof process.exit);
+      const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
       const missingDestination = "temp/cli-program-missing-start";
       const cli = createCli({
         flags: {

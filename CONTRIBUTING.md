@@ -77,7 +77,7 @@ Write the comment in English so future contributors and bots (for example Depend
 
 ### Testing and coverage
 
-New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md) (“Testing”) for Jest patterns in this repo.
+New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md) (“Testing”) for Vitest patterns in this repo.
 
 | Expectation | Guidance |
 |-------------|----------|
@@ -120,7 +120,7 @@ Git hooks are managed by [Lefthook](https://github.com/evilmartians/lefthook) (`
 | Hook | What runs |
 |------|-----------|
 | `pre-commit` | Biome check (with safe fixes) on staged `*.{ts,js,json}` files |
-| `pre-push` | `npm test` (full build + lint + Jest) |
+| `pre-push` | `npm test` (full build + lint + Vitest) |
 
 To simulate hooks without committing or pushing:
 

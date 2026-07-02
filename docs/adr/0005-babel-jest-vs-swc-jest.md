@@ -1,6 +1,6 @@
 # ADR 0005: Replace babel-jest with @swc/jest for test transforms
 
-- **Status:** Accepted
+- **Status:** Superseded (Vitest adopted; `@swc/jest` removed, 2026-07-02)
 - **Date:** 2026-07-02
 - **Related:** [ADR 0002](./0002-jest-vs-vitest-testing.md) (follow-up: “consider `@swc/jest` as a lower-risk performance improvement”)
 

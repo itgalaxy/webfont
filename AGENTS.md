@@ -2,13 +2,13 @@
 
 Instructions for AI agents and contributors automating work in this repository.
 
-## Testing (Jest)
+## Testing (Vitest)
 
 ### Do not mix sync-throwing `fs` calls inside async callbacks
 
 In `beforeAll`, `beforeEach`, `afterAll`, `afterEach`, or any `new Promise((resolve, reject) => { ... })` callback, avoid synchronous APIs that throw (`fs.mkdirSync`, `fs.symlinkSync`, `fs.unlinkSync`, bare `throw`, etc.).
 
-If they throw, the Promise is not rejected cleanly. Jest may report an uncaught exception instead of a failed hook, which is harder to diagnose.
+If they throw, the Promise is not rejected cleanly. Vitest may report an uncaught exception instead of a failed hook, which is harder to diagnose.
 
 **Prefer** `async` hooks with `fs/promises`:
 
@@ -23,7 +23,7 @@ beforeAll(async () => {
 
 ### Sync `fs` in test bodies is fine
 
-Calling `fs.mkdirSync` / `fs.rmSync` directly in an `async` `it(...)` block is acceptable. Jest attributes synchronous failures to the test. Use `try/finally` for cleanup.
+Calling `fs.mkdirSync` / `fs.rmSync` directly in an `async` `it(...)` block is acceptable. Vitest attributes synchronous failures to the test. Use `try/finally` for cleanup.
 
 ### Promisify callback-only helpers once
 
@@ -31,7 +31,7 @@ When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract 
 
 ### `it` descriptions must use `should` or `should not`
 
-Every `it("...")` title in this repo must read as a behavior statement with **`should`** or **`should not`**. This keeps Jest output scannable and consistent across unit, contract, and CLI integration tests.
+Every `it("...")` title in this repo must read as a behavior statement with **`should`** or **`should not`**. This keeps Vitest output scannable and consistent across unit, contract, and CLI integration tests.
 
 ```ts
 // Good
@@ -67,6 +67,10 @@ Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract
 Example: `toTtf.test.ts` — unit-tests the `toTtf` wrapper with a `svg2ttf` spy and asserts every `formatsOptions.ttf` field is forwarded.
 
 Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
+
+### Mocking `fs.createReadStream` under ESM
+
+Production code imports `createReadStream` as a **named** export from `fs` (`glyphsData.ts`). `vi.spyOn(fs, "createReadStream")` does not intercept that binding under Vitest's ESM module graph. Use `vi.hoisted` plus `vi.mock("fs", …)` that wraps `createReadStream` with `vi.fn(actual.createReadStream)` and assert via `vi.mocked(createReadStream)` — see `glyphsData.test.ts`.
 
 ### Dependency error assertions
 
@@ -118,7 +122,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.
 - Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `ci`).
 - Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
-- Keep changes focused; match surrounding code style and tooling (Biome, Jest, Lefthook).
+- Keep changes focused; match surrounding code style and tooling (Biome, Vitest, Lefthook).
 - Do not commit unless explicitly asked.
 - **Never push to `master`.** Use a branch and open a PR (see [Pull requests](#pull-requests) below).
 - **Push without asking.** After commits on a feature or PR branch, run `git push` as part of finishing the work. Do not end responses with “want me to push?” or similar — push, then report what was pushed and the PR URL if applicable.

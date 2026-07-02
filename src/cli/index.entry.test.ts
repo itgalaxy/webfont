@@ -1,25 +1,25 @@
-const startCli = jest.fn();
+const { startCli } = vi.hoisted(() => ({
+  startCli: vi.fn(),
+}));
 
-jest.mock("./program", () => ({
+vi.mock("./program", () => ({
   startCli,
 }));
 
-jest.mock("./meow", () => ({
+vi.mock("./meow", () => ({
   __esModule: true,
   default: {
     flags: {},
     input: [],
-    showHelp: jest.fn(),
-    showVersion: jest.fn(),
+    showHelp: vi.fn(),
+    showVersion: vi.fn(),
   },
 }));
 
 describe("cli entrypoint", () => {
-  it("should wire the meow parser into startCli on load", () => {
-    jest.isolateModules(() => {
-      // biome-ignore lint/style/noCommonJs: isolateModules needs synchronous require
-      require("./index");
-    });
+  it("should wire the meow parser into startCli on load", async () => {
+    vi.resetModules();
+    await import("./index");
 
     expect(startCli).toHaveBeenCalledWith(
       expect.objectContaining({

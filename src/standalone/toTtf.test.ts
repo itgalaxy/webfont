@@ -1,9 +1,11 @@
-jest.mock("svg2ttf", () => jest.fn(() => ({ buffer: new Uint8Array([0x74, 0x74, 0x66]) })));
+vi.mock("svg2ttf", () => ({
+  default: vi.fn(() => ({ buffer: new Uint8Array([0x74, 0x74, 0x66]) })),
+}));
 
 import svg2ttf from "svg2ttf";
 import toTtf from "./toTtf";
 
-const mockedSvg2ttf = svg2ttf as jest.MockedFunction<typeof svg2ttf>;
+const mockedSvg2ttf = vi.mocked(svg2ttf);
 
 const sampleSvgFont = '<font><font-face font-family="icons"/></font>';
 const sampleTtfBytes = new Uint8Array([0x74, 0x74, 0x66]);

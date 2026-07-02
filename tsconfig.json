@@ -13,8 +13,8 @@
     "target": "ES2020"
   },
   "exclude": [
-    "jest.config.ts",
-    "jest/**",
+    "vitest.config.ts",
+    "vitest/**",
     "src/**/*.test.ts",
     "src/**/__mocks__/**",
     "src/cli/**",

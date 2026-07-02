@@ -143,7 +143,7 @@
     {
       "includes": ["**/*.test.ts"],
       "javascript": {
-        "globals": ["afterAll", "afterEach", "beforeAll", "beforeEach", "describe", "expect", "it", "jest", "test"]
+        "globals": ["afterAll", "afterEach", "beforeAll", "beforeEach", "describe", "expect", "it", "test", "vi"]
       },
       "linter": {
         "rules": {

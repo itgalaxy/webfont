@@ -1,9 +1,17 @@
 name: npm publish
 
-# Runs when Release Please creates a GitHub Release (see release-please.yml and ADR 0004).
+# Runs when a GitHub Release is published, or manually via workflow_dispatch (see CONTRIBUTING.md).
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Git tag to publish (e.g. v12.0.1)
+        required: true
+
+env:
+  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
 
 jobs:
   build:
@@ -11,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ env.RELEASE_TAG }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24.x
@@ -27,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ env.RELEASE_TAG }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24.x

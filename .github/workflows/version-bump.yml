@@ -25,7 +25,7 @@ jobs:
           node-version: 24.x
           cache: npm
       - name: Install project dependencies
-        run: npm ci --omit=optional
+        run: npm ci
       - name: Sync package version with latest git tag
         run: |
           LATEST=$(git tag -l 'v*' --sort=-v:refname | head -1 | sed 's/^v//')

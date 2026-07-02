@@ -24,7 +24,6 @@
     "clean": "rm -rf dist/ temp/",
     "demo": "node dist/cli.js './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "lint": "biome check .",
-    "postinstall": "node scripts/ensure-biome-cli.js",
     "postbuild": "tsc --declaration --declarationDir dist --emitDeclarationOnly",
     "prebuild": "npm run clean && npm run lint",
     "predemo": "npm run build",

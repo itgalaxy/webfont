@@ -155,7 +155,9 @@ export const webfontCliHelpText = `
 
         --addHashInFontUrl
 
-            Generated font url will be : [webfont].[ext]?v=[hash]
+            Append an MD5 content hash to font URLs in built-in templates
+            (?v=[hash]) while keeping output filenames stable (fontName.woff2, etc.).
+            Use with a fixed fontName — do not randomize fontName for cache busting.
 `;
 
 export const webfontMeowFlags = {

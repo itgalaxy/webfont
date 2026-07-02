@@ -385,6 +385,26 @@ describe("cli", () => {
     expect(css).toMatchSnapshot();
   });
 
+  it("should include font hash in scss template when addHashInFontUrl is enabled (#125)", async () => {
+    const output = await execCLI(
+      `${source} -d ${destination} --template scss --templateCacheString test --addHashInFontUrl`,
+    );
+
+    expect(output.files).toEqual([
+      "webfont.eot",
+      "webfont.scss",
+      "webfont.svg",
+      "webfont.ttf",
+      "webfont.woff",
+      "webfont.woff2",
+    ]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    const scss = await fsPromise.readFile(`${destination}/webfont.scss`, { encoding: "utf-8" });
+    expect(scss).toMatch(/&v=[a-f0-9]{32}/u);
+    expect(scss).toContain('url("./webfont.woff2?');
+  });
+
   it("should set font name", async () => {
     const output = await execCLI(`${source} -d ${destination} --fontName foobar`);
 

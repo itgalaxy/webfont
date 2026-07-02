@@ -29,6 +29,16 @@ describe("convertTtfInput", () => {
     ).rejects.toThrow("glyphTransformFn is not supported when converting TTF input");
   });
 
+  it("should reject glyphContentTransformFn option", async () => {
+    await expect(
+      convertTtfInput([fixtureTtf], {
+        files: fixtureTtf,
+        formats: ["woff2"],
+        glyphContentTransformFn: async () => "<svg></svg>",
+      }),
+    ).rejects.toThrow("glyphContentTransformFn is not supported when converting TTF input");
+  });
+
   it("should reject empty font file list", async () => {
     await expect(
       convertTtfInput([], {

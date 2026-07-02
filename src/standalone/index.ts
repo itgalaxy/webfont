@@ -152,6 +152,19 @@ export const webfont: Webfont = async (initialOptions) => {
 
   let glyphsData = (await getGlyphsData(filteredFiles, options)) as GlyphData[];
 
+  if (options.glyphContentTransformFn) {
+    const glyphContentTransformFn = options.glyphContentTransformFn;
+    const transformedGlyphs = glyphsData.map(async (glyphData: GlyphData) => {
+      const contents = await glyphContentTransformFn(glyphData);
+
+      return {
+        ...glyphData,
+        contents,
+      };
+    });
+    glyphsData = await Promise.all(transformedGlyphs);
+  }
+
   if (options.glyphTransformFn) {
     const glyphTransformFn = options.glyphTransformFn;
     const transformedGlyphs = glyphsData.map(async (glyphData: GlyphData) => {

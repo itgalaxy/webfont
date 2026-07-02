@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import * as fsPromise from "fs/promises";
 import isEot from "is-eot";
 import isSvg from "is-svg";
 import isTtf from "is-ttf";
@@ -310,6 +311,31 @@ describe("standalone", () => {
         files: `${fixturesGlob}/svg-icons/**/*`,
       }),
     ).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
+  it("should transform SVG glyph contents before font generation (#144)", async () => {
+    const strokedPath = `${fixturesGlob}/svg-stroke-icons/stroked-plus.svg`;
+    const filledContents = await fsPromise.readFile(`${fixturesGlob}/svg-stroke-icons/plus-filled.svg`, "utf8");
+
+    const withoutTransform = await standalone({
+      files: strokedPath,
+      formats: ["ttf"],
+      fontName: "plus",
+    });
+
+    const withTransform = await standalone({
+      files: strokedPath,
+      formats: ["ttf"],
+      fontName: "plus",
+      glyphContentTransformFn: () => filledContents,
+    });
+
+    const hash = (buffer: Buffer) => crypto.createHash("md5").update(buffer).digest("hex");
+
+    expect(withTransform.glyphsData[0]?.contents).toBe(filledContents);
+    expect(hash(withTransform.ttf)).not.toBe(hash(withoutTransform.ttf));
+    expect(withTransform.ttf.length).toBeGreaterThan(withoutTransform.ttf.length);
+    expect(isTtf(withTransform.ttf)).toBe(true);
   });
 
   it("should create css selectors with transform titles through function", async () => {

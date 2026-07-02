@@ -1,4 +1,5 @@
 import type { Formats, FormatsOptions } from "./Format";
+import type { GlyphContentTransformFn } from "./GlyphContentTransformFn";
 import type { GlyphTransformFn } from "./GlyphTransformFn";
 import type { InitialOptions } from "./InitialOptions";
 import type { MetadataProvider } from "./MetadataProvider";
@@ -15,6 +16,7 @@ export interface WebfontOptions extends InitialOptions {
   formats: Formats;
   formatsOptions: FormatsOptions;
   glyphTransformFn?: GlyphTransformFn;
+  glyphContentTransformFn?: GlyphContentTransformFn;
   ligatures: boolean;
   maxConcurrency: number;
   metadata: unknown;

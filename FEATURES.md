@@ -43,6 +43,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - Default `formats` when SVG-pipeline defaults are still configured: `['woff', 'woff2']`.
   - Does **not** accept `.otf` input (TrueType only). Does **not** merge multiple weights into one file.
   - `template` and `glyphTransformFn` are not supported in this mode.
+  - `glyphContentTransformFn` is not supported in this mode.
   - **Licensing:** encoding does not grant rights to the font; users must comply with the font’s license. See [NOTICE.md](./NOTICE.md) §3.3.
   - **Architecture:** see [ADR 0009](docs/adr/0009-ttf-webfont-encoding-pipeline.md).
 - **Test Criteria**:
@@ -68,6 +69,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - Does **not** re-encode to `eot`, `woff`, or `woff2` in this mode.
   - Default `formats` when SVG-pipeline defaults are still configured: `['ttf']`.
   - `template` and `glyphTransformFn` are not supported in this mode.
+  - `glyphContentTransformFn` is not supported in this mode.
   - **Licensing:** decompression does not grant rights to the font; users must comply with the font’s license for input and extracted output. Copyright/metadata in the SFNT is preserved. See [NOTICE.md](./NOTICE.md) §3.4.
   - **Architecture:** see [ADR 0007](docs/adr/0007-woff-woff2-decompression-pipeline.md).
 - **Test Criteria**:
@@ -150,8 +152,10 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Properties**:
   - `metadataProvider`: replace default SVG metadata lookup.
   - `glyphTransformFn`: transform metadata after load (SVG mode only).
+  - `glyphContentTransformFn`: transform SVG glyph contents before font generation (SVG mode only; e.g. stroke-to-fill via `svg-outline-stroke`, #144).
 - **Test Criteria**:
   - [x] `glyphTransformFn` applied before font generation
+  - [x] `glyphContentTransformFn` applied before font generation (#144)
   - [x] `metadataProvider` error paths unit-tested (`glyphsData`)
 
 ### svgicons2svgfont options

@@ -14,6 +14,7 @@ import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2sv
 import convertTtfToEot from "../lib/ttf2eot";
 import type { Format, GlyphData, InitialOptions } from "../types";
 import type { Result } from "../types/Result";
+import type { ResultConfig } from "../types/ResultConfig";
 import { getGlyphsData } from "./glyphsData";
 import { getOptions } from "./options";
 
@@ -87,16 +88,19 @@ type Webfont = (initialOptions?: InitialOptions) => Promise<Result>;
 
 export const webfont: Webfont = async (initialOptions) => {
   let options = getOptions(initialOptions);
+  delete (options as Partial<ResultConfig>).filePath;
 
   const config = await buildConfig({
     configFile: options.configFile,
   });
 
+  let discoveredConfigPath: string | undefined;
+
   if (Object.keys(config).length > 0) {
     options = deepmerge(options, config.config, {
       arrayMerge: (_destinationArray, sourceArray) => sourceArray,
     });
-    options.filePath = config.filepath;
+    discoveredConfigPath = config.filepath;
   }
 
   const foundFiles = await globby([].concat(options.files));
@@ -212,7 +216,11 @@ export const webfont: Webfont = async (initialOptions) => {
     delete result.ttf;
   }
 
-  result.config = options;
+  if (discoveredConfigPath) {
+    result.config = { ...options, filePath: discoveredConfigPath };
+  } else {
+    result.config = options;
+  }
 
   return result;
 };

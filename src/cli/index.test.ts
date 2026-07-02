@@ -94,6 +94,143 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
+  describe("short options", () => {
+    it("can show help with -h", async () => {
+      const output = await execCLI("-h");
+
+      expect(output.code).toBe(2);
+      expect(output.stdout).toBe(meowMock.showHelp());
+      expect(output.stderr).toBe("");
+    });
+
+    it("can show version with -v", async () => {
+      const output = await execCLI("-v");
+
+      expect(output.code).toBe(0);
+      expect(output.stdout).toBe(meowMock.showVersion());
+      expect(output.stderr).toBe("");
+    });
+
+    it("can set destination with -d", async () => {
+      const output = await execCLI(`${source} -d ${destination}`);
+
+      expect(output.files).toEqual([
+        "webfont.eot",
+        "webfont.hash",
+        "webfont.svg",
+        "webfont.ttf",
+        "webfont.woff",
+        "webfont.woff2",
+      ]);
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+    });
+
+    it("can create destination with -m", async () => {
+      const nonExistentDestination = `${destination}/short-option/missing-dest`;
+      const output = await execCLI(`${source} -d ${nonExistentDestination} -m`);
+
+      await fsPromise.access(nonExistentDestination, fs.constants.F_OK);
+
+      const files = await fsPromise.readdir(nonExistentDestination, { encoding: "utf-8" });
+
+      expect(files).toEqual(
+        expect.arrayContaining(["webfont.eot", "webfont.svg", "webfont.ttf", "webfont.woff", "webfont.woff2"]),
+      );
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+    });
+
+    it("can set destTemplate with -s", async () => {
+      const templateDest = `${destination}/template-output`;
+      await fsPromise.mkdir(templateDest, { recursive: true });
+
+      const output = await execCLI(
+        `${source} -d ${destination} -t css --templateCacheString test -s ${templateDest}`,
+      );
+
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+
+      const cssPath = `${templateDest}/webfont.css`;
+      await fsPromise.access(cssPath, fs.constants.F_OK);
+      const css = await fsPromise.readFile(cssPath, { encoding: "utf-8" });
+      expect(css).toMatchSnapshot();
+    });
+
+    it("can set font name with -u", async () => {
+      const output = await execCLI(`${source} -d ${destination} -u foobar`);
+
+      expect(output.files).toEqual([
+        "foobar.eot",
+        "foobar.hash",
+        "foobar.svg",
+        "foobar.ttf",
+        "foobar.woff",
+        "foobar.woff2",
+      ]);
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+    });
+
+    it("can set formats with -f", async () => {
+      const output = await execCLI(`${source} -d ${destination} -f '["woff2"]'`);
+
+      expect(output.files).toEqual(["webfont.hash", "webfont.woff", "webfont.woff2"]);
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+    });
+
+    it("can set template with -t", async () => {
+      const output = await execCLI(`${source} -d ${destination} -t css --templateCacheString test`);
+
+      expect(output.files).toEqual([
+        "webfont.css",
+        "webfont.eot",
+        "webfont.svg",
+        "webfont.ttf",
+        "webfont.woff",
+        "webfont.woff2",
+      ]);
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+    });
+
+    it("can set templateClassName with -c", async () => {
+      const output = await execCLI(
+        `${source} -d ${destination} -t css -c short-option-class --templateCacheString test`,
+      );
+
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+
+      const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
+      expect(css).toContain(".short-option-class");
+    });
+
+    it("can set templateFontName with -n", async () => {
+      const output = await execCLI(
+        `${source} -d ${destination} -t css -n short-option-font --templateCacheString test`,
+      );
+
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+
+      const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
+      expect(css).toContain("short-option-font");
+    });
+
+    it("can set templateFontPath with -p", async () => {
+      const output = await execCLI(`${source} -d ${destination} -t css -p short/path --templateCacheString test`);
+
+      expect(output.code).toBe(0);
+      expect(output.stderr).toBe("");
+
+      const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
+      expect(css).toContain("short/path/");
+    });
+  });
+
   it("should throw error `files glob patterns specified did not match any files` if not found files", async () => {
     const output = await execCLI(`${fixturesGlob}/not-found-svg-icons/**/* -d ${destination}`);
 

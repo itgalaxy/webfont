@@ -7,12 +7,14 @@ import {
   buildOptionsBase,
   type CliLike,
   ensureResultConfig,
+  getDecompressedFontOutputBasename,
   getExitCode,
   getResultOutputPath,
   mergeCliDestIntoConfig,
   resolveDestTemplate,
   runCli,
   startCli,
+  writeDecompressedFontFiles,
   writeResultFiles,
 } from "./program";
 
@@ -259,6 +261,50 @@ describe("cli program", () => {
     });
   });
 
+  describe("getDecompressedFontOutputBasename", () => {
+    it("should use fontName for a single decompressed font", () => {
+      const fonts = [{ source: "fonts/Inter.woff2", ttf: Buffer.from("ttf") }];
+
+      expect(getDecompressedFontOutputBasename(fonts, fonts[0], { fontName: "my-font" } as never)).toBe("my-font");
+    });
+
+    it("should disambiguate basenames for batch decompression", () => {
+      const fonts = [
+        { source: "src/fixtures/fonts/iconfont.woff", ttf: Buffer.from("a") },
+        { source: "src/fixtures/fonts/iconfont.woff2", ttf: Buffer.from("b") },
+      ];
+
+      expect(getDecompressedFontOutputBasename(fonts, fonts[0], { fontName: "webfont" } as never)).toBe(
+        "iconfont-woff",
+      );
+      expect(getDecompressedFontOutputBasename(fonts, fonts[1], { fontName: "webfont" } as never)).toBe(
+        "iconfont-woff2",
+      );
+    });
+  });
+
+  describe("writeDecompressedFontFiles", () => {
+    it("should write one ttf per decompressed font", async () => {
+      const destination = "temp/cli-program-batch";
+      await fsPromise.mkdir(destination, { recursive: true });
+
+      await writeDecompressedFontFiles(
+        [
+          { source: "src/fixtures/fonts/iconfont.woff", ttf: Buffer.from("woff-ttf") },
+          { source: "src/fixtures/fonts/iconfont.woff2", ttf: Buffer.from("woff2-ttf") },
+        ],
+        {
+          dest: destination,
+          fontName: "webfont",
+        } as never,
+        destination,
+      );
+
+      expect(await fsPromise.readFile(path.join(destination, "iconfont-woff.ttf"), "utf8")).toBe("woff-ttf");
+      expect(await fsPromise.readFile(path.join(destination, "iconfont-woff2.ttf"), "utf8")).toBe("woff2-ttf");
+    });
+  });
+
   describe("writeResultFiles", () => {
     const destination = "temp/cli-program";
 
@@ -266,6 +312,28 @@ describe("cli program", () => {
       await fsPromise.mkdir(destination, { recursive: true });
       await fsPromise.rm(destination, { recursive: true, force: true });
       await fsPromise.mkdir(destination, { recursive: true });
+    });
+
+    it("should write batch decompressed fonts without using fontName for every file", async () => {
+      const result: Result = {
+        config: {
+          dest: destination,
+          files: ["src/fixtures/fonts/iconfont.woff", "src/fixtures/fonts/iconfont.woff2"],
+          fontName: "webfont",
+          formats: ["ttf"],
+          formatsOptions: {},
+          maxConcurrency: 1,
+        },
+        decompressedFonts: [
+          { source: "src/fixtures/fonts/iconfont.woff", ttf: Buffer.from("woff-ttf") },
+          { source: "src/fixtures/fonts/iconfont.woff2", ttf: Buffer.from("woff2-ttf") },
+        ],
+      };
+
+      await writeResultFiles(result);
+
+      const files = await fsPromise.readdir(destination);
+      expect(files).toEqual(expect.arrayContaining(["iconfont-woff.ttf", "iconfont-woff2.ttf"]));
     });
 
     it("should write font outputs and hash files", async () => {

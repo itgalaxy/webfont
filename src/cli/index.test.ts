@@ -526,4 +526,16 @@ describe("cli", () => {
     const ttf = await fsPromise.readFile(`${conversionDest}/iconfont.ttf`);
     expect(ttf.length).toBeGreaterThan(0);
   });
+
+  it("should batch-decompress multiple webfont files via the CLI", async () => {
+    const conversionDest = "temp/cli-batch-decompress";
+    const output = await execCLI(
+      `src/fixtures/fonts/iconfont.woff src/fixtures/fonts/iconfont.woff2 -d ${conversionDest} -f ttf --dest-create`,
+      conversionDest,
+    );
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    expect(output.files).toEqual(expect.arrayContaining(["iconfont-woff.ttf", "iconfont-woff2.ttf"]));
+  });
 });

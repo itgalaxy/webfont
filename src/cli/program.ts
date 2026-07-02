@@ -1,7 +1,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import resolveFrom from "resolve-from";
+import { resolveDecompressedFontBasenames } from "../lib/inputSource";
 import { webfont } from "../standalone";
+import type { DecompressedFont } from "../types/DecompressedFont";
 import type { InitialOptions } from "../types/InitialOptions";
 import type { OptionsBase } from "../types/OptionsBase";
 import type { Result } from "../types/Result";
@@ -253,6 +255,44 @@ export const ensureDestExists = async (dest: string, destCreate?: boolean): Prom
   }
 };
 
+export const getDecompressedFontOutputBasename = (
+  fonts: readonly DecompressedFont[],
+  font: DecompressedFont,
+  config: ResultConfig,
+): string => {
+  if (fonts.length === 1 && config.fontName) {
+    return config.fontName;
+  }
+
+  const basenames = resolveDecompressedFontBasenames(fonts.map((entry) => entry.source));
+  const index = fonts.indexOf(font);
+
+  return basenames[index] ?? config.fontName;
+};
+
+export const writeDecompressedFontFiles = async (
+  fonts: readonly DecompressedFont[],
+  config: ResultConfig,
+  dest: string,
+): Promise<void> => {
+  await Promise.all(
+    fonts.flatMap((font) => {
+      const basename = getDecompressedFontOutputBasename(fonts, font, config);
+      const writes: Promise<void>[] = [];
+
+      if (font.ttf) {
+        writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.ttf`)), font.ttf));
+      }
+
+      if (font.otf) {
+        writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.otf`)), font.otf));
+      }
+
+      return writes;
+    }),
+  );
+};
+
 export const writeResultFiles = async (result: Result): Promise<Result> => {
   const config = ensureResultConfig(result);
   const dest = config.dest ?? process.cwd();
@@ -263,6 +303,11 @@ export const writeResultFiles = async (result: Result): Promise<Result> => {
   }
 
   await ensureDestExists(dest, config.destCreate);
+
+  if (result.decompressedFonts && result.decompressedFonts.length > 1) {
+    await writeDecompressedFontFiles(result.decompressedFonts, config, dest);
+    return result;
+  }
 
   await Promise.all(
     resultFileKeys

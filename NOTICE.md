@@ -45,13 +45,14 @@ Generated font files may be subject to the same restrictions as the source icons
 
 ### 3.2 WOFF / WOFF2 decompression
 
-If you **decompress** a `.woff` or `.woff2` file to `.ttf` or `.otf`, you are extracting the **SFNT payload** inside the container. That operation:
+If you **decompress** one or more `.woff` or `.woff2` files (from disk or from an `http(s)` URL) to `.ttf` or `.otf`, you are extracting the **SFNT payload** inside each container. That operation:
 
 - does **not** make a restricted or commercial font free to use or share;
-- does **not** bypass foundry EULAs, app terms of service, or site download policies;
-- may produce a file that is **easier to reuse** than the original webfont — compliance with the **original font license** remains your obligation.
+- does **not** bypass foundry EULAs, app terms of service, CDN hotlinking policies, or site download terms;
+- may produce files that are **easier to reuse** than the original webfonts — compliance with the **original font license** remains your obligation;
+- does **not** merge multiple weights into one font file — each input yields a separate output.
 
-**Only process fonts you are authorized to use** under their license. Examples that often require explicit permission or a valid license include commercial desktop/web fonts, fonts bundled inside applications or websites (e.g. product UIs), and subscription or OEM font offerings.
+**Only process fonts you are authorized to use and download** under their license. For remote URLs, you must also have permission to fetch and store those bytes.
 
 ### 3.3 Redistribution of output
 

@@ -35,10 +35,14 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 ### WOFF / WOFF2 container decompression
 
 - **Stability**: in-progress
-- **Description**: Decompress a single `.woff` or `.woff2` webfont file to the **SFNT payload inside** (TTF or OTF), not arbitrary format transcoding.
+- **Description**: Decompress one or more `.woff` / `.woff2` inputs (local paths, globs, or `http(s)` URLs) to the **SFNT payload inside** each file (TTF or OTF), not arbitrary format transcoding or font merging.
 - **Properties**:
-  - Input: exactly **one** `.woff` or `.woff2` file per run.
-  - Output: `ttf` and/or `otf` only — whichever matches the decompressed SFNT flavor (`0x00010000` / `true` → TTF, `OTTO` → OTF).
+  - Input: one or more `.woff` / `.woff2` sources per run (paths, globs, and/or URLs).
+  - Output: `ttf` and/or `otf` per input — whichever matches each decompressed SFNT flavor (`0x00010000` / `true` → TTF, `OTTO` → OTF).
+  - Batch results are exposed on `result.decompressedFonts` (`{ source, ttf?, otf? }[]`). A single input still sets `result.ttf` / `result.otf` at the top level for backward compatibility.
+  - CLI writes `{basename}.ttf` / `.otf` per input; colliding basenames (e.g. `iconfont.woff` + `iconfont.woff2`) use `-woff` / `-woff2` suffixes. A single input still honors `-u` / `fontName`.
+  - URLs must end in `.woff` or `.woff2` (query strings allowed). Response must be a valid WOFF/WOFF2 container.
+  - Does **not** merge multiple weights into one SFNT file (see [NOTICE.md](./NOTICE.md)).
   - Does **not** convert TrueType outlines to PostScript/CFF (TTF → OTF) or the reverse; use an external tool (e.g. FontForge) for that.
   - Does **not** re-encode to `eot`, `woff`, or `woff2` in this mode.
   - Default `formats` when SVG-pipeline defaults are still configured: `['ttf']`.
@@ -47,9 +51,10 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Test Criteria**:
   - [x] `.woff2` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
   - [x] `.woff` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
+  - [x] Multiple webfont files decompress in one run (`decompressedFonts`)
+  - [x] HTTPS URL input decompresses when fetch returns a valid WOFF2
   - [x] Requesting `ttf` when the SFNT flavor is OTF rejects with a flavor hint
   - [x] Requesting `otf` when the SFNT flavor is TTF rejects with a flavor hint
-  - [x] Multiple webfont files in one run reject
   - [x] Template option in webfont conversion mode rejects
 
 ### Supported input file classification

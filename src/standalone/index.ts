@@ -1,13 +1,13 @@
 import { cosmiconfig } from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
-import { globby } from "globby";
 import nunjucks from "nunjucks";
 import path from "path";
 import { Readable } from "stream";
 import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
 import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
+import { resolveInputSources } from "../lib/inputSource";
 import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2svgfont";
 import convertTtfToEot from "../lib/ttf2eot";
 import type { Format, GlyphData, GlyphMetadata, InitialOptions, WebfontOptions } from "../types";
@@ -109,7 +109,7 @@ export const webfont: Webfont = async (initialOptions) => {
     filePatterns = [options.files];
   }
 
-  const foundFiles = await globby(filePatterns);
+  const foundFiles = await resolveInputSources(filePatterns);
   const inputMode = classifyInputFiles(foundFiles);
 
   if (inputMode === "mixed") {

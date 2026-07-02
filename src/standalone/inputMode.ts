@@ -1,4 +1,4 @@
-import path from "path";
+import { getInputExtension } from "../lib/inputSource";
 import type { Format } from "../types/Format";
 
 export type InputMode = "empty" | "mixed" | "svg" | "webfont";
@@ -17,7 +17,7 @@ export const classifyInputFiles = (filePaths: readonly string[]): InputMode => {
     return "empty";
   }
 
-  const extensions = filePaths.map((filePath) => path.extname(filePath).toLowerCase());
+  const extensions = filePaths.map((filePath) => getInputExtension(filePath));
 
   if (!extensions.every(isSupportedInputExtension)) {
     return "empty";
@@ -51,11 +51,11 @@ export const assertSvgPipelineFormats = (formats: readonly Format[]): void => {
 
 export const filterInputFilesByMode = (filePaths: readonly string[], mode: InputMode): string[] => {
   if (mode === "svg") {
-    return filePaths.filter((filePath) => path.extname(filePath).toLowerCase() === SVG_EXTENSION);
+    return filePaths.filter((filePath) => getInputExtension(filePath) === SVG_EXTENSION);
   }
 
   if (mode === "webfont") {
-    return filePaths.filter((filePath) => WEBFONT_EXTENSIONS.has(path.extname(filePath).toLowerCase()));
+    return filePaths.filter((filePath) => WEBFONT_EXTENSIONS.has(getInputExtension(filePath)));
   }
 
   return [];

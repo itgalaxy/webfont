@@ -26,13 +26,13 @@ webfont runs one of two pipelines depending on matched input files. They cannot 
 | Mode | Input | Outputs | Notes |
 |------|--------|---------|--------|
 | **SVG icons** | One or more `.svg` files | `svg`, `ttf`, `eot`, `woff`, `woff2` | Default. Builds TrueType via `svg2ttf`. **`otf` is rejected** — use `ttf`. |
-| **Webfont decompress** | Exactly one `.woff` or `.woff2` | `ttf` and/or `otf` | Exposes the SFNT inside the container. Request the format that matches the payload (TrueType vs `OTTO`). **Does not** transcode TTF to OTF. |
+| **Webfont decompress** | One or more `.woff` / `.woff2` paths, globs, or `http(s)` URLs | `ttf` and/or `otf` per input | One output file per source (basename from filename; collisions get `-woff`/`-woff2`). Not a single merged font. |
 
 **Not supported today**
 
 - Renaming or re-wrapping without matching the real outline format (e.g. requesting `otf` when the WOFF2 holds TrueType).
 - Converting TTF to OTF (or OTF to TTF) — use [FontForge](https://fontforge.org/) or similar.
-- Templates, `glyphTransformFn`, or multiple font files in webfont decompress mode.
+- Templates, `glyphTransformFn`, or merged multi-weight SFNT output in webfont decompress mode.
 - Globs that match extension-less or unsupported files together with fonts (the run fails instead of silently ignoring extras).
 
 Every matched path must end in `.svg`, `.woff`, or `.woff2`. See [FEATURES.md](./FEATURES.md) for test-backed criteria.
@@ -113,17 +113,29 @@ webfont({
   });
 ```
 
-### Webfont decompress example
+### Webfont decompress examples
 
 ```js
 import webfont from "webfont";
 
-const result = await webfont({
+// Single local file
+const one = await webfont({
   files: "path/to/font.woff2",
-  formats: ["ttf"], // use ["otf"] only when the WOFF2 holds OpenType (OTTO)
+  formats: ["ttf"],
 });
 
-// result.ttf → Buffer (TrueType SFNT from inside the container)
+// Batch: multiple files in one run (one TTF/OTF output per input)
+const batch = await webfont({
+  files: ["fonts/Inter-Regular.woff2", "fonts/Inter-Bold.woff2"],
+  formats: ["ttf"],
+});
+// batch.decompressedFonts → [{ source, ttf }, …]
+
+// Remote URL (http or https)
+const remote = await webfont({
+  files: "https://cdn.example.com/fonts/Inter-Medium.woff2",
+  formats: ["ttf"],
+});
 ```
 
 ### Options
@@ -133,7 +145,7 @@ const result = await webfont({
 - Type: `string` | `array`
 - Description: A file glob, or array of file globs. Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
 - **SVG mode**: one or more `.svg` icon paths or globs (default pipeline).
-- **Webfont decompress mode**: exactly one `.woff` or `.woff2` file (see [`formats`](#formats) and [Input modes](#input-modes)).
+- **Webfont decompress mode**: one or more `.woff` / `.woff2` paths, globs, or `https://…` URLs (see [`formats`](#formats) and [Input modes](#input-modes)).
 - Do not mix `.svg` with `.woff` / `.woff2` in the same run.
 - Every matched file must have a supported extension (`.svg`, `.woff`, `.woff2`); extension-less files such as `LICENSE` are not ignored when matched by a broad glob.
 - `node_modules` and `bower_components` are always ignored.

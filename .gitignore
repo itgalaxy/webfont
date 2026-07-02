@@ -61,6 +61,9 @@ dist
 # Store temp files
 temp
 
+# CLI output when run from repo root without --dest (default cwd)
+/webfont.svg
+
 # Environment variables files
 .env
 

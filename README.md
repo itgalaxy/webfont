@@ -283,12 +283,6 @@ These can be appended to [webfont options](#options). These are passed directly 
 - Description: The font [metadata](http://www.w3.org/TR/SVG/metadata.html).
   You can set any character data in, but this is the recommended place for a copyright mention.
 
-#### `svgicons2svgfont.log`
-
-- Type: `function`
-- Default: `console.log`
-- Description: Allows you to provide your own logging function. Set to `function(){}` to disable logging.
-
 ---
 
 ## Command Line Interface

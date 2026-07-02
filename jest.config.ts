@@ -19,6 +19,7 @@ const config: Config.InitialOptions = {
    * If test environment is not set to "node", you may receive an error message when testing `wawoff2` module.
    */
   testEnvironment: "node",
+  transformIgnorePatterns: ["/node_modules/(?!(svgicons2svgfont|svg-pathdata|transformation-matrix|yerror)/)"],
   verbose: true,
 };
 

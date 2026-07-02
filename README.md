@@ -9,7 +9,9 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 
 **Legal / licensing:** [NOTICE.md](./NOTICE.md) — font copyright, disclaimers, attribution guidelines, and third-party library notices.
 
-**Troubleshooting:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — common errors, why they happen, and steps to fix them.
+**Troubleshooting:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — common errors on the current release.
+
+**Migration:** [MIGRATION.md](./MIGRATION.md) — what changed between versions and how to upgrade.
 
 ## Features
 

@@ -209,6 +209,19 @@ When a task produces branch changes intended for review (features, fixes, CI, do
 
 **Fix PR titles proactively.** When working on an open PR, check the title with `gh pr view --json title`. If it does not match Conventional Commits (wrong type, vendor prefix, or scope drift after new commits), run `gh pr edit --title "type(scope): description"` **without asking** — same as push. Re-read the title after every push that changes PR scope.
 
+### Copilot and review comments
+
+Before finishing work on an open PR, **check for unresolved review threads** (Copilot, humans, bots). Do not leave Copilot feedback unanswered.
+
+| Step | Action |
+|------|--------|
+| **List threads** | `gh api graphql` → `pullRequest(number: N) { reviewThreads { nodes { id isResolved comments { nodes { body author { login } } } } } } }` or the PR **Files changed** tab |
+| **Evaluate** | If the suggestion is valid for the **current** branch state, apply it (code, tests, or docs) in the same PR. If it is wrong or obsolete (e.g. based on a reverted approach), explain why in a **reply in English** — cite code, tests, or AGENTS.md |
+| **Reply** | `gh api repos/{owner}/{repo}/pulls/{number}/comments` with `in_reply_to` set to the review comment `databaseId` |
+| **Resolve** | When addressed (fix merged in the branch **or** reply documents why not), resolve the thread: GraphQL `resolveReviewThread(input: { threadId: "PRRT_…" })` |
+
+Resolve only after the thread is truly handled — not when ignoring feedback. If a follow-up commit applies Copilot’s fix, reply briefly (“Fixed in \<sha\>”) then resolve.
+
 **Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. **Never** close a turn with prompts like “Quer que eu faça o push?” / “Should I push?” after committing on an open PR branch; push first, then summarize. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
 
 ### Merged branches

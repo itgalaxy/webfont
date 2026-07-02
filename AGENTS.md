@@ -29,6 +29,24 @@ Calling `fs.mkdirSync` / `fs.rmSync` directly in an `async` `it(...)` block is a
 
 When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract a small `promisify` helper and use it from `async` hooks instead of nesting callbacks.
 
+### `it` descriptions must use `should` or `should not`
+
+Every `it("...")` title in this repo must read as a behavior statement with **`should`** or **`should not`**. This keeps Jest output scannable and consistent across unit, contract, and CLI integration tests.
+
+```ts
+// Good
+it("should return default webfont options", () => { ... });
+it("should not emit result.svg when only woff2 is requested", async () => { ... });
+it("should document that is-svg throws TypeError for non-string input", () => { ... });
+
+// Avoid
+it("returns default webfont options", () => { ... });
+it("documents that is-svg throws TypeError for non-string input", () => { ... });
+it("throws when given binary font buffers", async () => { ... });
+```
+
+When adding or renaming tests, follow this rule even in contract-style `describe` blocks that document library behavior.
+
 ### Document guards and error paths with explicit unit tests
 
 When production code works around a library quirk or adds a defensive guard, add **unit tests that name the reason** — not only integration tests through the full pipeline.
@@ -42,11 +60,30 @@ When production code works around a library quirk or adds a defensive guard, add
 
 Example: `glyphsData.test.ts` — `describe("svg xml validation via xml2js")` documents that `xml2js` accepts empty input without error, then unit-tests the empty-file guard and malformed-xml rejection before metadata lookup.
 
-Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract (via `fast-xml-parser`), negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
+Example: `isSvgOutput.test.ts` — documents the `is-svg` dev-dependency contract, negative fixtures, and when `result.svg` is absent (`toBeUndefined`) vs validated (`isSvg(result.svg)`).
 
 Example: `svg2ttfOutput.test.ts` — documents the `svg2ttf` production contract (via `@xmldom/xmldom`), invalid version options, early pipeline rejection before conversion, and when `result.ttf` is absent vs validated (`isTtf(result.ttf)`).
 
+Example: `toTtf.test.ts` — unit-tests the `toTtf` wrapper with a `svg2ttf` spy and asserts every `formatsOptions.ttf` field is forwarded.
+
 Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
+
+### Dependency error assertions
+
+When a test documents a **third-party library contract** (for example `is-svg`, `svg2ttf`, `xml2js`), assert the **error type** or a **loose regex** — not the dependency’s full error message string. Patch and minor releases often reword messages; the behavioral contract is usually the type or a stable fragment.
+
+```ts
+// Good — contract is "non-string input throws TypeError"
+expect(() => isSvg(null as unknown as string)).toThrow(TypeError);
+
+// Good — stable fragment from our pipeline or a documented library quirk
+await expect(getGlyphsData([malformedXmlFile], options)).rejects.toThrow(/Unclosed root tag/u);
+
+// Avoid for dependency-owned messages — brittle across releases
+expect(() => isSvg(null as unknown as string)).toThrow("Expected a `string`, got `object`");
+```
+
+Exact message strings are fine for **errors thrown by this repository** when the message is part of the public CLI or API contract under test.
 
 ### CLI integration tests (`execCLI`)
 
@@ -103,11 +140,13 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
 
 1. **Check whether the current branch is already merged** (see [Merged branches](#merged-branches) below). If it is, create a **new branch from `master`** — do not push follow-up commits to a merged PR branch.
-2. **Create a branch** from `master` (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`).
+2. **Create a branch** from `master` using a **lowercase** name (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`). The entire branch name must stay lowercase — no camelCase or uppercase segments (avoid names like `test/toTtf-unit-tests`).
 3. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
 4. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
 5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
 6. **Return the PR URL** in the final response.
+
+**Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
 
 ### Merged branches
 
@@ -145,5 +184,3 @@ Keep the template **headings and order**, but write each section critically — 
 - **Re-read the PR title and body whenever the branch scope changes.** After adding commits, update the title and **Proposed changes** section so reviewers see the full picture — not just the first commit message.
 - **Split when it grows too much.** If a branch picks up unrelated fixes, large test extractions, or docs on top of the original goal, prefer **separate PRs** for follow-up work rather than one ever-growing branch. This PR accumulated extra scope before that rule was written; use smaller PRs from here on.
 - **Explain why when closing a PR.** Leave an English comment (superseded, obsolete, duplicate, out of scope, etc.) — do not close without context. See [CONTRIBUTING.md](./CONTRIBUTING.md) (“Closing pull requests”).
-
-Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only / no code changes.

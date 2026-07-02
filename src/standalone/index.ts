@@ -5,7 +5,6 @@ import { globby } from "globby";
 import nunjucks from "nunjucks";
 import path from "path";
 import { Readable } from "stream";
-import svg2ttf from "svg2ttf";
 import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
 import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
@@ -17,6 +16,7 @@ import type { ResultConfig } from "../types/ResultConfig";
 import { getGlyphsData } from "./glyphsData";
 import { getOptions } from "./options";
 import { getTemplateFontBase64 } from "./templateFonts";
+import toTtf from "./toTtf";
 
 type CosmiconfigLoaded = NonNullable<Awaited<ReturnType<ReturnType<typeof cosmiconfig>["search"]>>>;
 
@@ -73,8 +73,6 @@ const toSvg = (glyphsData: GlyphData[], options: WebfontOptions) => {
     fontStream.end();
   });
 };
-
-const toTtf = (buffer: string, options: Record<string, unknown>) => Buffer.from(svg2ttf(buffer, options).buffer);
 
 const toEot = (buffer: Buffer) => convertTtfToEot(buffer);
 

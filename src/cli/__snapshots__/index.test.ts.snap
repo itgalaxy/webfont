@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`cli short options can set destTemplate with -s 1`] = `
+exports[`cli short options should set destTemplate with -s 1`] = `
 "@font-face {
   font-display: auto;
   font-family: "webfont";

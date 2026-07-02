@@ -31,39 +31,39 @@ describe("svg2ttf output validation", () => {
   });
 
   describe("svg2ttf library contract (production dependency)", () => {
-    it("documents that svg2ttf depends on @xmldom/xmldom for svg font parsing", () => {
+    it("should document that svg2ttf depends on @xmldom/xmldom for svg font parsing", () => {
       const svg2ttfPackage = jest.requireActual<{ dependencies: Record<string, string> }>("svg2ttf/package.json");
 
       expect(svg2ttfPackage.dependencies["@xmldom/xmldom"]).toBeDefined();
     });
 
-    it("documents that svg2ttf rejects empty svg font input", () => {
+    it("should document that svg2ttf rejects empty svg font input", () => {
       expect(() => svg2ttf("", {})).toThrow();
     });
 
-    it("documents that svg2ttf rejects regular svg images without a font element", () => {
+    it("should document that svg2ttf rejects regular svg images without a font element", () => {
       expect(() => svg2ttf('<svg xmlns="http://www.w3.org/2000/svg"><path /></svg>', {})).toThrow(
         /Can't find <font> tag/u,
       );
     });
 
-    it("documents that svg2ttf rejects malformed svg font markup", () => {
+    it("should document that svg2ttf rejects malformed svg font markup", () => {
       expect(() => svg2ttf("<font><unclosed>", {})).toThrow();
     });
 
-    it("documents that svg2ttf rejects non-string version options", async () => {
+    it("should document that svg2ttf rejects non-string version options", async () => {
       const svgFont = await getSvgFontString();
 
       expect(() => svg2ttf(svgFont, { version: 1 })).toThrow(/version option should be a string/u);
     });
 
-    it("documents that svg2ttf rejects invalid version strings", async () => {
+    it("should document that svg2ttf rejects invalid version strings", async () => {
       const svgFont = await getSvgFontString();
 
       expect(() => svg2ttf(svgFont, { version: "bad" })).toThrow(/invalid option, version/u);
     });
 
-    it("accepts a webfont-generated svg font and returns a ttf buffer", async () => {
+    it("should accept a webfont-generated svg font and returns a ttf buffer", async () => {
       const svgFont = await getSvgFontString();
       const ttf = svg2ttf(svgFont, { version: "1.0" });
 
@@ -73,7 +73,7 @@ describe("svg2ttf output validation", () => {
   });
 
   describe("webfont result.ttf validation", () => {
-    it("accepts ttf font output from standalone as valid ttf", async () => {
+    it("should accept ttf font output from standalone as valid ttf", async () => {
       const result = await standalone({
         files: `${svgIconsGlob}/avatar.svg`,
         formats: ["ttf"],
@@ -84,30 +84,27 @@ describe("svg2ttf output validation", () => {
       expect(mockedSvg2ttf).toHaveBeenCalled();
     });
 
-    it("forwards formatsOptions.ttf to svg2ttf", async () => {
+    it("should forward every formatsOptions.ttf field to svg2ttf", async () => {
+      const ttfOptions = {
+        copyright: "test copyright",
+        description: "test description",
+        ts: 1457357570,
+        url: "https://example.com/fonts",
+        version: "2.0",
+      };
+
       await standalone({
         files: `${svgIconsGlob}/avatar.svg`,
         formats: ["ttf"],
         formatsOptions: {
-          ttf: {
-            copyright: "test copyright",
-            ts: 1457357570,
-            version: "2.0",
-          },
+          ttf: ttfOptions,
         },
       });
 
-      expect(mockedSvg2ttf).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({
-          copyright: "test copyright",
-          ts: 1457357570,
-          version: "2.0",
-        }),
-      );
+      expect(mockedSvg2ttf).toHaveBeenCalledWith(expect.any(String), ttfOptions);
     });
 
-    it("runs svg2ttf internally even when ttf is omitted from formats", async () => {
+    it("should run svg2ttf internally even when ttf is omitted from formats", async () => {
       const result = await standalone({
         files: `${svgIconsGlob}/avatar.svg`,
         formats: ["woff2"],
@@ -119,7 +116,7 @@ describe("svg2ttf output validation", () => {
       expect(mockedSvg2ttf).toHaveBeenCalled();
     });
 
-    it("does not emit result.ttf when only woff and woff2 are requested", async () => {
+    it("should not emit result.ttf when only woff and woff2 are requested", async () => {
       const result = await standalone({
         files: `${svgIconsGlob}/avatar.svg`,
         formats: ["woff", "woff2"],
@@ -131,13 +128,13 @@ describe("svg2ttf output validation", () => {
       expect(mockedSvg2ttf).toHaveBeenCalled();
     });
 
-    it("documents that absent result.ttf must be asserted with toBeUndefined, not is-ttf", () => {
+    it("should document that absent result.ttf must be asserted with toBeUndefined, not is-ttf", () => {
       // is-ttf coerces missing values to false, which cannot distinguish "not generated" from "invalid".
       expect(isTtf(undefined)).toBe(false);
       expect(undefined).toBeUndefined();
     });
 
-    it("rejects invalid input svg before svg2ttf is called", async () => {
+    it("should reject invalid input svg before svg2ttf is called", async () => {
       await expect(
         standalone({
           files: badSvgFile,

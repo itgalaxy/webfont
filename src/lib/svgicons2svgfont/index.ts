@@ -14,23 +14,36 @@ export const getMetadataServiceOptions = (options: WebfontOptions): MetadataServ
   startUnicode: Number(options.startUnicode),
 });
 
-/** Coerce `round` for svgicons2svgfont; accepts number or numeric string (CLI/config). */
-export const normalizeRoundOption = (round: string | number | undefined): number | undefined => {
-  if (round === undefined) {
+/**
+ * Coerce `round` for svgicons2svgfont; accepts number or numeric string (CLI/config).
+ * Returns undefined for undefined/null/empty/non-numeric/non-finite inputs.
+ */
+export const normalizeRoundOption = (round: string | number | null | undefined): number | undefined => {
+  if (round === undefined || round === null) {
     return undefined;
   }
 
   if (typeof round === "number") {
-    return round;
-  }
+    if (Number.isFinite(round)) {
+      return round;
+    }
 
-  const parsed = Number(round);
-
-  if (Number.isNaN(parsed)) {
     return undefined;
   }
 
-  return parsed;
+  const trimmed = round.trim();
+
+  if (trimmed.length === 0) {
+    return undefined;
+  }
+
+  const parsed = Number(trimmed);
+
+  if (Number.isFinite(parsed)) {
+    return parsed;
+  }
+
+  return undefined;
 };
 
 export const getFontStreamOptions = (options: WebfontOptions): Partial<SVGIcons2SVGFontStreamOptions> =>

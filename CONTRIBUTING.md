@@ -49,6 +49,26 @@ And, if you’re raising an issue, please understand that people involved with t
 
 This project uses [Biome](https://biomejs.dev/) for linting and formatting (`biome.json`). Use `npm run lint` to check and `npm run prettify` to auto-fix.
 
+### Git hooks
+
+Git hooks are managed by [Lefthook](https://github.com/evilmartians/lefthook) (`lefthook.yml`). They install automatically when you run `npm install` (`prepare` → `lefthook install`).
+
+| Hook | What runs |
+|------|-----------|
+| `pre-commit` | Biome check (with safe fixes) on staged `*.{ts,js,json}` files |
+| `pre-push` | `npm test` (full build + lint + Jest) |
+
+To simulate hooks without committing or pushing:
+
+```shell
+npx lefthook run pre-commit
+npx lefthook run pre-push
+```
+
+To skip hooks for a single command: `LEFTHOOK=0 git commit` or `LEFTHOOK=0 git push`.
+
+See [ADR 0003](docs/adr/0003-lefthook-instead-of-husky-lint-staged.md) for rationale.
+
 ### Dependencies
 
 - Pin exact versions in `package.json` (no `^`, `~`, or `latest` ranges), including `@types/*` packages.

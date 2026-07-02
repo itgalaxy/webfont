@@ -58,6 +58,7 @@ Absolute savings: **~0.8 s per lint run**. Relative speedup is significant; on t
 - Close obsolete ESLint Dependabot PRs.
 - Revisit `biome.json` rule strictness if new false positives appear.
 - Consider enabling additional Biome rules incrementally rather than restoring the full ESLint surface area.
+- Git hooks: see [ADR 0003](./0003-lefthook-instead-of-husky-lint-staged.md) (Lefthook replaced Husky / lint-staged).
 
 ## References
 

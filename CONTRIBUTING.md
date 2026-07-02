@@ -37,6 +37,7 @@ And, if you’re raising an issue, please understand that people involved with t
 ## Submitting a pull request
 
 - **Never commit or push directly to `master`.** Create a branch, open a pull request, and merge through GitHub — even for documentation-only or test-only changes. Maintainers merge; contributors and automation do not bypass review with `git push origin master`.
+- **Use lowercase branch names only.** The full branch name must be lowercase letters, numbers, and slashes (for example `fix/cli-formats`, `test/to-ttf-unit-tests`, `ci/update-node-version`). Do not use camelCase, PascalCase, or uppercase acronyms in branch names.
 - Non-trivial changes are often best discussed in an issue first, to prevent you from doing unnecessary work;
 - For ambitious tasks, you should try to get your work in front of the community for feedback as soon as possible;
 - New features should be accompanied with tests and documentation;

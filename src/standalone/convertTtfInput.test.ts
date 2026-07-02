@@ -56,6 +56,17 @@ describe("convertTtfInput", () => {
     }
   });
 
+  it("should reject remote ttf URLs with a clear error", async () => {
+    const remoteUrl = "https://cdn.example.com/fonts/iconfont.ttf";
+
+    await expect(
+      convertTtfInput([remoteUrl], {
+        files: remoteUrl,
+        formats: ["woff2"],
+      }),
+    ).rejects.toThrow(`Remote TTF URLs are not supported. Download the file first: ${remoteUrl}`);
+  });
+
   it("should log verbose progress when encoding", async () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(vi.fn());
 

@@ -1,4 +1,5 @@
 import * as fsPromise from "fs/promises";
+import { isHttpUrl } from "../lib/inputSource";
 import { getSfntFlavor } from "../lib/sfnt/flavor";
 import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
 import type { Result } from "../types/Result";
@@ -72,6 +73,10 @@ const transcodeTtfSource = async (
   options: WebfontOptions,
   verbose?: boolean,
 ): Promise<TranscodedFont> => {
+  if (isHttpUrl(source)) {
+    throw new Error(`Remote TTF URLs are not supported. Download the file first: ${source}`);
+  }
+
   if (verbose) {
     // biome-ignore lint/suspicious/noConsole: verbose conversion progress
     console.log(`Encoding ${source}...`);

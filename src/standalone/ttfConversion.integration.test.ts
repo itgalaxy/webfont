@@ -65,6 +65,17 @@ describe("TTF to webfont conversion", () => {
     ).rejects.toThrow("Cannot mix SVG icons, TTF fonts, and WOFF/WOFF2 files");
   });
 
+  it("should reject remote ttf URLs with a clear error", async () => {
+    const remoteUrl = "https://cdn.example.com/fonts/iconfont.ttf";
+
+    await expect(
+      standalone({
+        files: remoteUrl,
+        formats: ["woff2"],
+      }),
+    ).rejects.toThrow(`Remote TTF URLs are not supported. Download the file first: ${remoteUrl}`);
+  });
+
   it("should reject template option in ttf mode", async () => {
     await expect(
       standalone({

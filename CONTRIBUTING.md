@@ -161,13 +161,12 @@ Versioning is automated with [Release Please](https://github.com/googleapis/rele
 
 Do not run local `npm version` or push version tags manually unless coordinating an emergency release with maintainers.
 
-#### npm publishing prerequisites
+#### Release and npm publishing prerequisites
 
-Before the first automated publish to [npm](https://www.npmjs.com/package/webfont), configure a repository secret:
+Configure these repository secrets under **Settings → Secrets and variables → Actions**:
 
+- **`RELEASE_PLEASE_TOKEN`** — GitHub fine-grained or classic PAT with **Contents** and **Pull requests** write access on this repository. Release Please uses it instead of the default `GITHUB_TOKEN` so the GitHub Release it creates can trigger [`npm-publish.yml`](.github/workflows/npm-publish.yml) (releases created by `GITHUB_TOKEN` do not start downstream workflows).
 - **`NPM_TOKEN`** — npm access token with publish permission for the `webfont` package (Automation or Granular Access Token).
-
-Add it under **Settings → Secrets and variables → Actions** for this repository.
 
 If CI publish is unavailable, maintainers can publish manually from the release tag:
 

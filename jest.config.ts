@@ -1,4 +1,4 @@
-import type {Config} from "@jest/types";
+import type { Config } from "@jest/types";
 
 const esmNodeModules = "p-limit|svgicons2svgfont|svg-pathdata|transformation-matrix|yerror|yocto-queue";
 

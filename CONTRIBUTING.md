@@ -41,7 +41,12 @@ And, if you’re raising an issue, please understand that people involved with t
 - New features should be accompanied with tests and documentation;
 - Please, don’t include unrelated changes;
 - Lint and test before submitting code by running `$ npm test`;
+- Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;
 - Write a [convincing description](https://github.com/itgalaxy/webfont/blob/master/.github/pull_request_template.md) of why we should land your pull request: it’s your job to convince us.
+
+### Linting and formatting
+
+This project uses [Biome](https://biomejs.dev/) for linting and formatting (`biome.json`). Use `npm run lint` to check and `npm run prettify` to auto-fix.
 
 ### Dependencies
 

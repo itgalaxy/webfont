@@ -1,11 +1,11 @@
-import type {InitialOptions} from "../types/InitialOptions";
-import {WebfontOptions} from "../types/WebfontOptions";
+import type { InitialOptions } from "../types/InitialOptions";
+import type { WebfontOptions } from "../types/WebfontOptions";
 
 // eslint-disable-next-line no-unused-vars
 type OptionsGetter = (initialOptions?: InitialOptions) => WebfontOptions;
 
 export const getOptions: OptionsGetter = (initialOptions) => {
-  if (!initialOptions || !initialOptions.files) {
+  if (!initialOptions?.files) {
     throw new Error("You must pass webfont a `files` glob");
   }
 
@@ -49,5 +49,4 @@ export const getOptions: OptionsGetter = (initialOptions) => {
     verbose: false,
     ...initialOptions,
   };
-
 };

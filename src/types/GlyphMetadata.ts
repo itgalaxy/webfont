@@ -8,4 +8,4 @@ export type GlyphMetadata = {
    * ```
    */
   unicode?: string[];
-}
+};

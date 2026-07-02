@@ -1,7 +1,8 @@
 /* eslint-disable max-len, sort-keys */
 import meow from "meow";
 
-const meowCLI = meow(`
+const meowCLI = meow(
+  `
     Usage: webfont [input] [options]
 
     Input: File(s) or glob(s).
@@ -141,115 +142,117 @@ const meowCLI = meow(`
         --addHashInFontUrl
 
             Generated font url will be : [webfont].[ext]?v=[hash]
-`, {
-  autoHelp: false,
-  autoVersion: false,
-  flags: {
-    ascent: {
-      type: "string",
-    },
-    centerHorizontally: {
-      type: "boolean",
-    },
-    config: {
-      default: null,
-    },
-    descent: {
-      type: "string",
-    },
-    dest: {
-      alias: "d",
-      default: process.cwd(),
-      type: "string",
-    },
-    destCreate: {
-      alias: "m",
-      default: false,
-      type: "boolean",
-    },
-    destTemplate: {
-      alias: "s",
-      type: "string",
-    },
-    fixedWidth: {
-      type: "boolean",
-    },
-    fontHeight: {
-      type: "string",
-    },
-    fontId: {
-      type: "string",
-    },
-    fontName: {
-      alias: "u",
-      type: "string",
-    },
-    fontStyle: {
-      type: "string",
-    },
-    fontWeight: {
-      type: "string",
-    },
-    formats: {
-      alias: "f",
-    },
-    help: {
-      alias: "h",
-      type: "boolean",
-    },
-    ligatures: {
-      default: true,
-      type: "boolean",
-    },
-    normalize: {
-      type: "boolean",
-    },
-    prependUnicode: {
-      type: "boolean",
-    },
-    round: {
-      type: "string",
-    },
-    sort: {
-      default: true,
-      type: "boolean",
-    },
-    startUnicode: {
-      type: "string",
-    },
-    template: {
-      alias: "t",
-      type: "string",
-    },
-    templateClassName: {
-      alias: "c",
-      type: "string",
-    },
-    templateFontName: {
-      alias: "n",
-      type: "string",
-    },
-    addHashInFontUrl: {
-      default: false,
-      type: "boolean",
-    },
-    templateFontPath: {
-      alias: "p",
-      type: "string",
-    },
-    templateCacheString: {
-      default: "",
-      type: "string",
-    },
-    verbose: {
-      default: false,
-      type: "boolean",
-    },
-    version: {
-      alias: "v",
-      type: "boolean",
+`,
+  {
+    autoHelp: false,
+    autoVersion: false,
+    flags: {
+      ascent: {
+        type: "string",
+      },
+      centerHorizontally: {
+        type: "boolean",
+      },
+      config: {
+        default: null,
+      },
+      descent: {
+        type: "string",
+      },
+      dest: {
+        alias: "d",
+        default: process.cwd(),
+        type: "string",
+      },
+      destCreate: {
+        alias: "m",
+        default: false,
+        type: "boolean",
+      },
+      destTemplate: {
+        alias: "s",
+        type: "string",
+      },
+      fixedWidth: {
+        type: "boolean",
+      },
+      fontHeight: {
+        type: "string",
+      },
+      fontId: {
+        type: "string",
+      },
+      fontName: {
+        alias: "u",
+        type: "string",
+      },
+      fontStyle: {
+        type: "string",
+      },
+      fontWeight: {
+        type: "string",
+      },
+      formats: {
+        alias: "f",
+      },
+      help: {
+        alias: "h",
+        type: "boolean",
+      },
+      ligatures: {
+        default: true,
+        type: "boolean",
+      },
+      normalize: {
+        type: "boolean",
+      },
+      prependUnicode: {
+        type: "boolean",
+      },
+      round: {
+        type: "string",
+      },
+      sort: {
+        default: true,
+        type: "boolean",
+      },
+      startUnicode: {
+        type: "string",
+      },
+      template: {
+        alias: "t",
+        type: "string",
+      },
+      templateClassName: {
+        alias: "c",
+        type: "string",
+      },
+      templateFontName: {
+        alias: "n",
+        type: "string",
+      },
+      addHashInFontUrl: {
+        default: false,
+        type: "boolean",
+      },
+      templateFontPath: {
+        alias: "p",
+        type: "string",
+      },
+      templateCacheString: {
+        default: "",
+        type: "string",
+      },
+      verbose: {
+        default: false,
+        type: "boolean",
+      },
+      version: {
+        alias: "v",
+        type: "boolean",
+      },
     },
   },
-});
+);
 
 export default meowCLI;

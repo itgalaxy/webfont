@@ -11,7 +11,7 @@ import wawoff2 from "wawoff2";
 import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
 import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2svgfont";
 import convertTtfToEot from "../lib/ttf2eot";
-import type { Format, GlyphData, GlyphMetadata, InitialOptions } from "../types";
+import type { Format, GlyphData, GlyphMetadata, InitialOptions, WebfontOptions } from "../types";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
 import { getGlyphsData } from "./glyphsData";
@@ -44,10 +44,10 @@ const buildConfig = async (options: {
 
 type GlyphReadable = Readable & { metadata: GlyphMetadata };
 
-const toSvg = (glyphsData, options) => {
+const toSvg = (glyphsData: GlyphData[], options: WebfontOptions) => {
   let result = "";
 
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     if (options.verbose) {
       console.log("Generating SVG font...");
     }
@@ -64,7 +64,7 @@ const toSvg = (glyphsData, options) => {
 
       glyphStream.push(glyphData.contents);
       glyphStream.push(null);
-      glyphStream.metadata = glyphData.metadata;
+      glyphStream.metadata = glyphData.metadata ?? { name: "", unicode: [] };
 
       fontStream.write(glyphStream);
     });
@@ -73,13 +73,13 @@ const toSvg = (glyphsData, options) => {
   });
 };
 
-const toTtf = (buffer, options) => Buffer.from(svg2ttf(buffer, options).buffer);
+const toTtf = (buffer: string, options: Record<string, unknown>) => Buffer.from(svg2ttf(buffer, options).buffer);
 
-const toEot = (buffer) => convertTtfToEot(buffer);
+const toEot = (buffer: Buffer) => convertTtfToEot(buffer);
 
-const toWoff = (buffer, options) => Buffer.from(ttf2woff(buffer, options).buffer);
+const toWoff = (buffer: Buffer, options: { metadata?: string }) => Buffer.from(ttf2woff(buffer, options).buffer);
 
-const toWoff2 = (buffer) => wawoff2.compress(buffer);
+const toWoff2 = (buffer: Buffer) => wawoff2.compress(buffer);
 
 type Webfont = (_initialOptions?: InitialOptions) => Promise<Result>;
 
@@ -100,7 +100,15 @@ export const webfont: Webfont = async (initialOptions) => {
     discoveredConfigPath = config.filepath;
   }
 
-  const foundFiles = await globby([].concat(options.files));
+  let filePatterns: string[];
+
+  if (Array.isArray(options.files)) {
+    filePatterns = options.files;
+  } else {
+    filePatterns = [options.files];
+  }
+
+  const foundFiles = await globby(filePatterns);
   const filteredFiles = foundFiles.filter((foundFile) => path.extname(foundFile) === ".svg");
 
   if (filteredFiles.length === 0) {
@@ -109,9 +117,10 @@ export const webfont: Webfont = async (initialOptions) => {
 
   let glyphsData = (await getGlyphsData(filteredFiles, options)) as GlyphData[];
 
-  if (options.glyphTransformFn && typeof options.glyphTransformFn === "function") {
+  if (options.glyphTransformFn) {
+    const glyphTransformFn = options.glyphTransformFn;
     const transformedGlyphs = glyphsData.map(async (glyphData: GlyphData) => {
-      const metadata = await options.glyphTransformFn(glyphData.metadata);
+      const metadata = await glyphTransformFn(glyphData.metadata ?? { name: "", unicode: [] });
 
       return {
         ...glyphData,
@@ -127,7 +136,7 @@ export const webfont: Webfont = async (initialOptions) => {
     ttfOptions = options.formatsOptions.ttf;
   }
 
-  const svg = (await toSvg(glyphsData, options)) as Result["svg"];
+  const svg = await toSvg(glyphsData, options);
   const ttf = toTtf(svg, ttfOptions);
 
   const result: Result = {
@@ -137,16 +146,24 @@ export const webfont: Webfont = async (initialOptions) => {
     ttf,
   };
 
-  if (options.formats.includes("eot")) {
+  const { formats } = options;
+
+  if (formats.includes("eot")) {
     result.eot = toEot(ttf);
   }
 
-  if (options.formats.includes("woff")) {
-    result.woff = toWoff(ttf, { metadata: options.metadata });
+  if (formats.includes("woff")) {
+    let metadata: string | undefined;
+
+    if (typeof options.metadata === "string") {
+      metadata = options.metadata;
+    }
+
+    result.woff = toWoff(ttf, { metadata });
   }
 
-  if (options.formats.includes("woff2")) {
-    result.woff2 = await toWoff2(ttf);
+  if (formats.includes("woff2")) {
+    result.woff2 = Buffer.from(await toWoff2(ttf));
   }
 
   if (options.template) {
@@ -175,7 +192,7 @@ export const webfont: Webfont = async (initialOptions) => {
 
     const nunjucksOptions = deepmerge.all([
       {
-        glyphs: result.glyphsData.map((glyph: GlyphData) => glyph.metadata),
+        glyphs: result.glyphsData?.map((glyph: GlyphData) => glyph.metadata) ?? [],
       },
       options,
       {
@@ -188,13 +205,20 @@ export const webfont: Webfont = async (initialOptions) => {
       {
         fonts: Object.fromEntries(
           new Map(
-            options.formats.map((format: Format) => [
+            formats.map((format: Format) => [
               format,
               () => {
                 if (format === "woff2") {
-                  return Buffer.from(result.woff2).toString("base64");
+                  return Buffer.from(result.woff2 as Buffer).toString("base64");
                 }
-                return result[format].toString("base64");
+
+                const fontBuffer = result[format];
+
+                if (!fontBuffer) {
+                  throw new Error(`Missing ${format} buffer for template rendering`);
+                }
+
+                return fontBuffer.toString("base64");
               },
             ]),
           ),
@@ -205,11 +229,11 @@ export const webfont: Webfont = async (initialOptions) => {
     result.template = nunjucks.render(templateFilePath, nunjucksOptions);
   }
 
-  if (!options.formats.includes("svg")) {
+  if (!formats.includes("svg")) {
     delete result.svg;
   }
 
-  if (!options.formats.includes("ttf")) {
+  if (!formats.includes("ttf")) {
     delete result.ttf;
   }
 

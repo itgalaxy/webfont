@@ -27,7 +27,7 @@ if (cli.flags.fontName) {
 }
 
 if (cli.flags.formats) {
-  optionsBase.formats = cli.flags.formats as Formats;
+  optionsBase.formats = cli.flags.formats as unknown as Formats;
 }
 
 if (cli.flags.dest) {
@@ -130,13 +130,17 @@ if (cli.flags.addHashInFontUrl) {
   optionsBase.addHashInFontUrl = cli.flags.addHashInFontUrl;
 }
 
-if (cli.flags.help || cli.flags.h) {
+if (cli.flags.help) {
   cli.showHelp();
 }
 
-if (cli.flags.version || cli.flags.v) {
+if (cli.flags.version) {
   cli.showVersion();
 }
+
+type ResultFileKey = "eot" | "hash" | "svg" | "template" | "ttf" | "woff" | "woff2";
+
+const resultFileKeys: ResultFileKey[] = ["svg", "ttf", "eot", "woff", "woff2", "hash", "template"];
 
 Promise.resolve()
   .then(() => {
@@ -147,31 +151,42 @@ Promise.resolve()
     }
 
     return webfont(options).then((result) => {
+      if (!result.config) {
+        throw new Error("Missing config in webfont result");
+      }
+
       result.config = {
+        ...result.config,
         dest: options.dest,
         destTemplate: options.destTemplate,
-        ...result.config,
       };
 
       return result;
     });
   })
   .then((result: Result) => {
-    const { fontName, dest, destCreate } = result.config;
+    if (!result.config) {
+      throw new Error("Missing config in webfont result");
+    }
 
-    let destTemplate = null;
+    const config = result.config;
+    const fontName = config.fontName;
+    const dest = config.dest ?? process.cwd();
+    const { destCreate } = config;
+
+    let destTemplate: string | undefined;
 
     if (result.template) {
-      ({ destTemplate } = result.config);
-
-      if (!destTemplate) {
+      if (typeof config.destTemplate === "string") {
+        destTemplate = config.destTemplate;
+      } else {
         destTemplate = dest;
       }
 
-      if (result.usedBuildInTemplate) {
-        destTemplate = path.join(destTemplate, `${result.config.fontName}.${result.config.template}`);
-      } else {
-        destTemplate = path.join(destTemplate, path.basename(result.config.template).replace(".njk", ""));
+      if (result.usedBuildInTemplate && typeof config.template === "string") {
+        destTemplate = path.join(destTemplate, `${fontName}.${config.template}`);
+      } else if (typeof config.template === "string") {
+        destTemplate = path.join(destTemplate, path.basename(config.template).replace(".njk", ""));
       }
 
       delete result.hash;
@@ -194,21 +209,29 @@ Promise.resolve()
       })
       .finally(() =>
         Promise.all(
-          Object.keys(result).map((type) => {
-            if (type === "config" || type === "usedBuildInTemplate" || type === "glyphsData") {
-              return null;
-            }
-            const content = result[type];
-            let file: string;
-            if (type === "template") {
-              file = path.resolve(destTemplate);
-            } else {
-              file = path.resolve(path.join(dest, `${fontName}.${type}`));
-            }
-            return fs.writeFile(file, content, () => {
-              Function.prototype();
-            });
-          }),
+          resultFileKeys
+            .filter((type) => result[type] !== undefined)
+            .map((type) => {
+              const content = result[type];
+
+              if (content === undefined) {
+                return Promise.resolve();
+              }
+
+              let file: string;
+
+              if (type === "template") {
+                file = path.resolve(destTemplate ?? dest);
+              } else if (type === "hash") {
+                file = path.resolve(path.join(dest, `${fontName}.hash`));
+              } else {
+                file = path.resolve(path.join(dest, `${fontName}.${type}`));
+              }
+
+              return fs.writeFile(file, content, () => {
+                Function.prototype();
+              });
+            }),
         ),
       )
       .then(() => Promise.resolve(result));

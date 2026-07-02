@@ -4,7 +4,11 @@ import pLimit from "../lib/p-limit";
 import { fileSorter, getMetadataService, getMetadataServiceOptions } from "../lib/svgicons2svgfont";
 import type { GlyphData, GlyphMetadata, WebfontOptions } from "../types";
 
-const normalizeUnicode = (unicode: GlyphMetadata["unicode"]): string[] => {
+const normalizeUnicode = (unicode: string | string[] | undefined): string[] => {
+  if (unicode === undefined) {
+    return [];
+  }
+
   if (Array.isArray(unicode)) {
     return unicode;
   }
@@ -14,10 +18,10 @@ const normalizeUnicode = (unicode: GlyphMetadata["unicode"]): string[] => {
 
 const toGlyphMetadata = (metadata: {
   name: string;
-  unicode: GlyphMetadata["unicode"] | string | string[];
-}): GlyphMetadata => ({
+  unicode?: string | string[];
+}): GlyphMetadata & { unicode: string[] } => ({
   name: metadata.name,
-  unicode: normalizeUnicode(metadata.unicode as GlyphMetadata["unicode"]),
+  unicode: normalizeUnicode(metadata.unicode),
 });
 
 type GlyphsDataGetter = (_files: Array<GlyphData["srcPath"]>, _options: WebfontOptions) => unknown;
@@ -47,7 +51,7 @@ export const getGlyphsData: GlyphsDataGetter = (files, options) => {
                   return reject(new Error(`Empty file ${srcPath}`));
                 }
 
-                return xmlParser.parseString(glyphContents, (error) => {
+                return xmlParser.parseString(glyphContents, (error: Error | null) => {
                   if (error) {
                     return reject(error);
                   }
@@ -80,6 +84,10 @@ export const getGlyphsData: GlyphsDataGetter = (files, options) => {
             metadataProvider(glyphData.srcPath, (error, metadata) => {
               if (error) {
                 return reject(error);
+              }
+
+              if (!metadata) {
+                return reject(new Error(`Missing metadata for ${glyphData.srcPath}`));
               }
 
               const glyphMetadata = toGlyphMetadata(metadata);

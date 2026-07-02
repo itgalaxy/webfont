@@ -1,5 +1,6 @@
-name: Node.js Package
+name: npm publish
 
+# Runs when Release Please creates a GitHub Release (see release-please.yml and ADR 0004).
 on:
   release:
     types: [created]

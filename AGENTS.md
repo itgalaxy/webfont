@@ -2,6 +2,8 @@
 
 Instructions for AI agents and contributors automating work in this repository.
 
+**GitHub Copilot:** repository custom instructions live at [`.github/instructions/webfont.instructions.md`](./.github/instructions/webfont.instructions.md) (symlink to this file). Edit **AGENTS.md** only — not the symlink target path in `.github/instructions/`.
+
 ## Testing (Vitest)
 
 ### Do not mix sync-throwing `fs` calls inside async callbacks
@@ -101,6 +103,19 @@ Integration tests in `src/cli/index.test.ts` run the built CLI via `child_proces
 
 When adding a new `execCLI` test, include `expect(output.stderr).toBe("")` alongside exit-code and stdout/file assertions so the suite stays consistent.
 
+### CLI unit tests (`createCli` vs `createMeowCli`)
+
+`program.test.ts` uses **`createCli`** to stub `CliLike` without running meow. **`program.meow.integration.test.ts`** uses **`createMeowCli`** with real argv parsing.
+
+| Rule | Detail |
+|------|--------|
+| **Match `CliLike` in stubs** | Every `createCli({ flags: { … } })` value must satisfy `CliLike["flags"]`. If production types a flag as `string`, the fixture uses a **string** (not a number) — even when the runtime option later accepts `string \| number`. |
+| **Assert what the layer under test returns** | `buildOptionsBase` forwards meow string flags unchanged (e.g. `round: "1"` → `options.round === "1"`). Coercion for downstream libraries belongs in later pipeline steps — do not “fix” tests by expecting a number unless `buildOptionsBase` actually converts it. |
+| **Prefer meow integration for argv** | When verifying how `--round 4` is parsed, extend `program.meow.integration.test.ts` (or `execCLI`), not `createCli` with numeric literals that `CliLike` does not allow. |
+| **Change types and fixtures together** | If `CliLike` or `cliOptions.ts` changes a flag type, update **both** production types and all `createCli` / meow tests in the same PR. |
+
+Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliLike.flags.round` is `string`; meow `type: "string"`; `OptionsBase.round` is `string \| number`; `normalizeRoundOption` coerces at the SVG font stream boundary. Tests for `buildOptionsBase` keep `round: "1"` and `expect(options.round).toBe("1")`.
+
 ### CLI and async I/O
 
 - **Parse CLI flags into real runtime types.** Do not cast meow string flags (for example `--formats`) directly to array types. Parse JSON arrays or comma-separated values into typed structures before passing them to `webfont` (see `parseFormatsFlag`).
@@ -193,6 +208,19 @@ When a task produces branch changes intended for review (features, fixes, CI, do
 **Squash merge only.** Routine merges to `master` use **Squash and merge** so the PR title is the single commit on `master` (Release Please depends on this). Do not use merge commits or rebase-merge unless a maintainer explicitly requests it.
 
 **Fix PR titles proactively.** When working on an open PR, check the title with `gh pr view --json title`. If it does not match Conventional Commits (wrong type, vendor prefix, or scope drift after new commits), run `gh pr edit --title "type(scope): description"` **without asking** — same as push. Re-read the title after every push that changes PR scope.
+
+### Copilot and review comments
+
+Before finishing work on an open PR, **check for unresolved review threads** (Copilot, humans, bots). Do not leave Copilot feedback unanswered.
+
+| Step | Action |
+|------|--------|
+| **List threads** | `gh api graphql` → `pullRequest(number: N) { reviewThreads { nodes { id isResolved comments { nodes { body author { login } } } } } } }` or the PR **Files changed** tab |
+| **Evaluate** | If the suggestion is valid for the **current** branch state, apply it (code, tests, or docs) in the same PR. If it is wrong or obsolete (e.g. based on a reverted approach), explain why in a **reply in English** — cite code, tests, or AGENTS.md |
+| **Reply** | `gh api repos/{owner}/{repo}/pulls/{number}/comments` with `in_reply_to` set to the review comment `databaseId` |
+| **Resolve** | When addressed (fix merged in the branch **or** reply documents why not), resolve the thread: GraphQL `resolveReviewThread(input: { threadId: "PRRT_…" })` |
+
+Resolve only after the thread is truly handled — not when ignoring feedback. If a follow-up commit applies Copilot’s fix, reply briefly (“Fixed in \<sha\>”) then resolve.
 
 **Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. **Never** close a turn with prompts like “Quer que eu faça o push?” / “Should I push?” after committing on an open PR branch; push first, then summarize. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
 

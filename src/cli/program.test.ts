@@ -66,6 +66,7 @@ describe("cli program", () => {
             metadata: "meta",
             normalize: true,
             prependUnicode: true,
+            // meow string flag — matches CliLike.flags.round (see AGENTS.md § createCli vs createMeowCli)
             round: "1",
             sort: false,
             startUnicode: "0xea01",

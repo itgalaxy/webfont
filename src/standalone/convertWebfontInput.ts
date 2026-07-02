@@ -1,20 +1,17 @@
 import fontverter from "fontverter";
 import * as fsPromise from "fs/promises";
+import { isHttpUrl } from "../lib/inputSource";
 import { getSfntFlavor } from "../lib/sfnt/flavor";
+import type { DecompressedFont } from "../types/DecompressedFont";
 import type { Result } from "../types/Result";
 import type { WebfontOptions } from "../types/WebfontOptions";
+import { fetchWebfontFromUrl } from "./fetchWebfontUrl";
 import { type ConversionFormat, resolveWebfontConversionFormats } from "./inputMode";
 
-const assertSingleFontFile = (fontFiles: readonly string[]): string => {
+const assertNonEmptyFontFiles = (fontFiles: readonly string[]): void => {
   if (fontFiles.length === 0) {
     throw new Error("No WOFF or WOFF2 files matched");
   }
-
-  if (fontFiles.length > 1) {
-    throw new Error("WOFF/WOFF2 conversion supports one font file at a time");
-  }
-
-  return fontFiles[0];
 };
 
 const assertConversionOptions = (options: WebfontOptions): void => {
@@ -27,26 +24,61 @@ const assertConversionOptions = (options: WebfontOptions): void => {
   }
 };
 
-const assignSfntOutput = (
-  result: Result,
-  sfnt: Buffer,
-  format: ConversionFormat,
-  flavor: ReturnType<typeof getSfntFlavor>,
-): void => {
+type AssignSfntOutputOptions = {
+  decompressed: DecompressedFont;
+  sfnt: Buffer;
+  format: ConversionFormat;
+  flavor: ReturnType<typeof getSfntFlavor>;
+  source: string;
+};
+
+const assignSfntOutput = (options: AssignSfntOutputOptions): void => {
+  const { decompressed, sfnt, format, flavor, source } = options;
+
   if (format === "ttf" && flavor !== "ttf") {
-    throw new Error('Input decompresses to OpenType (OTF). Request "otf" format instead of "ttf".');
+    throw new Error(`Input decompresses to OpenType (OTF). Request "otf" format instead of "ttf" for ${source}.`);
   }
 
   if (format === "otf" && flavor !== "otf") {
-    throw new Error('Input decompresses to TrueType (TTF). Request "ttf" format instead of "otf".');
+    throw new Error(`Input decompresses to TrueType (TTF). Request "ttf" format instead of "otf" for ${source}.`);
   }
 
   if (format === "ttf") {
-    result.ttf = sfnt;
+    decompressed.ttf = sfnt;
     return;
   }
 
-  result.otf = sfnt;
+  decompressed.otf = sfnt;
+};
+
+const readWebfontInput = (source: string): Promise<Buffer> => {
+  if (isHttpUrl(source)) {
+    return fetchWebfontFromUrl(source);
+  }
+
+  return fsPromise.readFile(source);
+};
+
+const decompressWebfontSource = async (
+  source: string,
+  formats: ConversionFormat[],
+  verbose?: boolean,
+): Promise<DecompressedFont> => {
+  if (verbose) {
+    // biome-ignore lint/suspicious/noConsole: verbose conversion progress
+    console.log(`Decompressing ${source}...`);
+  }
+
+  const inputBuffer = await readWebfontInput(source);
+  const sfnt = Buffer.from(await fontverter.convert(inputBuffer, "sfnt"));
+  const flavor = getSfntFlavor(sfnt);
+  const decompressed: DecompressedFont = { source };
+
+  for (const format of formats) {
+    assignSfntOutput({ decompressed, sfnt, format, flavor, source });
+  }
+
+  return decompressed;
 };
 
 export const convertWebfontInput = async (
@@ -54,24 +86,21 @@ export const convertWebfontInput = async (
   options: WebfontOptions,
 ): Promise<Result> => {
   assertConversionOptions(options);
+  assertNonEmptyFontFiles(fontFiles);
 
-  const fontPath = assertSingleFontFile(fontFiles);
-  const inputBuffer = await fsPromise.readFile(fontPath);
-
-  if (options.verbose) {
-    // biome-ignore lint/suspicious/noConsole: verbose conversion progress
-    console.log(`Decompressing ${fontPath}...`);
-  }
-
-  const sfnt = Buffer.from(await fontverter.convert(inputBuffer, "sfnt"));
-  const flavor = getSfntFlavor(sfnt);
   const formats = resolveWebfontConversionFormats(options.formats);
+  const decompressedFonts = await Promise.all(
+    fontFiles.map((source) => decompressWebfontSource(source, formats, options.verbose)),
+  );
+
   const result: Result = {
     config: { ...options },
+    decompressedFonts,
   };
 
-  for (const format of formats) {
-    assignSfntOutput(result, sfnt, format, flavor);
+  if (decompressedFonts.length === 1) {
+    result.ttf = decompressedFonts[0].ttf;
+    result.otf = decompressedFonts[0].otf;
   }
 
   return result;

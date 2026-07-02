@@ -83,13 +83,42 @@ describe("webfont WOFF/WOFF2 conversion", () => {
     ).rejects.toThrow("did not match any supported files");
   });
 
-  it("should reject multiple webfont files in one run", async () => {
-    await expect(
-      standalone({
-        files: [fixtureWoff, fixtureWoff2],
-        formats: ["ttf"],
+  it("should decompress multiple webfont files in one run", async () => {
+    const result = await standalone({
+      files: [fixtureWoff, fixtureWoff2],
+      formats: ["ttf"],
+    });
+
+    expect(result.decompressedFonts).toHaveLength(2);
+    expect(result.ttf).toBeUndefined();
+    expect(result.decompressedFonts?.every((font) => isTtf(font.ttf))).toBe(true);
+  });
+
+  it("should decompress a webfont from an https URL", async () => {
+    const fixture = fs.readFileSync(fixtureWoff2);
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        statusText: "OK",
+        arrayBuffer: async () => fixture.buffer.slice(fixture.byteOffset, fixture.byteOffset + fixture.byteLength),
       }),
-    ).rejects.toThrow("WOFF/WOFF2 conversion supports one font file at a time");
+    );
+
+    try {
+      const result = await standalone({
+        files: "https://cdn.example.com/iconfont.woff2",
+        formats: ["ttf"],
+      });
+
+      expect(result.ttf).toBeDefined();
+      expect(isTtf(result.ttf)).toBe(true);
+      expect(result.decompressedFonts?.[0].source).toBe("https://cdn.example.com/iconfont.woff2");
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 
   it("should attach discovered config filePath when converting woff2 input", async () => {
@@ -110,7 +139,9 @@ describe("webfont WOFF/WOFF2 conversion", () => {
         files: fixtureWoff2,
         formats: ["ttf", "otf"],
       }),
-    ).rejects.toThrow('Input decompresses to TrueType (TTF). Request "ttf" format instead of "otf".');
+    ).rejects.toThrow(
+      'Input decompresses to TrueType (TTF). Request "ttf" format instead of "otf" for src/fixtures/fonts/iconfont.woff2.',
+    );
   });
 
   it("should document that input fixtures are valid webfont containers", () => {

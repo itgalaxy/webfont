@@ -67,7 +67,7 @@ describe("convertWebfontInput", () => {
     mockedConvert.mockResolvedValue(otto);
 
     await expect(convertWebfontInput([fixtureWoff2], getConversionOptions({ formats: ["ttf"] }))).rejects.toThrow(
-      'Input decompresses to OpenType (OTF). Request "otf" format instead of "ttf".',
+      'Input decompresses to OpenType (OTF). Request "otf" format instead of "ttf" for src/fixtures/fonts/iconfont.woff2.',
     );
   });
 
@@ -76,7 +76,7 @@ describe("convertWebfontInput", () => {
     mockedConvert.mockResolvedValue(sfnt);
 
     await expect(convertWebfontInput([fixtureWoff2], getConversionOptions({ formats: ["otf"] }))).rejects.toThrow(
-      'Input decompresses to TrueType (TTF). Request "ttf" format instead of "otf".',
+      'Input decompresses to TrueType (TTF). Request "ttf" format instead of "otf" for src/fixtures/fonts/iconfont.woff2.',
     );
   });
 
@@ -86,10 +86,29 @@ describe("convertWebfontInput", () => {
     );
   });
 
-  it("should reject multiple font files in one conversion run", async () => {
-    await expect(convertWebfontInput([fixtureWoff, fixtureWoff2], getConversionOptions())).rejects.toThrow(
-      "WOFF/WOFF2 conversion supports one font file at a time",
-    );
+  it("should decompress multiple webfont files in one conversion run", async () => {
+    const sfnt = await fsPromise.readFile(fixtureTtf);
+    mockedConvert.mockResolvedValue(sfnt);
+
+    const result = await convertWebfontInput([fixtureWoff, fixtureWoff2], getConversionOptions());
+
+    expect(result.decompressedFonts).toHaveLength(2);
+    expect(result.decompressedFonts?.[0].source).toBe(fixtureWoff);
+    expect(result.decompressedFonts?.[1].source).toBe(fixtureWoff2);
+    expect(result.decompressedFonts?.[0].ttf).toBeDefined();
+    expect(result.decompressedFonts?.[1].ttf).toBeDefined();
+    expect(result.ttf).toBeUndefined();
+    expect(result.otf).toBeUndefined();
+  });
+
+  it("should keep single-file ttf and otf on the result root for backward compatibility", async () => {
+    const sfnt = await fsPromise.readFile(fixtureTtf);
+    mockedConvert.mockResolvedValue(sfnt);
+
+    const result = await convertWebfontInput([fixtureWoff2], getConversionOptions());
+
+    expect(result.decompressedFonts).toHaveLength(1);
+    expect(result.ttf).toEqual(sfnt);
   });
 
   it("should reject template rendering for webfont conversion", async () => {

@@ -2,6 +2,8 @@
 
 Instructions for AI agents and contributors automating work in this repository.
 
+**GitHub Copilot:** repository custom instructions live at [`.github/instructions/webfont.instructions.md`](./.github/instructions/webfont.instructions.md) (symlink to this file). Edit **AGENTS.md** only — not the symlink target path in `.github/instructions/`.
+
 ## Testing (Vitest)
 
 ### Do not mix sync-throwing `fs` calls inside async callbacks
@@ -100,6 +102,19 @@ Integration tests in `src/cli/index.test.ts` run the built CLI via `child_proces
 | **exit code** | Assert `output.code` explicitly for success (`0`) and failure (`1`, `2`, etc.). |
 
 When adding a new `execCLI` test, include `expect(output.stderr).toBe("")` alongside exit-code and stdout/file assertions so the suite stays consistent.
+
+### CLI unit tests (`createCli` vs `createMeowCli`)
+
+`program.test.ts` uses **`createCli`** to stub `CliLike` without running meow. **`program.meow.integration.test.ts`** uses **`createMeowCli`** with real argv parsing.
+
+| Rule | Detail |
+|------|--------|
+| **Match `CliLike` in stubs** | Every `createCli({ flags: { … } })` value must satisfy `CliLike["flags"]`. If production types a flag as `string`, the fixture uses a **string** (not a number) — even when the runtime option later accepts `string \| number`. |
+| **Assert what the layer under test returns** | `buildOptionsBase` forwards meow string flags unchanged (e.g. `round: "1"` → `options.round === "1"`). Coercion for downstream libraries belongs in later pipeline steps — do not “fix” tests by expecting a number unless `buildOptionsBase` actually converts it. |
+| **Prefer meow integration for argv** | When verifying how `--round 4` is parsed, extend `program.meow.integration.test.ts` (or `execCLI`), not `createCli` with numeric literals that `CliLike` does not allow. |
+| **Change types and fixtures together** | If `CliLike` or `cliOptions.ts` changes a flag type, update **both** production types and all `createCli` / meow tests in the same PR. |
+
+Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliLike.flags.round` is `string`; meow `type: "string"`; `OptionsBase.round` is `string \| number`; `normalizeRoundOption` coerces at the SVG font stream boundary. Tests for `buildOptionsBase` keep `round: "1"` and `expect(options.round).toBe("1")`.
 
 ### CLI and async I/O
 

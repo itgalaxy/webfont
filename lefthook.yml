@@ -7,5 +7,7 @@ pre-commit:
 
 pre-push:
   commands:
+    depcheck:
+      run: npm run depcheck
     test:
       run: npm test

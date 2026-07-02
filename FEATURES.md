@@ -130,6 +130,18 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Test Criteria**:
   - [x] CLI integration tests cover success, failure, and `--verbose`
   - [x] `parseFormatsFlag` validates format names including `otf`
+  - [x] `validateWebfontOptions` rejects unknown `formats` from API and cosmiconfig (#133)
+
+### Option validation
+
+- **Stability**: stable
+- **Description**: Reject mis-typed options before running the pipeline.
+- **Properties**:
+  - `formats` must be a non-empty array of known format names (`svg`, `ttf`, `otf`, `eot`, `woff`, `woff2`).
+  - `files`, `fontName`, `template`, and `templateFontPath` type-checked after cosmiconfig merge.
+- **Test Criteria**:
+  - [x] Unit tests in `validateWebfontOptions.test.ts`
+  - [x] Standalone and CLI integration tests for unknown format names (#133)
 
 ### Glyph metadata hooks
 

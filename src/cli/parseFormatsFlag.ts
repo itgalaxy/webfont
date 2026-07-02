@@ -1,31 +1,36 @@
-import type { Format, Formats } from "../types/Format";
+import { assertValidFormat, parseFormatsList } from "../lib/parseFormats";
+import type { Formats } from "../types/Format";
 
-const VALID_FORMATS = new Set<Format>(["eot", "otf", "svg", "ttf", "woff", "woff2"]);
-
-const assertValidFormat = (value: unknown): Format => {
-  if (typeof value !== "string" || !VALID_FORMATS.has(value as Format)) {
-    throw new Error(`Invalid format "${String(value)}". Expected one of: ${[...VALID_FORMATS].join(", ")}`);
+export const parseFormatsFlag = (value: string | undefined): Formats | undefined => {
+  if (value === undefined) {
+    return undefined;
   }
 
-  return value as Format;
-};
-
-export const parseFormatsFlag = (value: string): Formats => {
   const trimmed = value.trim();
-
-  if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
-    const parsed: unknown = JSON.parse(trimmed);
-
-    if (!Array.isArray(parsed)) {
-      throw new Error("formats must be a JSON array");
-    }
-
-    return parsed.map(assertValidFormat);
-  }
 
   if (trimmed.length === 0) {
     throw new Error("formats must not be empty");
   }
 
-  return trimmed.split(",").map((format) => assertValidFormat(format.trim()));
+  if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+    let parsed: unknown;
+
+    try {
+      parsed = JSON.parse(trimmed);
+    } catch {
+      throw new Error('formats must be a JSON array (e.g. ["woff2","svg"]) or comma-separated list');
+    }
+
+    if (!Array.isArray(parsed)) {
+      throw new Error('formats must be a JSON array (e.g. ["woff2","svg"]) or comma-separated list');
+    }
+
+    return parseFormatsList(parsed);
+  }
+
+  return trimmed
+    .split(",")
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0)
+    .map(assertValidFormat);
 };

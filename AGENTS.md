@@ -139,7 +139,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 ## General
 
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.
-- Run `npm run depcheck` (Knip) when changing imports or `package.json` dependencies; see [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md).
+- Run `npm run depcheck` (Knip) when changing imports or `package.json` dependencies; see [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md). The **pre-push** Lefthook runs `depcheck` before `npm test`.
 - Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `ci`).
 - Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)). Release git tags use **`v{semver}`** (`v12.0.0`); `release-please-config.json` sets `include-component-in-tag: false` — do not use `webfont-v*` tags.
 - Keep changes focused; match surrounding code style and tooling (Biome, Vitest, Lefthook).

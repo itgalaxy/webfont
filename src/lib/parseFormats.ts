@@ -1,8 +1,8 @@
 import type { Format, Formats } from "../types/Format";
 
-export const VALID_FORMATS = new Set<Format>(["eot", "otf", "svg", "ttf", "woff", "woff2"]);
+const VALID_FORMATS = new Set<Format>(["eot", "otf", "svg", "ttf", "woff", "woff2"]);
 
-export const VALID_FORMATS_LIST = [...VALID_FORMATS].join(", ");
+const VALID_FORMATS_LIST = [...VALID_FORMATS].join(", ");
 
 export const assertValidFormat = (value: unknown): Format => {
   if (typeof value !== "string" || !VALID_FORMATS.has(value as Format)) {

@@ -121,6 +121,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 - Keep changes focused; match surrounding code style and tooling (Biome, Jest, Lefthook).
 - Do not commit unless explicitly asked.
 - **Never push to `master`.** Use a branch and open a PR (see [Pull requests](#pull-requests) below).
+- **Push without asking.** After commits on a feature or PR branch, run `git push` as part of finishing the work. Do not end responses with “want me to push?” or similar — push, then report what was pushed and the PR URL if applicable.
 
 ### Lint and type hygiene
 
@@ -146,7 +147,7 @@ When a task produces branch changes intended for review (features, fixes, CI, do
 5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
 6. **Return the PR URL** in the final response.
 
-**Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
+**Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. **Never** close a turn with prompts like “Quer que eu faça o push?” / “Should I push?” after committing on an open PR branch; push first, then summarize. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
 
 ### Merged branches
 

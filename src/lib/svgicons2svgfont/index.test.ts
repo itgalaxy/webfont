@@ -14,6 +14,27 @@ describe("svgicons2svgfont helpers", () => {
     it("should return undefined for non-numeric strings", () => {
       expect(normalizeRoundOption("not-a-number")).toBeUndefined();
     });
+
+    it("should return undefined for empty strings", () => {
+      expect(normalizeRoundOption("")).toBeUndefined();
+    });
+
+    it("should return undefined for whitespace-only strings", () => {
+      expect(normalizeRoundOption("   ")).toBeUndefined();
+    });
+
+    it("should return undefined for non-finite numbers", () => {
+      expect(normalizeRoundOption(Number.POSITIVE_INFINITY)).toBeUndefined();
+      expect(normalizeRoundOption(Number.NaN)).toBeUndefined();
+    });
+
+    it("should return undefined for non-finite numeric strings", () => {
+      expect(normalizeRoundOption("Infinity")).toBeUndefined();
+    });
+
+    it("should return undefined for null", () => {
+      expect(normalizeRoundOption(null)).toBeUndefined();
+    });
   });
 
   describe("getFontStreamOptions", () => {

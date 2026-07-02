@@ -338,6 +338,22 @@ describe("standalone", () => {
     expect(isTtf(withTransform.ttf)).toBe(true);
   });
 
+  it("should warn about evenodd fill-rule when verbose (#175)", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+
+    try {
+      await standalone({
+        files: `${fixturesGlob}/svg-evenodd/linkedin.svg`,
+        formats: ["svg"],
+        verbose: true,
+      });
+
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("fill-rule: evenodd"));
+    } finally {
+      logSpy.mockRestore();
+    }
+  });
+
   it("should create css selectors with transform titles through function", async () => {
     const glyphTransformFn: GlyphTransformFn = (obj) => {
       obj.name += "_transform";

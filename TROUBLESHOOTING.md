@@ -212,3 +212,48 @@ Error: Cannot specify input files on the command line when `files` is set in the
 4. **Do not mix** CLI positional paths with `files` in the config after upgrading — pick one source of truth.
 
 If the problem persists after upgrading, open an issue with your config file, full command, and webfont version (`webfont --version` or `npm ls webfont`).
+
+---
+
+## Icon details missing after export
+
+### What error appeared
+
+There is often **no error**. The font builds successfully, but part of the icon is missing in the browser — for example the dot on a letter in a LinkedIn-style logo ([#175](https://github.com/itgalaxy/webfont/issues/175)).
+
+The same SVG looks correct in Inkscape, Illustrator, or Affinity Designer.
+
+### Why it usually happens
+
+- **`fill-rule: evenodd` on compound paths.** Many design tools export icons as one path with multiple subpaths and `fill-rule: evenodd` (often via an inline `style` on the root `<svg>`). Browsers still draw that SVG correctly.
+- **Icon fonts use the nonzero fill rule.** When the SVG is converted to a font glyph, `fill-rule` is not preserved. Counter-shapes and holes can disappear or invert — the geometry is often still in the glyph path, but it renders wrong.
+- **`--normalize` does not fix fill-rule.** Normalization adjusts metrics and path coordinates; it does not change evenodd semantics ([#80](https://github.com/itgalaxy/webfont/issues/80)).
+- **Small viewBoxes can make detail loss worse** for complex paths. Try a larger artboard (for example 512×512) and `fontHeight: 600` with `normalize: true` when paths are very small ([#80](https://github.com/itgalaxy/webfont/issues/80#issuecomment-435621410)).
+
+Run with **`--verbose`** to log a warning when webfont detects `fill-rule: evenodd` in a source SVG.
+
+### Steps to try to resolve
+
+1. **Inspect the SVG with nonzero fill rule.** Temporarily change `fill-rule:evenodd` to `fill-rule:nonzero` in the file and reopen it in a vector editor. Missing pieces usually indicate path direction or compound-path issues, not a silent webfont failure.
+
+2. **Fix the source in your design tool (recommended).**
+   - Merge shapes with **Unite** / **Union**, then **Object → Compound Path → Make** (Illustrator: Ctrl/Cmd+8) so holes use correct winding ([#175](https://github.com/itgalaxy/webfont/issues/175#issuecomment-966653174)).
+   - Avoid leaving `fill-rule: evenodd` on icons destined for icon fonts.
+   - Export at a **larger size** (for example 512×512) when the tool produces fragile small paths.
+
+3. **Tune font metrics for fine detail:**
+
+   ```js
+   await webfont({
+     files: "src/icons/**/*.svg",
+     normalize: true,
+     fontHeight: 600,
+   });
+   ```
+
+4. **Preprocess difficult SVGs** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) (for example retrace or flatten strokes with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer)) before generating the font.
+
+5. **Remove percentage `width` / `height`** on the root `<svg>` if a preprocessor errors; keep a numeric `viewBox` instead.
+
+See also [MDN: fill-rule](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule).
+

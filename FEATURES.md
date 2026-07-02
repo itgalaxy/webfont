@@ -32,6 +32,27 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - [x] SVG input with `formats: ['otf']` rejects
   - [x] Built-in CSS template works with default SVG formats
 
+### TTF to webfont encoding
+
+- **Stability**: in-progress
+- **Description**: Encode one or more `.ttf` TrueType files to `eot`, `woff`, and/or `woff2` (and optional TTF pass-through). Auto-detected from input extension — no separate flag (see [#13](https://github.com/itgalaxy/webfont/issues/13)).
+- **Properties**:
+  - Input: one or more local `.ttf` paths or globs per run.
+  - Output: `ttf` (copy), `eot`, `woff`, and/or `woff2` per input via existing encoders (`ttf2eot`, `ttf2woff`, `wawoff2`).
+  - Batch results on `result.transcodedFonts` (`{ source, ttf?, eot?, woff?, woff2? }[]`). Single input mirrors buffers on `result` top level.
+  - Default `formats` when SVG-pipeline defaults are still configured: `['woff', 'woff2']`.
+  - Does **not** accept `.otf` input (TrueType only). Does **not** merge multiple weights into one file.
+  - `template` and `glyphTransformFn` are not supported in this mode.
+  - **Licensing:** encoding does not grant rights to the font; users must comply with the font’s license. See [NOTICE.md](./NOTICE.md) §3.3.
+  - **Architecture:** see [ADR 0009](docs/adr/0009-ttf-webfont-encoding-pipeline.md).
+- **Test Criteria**:
+  - [x] `.ttf` input with `formats: ['woff', 'woff2']` yields valid WOFF and WOFF2
+  - [x] Default formats produce `woff` + `woff2` when SVG defaults are configured
+  - [x] Multiple TTF files encode in one run (`transcodedFonts`)
+  - [x] Mixed `.svg` + `.ttf` or `.ttf` + `.woff2` inputs reject
+  - [x] Template option in TTF mode rejects
+  - [x] CLI writes encoded outputs for a single TTF input
+
 ### WOFF / WOFF2 container decompression
 
 - **Stability**: in-progress
@@ -47,7 +68,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - Does **not** re-encode to `eot`, `woff`, or `woff2` in this mode.
   - Default `formats` when SVG-pipeline defaults are still configured: `['ttf']`.
   - `template` and `glyphTransformFn` are not supported in this mode.
-  - **Licensing:** decompression does not grant rights to the font; users must comply with the font’s license for input and extracted output. Copyright/metadata in the SFNT is preserved. See [NOTICE.md](./NOTICE.md) §3.2.
+  - **Licensing:** decompression does not grant rights to the font; users must comply with the font’s license for input and extracted output. Copyright/metadata in the SFNT is preserved. See [NOTICE.md](./NOTICE.md) §3.4.
   - **Architecture:** see [ADR 0007](docs/adr/0007-woff-woff2-decompression-pipeline.md).
 - **Test Criteria**:
   - [x] `.woff2` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
@@ -63,13 +84,13 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Stability**: in-progress
 - **Description**: Classify matched paths into SVG mode, webfont mode, mixed, or unsupported before running a pipeline.
 - **Properties**:
-  - Supported extensions: `.svg`, `.woff`, `.woff2` only.
+  - Supported extensions: `.svg`, `.ttf`, `.woff`, `.woff2` only.
   - Extension-less paths (e.g. `LICENSE`, `.webfontrc`) are **not** treated as compatible wildcards; globs that match them alongside fonts fail as unsupported.
   - Unsupported extensions (e.g. `.txt`, `.json`) cause the run to fail with “did not match any supported files”.
 - **Test Criteria**:
   - [x] Extension-less file + `.woff2` classifies as unsupported (error)
   - [x] `.txt`-only input classifies as unsupported (error)
-  - [x] Pure `.svg` / pure `.woff`/`.woff2` classify correctly
+  - [x] Pure `.svg` / pure `.ttf` / pure `.woff`/`.woff2` classify correctly
 
 ### Configuration file discovery
 
@@ -131,10 +152,12 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 ### Arbitrary format transcoding
 
 - **Stability**: planned
-- **Description**: Convert between outline/container formats beyond the current two pipelines (e.g. TTF ↔ OTF transcoding, “any format to any format”).
+- **Description**: Convert between outline/container formats beyond the current three pipelines (e.g. TTF ↔ OTF transcoding, OTF input encoding).
 - **Properties**:
-  - **Out of scope today.** WOFF/WOFF2 mode only decompresses; SVG mode only builds TrueType-based outputs.
+  - **Partially supported:** TTF → `eot` / `woff` / `woff2` (see TTF to webfont encoding). WOFF/WOFF2 → TTF/OTF decompression.
+  - **Out of scope today:** OTF input encoding, TTF ↔ OTF outline conversion.
   - External tools (FontForge, fontTools, etc.) are required for TTF → OTF today.
 - **Test Criteria**:
+  - [x] TTF input encoded to WOFF/WOFF2
   - [ ] TTF input transcoded to OTF
   - [ ] Documented public API for generic transcoding

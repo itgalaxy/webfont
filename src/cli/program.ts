@@ -8,6 +8,7 @@ import type { InitialOptions } from "../types/InitialOptions";
 import type { OptionsBase } from "../types/OptionsBase";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
+import type { TranscodedFont } from "../types/TranscodedFont";
 import { parseFormatsFlag } from "./parseFormatsFlag";
 import { resolveCliFiles } from "./resolveCliFiles";
 
@@ -257,8 +258,8 @@ export const ensureDestExists = async (dest: string, destCreate?: boolean): Prom
 };
 
 export const getDecompressedFontOutputBasename = (
-  fonts: readonly DecompressedFont[],
-  font: DecompressedFont,
+  fonts: readonly { source: string }[],
+  font: { source: string },
   config: ResultConfig,
 ): string => {
   if (fonts.length === 1 && config.fontName) {
@@ -294,6 +295,43 @@ export const writeDecompressedFontFiles = async (
   );
 };
 
+export const getTranscodedFontOutputBasename = (
+  fonts: readonly TranscodedFont[],
+  font: TranscodedFont,
+  config: ResultConfig,
+): string => getDecompressedFontOutputBasename(fonts, font, config);
+
+export const writeTranscodedFontFiles = async (
+  fonts: readonly TranscodedFont[],
+  config: ResultConfig,
+  dest: string,
+): Promise<void> => {
+  await Promise.all(
+    fonts.flatMap((font) => {
+      const basename = getTranscodedFontOutputBasename(fonts, font, config);
+      const writes: Promise<void>[] = [];
+
+      if (font.ttf) {
+        writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.ttf`)), font.ttf));
+      }
+
+      if (font.eot) {
+        writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.eot`)), font.eot));
+      }
+
+      if (font.woff) {
+        writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.woff`)), font.woff));
+      }
+
+      if (font.woff2) {
+        writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.woff2`)), font.woff2));
+      }
+
+      return writes;
+    }),
+  );
+};
+
 export const writeResultFiles = async (result: Result): Promise<Result> => {
   const config = ensureResultConfig(result);
   const dest = config.dest ?? process.cwd();
@@ -304,6 +342,11 @@ export const writeResultFiles = async (result: Result): Promise<Result> => {
   }
 
   await ensureDestExists(dest, config.destCreate);
+
+  if (result.transcodedFonts && result.transcodedFonts.length > 1) {
+    await writeTranscodedFontFiles(result.transcodedFonts, config, dest);
+    return result;
+  }
 
   if (result.decompressedFonts && result.decompressedFonts.length > 1) {
     await writeDecompressedFontFiles(result.decompressedFonts, config, dest);

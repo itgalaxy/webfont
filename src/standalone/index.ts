@@ -45,6 +45,8 @@ const buildConfig = async (options: {
   return config ?? {};
 };
 
+export const loadWebfontConfig = buildConfig;
+
 type GlyphReadable = Readable & { metadata: GlyphMetadata };
 
 const toSvg = (glyphsData: GlyphData[], options: WebfontOptions) => {

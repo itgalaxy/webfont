@@ -9,6 +9,7 @@ import type { OptionsBase } from "../types/OptionsBase";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
 import { parseFormatsFlag } from "./parseFormatsFlag";
+import { resolveCliFiles } from "./resolveCliFiles";
 
 export type CliLike = {
   flags: {
@@ -356,11 +357,13 @@ export const runCli = async (cli: CliLike): Promise<Result> => {
   }
 
   const optionsBase = buildOptionsBase(cli);
-  const options = { ...optionsBase, files: cli.input };
+  const files = await resolveCliFiles(cli, optionsBase);
 
-  if (options.files.length === 0) {
+  if (files.length === 0) {
     cli.showHelp();
   }
+
+  const options = { ...optionsBase, files };
 
   const result = await webfont(options);
   mergeCliDestIntoConfig(result, options);

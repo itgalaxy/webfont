@@ -327,6 +327,26 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
+  it("should use files from config when no CLI input is provided (#2)", async () => {
+    const configPath = `${fixturesGlob}/configs/.webfontrc-files.json`;
+    const output = await execCLI(`-d ${destination} --config ${configPath}`);
+
+    expect(output.files).toEqual(["config-files-font.hash", "config-files-font.woff2"]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
+  it("should reject CLI input when config defines files (#2)", async () => {
+    const configPath = `${fixturesGlob}/configs/.webfontrc-files.json`;
+    const output = await execCLI(`${source}/envelope.svg -d ${destination} --config ${configPath}`);
+
+    expect(output.code).toBe(1);
+    expect(output.stderr).toBe("");
+    expect(output.stdout).toMatch(
+      /Cannot specify input files on the command line when `files` is set in the config file/u,
+    );
+  });
+
   it("should generate built-in html template", async () => {
     const output = await execCLI(`${source} -d ${destination} --template html --templateCacheString test`);
 

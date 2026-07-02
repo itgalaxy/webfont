@@ -41,11 +41,23 @@ When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract 
 
 When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
 
-1. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and **fill every section** of the template (do not substitute a shorter custom format).
+1. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
 2. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
-3. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so checklists and headings match the template exactly.
+3. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
 4. **Return the PR URL** in the final response.
 
-Required sections from the template: **Proposed changes**, **Related issue**, **Dependencies added/removed** (or “None”), **Testing** checklists, **How to test**, **Test configuration**, and the **Checklist** at the bottom. Mark completed items with `[x]`.
+### Template sections (be selective)
+
+Keep the template **headings and order**, but write each section critically — only include content that applies to the PR:
+
+| Section | Guidance |
+|---------|----------|
+| **Proposed changes** | Bullet the real changes; remove placeholder text. |
+| **Related issue** | Link the issue, or write `N/A` / `None` when there is none. |
+| **Dependencies** | List adds/updates/removes, or `N/A` when `package.json` is untouched. |
+| **Testing** | Do **not** copy every sub-checkbox from the template. Mark only test types you actually ran or added (e.g. unit test for code changes). Omit sub-items that do not apply instead of leaving them unchecked. For docs-only or config-only PRs, say so explicitly (e.g. “No runtime tests; verified by review / `npm test` still passes”). |
+| **How to test** | Steps a reviewer can follow. For non-user-facing changes, describe what you ran (`npm test`, `npm run lint`, file review). |
+| **Test configuration** | Include Node/npm versions only when the change is version-sensitive or CI-related; otherwise `N/A` or omit the bullet values. |
+| **Checklist** | Mark `[x]` only for items you completed. Leave maintainer-only items (labels) unchecked. |
 
 Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only / no code changes.

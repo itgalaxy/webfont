@@ -11,8 +11,9 @@ import {getOptions} from "./options";
 import globby from "globby";
 import nunjucks from "nunjucks";
 import path from "path";
+// eslint-disable-next-line sort-imports -- keep ttf2eot adapter beside font converter imports
+import convertTtfToEot from "../lib/ttf2eot";
 import svg2ttf from "svg2ttf";
-import ttf2eot from "ttf2eot";
 import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
 
@@ -76,7 +77,7 @@ const toSvg = (glyphsData, options) => {
 
 const toTtf = (buffer, options) => Buffer.from(svg2ttf(buffer, options).buffer);
 
-const toEot = (buffer) => Buffer.from(ttf2eot(buffer).buffer);
+const toEot = (buffer) => convertTtfToEot(buffer);
 
 const toWoff = (buffer, options) => Buffer.from(ttf2woff(buffer, options).buffer);
 

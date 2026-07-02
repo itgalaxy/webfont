@@ -80,7 +80,9 @@
     "vite-plugin-dts": "5.0.3"
   },
   "overrides": {
-    "fast-glob": "3.2.12"
+    "fast-glob": "3.2.12",
+    "minimatch": "10.2.5",
+    "test-exclude": "7.0.2"
   },
   "repository": {
     "type": "git",

@@ -1,10 +1,10 @@
-import type {GlyphData, GlyphMetadata, WebfontOptions} from "../types";
-import {createReadStream} from "fs";
-/* eslint-disable sort-imports -- default and named imports from lib adapters */
-import {fileSorter, getMetadataService, getMetadataServiceOptions} from "../lib/svgicons2svgfont";
-import pLimit from "../lib/p-limit";
+import { createReadStream } from "fs";
 /* eslint-enable sort-imports */
 import xml2js from "xml2js";
+import pLimit from "../lib/p-limit";
+/* eslint-disable sort-imports -- default and named imports from lib adapters */
+import { fileSorter, getMetadataService, getMetadataServiceOptions } from "../lib/svgicons2svgfont";
+import type { GlyphData, GlyphMetadata, WebfontOptions } from "../types";
 
 const normalizeUnicode = (unicode: GlyphMetadata["unicode"]): string[] => {
   if (Array.isArray(unicode)) {
@@ -25,45 +25,49 @@ const toGlyphMetadata = (metadata: {
 // eslint-disable-next-line no-unused-vars
 type GlyphsDataGetter = (files: Array<GlyphData["srcPath"]>, options: WebfontOptions) => unknown;
 
-export const getGlyphsData : GlyphsDataGetter = (files, options) => {
-  const metadataProvider =
-    options.metadataProvider ||
-    getMetadataService(getMetadataServiceOptions(options));
+export const getGlyphsData: GlyphsDataGetter = (files, options) => {
+  const metadataProvider = options.metadataProvider || getMetadataService(getMetadataServiceOptions(options));
 
   const xmlParser = new xml2js.Parser();
   const throttle = pLimit(options.maxConcurrency);
 
-  return Promise.all(files.map((srcPath: GlyphData["srcPath"]) => throttle(() => new Promise((resolve, reject) => {
-    const glyph = createReadStream(srcPath);
-    let glyphContents = "";
+  return Promise.all(
+    files.map((srcPath: GlyphData["srcPath"]) =>
+      throttle(
+        () =>
+          new Promise((resolve, reject) => {
+            const glyph = createReadStream(srcPath);
+            let glyphContents = "";
 
-    // eslint-disable-next-line no-promise-executor-return
-    return glyph.
-      on("error", (glyphError) => reject(glyphError)).
-      on("data", (data) => {
-        glyphContents += data.toString();
-      }).
-      on("end", () => {
-      // Maybe bug in xml2js
-        if (glyphContents.length === 0) {
-          return reject(new Error(`Empty file ${srcPath}`));
-        }
+            // eslint-disable-next-line no-promise-executor-return
+            return glyph
+              .on("error", (glyphError) => reject(glyphError))
+              .on("data", (data) => {
+                glyphContents += data.toString();
+              })
+              .on("end", () => {
+                // Maybe bug in xml2js
+                if (glyphContents.length === 0) {
+                  return reject(new Error(`Empty file ${srcPath}`));
+                }
 
-        return xmlParser.parseString(glyphContents, (error) => {
-          if (error) {
-            return reject(error);
-          }
+                return xmlParser.parseString(glyphContents, (error) => {
+                  if (error) {
+                    return reject(error);
+                  }
 
-          const glyphData: GlyphData = {
-            contents: glyphContents,
-            srcPath,
-          };
+                  const glyphData: GlyphData = {
+                    contents: glyphContents,
+                    srcPath,
+                  };
 
-          return resolve(glyphData);
-        });
-      });
-  })))).then((glyphsData) => {
-
+                  return resolve(glyphData);
+                });
+              });
+          }),
+      ),
+    ),
+  ).then((glyphsData) => {
     let sortedGlyphsData = glyphsData;
 
     if (options.sort) {
@@ -73,22 +77,27 @@ export const getGlyphsData : GlyphsDataGetter = (files, options) => {
 
     const { ligatures } = options;
 
-    return Promise.all(sortedGlyphsData.map((glyphData: GlyphData) => new Promise((resolve, reject) => {
-      metadataProvider(glyphData.srcPath, (error, metadata) => {
-        if (error) {
-          return reject(error);
-        }
+    return Promise.all(
+      sortedGlyphsData.map(
+        (glyphData: GlyphData) =>
+          new Promise((resolve, reject) => {
+            metadataProvider(glyphData.srcPath, (error, metadata) => {
+              if (error) {
+                return reject(error);
+              }
 
-        const glyphMetadata = toGlyphMetadata(metadata);
+              const glyphMetadata = toGlyphMetadata(metadata);
 
-        if (ligatures) {
-          glyphMetadata.unicode.push(metadata.name.replace(/-/gu, "_"));
-        }
+              if (ligatures) {
+                glyphMetadata.unicode.push(metadata.name.replace(/-/gu, "_"));
+              }
 
-        glyphData.metadata = glyphMetadata;
+              glyphData.metadata = glyphMetadata;
 
-        return resolve(glyphData);
-      });
-    })));
+              return resolve(glyphData);
+            });
+          }),
+      ),
+    );
   });
 };

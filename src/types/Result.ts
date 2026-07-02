@@ -1,5 +1,5 @@
-import {GlyphData} from "./GlyphData";
-import {OptionsBase} from "./OptionsBase";
+import type { GlyphData } from "./GlyphData";
+import type { OptionsBase } from "./OptionsBase";
 
 export type Result = {
   config?: OptionsBase;
@@ -12,4 +12,4 @@ export type Result = {
   usedBuildInTemplate?: boolean;
   woff?: Buffer;
   woff2?: Buffer;
-}
+};

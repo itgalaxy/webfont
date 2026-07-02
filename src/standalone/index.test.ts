@@ -1,4 +1,3 @@
-import type {GlyphMetadata, GlyphTransformFn} from "../types";
 import crypto from "crypto";
 import isEot from "is-eot";
 import isSvg from "is-svg";
@@ -7,6 +6,7 @@ import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
 import path from "path";
 import standalone from "../standalone";
+import type { GlyphMetadata, GlyphTransformFn } from "../types";
 
 const fixturesGlob = "src/fixtures";
 
@@ -56,18 +56,11 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
 
-    const svgHash = crypto.createHash("md5").update(result.svg).
-      digest("hex");
-    const ttfHash = crypto.createHash("md5").update(result.ttf).
-      digest("hex");
-    const eotHash = crypto.createHash("md5").update(result.eot).
-      digest("hex");
-    const woffHash = crypto.createHash("md5").update(result.woff).
-      digest("hex");
-    const woff2Hash = crypto.
-      createHash("md5").
-      update(result.woff2).
-      digest("hex");
+    const svgHash = crypto.createHash("md5").update(result.svg).digest("hex");
+    const ttfHash = crypto.createHash("md5").update(result.ttf).digest("hex");
+    const eotHash = crypto.createHash("md5").update(result.eot).digest("hex");
+    const woffHash = crypto.createHash("md5").update(result.woff).digest("hex");
+    const woff2Hash = crypto.createHash("md5").update(result.woff2).digest("hex");
 
     expect(svgHash).toBe("1154313a3843c5f5ec70890715e8a527");
     expect(ttfHash).toBe("a78de3c54fa46d77540c2c96c4194f16");
@@ -116,7 +109,6 @@ describe("standalone", () => {
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.template).toMatchSnapshot();
   });
-
 
   it("should generate only `woff` and `woff2` fonts with build-in template", async () => {
     const result = await standalone({
@@ -177,7 +169,7 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error
     expect(result.config.foo).toBe("bar");
   });
 
@@ -241,10 +233,7 @@ describe("standalone", () => {
     }
   `;
     const result = await standalone({
-      files: [
-        `${fixturesGlob}/svg-icons/envelope.svg`,
-        `${fixturesGlob}/svg-icons/avatar.svg`,
-      ],
+      files: [`${fixturesGlob}/svg-icons/envelope.svg`, `${fixturesGlob}/svg-icons/avatar.svg`],
       sort: false,
       template: path.join(fixturesGlob, "templates/template-ordered.css"),
     });
@@ -289,7 +278,7 @@ describe("standalone", () => {
     }
   });
 
-  it("should throw error on bad svg images - `Unexpected character \"N\"`", async () => {
+  it('should throw error on bad svg images - `Unexpected character "N"`', async () => {
     expect.assertions(1);
 
     const configFile = path.join(fixturesGlob, "configs/.webfontrc");
@@ -338,8 +327,7 @@ describe("standalone", () => {
   });
 
   it("should create css selectors with transform titles through function", async () => {
-
-    const glyphTransformFn : GlyphTransformFn = (obj) => {
+    const glyphTransformFn: GlyphTransformFn = (obj) => {
       obj.name += "_transform";
 
       return obj;
@@ -355,7 +343,6 @@ describe("standalone", () => {
 
     expect(result.template).toMatchSnapshot();
   });
-
 
   it("should change unicode symbols in the result using sync function", async () => {
     const { template } = await standalone({

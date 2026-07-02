@@ -1,8 +1,8 @@
-import type {GlyphData} from "../types";
 import fs from "fs";
-import {getGlyphsData} from "./glyphsData";
-import {getOptions} from "./options";
 import path from "path";
+import type { GlyphData } from "../types";
+import { getGlyphsData } from "./glyphsData";
+import { getOptions } from "./options";
 
 const fixturesDir = path.join(__dirname, "../fixtures/svg-icons");
 const svgFiles = [
@@ -22,7 +22,7 @@ const getTestOptions = (maxConcurrency: number) => ({
 
 describe("glyphsData", () => {
   it("should load glyph contents and metadata for each svg file", async () => {
-    const glyphsData = await getGlyphsData(svgFiles, getTestOptions(2)) as GlyphData[];
+    const glyphsData = (await getGlyphsData(svgFiles, getTestOptions(2))) as GlyphData[];
 
     expect(glyphsData).toHaveLength(svgFiles.length);
     expect(glyphsData.map((glyph) => glyph.srcPath).sort()).toEqual([...svgFiles].sort());
@@ -58,7 +58,7 @@ describe("glyphsData", () => {
     });
 
     try {
-      const glyphsData = await getGlyphsData(svgFiles, getTestOptions(maxConcurrency)) as GlyphData[];
+      const glyphsData = (await getGlyphsData(svgFiles, getTestOptions(maxConcurrency))) as GlyphData[];
 
       expect(glyphsData).toHaveLength(svgFiles.length);
       expect(maxObservedConcurrency).toBeLessThanOrEqual(maxConcurrency);
@@ -90,7 +90,7 @@ describe("glyphsData", () => {
     });
 
     try {
-      const glyphsData = await getGlyphsData(svgFiles, getTestOptions(1)) as GlyphData[];
+      const glyphsData = (await getGlyphsData(svgFiles, getTestOptions(1))) as GlyphData[];
 
       expect(glyphsData).toHaveLength(svgFiles.length);
       expect(maxObservedConcurrency).toBe(1);

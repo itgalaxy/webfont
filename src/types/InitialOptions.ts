@@ -1,5 +1,5 @@
-import {GlyphTransformFn} from "./GlyphTransformFn";
-import {OptionsBase} from "./OptionsBase";
+import type { GlyphTransformFn } from "./GlyphTransformFn";
+import type { OptionsBase } from "./OptionsBase";
 
 export type InitialOptions = OptionsBase & {
   filePath?: string;

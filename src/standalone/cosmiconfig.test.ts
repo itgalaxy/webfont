@@ -2,6 +2,7 @@ import fs from "fs";
 import isWoff2 from "is-woff2";
 import path from "path";
 import standalone from "../standalone";
+import type { InitialOptions } from "../types";
 
 const fixturesRoot = path.join(__dirname, "../fixtures");
 const svgFiles = path.join(fixturesRoot, "svg-icons/*.svg");
@@ -88,13 +89,15 @@ describe("cosmiconfig", () => {
       }
     });
 
-    it("should ignore filePath passed as input when no config is loaded", async () => {
-      const result = await standalone({
+    it("should not echo filePath on result when no config was discovered", async () => {
+      // Untyped callers (e.g. plain JS) may pass extra keys; filePath is output-only.
+      const input = {
         files: svgFiles,
         formats: ["woff2"],
-        // @ts-expect-error filePath is result metadata, not an input option
         filePath: "/fake/config/path.json",
-      });
+      } as InitialOptions;
+
+      const result = await standalone(input);
 
       expect(result.config?.filePath).toBeUndefined();
     });

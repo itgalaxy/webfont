@@ -51,9 +51,11 @@ This project uses [Biome](https://biomejs.dev/) for linting and formatting (`bio
 
 ### Dependencies
 
-- Pin exact versions in `package.json` (no `^`, `~`, or `latest` ranges).
+- Pin exact versions in `package.json` (no `^`, `~`, or `latest` ranges), including `@types/*` packages.
 - The repository sets `save-exact=true` in `.npmrc`, so `npm install <package>` records exact versions automatically.
-- When upgrading a dependency, update both `package.json` and `package-lock.json` in the same pull request.
+- When upgrading a dependency, pin its `@types/<package>` counterpart in the same pull request when one exists.
+- Update both `package.json` and `package-lock.json` in the same pull request.
+- [Dependabot](.github/dependabot.yml) opens upgrade PRs for pinned dependencies; do not use open ranges to get updates.
 
 ### CI changes
 

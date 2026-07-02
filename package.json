@@ -77,7 +77,7 @@
     "lint-staged": "11.1.2",
     "rimraf": "latest",
     "rollup": "2.56.3",
-    "standard-version": "latest",
+    "standard-version": "9.5.0",
     "ts-node": "latest",
     "tslib": "latest",
     "typescript": "5.9.3"

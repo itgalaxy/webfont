@@ -82,7 +82,7 @@ The project already uses [Conventional Commits](https://www.conventionalcommits.
 ### Negative / trade-offs
 
 - **Release PR cadence:** Version bumps no longer land instantly on every `master` push; they accumulate in a Release PR until merged.
-- **`GITHUB_TOKEN` limitation:** Releases created with the default token do **not** trigger other workflows (including `npm-publish.yml`). Configure **`RELEASE_PLEASE_TOKEN`** (GitHub PAT with Contents + Pull requests write) for [`release-please.yml`](../../.github/workflows/release-please.yml) — see [Release Please Action docs](https://github.com/googleapis/release-please-action#github-credentials).
+- **`GITHUB_TOKEN` limitation:** Releases created with the default token do **not** trigger other workflows (including `npm-publish.yml`). Publish manually from the release tag, or configure a PAT for Release Please later if fully automated publish is required (see [Release Please Action docs](https://github.com/googleapis/release-please-action#github-credentials)).
 - **Prereleases:** The old `npm run release-alpha` script is removed; use Conventional Commit prerelease notation or Release Please `release-as` / manifest options when needed.
 
 ### Follow-up

@@ -20,8 +20,6 @@ jobs:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          # PAT required so the GitHub Release it creates triggers npm-publish.yml
-          # (events from the default GITHUB_TOKEN do not start other workflows).
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json

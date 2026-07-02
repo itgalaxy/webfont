@@ -156,19 +156,18 @@ Versioning is automated with [Release Please](https://github.com/googleapis/rele
 
 1. Merge changes to `master` using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `ci:`, etc.).
 2. Release Please opens or updates a **Release PR** with the next version, `CHANGELOG.md`, and `package.json` updates.
-3. Review and merge the Release PR to create the git tag and GitHub Release.
-4. The [`npm-publish`](.github/workflows/npm-publish.yml) workflow runs on the published release: `npm test`, then `npm publish --access public` (the `prepublishOnly` script builds before upload).
+3. Review and merge the Release PR to create the git tag and GitHub Release on GitHub.
+4. Publish to npm (see **npm publishing** below). The [`npm-publish`](.github/workflows/npm-publish.yml) workflow listens for `release: published`, but releases created with the default `GITHUB_TOKEN` usually **do not** trigger downstream workflows — use manual publish or re-run the workflow from the Actions tab if needed.
 
 Do not run local `npm version` or push version tags manually unless coordinating an emergency release with maintainers.
 
-#### Release and npm publishing prerequisites
+#### npm publishing
 
-Configure these repository secrets under **Settings → Secrets and variables → Actions**:
+Configure this repository secret under **Settings → Secrets and variables → Actions**:
 
-- **`RELEASE_PLEASE_TOKEN`** — GitHub fine-grained or classic PAT with **Contents** and **Pull requests** write access on this repository. Release Please uses it instead of the default `GITHUB_TOKEN` so the GitHub Release it creates can trigger [`npm-publish.yml`](.github/workflows/npm-publish.yml) (releases created by `GITHUB_TOKEN` do not start downstream workflows).
 - **`NPM_TOKEN`** — npm access token with publish permission for the `webfont` package (Automation or Granular Access Token).
 
-If CI publish is unavailable, maintainers can publish manually from the release tag:
+After merging the Release PR, publish from the release tag (recommended):
 
 ```shell
 git fetch origin --tags

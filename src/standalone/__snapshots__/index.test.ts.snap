@@ -1,18 +1,18 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`standalone should change unicode symbols in the result using async function 1`] = `
 "@font-face {
   font-display: auto;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./webfont.eot?test\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
+  src: url("./webfont.eot?test");
+  src: url("./webfont.eot?#iefix") format("embedded-opentype"); 
 }
 
 .webfont {
   display: inline-block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -105,15 +105,15 @@ exports[`standalone should change unicode symbols in the result using async func
 
 
 .webfont-avatar::before {
-  content: \\"\\\\1\\";
+  content: "\\1";
 }
 
 .webfont-envelope::before {
-  content: \\"\\\\1\\";
+  content: "\\1";
 }
 
 .webfont-phone-call::before {
-  content: \\"\\\\1\\";
+  content: "\\1";
 }
 
 "
@@ -122,16 +122,16 @@ exports[`standalone should change unicode symbols in the result using async func
 exports[`standalone should change unicode symbols in the result using sync function 1`] = `
 "@font-face {
   font-display: auto;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./webfont.eot?test\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
+  src: url("./webfont.eot?test");
+  src: url("./webfont.eot?#iefix") format("embedded-opentype"); 
 }
 
 .webfont {
   display: inline-block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -224,15 +224,15 @@ exports[`standalone should change unicode symbols in the result using sync funct
 
 
 .webfont-avatar::before {
-  content: \\"\\\\1\\";
+  content: "\\1";
 }
 
 .webfont-envelope::before {
-  content: \\"\\\\1\\";
+  content: "\\1";
 }
 
 .webfont-phone-call::before {
-  content: \\"\\\\1\\";
+  content: "\\1";
 }
 
 "
@@ -241,16 +241,16 @@ exports[`standalone should change unicode symbols in the result using sync funct
 exports[`standalone should create css selectors with transform titles through function 1`] = `
 "@font-face {
   font-display: auto;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./webfont.eot?test\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
+  src: url("./webfont.eot?test");
+  src: url("./webfont.eot?#iefix") format("embedded-opentype"); 
 }
 
 .webfont {
   display: inline-block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -343,15 +343,15 @@ exports[`standalone should create css selectors with transform titles through fu
 
 
 .webfont-avatar_transform::before {
-  content: \\"\\\\ea01\\";
+  content: "\\ea01";
 }
 
 .webfont-envelope_transform::before {
-  content: \\"\\\\ea02\\";
+  content: "\\ea02";
 }
 
 .webfont-phone-call_transform::before {
-  content: \\"\\\\ea03\\";
+  content: "\\ea03";
 }
 
 "
@@ -360,16 +360,16 @@ exports[`standalone should create css selectors with transform titles through fu
 exports[`standalone should generate all fonts with build-in template 1`] = `
 "@font-face {
   font-display: auto;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./webfont.eot?test\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"), url(\\"./webfont.ttf?test\\") format(\\"truetype\\"), url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+  src: url("./webfont.eot?test");
+  src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
 }
 
 .webfont {
   display: inline-block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -462,15 +462,15 @@ exports[`standalone should generate all fonts with build-in template 1`] = `
 
 
 .webfont-avatar::before {
-  content: \\"\\\\ea01\\";
+  content: "\\ea01";
 }
 
 .webfont-envelope::before {
-  content: \\"\\\\ea02\\";
+  content: "\\ea02";
 }
 
 .webfont-phone-call::before {
-  content: \\"\\\\ea03\\";
+  content: "\\ea03";
 }
 
 "
@@ -480,13 +480,13 @@ exports[`standalone should generate all fonts with custom \`template\` with abso
 "/* custom template */
 @font-face {
     font-family: webfont;
-    src: url(\\"./webfont.eot?test\\");
+    src: url("./webfont.eot?test");
     src:
-        url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
-        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
-        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
-        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
-        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+        url("./webfont.eot?#iefix") format("embedded-opentype"),
+        url("./webfont.woff2?test") format("woff2"),
+        url("./webfont.woff?test") format("woff"),
+        url("./webfont.ttf?test") format("truetype"),
+        url("./webfont.svg?test#webfont") format("svg");
     font-style: normal;
     font-weight: 400;
 }
@@ -529,15 +529,15 @@ exports[`standalone should generate all fonts with custom \`template\` with abso
 }
 
 .webfont-avatar::before {
-    content: \\"\\\\ea01\\";
+    content: "\\ea01";
 }
 
 .webfont-envelope::before {
-    content: \\"\\\\ea02\\";
+    content: "\\ea02";
 }
 
 .webfont-phone-call::before {
-    content: \\"\\\\ea03\\";
+    content: "\\ea03";
 }
 "
 `;
@@ -546,13 +546,13 @@ exports[`standalone should generate all fonts with custom \`template\` with rela
 "/* custom template */
 @font-face {
     font-family: webfont;
-    src: url(\\"./webfont.eot?test\\");
+    src: url("./webfont.eot?test");
     src:
-        url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
-        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
-        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
-        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
-        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+        url("./webfont.eot?#iefix") format("embedded-opentype"),
+        url("./webfont.woff2?test") format("woff2"),
+        url("./webfont.woff?test") format("woff"),
+        url("./webfont.ttf?test") format("truetype"),
+        url("./webfont.svg?test#webfont") format("svg");
     font-style: normal;
     font-weight: 400;
 }
@@ -595,32 +595,32 @@ exports[`standalone should generate all fonts with custom \`template\` with rela
 }
 
 .webfont-avatar::before {
-    content: \\"\\\\ea01\\";
+    content: "\\ea01";
 }
 
 .webfont-envelope::before {
-    content: \\"\\\\ea02\\";
+    content: "\\ea02";
 }
 
 .webfont-phone-call::before {
-    content: \\"\\\\ea03\\";
+    content: "\\ea03";
 }
 "
 `;
 
 exports[`standalone should generate built-in html template 1`] = `
 "<!doctype html>
-<html lang=\\"en\\">
+<html lang="en">
   <head>
-    <meta charset=\\"utf-8\\">
+    <meta charset="utf-8">
     <title>webfont</title>
-    <style type=\\"text/css\\">
+    <style type="text/css">
       body {
         margin: 0;
         padding:10px 20px;
         background: #fff;
         color: #222;
-        font-family:\\"Helvetica Neue\\", Arial, sans-serif;
+        font-family:"Helvetica Neue", Arial, sans-serif;
       }
 
       h1 {
@@ -659,16 +659,16 @@ exports[`standalone should generate built-in html template 1`] = `
 
       @font-face {
         font-display: block;
-        font-family: \\"webfont\\";
+        font-family: "webfont";
         font-style: normal;
         font-weight: 400;
-        src: url(\\"./webfont.eot?test\\");
-        src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"), url(\\"./webfont.ttf?test\\") format(\\"truetype\\"), url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+        src: url("./webfont.eot?test");
+        src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
       }
 
       .webfont {
         display: inline-block;
-        font-family: \\"webfont\\";
+        font-family: "webfont";
         font-weight: 400;
         font-style: normal;
         font-variant: normal;
@@ -761,15 +761,15 @@ exports[`standalone should generate built-in html template 1`] = `
 
       
       .webfont-avatar::before {
-        content: \\"\\\\ea01\\";
+        content: "\\ea01";
       }
       
       .webfont-envelope::before {
-        content: \\"\\\\ea02\\";
+        content: "\\ea02";
       }
       
       .webfont-phone-call::before {
-        content: \\"\\\\ea03\\";
+        content: "\\ea03";
       }
       
     </style>
@@ -777,39 +777,39 @@ exports[`standalone should generate built-in html template 1`] = `
   <body>
     <h1>List Icons</h1>
       <h3>Class</h3>
-      <div class=\\"icons\\" id=\\"icon-classes\\">
+      <div class="icons" id="icon-classes">
           
-            <div class=\\"icons__item\\">
-              <i class=\\"webfont webfont-3x webfont-avatar\\"></i><br />
+            <div class="icons__item">
+              <i class="webfont webfont-3x webfont-avatar"></i><br />
               <span>.webfont-avatar</span>
             </div>
           
-            <div class=\\"icons__item\\">
-              <i class=\\"webfont webfont-3x webfont-envelope\\"></i><br />
+            <div class="icons__item">
+              <i class="webfont webfont-3x webfont-envelope"></i><br />
               <span>.webfont-envelope</span>
             </div>
           
-            <div class=\\"icons__item\\">
-              <i class=\\"webfont webfont-3x webfont-phone-call\\"></i><br />
+            <div class="icons__item">
+              <i class="webfont webfont-3x webfont-phone-call"></i><br />
               <span>.webfont-phone-call</span>
             </div>
           
       </div>
       <h3>Ligature</h3>
-      <div class=\\"icons\\" id=\\"icon-ligatures\\">
+      <div class="icons" id="icon-ligatures">
           
-            <div class=\\"icons__item\\">
-              <i class=\\"webfont webfont-3x\\">avatar</i><br />
+            <div class="icons__item">
+              <i class="webfont webfont-3x">avatar</i><br />
               <span>avatar</span>
             </div>
           
-            <div class=\\"icons__item\\">
-              <i class=\\"webfont webfont-3x\\">envelope</i><br />
+            <div class="icons__item">
+              <i class="webfont webfont-3x">envelope</i><br />
               <span>envelope</span>
             </div>
           
-            <div class=\\"icons__item\\">
-              <i class=\\"webfont webfont-3x\\">phone_call</i><br />
+            <div class="icons__item">
+              <i class="webfont webfont-3x">phone_call</i><br />
               <span>phone_call</span>
             </div>
           
@@ -820,27 +820,27 @@ exports[`standalone should generate built-in html template 1`] = `
 `;
 
 exports[`standalone should generate built-in json template 1`] = `
-Array [
-  Object {
+[
+  {
     "id": "avatar",
     "name": "Avatar",
-    "unicode": Array [
+    "unicode": [
       "ea01",
       "avatar",
     ],
   },
-  Object {
+  {
     "id": "envelope",
     "name": "Envelope",
-    "unicode": Array [
+    "unicode": [
       "ea02",
       "envelope",
     ],
   },
-  Object {
+  {
     "id": "phone-call",
     "name": "Phone Call",
-    "unicode": Array [
+    "unicode": [
       "ea03",
       "phone_call",
     ],
@@ -851,32 +851,32 @@ Array [
 exports[`standalone should generate built-in json template 2`] = `
 "[
   {
-    \\"id\\": \\"avatar\\",
-    \\"name\\": \\"Avatar\\",
-    \\"unicode\\": [\\"ea01\\", \\"avatar\\"]
+    "id": "avatar",
+    "name": "Avatar",
+    "unicode": ["ea01", "avatar"]
   },
 {
-    \\"id\\": \\"envelope\\",
-    \\"name\\": \\"Envelope\\",
-    \\"unicode\\": [\\"ea02\\", \\"envelope\\"]
+    "id": "envelope",
+    "name": "Envelope",
+    "unicode": ["ea02", "envelope"]
   },
 {
-    \\"id\\": \\"phone-call\\",
-    \\"name\\": \\"Phone Call\\",
-    \\"unicode\\": [\\"ea03\\", \\"phone_call\\"]
+    "id": "phone-call",
+    "name": "Phone Call",
+    "unicode": ["ea03", "phone_call"]
   }
 ]"
 `;
 
 exports[`standalone should generate built-in styl template 1`] = `
-"$webfont-avatar = \\"\\\\ea01\\";
-$webfont-envelope = \\"\\\\ea02\\";
-$webfont-phone-call = \\"\\\\ea03\\";
+"$webfont-avatar = "\\ea01";
+$webfont-envelope = "\\ea02";
+$webfont-phone-call = "\\ea03";
 
 @font-face {
     font-family: webfont;
-    src: url(\\"./webfont.eot\\");
-    src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2\\") format(\\"woff2\\"), url(\\"./webfont.woff\\") format(\\"woff\\"), url(\\"./webfont.ttf\\") format(\\"truetype\\"), url(\\"./webfont.svg#webfont\\") format(\\"svg\\");
+    src: url("./webfont.eot");
+    src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2") format("woff2"), url("./webfont.woff") format("woff"), url("./webfont.ttf") format("truetype"), url("./webfont.svg#webfont") format("svg");
     font-display: block;
     font-style: normal;
     font-weight: 400;
@@ -936,16 +936,16 @@ $webfont-phone-call = \\"\\\\ea03\\";
 exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build-in template 1`] = `
 "@font-face {
   font-display: auto;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-style: normal;
   font-weight: 400;
   
-  src: url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"); 
+  src: url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"); 
 }
 
 .webfont {
   display: inline-block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -1038,15 +1038,15 @@ exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build
 
 
 .webfont-avatar::before {
-  content: \\"\\\\ea01\\";
+  content: "\\ea01";
 }
 
 .webfont-envelope::before {
-  content: \\"\\\\ea02\\";
+  content: "\\ea02";
 }
 
 .webfont-phone-call::before {
-  content: \\"\\\\ea03\\";
+  content: "\\ea03";
 }
 
 "
@@ -1055,16 +1055,16 @@ exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build
 exports[`standalone should include font hash in template URLs when addHashInFontUrl is enabled 1`] = `
 "@font-face {
   font-display: auto;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-style: normal;
   font-weight: 400;
   
-  src: url(\\"./webfont.woff2?test&v=1154313a3843c5f5ec70890715e8a527\\") format(\\"woff2\\"); 
+  src: url("./webfont.woff2?test&v=1154313a3843c5f5ec70890715e8a527") format("woff2"); 
 }
 
 .webfont {
   display: inline-block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -1157,15 +1157,15 @@ exports[`standalone should include font hash in template URLs when addHashInFont
 
 
 .webfont-avatar::before {
-  content: \\"\\\\ea01\\";
+  content: "\\ea01";
 }
 
 .webfont-envelope::before {
-  content: \\"\\\\ea02\\";
+  content: "\\ea02";
 }
 
 .webfont-phone-call::before {
-  content: \\"\\\\ea03\\";
+  content: "\\ea03";
 }
 
 "
@@ -1173,25 +1173,25 @@ exports[`standalone should include font hash in template URLs when addHashInFont
 
 exports[`standalone should load config and respect \`template\` option with build-in template value 1`] = `
 "
-  $webfont-avatar: \\"\\\\ea01\\";
+  $webfont-avatar: "\\ea01";
 
-  $webfont-envelope: \\"\\\\ea02\\";
+  $webfont-envelope: "\\ea02";
 
-  $webfont-phone-call: \\"\\\\ea03\\";
+  $webfont-phone-call: "\\ea03";
 
 
 @font-face {
   font-display: block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./webfont.eot?test\\");
-  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"), url(\\"./webfont.ttf?test\\") format(\\"truetype\\"), url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+  src: url("./webfont.eot?test");
+  src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
 }
 
 %webfont {
 display: inline-block;
-  font-family: \\"webfont\\";
+  font-family: "webfont";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -1288,15 +1288,15 @@ display: inline-block;
 
 
 .webfont-avatar::before {
-    content: \\"\\\\ea01\\";
+    content: "\\ea01";
 }
 
 .webfont-envelope::before {
-    content: \\"\\\\ea02\\";
+    content: "\\ea02";
 }
 
 .webfont-phone-call::before {
-    content: \\"\\\\ea03\\";
+    content: "\\ea03";
 }
 
 "
@@ -1306,13 +1306,13 @@ exports[`standalone should load config and respect \`template\` option with exte
 "/* custom template */
 @font-face {
     font-family: webfont;
-    src: url(\\"./webfont.eot?test\\");
+    src: url("./webfont.eot?test");
     src:
-        url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
-        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
-        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
-        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
-        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+        url("./webfont.eot?#iefix") format("embedded-opentype"),
+        url("./webfont.woff2?test") format("woff2"),
+        url("./webfont.woff?test") format("woff"),
+        url("./webfont.ttf?test") format("truetype"),
+        url("./webfont.svg?test#webfont") format("svg");
     font-style: normal;
     font-weight: 400;
 }
@@ -1355,15 +1355,15 @@ exports[`standalone should load config and respect \`template\` option with exte
 }
 
 .webfont-avatar::before {
-    content: \\"\\\\ea01\\";
+    content: "\\ea01";
 }
 
 .webfont-envelope::before {
-    content: \\"\\\\ea02\\";
+    content: "\\ea02";
 }
 
 .webfont-phone-call::before {
-    content: \\"\\\\ea03\\";
+    content: "\\ea03";
 }
 "
 `;
@@ -1371,16 +1371,16 @@ exports[`standalone should load config and respect \`template\` option with exte
 exports[`standalone should respect \`template\` options 1`] = `
 "@font-face {
   font-display: auto;
-  font-family: \\"bar\\";
+  font-family: "bar";
   font-style: normal;
   font-weight: 400;
-  src: url(\\"./foo-bar/bar.eot?test\\");
-  src: url(\\"./foo-bar/bar.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./foo-bar/bar.woff2?test\\") format(\\"woff2\\"), url(\\"./foo-bar/bar.woff?test\\") format(\\"woff\\"), url(\\"./foo-bar/bar.ttf?test\\") format(\\"truetype\\"), url(\\"./foo-bar/bar.svg?test#bar\\") format(\\"svg\\");
+  src: url("./foo-bar/bar.eot?test");
+  src: url("./foo-bar/bar.eot?#iefix") format("embedded-opentype"), url("./foo-bar/bar.woff2?test") format("woff2"), url("./foo-bar/bar.woff?test") format("woff"), url("./foo-bar/bar.ttf?test") format("truetype"), url("./foo-bar/bar.svg?test#bar") format("svg");
 }
 
 .foo {
   display: inline-block;
-  font-family: \\"bar\\";
+  font-family: "bar";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -1473,15 +1473,15 @@ exports[`standalone should respect \`template\` options 1`] = `
 
 
 .foo-avatar::before {
-  content: \\"\\\\ea01\\";
+  content: "\\ea01";
 }
 
 .foo-envelope::before {
-  content: \\"\\\\ea02\\";
+  content: "\\ea02";
 }
 
 .foo-phone-call::before {
-  content: \\"\\\\ea03\\";
+  content: "\\ea03";
 }
 
 "

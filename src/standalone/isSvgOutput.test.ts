@@ -1,4 +1,6 @@
+import fs from "fs";
 import isSvg from "is-svg";
+import path from "path";
 import standalone from "../standalone";
 
 const fixturesGlob = "src/fixtures/svg-icons";
@@ -34,7 +36,9 @@ describe("is-svg output validation", () => {
     });
 
     it("documents that is-svg depends on @file-type/xml for validate and parse", () => {
-      const isSvgPackage = jest.requireActual<{ dependencies: Record<string, string> }>("is-svg/package.json");
+      const isSvgPackage = JSON.parse(
+        fs.readFileSync(path.join(path.dirname(require.resolve("is-svg")), "package.json"), "utf8"),
+      ) as { dependencies: Record<string, string> };
 
       expect(isSvgPackage.dependencies["@file-type/xml"]).toBeDefined();
     });

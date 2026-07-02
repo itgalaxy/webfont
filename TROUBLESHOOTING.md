@@ -257,3 +257,47 @@ Run with **`--verbose`** to log a warning when webfont detects `fill-rule: eveno
 
 See also [MDN: fill-rule](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill-rule).
 
+---
+
+## Can't resolve `fs` (webpack / React / Vite client bundle)
+
+### What error appeared
+
+Bundlers fail while building client code with errors such as:
+
+```text
+Module not found: Error: Can't resolve 'fs'
+```
+
+The stack trace often includes `globby`, `fast-glob`, `cosmiconfig`, or `webfont/dist/standalone.js` ([#198](https://github.com/itgalaxy/webfont/issues/198)).
+
+### Why it usually happens
+
+- **`webfont` is Node.js-only.** It reads SVG files from disk, runs `globby`, and uses other Node built-ins. It is meant for **build time**, not inside browser/React component bundles.
+- **The package was imported from client code** (for example `import webfont from "webfont"` in `App.js`). Webpack/Vite tries to bundle the full Node implementation and fails on `fs`.
+
+### Steps to try to resolve
+
+1. **Do not import `webfont` from client-side code.** Generate fonts in an npm script, a Node build step, or CI:
+
+   ```shell
+   webfont "src/icons/*.svg" -d public/fonts -t css
+   ```
+
+2. **Use the [webfont-webpack-plugin](https://github.com/itgalaxy/webfont-webpack-plugin)** (or an equivalent build hook) so generation runs in Node during compilation — not in the browser bundle.
+
+3. **Programmatic API — Node only:**
+
+   ```js
+   import { webfont } from "webfont";
+
+   await webfont({ files: "src/icons/*.svg", dest: "public/fonts" });
+   ```
+
+   Run this from a `.mjs` script, `vite.config.ts`, or webpack config — never from React components loaded in the browser.
+
+4. **If a dependency still pulls `webfont` into the client bundle**, mark it external or move the import to a Node-only file. With webpack 5+, the package `browser` field resolves to a stub that throws a clear error instead of pulling in `fs`.
+
+5. **Browser-based generation** is not supported on the current release; see [#708](https://github.com/itgalaxy/webfont/issues/708) for a possible future Web Worker spike.
+
+

@@ -16,12 +16,23 @@
     "NOTICE.md"
   ],
   "main": "dist/index.js",
+  "browser": "dist/browser.js",
   "bin": "dist/cli.mjs",
   "source": "src/index.ts",
   "types": "dist/src/index.d.ts",
   "typings": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "node": {
+        "import": "./dist/index.js",
+        "require": "./dist/index.js"
+      },
+      "default": "./dist/browser.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "build": "vite build --mode library && vite build --mode cli",
+    "build": "vite build --mode library && vite build --mode browser && vite build --mode cli",
     "clean": "rm -rf dist/ temp/",
     "demo": "node dist/cli.mjs './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "lint": "biome check .",

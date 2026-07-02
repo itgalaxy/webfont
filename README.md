@@ -20,7 +20,7 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 - **Webfont decompression**: one `.woff` or `.woff2` file → `ttf` and/or `otf` matching the **embedded SFNT flavor** (decompress only — not TTF ↔ OTF transcoding);
 - Config files: `JavaScript`, `JSON`, or `YAML` via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig);
 - Built-in and custom CSS templates (`css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/));
-- CLI and programmatic API;
+- CLI and programmatic API (**Node.js build time only** — see [TROUBLESHOOTING](./TROUBLESHOOTING.md#cant-resolve-fs-webpack--react--vite-client-bundle));
 - [Webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin).
 
 ## Input modes
@@ -75,11 +75,15 @@ Full details, disclaimers, community attribution guidelines, and third-party lib
 
 ## Installation
 
+Requires **Node.js** >= 24.14.0. Install as a dev dependency and run at **build time** (CLI, npm script, or bundler plugin) — not from browser/React client bundles.
+
 ```shell
 npm install --save-dev webfont
 ```
 
 ## Usage
+
+Node.js only — do not import from client-side app code ([#198](https://github.com/itgalaxy/webfont/issues/198)).
 
 ```js
 import webfont from "webfont";

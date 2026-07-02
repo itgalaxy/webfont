@@ -35,6 +35,16 @@ When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract 
 - **Await filesystem writes in async CLI flows.** Use `fs.promises.writeFile` (or promisified equivalents) inside `async` functions and `await Promise.all(...)`. Do not wrap callback-based `fs.writeFile` in `Promise.all` — the callback form returns `void`, so the CLI can exit before writes finish and write errors are lost.
 - **Model optional runtime hooks accurately.** If code supports an optional callback such as `metadataProvider`, type it as `metadataProvider?: MetadataProvider` — not `null` — so callers and `strictNullChecks` stay aligned.
 
+## Documentation
+
+When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:
+
+1. **Check for user impact** before finishing — compare CLI help (`src/cli/meow/index.ts`), [README.md](./README.md) (Options + CLI sections), and any examples or fixtures that show usage.
+2. **Update README.md** when behavior, accepted input formats, or public options change. Keep CLI flag names and short aliases aligned with `meow` (`-f` / `--formats`, `-u` / `--fontName`, etc.).
+3. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
+
+See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and documentation”.
+
 ## General
 
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.

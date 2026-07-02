@@ -40,6 +40,21 @@ And, if you’re raising an issue, please understand that people involved with t
 - For ambitious tasks, you should try to get your work in front of the community for feedback as soon as possible;
 - New features should be accompanied with tests and documentation;
 - Please, don’t include unrelated changes;
+
+### User-facing changes and documentation
+
+Before opening or updating a pull request, check whether your change affects **how people use webfont** — via the CLI (`webfont` / `dist/cli.js`), the programmatic API (`webfont({ ... })`), or config files (`.webfontrc`, `package.json` `webfont` key, etc.).
+
+When it does, update documentation in the same PR:
+
+| What changed | Update |
+|--------------|--------|
+| CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section and `src/cli/meow/index.ts` help text |
+| `webfont()` options, defaults, or return shape | [README.md](./README.md) Options / Result sections |
+| New or removed public options | README + TypeScript types under `src/types/` |
+| Internal-only refactors with no usage change | No README change; say so in the PR **Testing** section |
+
+Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.md) (“Documentation”).
 - **Write pull request titles, descriptions, and review comments in English** (commits and code comments in English as well);
 - Lint and test before submitting code by running `$ npm test`;
 - Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;

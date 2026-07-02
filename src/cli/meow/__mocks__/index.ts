@@ -33,7 +33,7 @@ meowMock.showHelp = () => `
           The search will begin in the working directory and move up the
           directory tree until a configuration file is found.
 
-      -f, --fontName
+      -u, --fontName
 
           The font family name you want, default: "webfont".
 
@@ -45,9 +45,10 @@ meowMock.showHelp = () => `
 
           Output the version number.
 
-      -r, --formats
+      -f, --formats
 
-          Only this formats generate.
+          Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
+          comma-separated list (e.g. woff2 or svg, ttf, woff2).
 
       -d, --dest
 

@@ -200,6 +200,25 @@ describe("cli program", () => {
 
       expect(destTemplate).toBe("temp/out");
     });
+
+    it("should resolve custom template paths by stripping the .njk extension", () => {
+      const config = {
+        dest: "temp/out",
+        destTemplate: "temp/templates",
+        fontName: "webfont",
+        template: "custom/foo.njk",
+      };
+
+      const destTemplate = resolveDestTemplate(
+        {
+          template: "custom-content",
+          usedBuildInTemplate: false,
+        },
+        config as never,
+      );
+
+      expect(destTemplate).toBe(path.join("temp/templates", "foo"));
+    });
   });
 
   describe("getResultOutputPath", () => {

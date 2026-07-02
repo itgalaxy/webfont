@@ -19,4 +19,9 @@ describe("parseFormatsFlag", () => {
   it("should reject non-array JSON values", () => {
     expect(() => parseFormatsFlag('{"formats":["woff2"]}')).toThrow("formats must be a JSON array");
   });
+
+  it("should reject empty comma-separated values", () => {
+    expect(() => parseFormatsFlag("")).toThrow("formats must not be empty");
+    expect(() => parseFormatsFlag("   ")).toThrow("formats must not be empty");
+  });
 });

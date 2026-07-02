@@ -2,12 +2,18 @@ import fs from "fs";
 import * as fsPromise from "fs/promises";
 import path from "path";
 import rimraf from "rimraf";
+import { version } from "../../package.json";
 import { execCLI } from "../lib/execCLI";
-import meowMock from "./meow/__mocks__/index";
+import { createMeowCli } from "./meow/createMeowCli";
 
 const timeout = 10000;
-jest.mock("./meow");
 jest.setTimeout(timeout);
+
+const formatCliStdout = (value: string): string => value.replace(/\n$/u, "");
+const expectedHelp = () => formatCliStdout(`${createMeowCli([]).help}\n`);
+const expectedVersion = () => version;
+const expectedVerbose = () => "Generating SVG font...";
+const expectedGlobError = () => "Error: Files glob patterns specified did not match any files";
 
 const destination = "temp/cli";
 const fixturesGlob = "src/fixtures";
@@ -74,7 +80,7 @@ describe("cli", () => {
     const output = await execCLI();
 
     expect(output.code).toBe(2);
-    expect(output.stdout).toBe(meowMock.showHelp());
+    expect(output.stdout).toBe(expectedHelp());
     expect(output.stderr).toBe("");
   });
 
@@ -82,7 +88,7 @@ describe("cli", () => {
     const output = await execCLI("--help");
 
     expect(output.code).toBe(2);
-    expect(output.stdout).toBe(meowMock.showHelp());
+    expect(output.stdout).toBe(expectedHelp());
     expect(output.stderr).toBe("");
   });
 
@@ -90,7 +96,7 @@ describe("cli", () => {
     const output = await execCLI("--version");
 
     expect(output.code).toBe(0);
-    expect(output.stdout).toBe(meowMock.showVersion());
+    expect(output.stdout).toBe(expectedVersion());
     expect(output.stderr).toBe("");
   });
 
@@ -99,7 +105,7 @@ describe("cli", () => {
       const output = await execCLI("-h");
 
       expect(output.code).toBe(2);
-      expect(output.stdout).toBe(meowMock.showHelp());
+      expect(output.stdout).toBe(expectedHelp());
       expect(output.stderr).toBe("");
     });
 
@@ -107,7 +113,7 @@ describe("cli", () => {
       const output = await execCLI("-v");
 
       expect(output.code).toBe(0);
-      expect(output.stdout).toBe(meowMock.showVersion());
+      expect(output.stdout).toBe(expectedVersion());
       expect(output.stderr).toBe("");
     });
 
@@ -235,7 +241,7 @@ describe("cli", () => {
     const output = await execCLI(`${fixturesGlob}/not-found-svg-icons/**/* -d ${destination}`);
 
     expect(output.code).toBe(1);
-    expect(output.stdout).toContain(meowMock.error());
+    expect(output.stdout).toContain(expectedGlobError());
     expect(output.stderr).toBe("");
   });
 
@@ -407,7 +413,7 @@ describe("cli", () => {
       "webfont.woff",
       "webfont.woff2",
     ]);
-    expect(output.stdout).toBe(meowMock.verbose());
+    expect(output.stdout).toBe(expectedVerbose());
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
   });
@@ -468,5 +474,44 @@ describe("cli", () => {
       destinationWasCreated = false;
     }
     expect(destinationWasCreated).toBe(false);
+  });
+
+  it("should generate only `woff2` font from comma-separated formats", async () => {
+    const output = await execCLI(`${source} -d ${destination} -f woff2`);
+
+    expect(output.files).toEqual(["webfont.hash", "webfont.woff2"]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
+  it("should honor --no-sort and --no-ligatures flags", async () => {
+    const output = await execCLI(`${source} -d ${destination} --no-sort --no-ligatures`);
+
+    expect(output.files).toEqual([
+      "webfont.eot",
+      "webfont.hash",
+      "webfont.svg",
+      "webfont.ttf",
+      "webfont.woff",
+      "webfont.woff2",
+    ]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
+  it("should respect svgicons2svgfont flags passed on the CLI", async () => {
+    const output = await execCLI(
+      `${source} -d ${destination} --normalize --centerHorizontally --fixedWidth --fontWeight 500 --metadata test-meta`,
+    );
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    expect(output.files).toEqual(
+      expect.arrayContaining(["webfont.eot", "webfont.svg", "webfont.ttf", "webfont.woff", "webfont.woff2"]),
+    );
+
+    const svg = await fsPromise.readFile(`${destination}/webfont.svg`, { encoding: "utf-8" });
+    expect(svg).toContain('font-weight="500"');
+    expect(svg).toContain("<metadata>test-meta</metadata>");
   });
 });

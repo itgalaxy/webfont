@@ -88,6 +88,24 @@ describe("glyphsData", () => {
     }
   });
 
+  it("should reject when createReadStream emits an error", async () => {
+    const readError = new Error("read failed");
+    const originalCreateReadStream = fs.createReadStream;
+    const createReadStreamSpy = jest.spyOn(fs, "createReadStream").mockImplementation(() => {
+      const stream = originalCreateReadStream(emptySvgFile);
+
+      stream.destroy(readError);
+
+      return stream;
+    });
+
+    try {
+      await expect(getGlyphsData([svgFiles[0]], getTestOptions(1))).rejects.toThrow("read failed");
+    } finally {
+      createReadStreamSpy.mockRestore();
+    }
+  });
+
   it("should process svg files sequentially when maxConcurrency is 1", async () => {
     let activeReads = 0;
     let maxObservedConcurrency = 0;

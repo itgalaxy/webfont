@@ -12,6 +12,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - Input: globs resolving to `.svg` files only (every matched file must have a `.svg` extension).
   - Uses [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) to merge icons into an SVG font, then derives other formats from that TTF pipeline.
   - Does **not** accept `.woff`, `.woff2`, `.ttf`, or `.otf` as input in the same run.
+  - **Licensing:** you must have rights to the SVG icons you submit; generated fonts remain subject to those rights and any metadata you set. See [NOTICE.md](./NOTICE.md) §3.1.
 - **Test Criteria**:
   - [x] SVG glob produces `svg`, `ttf`, `eot`, `woff`, and `woff2` with default `formats`
   - [x] Empty or unsupported globs reject with a clear error
@@ -42,6 +43,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - Does **not** re-encode to `eot`, `woff`, or `woff2` in this mode.
   - Default `formats` when SVG-pipeline defaults are still configured: `['ttf']`.
   - `template` and `glyphTransformFn` are not supported in this mode.
+  - **Licensing:** decompression does not grant rights to the font; users must comply with the font’s license for input and extracted output. Copyright/metadata in the SFNT is preserved. See [NOTICE.md](./NOTICE.md) §3.2.
 - **Test Criteria**:
   - [x] `.woff2` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
   - [x] `.woff` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType

@@ -8,6 +8,8 @@ Generator of fonts from SVG icons, with a separate mode to **decompress** WOFF/W
 
 See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is stable, in progress, or planned).
 
+**Legal / licensing:** [NOTICE.md](./NOTICE.md) — font copyright, disclaimers, attribution guidelines, and third-party library notices.
+
 ## Features
 
 - **SVG icon pipeline** (default): `.svg` icons → `svg`, `ttf`, `eot`, `woff`, `woff2` (not `otf`);
@@ -35,11 +37,18 @@ webfont runs one of two pipelines depending on matched input files. They cannot 
 
 Every matched path must end in `.svg`, `.woff`, or `.woff2`. See [FEATURES.md](./FEATURES.md) for test-backed criteria.
 
+### Font licensing
+
+webfont is a technical tool. **Decompressing or generating fonts does not grant you any rights to those fonts.** You must have permission to use, convert, and redistribute every input file and every output file under the applicable license (commercial fonts, app-bundled webfonts, client icons, etc.). The MIT license applies to **this software only**, not to fonts you pass through it.
+
+Full details, disclaimers, community attribution guidelines, and third-party library notices: **[NOTICE.md](./NOTICE.md)**.
+
 ## Table Of Contents
 
 - [Webfont](#webfont)
   - [Features](#features)
   - [Input modes](#input-modes)
+  - [Font licensing](#font-licensing)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Options](#options)
@@ -53,6 +62,7 @@ Every matched path must end in `.svg`, `.woff`, or `.woff2`. See [FEATURES.md](.
 - [Roadmap](#roadmap)
 - [Contribution](#contribution)
 - [Changelog](#changelog)
+- [Legal notice](#legal-notice)
 - [License](#license)
 
 ---
@@ -563,6 +573,10 @@ Feel free to push your code if you agree with publishing under the MIT license.
 
 Check our [Changelog](CHANGELOG.md)
 
+## Legal notice
+
+Copyright, disclaimers, font licensing expectations (including WOFF/WOFF2 decompression), community attribution guidelines, and third-party open-source dependencies are documented in **[NOTICE.md](./NOTICE.md)**.
+
 ## License
 
-Check our [License](LICENSE)
+The **webfont software** is licensed under the [MIT License](./LICENSE). That license does **not** apply to fonts or icons you process with the tool — see [NOTICE.md](./NOTICE.md).

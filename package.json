@@ -12,7 +12,8 @@
     "templates",
     "!**/__tests__",
     "!**/__mocks__",
-    "README.md"
+    "README.md",
+    "NOTICE.md"
   ],
   "main": "dist/index.js",
   "bin": "dist/cli.mjs",

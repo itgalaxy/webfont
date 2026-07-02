@@ -16,6 +16,7 @@ export const webfontCliHelpText = `
 
         SVG icons: one or more \`.svg\` files (default pipeline).
         Webfont conversion: a single \`.woff\` or \`.woff2\` file to decompress to TTF/OTF.
+            You must have rights to any font file you process (see NOTICE.md).
 
         If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
         for cross-platform glob support.

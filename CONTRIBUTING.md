@@ -63,6 +63,8 @@ This project uses [Biome](https://biomejs.dev/) for linting and formatting (`bio
 
 Only use `biome-ignore` when there is no reasonable code change; never use it to paper over type errors—adjust types or test helpers instead.
 
+**Do not use `ignoreDeprecations` in TypeScript config.** When upgrading TypeScript or hitting deprecated compiler options, migrate `tsconfig.json` (for example, replace deprecated `moduleResolution` values) and fix resulting type errors. Do not silence deprecations with `ignoreDeprecations`.
+
 ### Git hooks
 
 Git hooks are managed by [Lefthook](https://github.com/evilmartians/lefthook) (`lefthook.yml`). They install automatically when you run `npm install` (`prepare` → `lefthook install`).

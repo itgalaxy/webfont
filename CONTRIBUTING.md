@@ -64,6 +64,12 @@ Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.m
 
 See [AGENTS.md](./AGENTS.md) (“Pull requests”) for agents and automation.
 
+### Closing pull requests
+
+When you close a pull request (as author or maintainer), **leave a comment explaining why** — do not close silently. Helpful reasons include: superseded by another PR (link it), obsolete after dependency or codebase changes, out of scope, duplicate, or rejected after review.
+
+Write the comment in English so future contributors and bots (for example Dependabot) understand what happened.
+
 - Lint and test before submitting code by running `$ npm test`;
 - Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;
 - Write a [convincing description](https://github.com/itgalaxy/webfont/blob/master/.github/pull_request_template.md) of why we should land your pull request: it’s your job to convince us.

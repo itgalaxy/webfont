@@ -70,6 +70,19 @@ When you close a pull request (as author or maintainer), **leave a comment expla
 
 Write the comment in English so future contributors and bots (for example Dependabot) understand what happened.
 
+### Testing and coverage
+
+New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md) (“Testing”) for Jest patterns in this repo.
+
+| Expectation | Guidance |
+|-------------|----------|
+| **Unit + integration** | Error paths and guards should have **unit tests** in the module under test. Add integration tests when the full pipeline matters, but do not use them as the only coverage for a guard. |
+| **Explicit, not implicit** | Name tests after the invariant they protect (for example, why a guard exists). If a dependency quirk motivated the code, add a small test that documents the quirk. |
+| **Pipeline ordering** | When step B must not run if step A fails, assert B was not called (spy/mock), not only that the final promise rejected. |
+| **Fixtures** | Reuse fixtures under `src/fixtures/` for file-based cases; add a fixture when the scenario is stable and reusable. |
+
+Run `npm test` before pushing. Integration-only coverage for a localized guard is incomplete.
+
 - Lint and test before submitting code by running `$ npm test`;
 - Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;
 - Write a [convincing description](https://github.com/itgalaxy/webfont/blob/master/.github/pull_request_template.md) of why we should land your pull request: it’s your job to convince us.

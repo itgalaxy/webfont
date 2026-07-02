@@ -1,10 +1,23 @@
 import fs from "fs";
+import * as fsPromise from "fs/promises";
 import path from "path";
+import xml2js from "xml2js";
 import type { GlyphData, WebfontOptions } from "../types";
 import { getGlyphsData } from "./glyphsData";
 import { getOptions } from "./options";
 
 const fixturesDir = path.join(__dirname, "../fixtures/svg-icons");
+const badFixturesDir = path.join(__dirname, "../fixtures/bad-svg-icons");
+const emptySvgFile = path.join(badFixturesDir, "avatar-3.svg");
+const malformedXmlFile = path.join(badFixturesDir, "avatar.svg");
+const wellFormedXmlFile = path.join(badFixturesDir, "avatar-1.svg");
+
+const parseWithXml2js = (input: string): Promise<{ error: Error | null; result: unknown }> =>
+  new Promise((resolve) => {
+    new xml2js.Parser().parseString(input, (error, result) => {
+      resolve({ error, result });
+    });
+  });
 const svgFiles = [
   path.join(fixturesDir, "avatar.svg"),
   path.join(fixturesDir, "envelope.svg"),
@@ -195,9 +208,70 @@ describe("glyphsData", () => {
     }
   });
 
-  it("should reject empty svg files", async () => {
-    const emptyFile = path.join(__dirname, "../fixtures/bad-svg-icons/avatar-3.svg");
+  describe("svg xml validation via xml2js", () => {
+    it("documents that xml2js accepts empty input without error (requires explicit empty-file guard)", async () => {
+      const { error, result } = await parseWithXml2js("");
 
-    await expect(getGlyphsData([emptyFile], getTestOptions(1))).rejects.toThrow(/Empty file/u);
+      expect(error).toBeNull();
+      expect(result).toBeNull();
+    });
+
+    it("documents that xml2js rejects malformed xml", async () => {
+      const contents = await fsPromise.readFile(malformedXmlFile, "utf8");
+      const { error } = await parseWithXml2js(contents);
+
+      expect(error?.message).toMatch(/Unclosed root tag/u);
+    });
+
+    it("documents that xml2js accepts well-formed xml used by later pipeline errors", async () => {
+      const contents = await fsPromise.readFile(wellFormedXmlFile, "utf8");
+      const { error, result } = await parseWithXml2js(contents);
+
+      expect(error).toBeNull();
+      expect(result).not.toBeNull();
+    });
+
+    it("rejects empty svg files before xml2js can treat them as valid", async () => {
+      await expect(getGlyphsData([emptySvgFile], getTestOptions(1))).rejects.toThrow(`Empty file ${emptySvgFile}`);
+    });
+
+    it("rejects empty svg files without calling parseString", async () => {
+      const parseStringSpy = jest.spyOn(xml2js.Parser.prototype, "parseString");
+
+      try {
+        await expect(getGlyphsData([emptySvgFile], getTestOptions(1))).rejects.toThrow(/Empty file/u);
+        expect(parseStringSpy).not.toHaveBeenCalled();
+      } finally {
+        parseStringSpy.mockRestore();
+      }
+    });
+
+    it("rejects empty svg files without calling metadataProvider", async () => {
+      const metadataProvider = jest.fn();
+
+      await expect(
+        getGlyphsData([emptySvgFile], {
+          ...getTestOptions(1),
+          metadataProvider,
+        }),
+      ).rejects.toThrow(/Empty file/u);
+      expect(metadataProvider).not.toHaveBeenCalled();
+    });
+
+    it("rejects malformed xml via xml2js parse errors", async () => {
+      await expect(getGlyphsData([malformedXmlFile], getTestOptions(1))).rejects.toThrow(/Unclosed root tag/u);
+    });
+
+    it("rejects malformed xml without calling metadataProvider", async () => {
+      const metadataProvider = jest.fn();
+
+      await expect(
+        getGlyphsData([malformedXmlFile], {
+          ...getTestOptions(1),
+          metadataProvider,
+        }),
+      ).rejects.toThrow(/Unclosed root tag/u);
+      expect(metadataProvider).not.toHaveBeenCalled();
+    });
   });
 });

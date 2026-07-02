@@ -29,6 +29,21 @@ Calling `fs.mkdirSync` / `fs.rmSync` directly in an `async` `it(...)` block is a
 
 When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract a small `promisify` helper and use it from `async` hooks instead of nesting callbacks.
 
+### Document guards and error paths with explicit unit tests
+
+When production code works around a library quirk or adds a defensive guard, add **unit tests that name the reason** — not only integration tests through the full pipeline.
+
+| Goal | How |
+|------|-----|
+| Explain why a guard exists | Add a focused test (or `describe` block) that reproduces the library behavior the guard works around |
+| Cover error paths | Unit-test the module that throws/rejects; do not rely on a distant integration test alone |
+| Prove ordering | Assert downstream callbacks (for example `metadataProvider`) are **not** called when an earlier step fails |
+| Avoid implicit coverage | If behavior matters, test it directly — happy path passing elsewhere is not enough |
+
+Example: `glyphsData.test.ts` — `describe("svg xml validation via xml2js")` documents that `xml2js` accepts empty input without error, then unit-tests the empty-file guard and malformed-xml rejection before metadata lookup.
+
+Prefer `await expect(fn()).rejects.toThrow(...)` for async failures. Use spies on the next pipeline step to prove early exit.
+
 ### CLI and async I/O
 
 - **Parse CLI flags into real runtime types.** Do not cast meow string flags (for example `--formats`) directly to array types. Parse JSON arrays or comma-separated values into typed structures before passing them to `webfont` (see `parseFormatsFlag`).

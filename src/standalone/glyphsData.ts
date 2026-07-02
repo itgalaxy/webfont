@@ -44,7 +44,7 @@ export const getGlyphsData: GlyphsDataGetter = (files, options) => {
                 glyphContents += data.toString();
               })
               .on("end", () => {
-                // Maybe bug in xml2js
+                // xml2js calls back without error for empty input (result: null).
                 if (glyphContents.length === 0) {
                   return reject(new Error(`Empty file ${srcPath}`));
                 }

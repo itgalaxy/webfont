@@ -1,7 +1,18 @@
 import type { Config } from "@jest/types";
 
-const esmNodeModules =
-  "p-limit|svgicons2svgfont|svg-pathdata|transformation-matrix|yerror|yocto-queue|is-svg|@file-type/xml|strtok3|peek-readable|@tokenizer/token";
+const esmNodeModules = [
+  "p-limit",
+  "svgicons2svgfont",
+  "svg-pathdata",
+  "transformation-matrix",
+  "yerror",
+  "yocto-queue",
+  "is-svg",
+  "@file-type/xml",
+  "strtok3",
+  "peek-readable",
+  "@tokenizer/token",
+].join("|");
 
 const config: Config.InitialOptions = {
   collectCoverage: true,

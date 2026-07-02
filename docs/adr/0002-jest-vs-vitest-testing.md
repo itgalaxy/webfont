@@ -1,6 +1,6 @@
 # ADR 0002: Keep Jest instead of migrating to Vitest
 
-- **Status:** Accepted
+- **Status:** Superseded (Vitest adopted, 2026-07-02)
 - **Date:** 2026-07-02
 
 ## Context
@@ -52,9 +52,19 @@ Additional migration friction observed:
 - **Risk:** CLI and concurrency tests exercise subtle module-loading behavior; a migration PR would need careful review with little user-facing benefit.
 - **Ecosystem fit:** Jest 27 is dated but stable; the project already documents pinned versions and conservative upgrades ([CONTRIBUTING.md](../../CONTRIBUTING.md)).
 
-## Decision
+## Decision (original)
 
 **Keep Jest** as the test runner. Do not migrate to Vitest at this time.
+
+## Supersession (2026-07-02)
+
+The test suite grew to **17** files, **206** tests, and **21** snapshots. Jest was upgraded to **30.4.2** with `@swc/jest` ([ADR 0005](./0005-babel-jest-vs-swc-jest.md)), CLI integration moved to `createMeowCli()` (no manual `meow` mock), and Vitest **4.1.9** compatibility issues from the original spike were addressed:
+
+- `vi.hoisted` / explicit `vi.mock` for CLI entry and `child_process`
+- `vi.mock("fs")` wrapping `createReadStream` for `glyphsData` concurrency tests
+- `vitest.config.ts` with `server.deps.inline`, `globby` stub alias, and v8 coverage
+
+**Vitest 4.1.9** is now the test runner; `jest`, `@swc/jest`, and `@types/jest` were removed.
 
 ## Consequences
 
@@ -80,4 +90,3 @@ Additional migration friction observed:
 - [Vitest documentation](https://vitest.dev/)
 - [Vitest migration guide (from Jest)](https://vitest.dev/guide/migration.html)
 - [ADR 0001: ESLint vs Biome](./0001-eslint-vs-biome-linting.md)
-- Benchmark environment: macOS, Node.js 26.x, Vitest 3.2.4 (temporary dev install, not merged)

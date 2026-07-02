@@ -1,11 +1,16 @@
+vi.mock("svg2ttf", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("svg2ttf")>();
+  return {
+    default: vi.fn(actual.default),
+  };
+});
+
 import isTtf from "is-ttf";
 import isWoff2 from "is-woff2";
 import svg2ttf from "svg2ttf";
 import standalone from "../standalone";
 
-jest.mock("svg2ttf", () => jest.fn(jest.requireActual("svg2ttf")));
-
-const mockedSvg2ttf = svg2ttf as jest.MockedFunction<typeof svg2ttf>;
+const mockedSvg2ttf = vi.mocked(svg2ttf);
 
 const fixturesGlob = "src/fixtures";
 const svgIconsGlob = `${fixturesGlob}/svg-icons`;
@@ -25,25 +30,28 @@ const getSvgFontString = async (): Promise<string> => {
 };
 
 describe("svg2ttf output validation", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     mockedSvg2ttf.mockClear();
-    mockedSvg2ttf.mockImplementation(jest.requireActual("svg2ttf"));
+    const actual = await vi.importActual<typeof import("svg2ttf")>("svg2ttf");
+    mockedSvg2ttf.mockImplementation(actual.default);
   });
 
   describe("svg2ttf library contract (production dependency)", () => {
-    let consoleErrorSpy: jest.SpiedFunction<typeof console.error>;
+    let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
     beforeEach(() => {
-      // @xmldom/xmldom logs fatal parse errors before svg2ttf throws; suppress Jest noise.
-      consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => undefined);
+      // @xmldom/xmldom logs fatal parse errors before svg2ttf throws; suppress Vitest noise.
+      consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
     });
 
     afterEach(() => {
       consoleErrorSpy.mockRestore();
     });
 
-    it("should document that svg2ttf depends on @xmldom/xmldom for svg font parsing", () => {
-      const svg2ttfPackage = jest.requireActual<{ dependencies: Record<string, string> }>("svg2ttf/package.json");
+    it("should document that svg2ttf depends on @xmldom/xmldom for svg font parsing", async () => {
+      const svg2ttfPackage = await vi.importActual<{ dependencies: Record<string, string> }>(
+        "svg2ttf/package.json",
+      );
 
       expect(svg2ttfPackage.dependencies["@xmldom/xmldom"]).toBeDefined();
     });

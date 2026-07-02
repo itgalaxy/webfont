@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`cli short options should set destTemplate with -s 1`] = `
+exports[`cli > short options > should set destTemplate with -s 1`] = `
 "@font-face {
   font-display: auto;
   font-family: "webfont";
@@ -119,7 +119,7 @@ exports[`cli short options should set destTemplate with -s 1`] = `
 "
 `;
 
-exports[`cli should generate all fonts with build-in template 1`] = `
+exports[`cli > should generate all fonts with build-in template 1`] = `
 "@font-face {
   font-display: auto;
   font-family: "webfont";
@@ -238,7 +238,7 @@ exports[`cli should generate all fonts with build-in template 1`] = `
 "
 `;
 
-exports[`cli should generate built-in html template 1`] = `
+exports[`cli > should generate built-in html template 1`] = `
 "<!doctype html>
 <html lang="en">
   <head>
@@ -449,7 +449,7 @@ exports[`cli should generate built-in html template 1`] = `
 "
 `;
 
-exports[`cli should include font hash in template when addHashInFontUrl is enabled 1`] = `
+exports[`cli > should include font hash in template when addHashInFontUrl is enabled 1`] = `
 "@font-face {
   font-display: auto;
   font-family: "webfont";
@@ -568,7 +568,7 @@ exports[`cli should include font hash in template when addHashInFontUrl is enabl
 "
 `;
 
-exports[`cli should respect \`font\` options 1`] = `
+exports[`cli > should respect \`font\` options 1`] = `
 "<?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
 <svg xmlns="http://www.w3.org/2000/svg">
@@ -604,7 +604,7 @@ exports[`cli should respect \`font\` options 1`] = `
 "
 `;
 
-exports[`cli should respect \`template\` options 1`] = `
+exports[`cli > should respect \`template\` options 1`] = `
 "@font-face {
   font-display: auto;
   font-family: "testname";

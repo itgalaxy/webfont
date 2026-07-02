@@ -75,7 +75,7 @@ pre-push:
 ### Follow-up
 
 - Document hook usage in `CONTRIBUTING.md`.
-- Remove `.husky` from `jest.config.ts` `modulePathIgnorePatterns` if no longer present.
+- Remove `.husky` from `vitest.config.ts` exclude patterns if no longer present.
 
 ## References
 

@@ -1,10 +1,37 @@
-import fs from "fs";
+import fs, { createReadStream } from "fs";
 import * as fsPromise from "fs/promises";
 import path from "path";
 import xml2js from "xml2js";
 import type { GlyphData, WebfontOptions } from "../types";
 import { getGlyphsData } from "./glyphsData";
 import { getOptions } from "./options";
+
+const fsMocks = vi.hoisted(() => ({
+  actualCreateReadStream: null as typeof import("fs").createReadStream | null,
+}));
+
+vi.mock("fs", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("fs")>();
+  fsMocks.actualCreateReadStream = actual.createReadStream;
+  const createReadStreamMock = vi.fn(actual.createReadStream);
+  const mocked = {
+    ...actual,
+    createReadStream: createReadStreamMock,
+  };
+
+  return {
+    ...mocked,
+    default: mocked,
+  };
+});
+
+const getActualCreateReadStream = (): typeof import("fs").createReadStream => {
+  if (fsMocks.actualCreateReadStream === null) {
+    throw new Error("fs mock not initialized");
+  }
+
+  return fsMocks.actualCreateReadStream;
+};
 
 const fixturesDir = path.join(__dirname, "../fixtures/svg-icons");
 const badFixturesDir = path.join(__dirname, "../fixtures/bad-svg-icons");
@@ -58,13 +85,11 @@ describe("glyphsData", () => {
     const maxConcurrency = 2;
     let activeReads = 0;
     let maxObservedConcurrency = 0;
-    const originalCreateReadStream = fs.createReadStream;
-
-    const createReadStreamSpy = jest.spyOn(fs, "createReadStream").mockImplementation((...args) => {
+    const createReadStreamSpy = vi.mocked(createReadStream).mockImplementation((...args) => {
       activeReads += 1;
       maxObservedConcurrency = Math.max(maxObservedConcurrency, activeReads);
 
-      const stream = originalCreateReadStream.apply(fs, args);
+      const stream = getActualCreateReadStream().apply(fs, args);
 
       const release = (): void => {
         activeReads -= 1;
@@ -84,15 +109,14 @@ describe("glyphsData", () => {
       expect(maxObservedConcurrency).toBeLessThanOrEqual(maxConcurrency);
       expect(maxObservedConcurrency).toBeGreaterThan(1);
     } finally {
-      createReadStreamSpy.mockRestore();
+      createReadStreamSpy.mockImplementation(getActualCreateReadStream());
     }
   });
 
   it("should reject when createReadStream emits an error", async () => {
     const readError = new Error("read failed");
-    const originalCreateReadStream = fs.createReadStream;
-    const createReadStreamSpy = jest.spyOn(fs, "createReadStream").mockImplementation(() => {
-      const stream = originalCreateReadStream(emptySvgFile);
+    const createReadStreamSpy = vi.mocked(createReadStream).mockImplementation(() => {
+      const stream = getActualCreateReadStream()(emptySvgFile);
 
       stream.destroy(readError);
 
@@ -102,20 +126,18 @@ describe("glyphsData", () => {
     try {
       await expect(getGlyphsData([svgFiles[0]], getTestOptions(1))).rejects.toThrow("read failed");
     } finally {
-      createReadStreamSpy.mockRestore();
+      createReadStreamSpy.mockImplementation(getActualCreateReadStream());
     }
   });
 
   it("should process svg files sequentially when maxConcurrency is 1", async () => {
     let activeReads = 0;
     let maxObservedConcurrency = 0;
-    const originalCreateReadStream = fs.createReadStream;
-
-    const createReadStreamSpy = jest.spyOn(fs, "createReadStream").mockImplementation((...args) => {
+    const createReadStreamSpy = vi.mocked(createReadStream).mockImplementation((...args) => {
       activeReads += 1;
       maxObservedConcurrency = Math.max(maxObservedConcurrency, activeReads);
 
-      const stream = originalCreateReadStream.apply(fs, args);
+      const stream = getActualCreateReadStream().apply(fs, args);
 
       const release = (): void => {
         activeReads -= 1;
@@ -133,7 +155,7 @@ describe("glyphsData", () => {
       expect(glyphsData).toHaveLength(svgFiles.length);
       expect(maxObservedConcurrency).toBe(1);
     } finally {
-      createReadStreamSpy.mockRestore();
+      createReadStreamSpy.mockImplementation(getActualCreateReadStream());
     }
   });
 
@@ -180,7 +202,7 @@ describe("glyphsData", () => {
   });
 
   it("should use a custom metadataProvider when provided", async () => {
-    const metadataProvider = jest.fn((_srcPath, callback) => {
+    const metadataProvider = vi.fn((_srcPath, callback) => {
       callback(null, { name: "custom-glyph", unicode: ["\u0001"] });
     });
 
@@ -217,10 +239,8 @@ describe("glyphsData", () => {
   });
 
   it("should reject when svg file read fails", async () => {
-    const originalCreateReadStream = fs.createReadStream;
-
-    const createReadStreamSpy = jest.spyOn(fs, "createReadStream").mockImplementation((...args) => {
-      const stream = originalCreateReadStream.apply(fs, args);
+    const createReadStreamSpy = vi.mocked(createReadStream).mockImplementation((...args) => {
+      const stream = getActualCreateReadStream().apply(fs, args);
       stream.emit("error", new Error("read failed"));
       return stream;
     });
@@ -228,7 +248,7 @@ describe("glyphsData", () => {
     try {
       await expect(getGlyphsData(svgFiles.slice(0, 1), getTestOptions(1))).rejects.toThrow("read failed");
     } finally {
-      createReadStreamSpy.mockRestore();
+      createReadStreamSpy.mockImplementation(getActualCreateReadStream());
     }
   });
 
@@ -260,7 +280,7 @@ describe("glyphsData", () => {
     });
 
     it("should reject empty svg files without calling parseString", async () => {
-      const parseStringSpy = jest.spyOn(xml2js.Parser.prototype, "parseString");
+      const parseStringSpy = vi.spyOn(xml2js.Parser.prototype, "parseString");
 
       try {
         await expect(getGlyphsData([emptySvgFile], getTestOptions(1))).rejects.toThrow(/Empty file/u);
@@ -271,7 +291,7 @@ describe("glyphsData", () => {
     });
 
     it("should reject empty svg files without calling metadataProvider", async () => {
-      const metadataProvider = jest.fn();
+      const metadataProvider = vi.fn();
 
       await expect(
         getGlyphsData([emptySvgFile], {
@@ -287,7 +307,7 @@ describe("glyphsData", () => {
     });
 
     it("should reject malformed xml without calling metadataProvider", async () => {
-      const metadataProvider = jest.fn();
+      const metadataProvider = vi.fn();
 
       await expect(
         getGlyphsData([malformedXmlFile], {
@@ -308,8 +328,8 @@ describe("glyphsData", () => {
       deletePollutionMarker();
     });
 
-    it("should require xml2js >= 0.5.0 so assignOrPush uses defineProperty instead of obj[key] assignment", () => {
-      const { version } = jest.requireActual<{ version: string }>("xml2js/package.json");
+    it("should require xml2js >= 0.5.0 so assignOrPush uses defineProperty instead of obj[key] assignment", async () => {
+      const { version } = await vi.importActual<{ version: string }>("xml2js/package.json");
 
       expect(version).not.toMatch(/^0\.4\./u);
     });

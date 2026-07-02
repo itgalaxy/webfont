@@ -1,21 +1,25 @@
+const { mockExec } = vi.hoisted(() => ({
+  mockExec: vi.fn(),
+}));
+
+vi.mock("child_process", () => ({
+  exec: mockExec,
+}));
+
 import { exec } from "child_process";
 import fs from "fs";
 import { execCLI } from "./index";
 
-jest.mock("child_process", () => ({
-  exec: jest.fn(),
-}));
-
-const mockedExec = exec as jest.MockedFunction<typeof exec>;
+const mockedExec = vi.mocked(exec);
 
 describe("execCLI", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should reject when destination readdir fails", async () => {
     const readdirError = Object.assign(new Error("readdir failed"), { code: "ENOENT" });
-    const readdirSpy = jest.spyOn(fs, "readdir").mockImplementation((_destination, _encoding, callback) => {
+    const readdirSpy = vi.spyOn(fs, "readdir").mockImplementation((_destination, _encoding, callback) => {
       (callback as (error: NodeJS.ErrnoException | null, files: string[]) => void)(readdirError, []);
       return undefined as never;
     });

@@ -6,9 +6,6 @@ import { version } from "../../package.json";
 import { execCLI } from "../lib/execCLI";
 import { createMeowCli } from "./meow/createMeowCli";
 
-const timeout = 10000;
-jest.setTimeout(timeout);
-
 const formatCliStdout = (value: string): string => value.replace(/\n$/u, "");
 const expectedHelp = () => formatCliStdout(`${createMeowCli([]).help}\n`);
 const expectedVersion = () => version;

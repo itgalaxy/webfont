@@ -43,8 +43,8 @@ const wrapCli = (argv: readonly string[]): CliLike => {
 
   return {
     ...meowCli,
-    showHelp: jest.fn(),
-    showVersion: jest.fn(),
+    showHelp: vi.fn(),
+    showVersion: vi.fn(),
   };
 };
 
@@ -52,7 +52,7 @@ const expectedHelpStdout = (): string => createMeowCli([]).help.replace(/\n$/u, 
 
 describe("cli/meow", () => {
   it("should load the meow package as a callable default export", async () => {
-    // meow 14+ is ESM-only; Jest resolves the default export object.
+    // meow 14+ is ESM-only; Vitest resolves the default export object.
     const meow = await import("meow");
 
     expect(typeof meow.default).toBe("function");

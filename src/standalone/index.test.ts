@@ -471,7 +471,7 @@ describe("standalone", () => {
   });
 
   it("should log progress when verbose is enabled", async () => {
-    const logSpy = jest.spyOn(console, "log").mockImplementation(() => undefined);
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
 
     await standalone({
       files: `${fixturesGlob}/svg-icons/avatar.svg`,

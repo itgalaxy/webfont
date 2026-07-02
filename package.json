@@ -30,10 +30,10 @@
     "prepublishOnly": "npm run build",
     "pretest": "npm run build",
     "prettify": "biome check --write .",
-    "test": "jest src",
-    "testc": "npm test -- --coverage",
-    "test-debug": "npm test --detectOpenHandles --runInBand",
-    "testu": "npm test -- -u"
+    "test": "vitest run src",
+    "testc": "vitest run src --coverage",
+    "test-debug": "vitest run src --no-file-parallelism",
+    "testu": "vitest run src -u"
   },
   "dependencies": {
     "cosmiconfig": "9.0.2",
@@ -53,9 +53,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
-    "@swc/core": "1.15.11",
-    "@swc/jest": "0.2.39",
-    "@types/jest": "30.0.0",
+    "@vitest/coverage-v8": "4.1.9",
     "@types/node": "^22.15.0",
     "@types/nunjucks": "3.2.6",
     "@types/rimraf": "latest",
@@ -69,7 +67,7 @@
     "is-ttf": "latest",
     "is-woff": "latest",
     "is-woff2": "latest",
-    "jest": "30.4.2",
+    "vitest": "4.1.9",
     "lefthook": "2.1.9",
     "rimraf": "latest",
     "ts-node": "latest",

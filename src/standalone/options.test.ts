@@ -42,7 +42,7 @@ describe("options", () => {
   });
 
   it("should accept a custom metadataProvider", () => {
-    const metadataProvider = jest.fn();
+    const metadataProvider = vi.fn();
     const options = getOptions({
       files: "icons/*.svg",
       metadataProvider,

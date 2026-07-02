@@ -24,7 +24,6 @@
     "clean": "rm -rf dist/ temp/",
     "demo": "node dist/cli.js './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "lint": "biome check .",
-    "postbuild": "tsc --declaration --declarationDir dist --emitDeclarationOnly",
     "prebuild": "npm run clean && npm run lint",
     "prepare": "lefthook install",
     "predemo": "npm run build",
@@ -76,7 +75,9 @@
     "ts-node": "latest",
     "tslib": "latest",
     "typescript": "6.0.3",
-    "vite": "8.1.3"
+    "vite": "8.1.3",
+    "vite-plugin-checker": "0.14.4",
+    "vite-plugin-dts": "5.0.3"
   },
   "overrides": {
     "fast-glob": "3.2.12"

@@ -1,11 +1,8 @@
-/* eslint-disable max-len, max-lines-per-function */
-import {version} from "../../../../package.json";
+import { version } from "../../../../package.json";
 
 const meowMock = Object.create(null);
 
-meowMock.verbose = () => `The provided icons do not have the same heights. This could lead to unexpected results. Using the normalize option may help.
-A fontHeight of at least than 1000 is recommended, otherwise further steps (rounding in svg2ttf) could lead to ugly results. Use the fontHeight option to scale icons.
-Font created`;
+meowMock.verbose = () => "Generating SVG font...";
 
 meowMock.error = () => "Error: Files glob patterns specified did not match any files";
 
@@ -36,7 +33,7 @@ meowMock.showHelp = () => `
           The search will begin in the working directory and move up the
           directory tree until a configuration file is found.
 
-      -f, --fontName
+      -u, --fontName
 
           The font family name you want, default: "webfont".
 
@@ -48,9 +45,10 @@ meowMock.showHelp = () => `
 
           Output the version number.
 
-      -r, --formats
+      -f, --formats
 
-          Only this formats generate.
+          Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
+          comma-separated list (e.g. woff2 or svg, ttf, woff2).
 
       -d, --dest
 

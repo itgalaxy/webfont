@@ -1,4 +1,3 @@
-import {GlyphMetadata} from "./GlyphMetadata";
+import type { GlyphMetadata } from "./GlyphMetadata";
 
-// eslint-disable-next-line no-unused-vars
-export type GlyphTransformFn = (obj: GlyphMetadata) => GlyphMetadata | Promise<GlyphMetadata>;
+export type GlyphTransformFn = (_obj: GlyphMetadata) => GlyphMetadata | Promise<GlyphMetadata>;

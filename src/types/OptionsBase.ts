@@ -1,4 +1,4 @@
-import {Formats} from "./Format";
+import type { Formats } from "./Format";
 
 export type OptionsBase = {
   configFile?: string;

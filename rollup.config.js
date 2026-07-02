@@ -1,21 +1,16 @@
 import commonjs from "@rollup/plugin-commonjs";
-import {dependencies} from "./package.json";
 import typescript from "@rollup/plugin-typescript";
+import { dependencies } from "./package.json";
 
 const dir = "dist";
 
-const external = [
-  ...Object.keys(dependencies),
-  "crypto",
-  "fs",
-  "os",
-  "path",
-  "stream",
-  "util",
-];
+const external = [...Object.keys(dependencies), "crypto", "fs", "os", "path", "stream", "util"];
 
 const plugins = [
-  typescript(),
+  typescript({
+    exclude: ["src/**/*.test.ts", "jest/**"],
+    module: "esnext",
+  }),
   commonjs(),
 ];
 

@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
-    "moduleResolution": "Node",
+    "lib": ["ES2020"],
+    "module": "commonjs",
+    "moduleResolution": "bundler",
+    "noImplicitAny": true,
+    "strictNullChecks": true,
     "outDir": "dist",
     "resolveJsonModule": true,
     "rootDir": ".",
-    "skipLibCheck": false
+    "skipLibCheck": false,
+    "target": "ES2020"
   },
-  "exclude": ["jest.config.ts"]
+  "exclude": ["jest.config.ts", "jest/**", "src/**/*.test.ts"]
 }

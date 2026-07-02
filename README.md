@@ -23,6 +23,7 @@ Generator of fonts from SVG icons.
   - [Installation](#installation)
   - [Usage](#usage)
   - [Options](#options)
+  - [Result](#result)
   - [svgicons2svgfont](#svgicons2svgfont)
 - [Command Line Interface (CLI)](#command-line-interface)
   - [Installation](#cli-installation)
@@ -99,6 +100,7 @@ webfont({
   2. a `.webfontrc` file (with or without filename extension: `.json`, `.yaml`, and `.js` are available)
   3. a `webfont.config.js` file exporting a JS `object`.
      The search will begin in the working directory and move up the directory tree until it finds a configuration file.
+- Note: When a configuration file is discovered or loaded, the resolved absolute path is available on `result.config.filePath` (see [Result](#result)).
 
 #### `fontName`
 
@@ -108,10 +110,11 @@ webfont({
 
 #### `formats`
 
-- Type: `array`,
-- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']`,
-- Possible values: `svg, ttf, eot, woff, woff2`,
+- Type: `array`
+- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']`
+- Possible values: `svg`, `ttf`, `eot`, `woff`, `woff2`
 - Description: Font file types to generate.
+- CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
 
 #### `template`
 
@@ -196,11 +199,49 @@ webfont({
     });
   ```
 
+#### `metadataProvider`
+
+- Type: `function`
+- Default: built-in metadata service (reads icon names and unicode from SVG files)
+- Description: Custom callback to resolve glyph metadata for each source file. Receives the file path and a Node-style callback `(error, metadata)` where `metadata` is `{ name: string, unicode?: string | string[] }`. When omitted, webfont uses its default metadata reader.
+
+  ```js
+  import webfont from "webfont";
+
+  webfont({
+    files: "src/svg-icons/**/*.svg",
+    metadataProvider: (srcPath, callback) => {
+      callback(null, { name: "custom-icon-name" });
+    },
+  });
+  ```
+
 #### `sort`
 
 - Type: `bool`
 - Default: `true`
 - Description: Whether you want to sort the icons sorted by name.
+
+### Result
+
+`webfont()` resolves to an object with generated font buffers (and optional `template` output). The `config` property contains the **effective options** used for the run (defaults, discovered config, and any options you passed in), plus optional **output metadata** when a configuration file was found or loaded.
+
+#### `result.config.filePath`
+
+- Type: `string` | `undefined`
+- Description: Absolute path to the configuration file that was discovered (`search`) or loaded (`configFile` / CLI `--config`). Omitted when no configuration file was found and defaults were used.
+- Note: Output-only metadata — not an input option. Do not set `filePath` in `.webfontrc`, `package.json`, or the `webfont()` call; values passed that way are ignored.
+- Example:
+
+  ```js
+  const result = await webfont({
+    files: "src/svg-icons/**/*.svg",
+  });
+
+  if (result.config?.filePath) {
+    console.log(`Loaded config from ${result.config.filePath}`);
+  }
+  ```
 
 ---
 
@@ -283,12 +324,6 @@ These can be appended to [webfont options](#options). These are passed directly 
 - Description: The font [metadata](http://www.w3.org/TR/SVG/metadata.html).
   You can set any character data in, but this is the recommended place for a copyright mention.
 
-#### `svgicons2svgfont.log`
-
-- Type: `function`
-- Default: `console.log`
-- Description: Allows you to provide your own logging function. Set to `function(){}` to disable logging.
-
 ---
 
 ## Command Line Interface
@@ -342,7 +377,7 @@ If you're using cross-env:
             The search will begin in the working directory and move up the
             directory tree until a configuration file is found.
 
-        -f, --font-name
+        -u, --fontName
 
             The font family name you want, default: "webfont".
 
@@ -354,9 +389,10 @@ If you're using cross-env:
 
             Output the version number.
 
-        -r, --formats
+        -f, --formats
 
-            Only this formats generate.
+            Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
+            comma-separated list (e.g. woff2 or svg, ttf, woff2).
 
         -d, --dest
 

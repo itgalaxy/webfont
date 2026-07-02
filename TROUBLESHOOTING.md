@@ -95,3 +95,64 @@ Font generation can finish before files are written. If the destination folder i
 7. **Upgrade webfont** if you see exit code **0** with no output files and only an `ENOENT` message. Current releases fail with exit code **1** and the clearer destination error above.
 
 If the problem persists, open an issue with the full command, your working directory, and the complete terminal output.
+
+---
+
+## `npm warn Unknown env config "devdir"`
+
+### What error appeared
+
+Every `npm` command prints a warning similar to:
+
+```text
+npm warn Unknown env config "devdir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+```
+
+The command still succeeds; only the warning is noisy.
+
+### Why it usually happens
+
+- **Cursor (or some IDE sandboxes) inject `npm_config_devdir`** into the shell environment so node-gyp uses a sandbox cache directory.
+- **npm 11.2+ warns** because `devdir` is not an official npm config key — it is a legacy node-gyp convention.
+- **This repository does not set `devdir`.** The project `.npmrc` only contains `save-exact=true`.
+
+Confirm the source in your terminal:
+
+```shell
+echo "$npm_config_devdir"
+```
+
+If the path contains `cursor-sandbox-cache` (or similar), the IDE injected it — not webfont.
+
+### Steps to try to resolve
+
+1. **Clear the variable for one command:**
+
+   ```shell
+   npm_config_devdir= npm test
+   ```
+
+2. **Clear it for the current shell session:**
+
+   ```shell
+   unset npm_config_devdir
+   ```
+
+3. **Cursor / VS Code integrated terminal** — add to your **local** `.vscode/settings.json` (this folder is gitignored in webfont):
+
+   ```json
+   {
+     "terminal.integrated.env.osx": {
+       "npm_config_devdir": ""
+     },
+     "terminal.integrated.env.linux": {
+       "npm_config_devdir": ""
+     }
+   }
+   ```
+
+   Open a **new** terminal or reload the window (*Developer: Reload Window*) so the setting applies. Existing terminals keep the old environment.
+
+4. **CI and plain shells** outside Cursor are unaffected; no change is required there.
+
+This warning does not indicate a broken install or a webfont bug.

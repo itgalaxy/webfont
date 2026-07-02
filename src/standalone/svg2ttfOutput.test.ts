@@ -31,6 +31,17 @@ describe("svg2ttf output validation", () => {
   });
 
   describe("svg2ttf library contract (production dependency)", () => {
+    let consoleErrorSpy: jest.SpiedFunction<typeof console.error>;
+
+    beforeEach(() => {
+      // @xmldom/xmldom logs fatal parse errors before svg2ttf throws; suppress Jest noise.
+      consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => undefined);
+    });
+
+    afterEach(() => {
+      consoleErrorSpy.mockRestore();
+    });
+
     it("should document that svg2ttf depends on @xmldom/xmldom for svg font parsing", () => {
       const svg2ttfPackage = jest.requireActual<{ dependencies: Record<string, string> }>("svg2ttf/package.json");
 

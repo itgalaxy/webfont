@@ -67,6 +67,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 - Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 - Keep changes focused; match surrounding code style and tooling (Biome, Jest, Lefthook).
 - Do not commit unless explicitly asked.
+- **Never push to `master`.** Use a branch and open a PR (see [Pull requests](#pull-requests) below).
 
 ### Lint and type hygiene
 
@@ -81,12 +82,15 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 
 ## Pull requests
 
+**Never push commits directly to `master`.** All changes — including docs, tests, and chores — go through a feature branch and a pull request. Only merge to `master` after review (or explicit maintainer approval on the PR). Do not use `git push origin master` for routine work.
+
 When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
 
-1. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
-2. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
-3. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
-4. **Return the PR URL** in the final response.
+1. **Create a branch** from `master` (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`).
+2. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
+3. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
+4. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.
+5. **Return the PR URL** in the final response.
 
 ### Template sections (be selective)
 

@@ -115,7 +115,9 @@ When a task changes **how users interact with webfont** (CLI flags, programmatic
 2. **Update README.md** when behavior, accepted input formats, or public options change. Keep CLI flag names and short aliases aligned with `meow` (`-f` / `--formats`, `-u` / `--fontName`, etc.).
 3. **Update [FEATURES.md](./FEATURES.md)** when capabilities, stability, properties, or test criteria change. Mark features `stable`, `in-progress`, or `planned`; tick test criteria when coverage exists.
 4. **Update [NOTICE.md](./NOTICE.md)** when legal notices, font licensing guidance, attribution rules, or runtime dependency licenses change.
-5. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
+5. **Update [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** for operational errors (symptoms and fixes on the **current** release, not version-to-version deltas).
+6. **Update [MIGRATION.md](./MIGRATION.md)** when a fix or change alters behavior across releases: document *before* / *after*, workarounds on older versions, and steps after upgrading. Link the GitHub issue; set the **minimum fixed version** when the release ships.
+7. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
 
 See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and documentation”.
 
@@ -140,6 +142,40 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
   - Unused parameters: `_name` prefix on the parameter or property.
 - **No `ignoreDeprecations` in `tsconfig.json` (or any tsconfig).** On TypeScript upgrades, migrate deprecated compiler options and fix type errors instead of silencing warnings (see [CONTRIBUTING.md](./CONTRIBUTING.md)).
 - After edits, run `npm test` and confirm `rg 'eslint-disable|@ts-expect-error|@ts-ignore|ignoreDeprecations'` returns no matches.
+
+## GitHub issues workflow
+
+Process open issues **oldest to newest** (`gh issue list --state open`, sort by number). For each issue:
+
+### Triage (every issue)
+
+1. Read the report and comments.
+2. Assign **`jimmyandrade`** (`gh issue edit <n> --add-assignee jimmyandrade`).
+3. Set milestone **`next`** (`--milestone next`).
+4. Add one type label: `bug`, `enhancement`, `security`, `ci`, or `question` (match the report; do not duplicate `enhancement` + `bug`).
+
+### Fix PR (when a code or docs change is needed)
+
+1. Comment on the issue **in English**: investigation is in progress; link the PR when it exists.
+2. **Tests first:** check coverage for the affected area. Add or extend tests that name the failure **before** changing production code when coverage is missing.
+3. Implement the fix; run `npm test`.
+4. **Bugs and behavior changes across releases:** add or update [MIGRATION.md](./MIGRATION.md) (*Before* → *After* → *Workaround on older versions* → *After upgrading*). Link the GitHub issue. Use [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) only when the entry is not version-specific (same behavior on all supported releases).
+5. Open a PR (English title/body, Conventional Commits). Link the issue in **Related issue**; do **not** use `Closes #n` if the issue should stay open until npm publish.
+6. Wait for CI; wait for maintainer merge.
+
+### After merge (before release)
+
+1. Comment on the issue **in English**: the fix is on `master`, planned for the **next** npm release, with a link to the merged PR.
+2. **Keep the issue open** until the fix is published on npm.
+3. Point reporters to [MIGRATION.md](./MIGRATION.md) (workarounds on their version) when the fix is not on npm yet.
+
+### On release (when the version containing the fix ships)
+
+1. Comment on the issue **in English** with the **released version** (e.g. `12.1.0`), `npm install` command, and **concrete steps** from MIGRATION.md — not only “upgrade”.
+2. **Close the issue** with a short note referencing the release tag / CHANGELOG entry.
+3. Update MIGRATION.md: set the **minimum version**, move the section under that release heading, and remove obsolete “before upgrade” workarounds.
+
+Skip PRs for duplicates, `wontfix`, or issues that only need a comment (already fixed in a recent release — verify with tests or changelog before closing).
 
 ## Pull requests
 

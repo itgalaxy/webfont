@@ -3,6 +3,7 @@ import crypto from "crypto";
 import deepmerge from "deepmerge";
 import path from "path";
 import { Readable } from "stream";
+import { evenoddFillRuleWarning, hasEvenoddFillRule } from "../lib/evenoddFillRule";
 import { resolveInputSources } from "../lib/inputSource";
 import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2svgfont";
 import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
@@ -149,6 +150,14 @@ export const webfont: Webfont = async (initialOptions) => {
   const filteredFiles = filterInputFilesByMode(foundFiles, "svg");
 
   let glyphsData = (await getGlyphsData(filteredFiles, options)) as GlyphData[];
+
+  if (options.verbose) {
+    for (const glyphData of glyphsData) {
+      if (hasEvenoddFillRule(glyphData.contents)) {
+        console.log(evenoddFillRuleWarning(glyphData.srcPath));
+      }
+    }
+  }
 
   if (options.glyphContentTransformFn) {
     const glyphContentTransformFn = options.glyphContentTransformFn;

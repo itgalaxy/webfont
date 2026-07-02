@@ -9,7 +9,7 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 
 **Legal / licensing:** [NOTICE.md](./NOTICE.md) — font copyright, disclaimers, attribution guidelines, and third-party library notices.
 
-**Troubleshooting:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — common errors on the current release.
+**Troubleshooting:** [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — common errors on the current release (including [icons that lose detail after export](./TROUBLESHOOTING.md#icon-details-missing-after-export) due to `fill-rule: evenodd`, #175).
 
 **Migration:** [MIGRATION.md](./MIGRATION.md) — what changed between versions and how to upgrade.
 

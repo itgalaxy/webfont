@@ -478,6 +478,14 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
+  it("should warn about evenodd fill-rule on stdout when verbose (#175)", async () => {
+    const output = await execCLI(`${fixturesGlob}/svg-evenodd/linkedin.svg -d ${destination} --verbose -f svg`);
+
+    expect(output.stdout).toContain("fill-rule: evenodd");
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
   it("should create dest directory if it does not exist and --dest-create flag is provided", async () => {
     const nonExistentDestination = `${destination}/that/does/not/exist`;
     const output = await execCLI(`${source} -d ${nonExistentDestination} --dest-create`);

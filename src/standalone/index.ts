@@ -1,7 +1,7 @@
 import { cosmiconfig } from "cosmiconfig";
 import crypto from "crypto";
 import deepmerge from "deepmerge";
-import globby from "globby";
+import { globby } from "globby";
 import nunjucks from "nunjucks";
 import path from "path";
 import { Readable } from "stream";

@@ -9,5 +9,5 @@
     "skipLibCheck": false,
     "target": "ES2020"
   },
-  "exclude": ["jest.config.ts", "src/**/*.test.ts"]
+  "exclude": ["jest.config.ts", "jest/**", "src/**/*.test.ts"]
 }

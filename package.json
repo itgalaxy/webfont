@@ -39,7 +39,7 @@
   "dependencies": {
     "cosmiconfig": "7.1.0",
     "deepmerge": "^4.2.2",
-    "globby": "^11.0.0",
+    "globby": "16.2.0",
     "meow": "^9.0.0",
     "nunjucks": "3.2.4",
     "p-limit": "7.3.0",
@@ -75,6 +75,9 @@
     "ts-node": "latest",
     "tslib": "latest",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "fast-glob": "3.2.12"
   },
   "repository": {
     "type": "git",

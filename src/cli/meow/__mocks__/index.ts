@@ -3,9 +3,7 @@ import {version} from "../../../../package.json";
 
 const meowMock = Object.create(null);
 
-meowMock.verbose = () => `The provided icons do not have the same heights. This could lead to unexpected results. Using the normalize option may help.
-A fontHeight of at least than 1000 is recommended, otherwise further steps (rounding in svg2ttf) could lead to ugly results. Use the fontHeight option to scale icons.
-Font created`;
+meowMock.verbose = () => "Generating SVG font...";
 
 meowMock.error = () => "Error: Files glob patterns specified did not match any files";
 

@@ -50,7 +50,7 @@
     "parse-json": "^5.2.0",
     "resolve-from": "^5.0.0",
     "svg2ttf": "^6.0.2",
-    "svgicons2svgfont": "^10.0.3",
+    "svgicons2svgfont": "^16.0.0",
     "ttf2eot": "^2.0.0",
     "ttf2woff": "^3.0.0",
     "wawoff2": "^2.0.0",
@@ -63,7 +63,7 @@
     "@rollup/plugin-commonjs": "latest",
     "@rollup/plugin-typescript": "latest",
     "@types/jest": "26.0.24",
-    "@types/node": "15.14.9",
+    "@types/node": "^22.15.0",
     "@types/nunjucks": "latest",
     "@types/rimraf": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
@@ -88,7 +88,7 @@
     "standard-version": "latest",
     "ts-node": "latest",
     "tslib": "latest",
-    "typescript": "latest"
+    "typescript": "^5.8.3"
   },
   "repository": {
     "type": "git",
@@ -113,7 +113,7 @@
   },
   "homepage": "https://github.com/itgalaxy/webfont#readme",
   "engines": {
-    "node": ">= 18.0.0"
+    "node": ">= 24.14.0"
   },
   "keywords": [
     "cli",

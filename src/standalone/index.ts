@@ -45,6 +45,11 @@ const toSvg = (glyphsData, options) => {
 
   return new Promise((resolve, reject) => {
 
+    if (options.verbose) {
+      // eslint-disable-next-line no-console
+      console.log("Generating SVG font...");
+    }
+
     const fontStream = new SVGIcons2SVGFontStream(getFontStreamOptions(options)).
       on("finish", () => resolve(result)).
       on("data", (data) => {

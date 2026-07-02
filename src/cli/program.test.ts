@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import * as fsPromise from "fs/promises";
 import path from "path";
 import { webfont } from "../standalone";
@@ -73,7 +74,7 @@ describe("cli program", () => {
 
       expect(options.configFile).toContain("webfont.config.js");
       expect(options.fontName).toBe("my-font");
-      expect(options.formats).toBe('["woff2"]');
+      expect(options.formats).toEqual(["woff2"]);
       expect(options.dest).toBe("temp/out");
       expect(options.destCreate).toBe(true);
       expect(options.template).toBe("css");
@@ -111,10 +112,9 @@ describe("cli program", () => {
       const config = {
         files: "icons/*.svg",
         fontName: "webfont",
-        formats: ["svg"] as const,
+        formats: ["svg"],
         formatsOptions: {},
         maxConcurrency: 1,
-        metadataProvider: null,
       };
 
       expect(ensureResultConfig({ config })).toBe(config);
@@ -134,7 +134,6 @@ describe("cli program", () => {
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-          metadataProvider: null,
         },
       };
 
@@ -218,6 +217,27 @@ describe("cli program", () => {
     });
   });
 
+  describe("ensureDestExists", () => {
+    const destination = "temp/cli-program-ensure-dest";
+
+    beforeEach(async () => {
+      await fsPromise.rm(destination, { recursive: true, force: true });
+    });
+
+    it("should create the destination when destCreate is enabled", async () => {
+      const { ensureDestExists } = await import("./program");
+
+      await ensureDestExists(destination, true);
+      await fsPromise.access(destination);
+    });
+
+    it("should reject when destination is missing and destCreate is disabled", async () => {
+      const { ensureDestExists } = await import("./program");
+
+      await expect(ensureDestExists(destination, false)).rejects.toMatchObject({ code: "ENOENT" });
+    });
+  });
+
   describe("writeResultFiles", () => {
     const destination = "temp/cli-program";
 
@@ -236,7 +256,6 @@ describe("cli program", () => {
           formats: ["svg", "woff2"],
           formatsOptions: {},
           maxConcurrency: 1,
-          metadataProvider: null,
         },
         hash: "abc123",
         svg: Buffer.from("svg"),
@@ -259,7 +278,6 @@ describe("cli program", () => {
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-          metadataProvider: null,
           template: "css",
         },
         svg: Buffer.from("svg"),
@@ -284,7 +302,6 @@ describe("cli program", () => {
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-          metadataProvider: null,
         },
         svg: Buffer.from("svg"),
       };
@@ -293,6 +310,24 @@ describe("cli program", () => {
 
       await fsPromise.access(nestedDestination);
       await fsPromise.access(path.join(nestedDestination, "webfont.svg"));
+    });
+
+    it("should propagate write errors", async () => {
+      const writeSpy = jest.spyOn(fs.promises, "writeFile").mockRejectedValueOnce(new Error("disk full"));
+      const result: Result = {
+        config: {
+          dest: destination,
+          files: "icons/*.svg",
+          fontName: "webfont",
+          formats: ["svg"],
+          formatsOptions: {},
+          maxConcurrency: 1,
+        },
+        svg: Buffer.from("svg"),
+      };
+
+      await expect(writeResultFiles(result)).rejects.toThrow("disk full");
+      writeSpy.mockRestore();
     });
   });
 
@@ -332,7 +367,6 @@ describe("cli program", () => {
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-          metadataProvider: null,
         },
         svg: Buffer.from("svg"),
       });
@@ -362,7 +396,6 @@ describe("cli program", () => {
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-          metadataProvider: null,
         },
         svg: Buffer.from("svg"),
         hash: "hash-value",

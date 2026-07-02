@@ -13,7 +13,6 @@ describe("options", () => {
     expect(options.fontName).toBe("webfont");
     expect(options.formats).toEqual(["svg", "ttf", "eot", "woff", "woff2"]);
     expect(options.maxConcurrency).toBe(100);
-    expect(options.metadataProvider).toBeNull();
     expect(options.templateFontPath).toBe("./");
     expect(options.ligatures).toBe(true);
     expect(options.sort).toBe(true);
@@ -40,5 +39,15 @@ describe("options", () => {
     expect(options.template).toBe("css");
     expect(options.verbose).toBe(true);
     expect(options.metadata).toBe("test-meta");
+  });
+
+  it("should accept a custom metadataProvider", () => {
+    const metadataProvider = jest.fn();
+    const options = getOptions({
+      files: "icons/*.svg",
+      metadataProvider,
+    });
+
+    expect(options.metadataProvider).toBe(metadataProvider);
   });
 });

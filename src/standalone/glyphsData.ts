@@ -3,6 +3,7 @@ import xml2js from "xml2js";
 import pLimit from "../lib/p-limit";
 import { fileSorter, getMetadataService, getMetadataServiceOptions } from "../lib/svgicons2svgfont";
 import type { GlyphData, GlyphMetadata, WebfontOptions } from "../types";
+import type { FileMetadata } from "../types/MetadataProvider";
 
 const normalizeUnicode = (unicode: string | string[] | undefined): string[] => {
   if (unicode === undefined) {
@@ -16,10 +17,7 @@ const normalizeUnicode = (unicode: string | string[] | undefined): string[] => {
   return [unicode];
 };
 
-const toGlyphMetadata = (metadata: {
-  name: string;
-  unicode?: string | string[];
-}): GlyphMetadata & { unicode: string[] } => ({
+const toGlyphMetadata = (metadata: FileMetadata): GlyphMetadata & { unicode: string[] } => ({
   name: metadata.name,
   unicode: normalizeUnicode(metadata.unicode),
 });

@@ -142,6 +142,21 @@ describe("glyphsData", () => {
     expect(glyphsData[0].metadata?.unicode).toEqual([]);
   });
 
+  it("should use a custom metadataProvider when provided", async () => {
+    const metadataProvider = jest.fn((_srcPath, callback) => {
+      callback(null, { name: "custom-glyph", unicode: ["\u0001"] });
+    });
+
+    const glyphsData = (await getGlyphsData(svgFiles.slice(0, 1), {
+      ...getTestOptions(1),
+      metadataProvider,
+    })) as GlyphData[];
+
+    expect(metadataProvider).toHaveBeenCalled();
+    expect(glyphsData[0].metadata?.name).toBe("custom-glyph");
+    expect(glyphsData[0].metadata?.unicode).toEqual(["\u0001"]);
+  });
+
   it("should reject when metadata provider returns no metadata", async () => {
     await expect(
       getGlyphsData(svgFiles.slice(0, 1), {

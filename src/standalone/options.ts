@@ -33,7 +33,6 @@ export const getOptions: OptionsGetter = (initialOptions) => {
      */
     maxConcurrency: 100,
     metadata: undefined,
-    metadataProvider: null,
     normalize: false,
     prependUnicode: false,
     round: 10e12,

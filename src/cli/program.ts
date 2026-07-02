@@ -2,11 +2,11 @@ import * as fs from "fs";
 import * as path from "path";
 import resolveFrom from "resolve-from";
 import { webfont } from "../standalone";
-import type { Formats } from "../types/Format";
 import type { InitialOptions } from "../types/InitialOptions";
 import type { OptionsBase } from "../types/OptionsBase";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
+import { parseFormatsFlag } from "./parseFormatsFlag";
 
 export type CliLike = {
   flags: {
@@ -63,7 +63,7 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
   }
 
   if (cli.flags.formats) {
-    optionsBase.formats = cli.flags.formats as unknown as Formats;
+    optionsBase.formats = parseFormatsFlag(cli.flags.formats);
   }
 
   if (cli.flags.dest) {
@@ -237,9 +237,21 @@ export const getResultOutputPath = (
   return path.resolve(path.join(dest, `${fontName}.${type}`));
 };
 
+export const ensureDestExists = async (dest: string, destCreate?: boolean): Promise<void> => {
+  try {
+    await fs.promises.access(dest, fs.constants.F_OK);
+  } catch (error) {
+    if (destCreate) {
+      await fs.promises.mkdir(dest, { recursive: true });
+      return;
+    }
+
+    throw error;
+  }
+};
+
 export const writeResultFiles = async (result: Result): Promise<Result> => {
   const config = ensureResultConfig(result);
-  const { destCreate } = config;
   const dest = config.dest ?? process.cwd();
   const destTemplate = resolveDestTemplate(result, config);
 
@@ -247,39 +259,23 @@ export const writeResultFiles = async (result: Result): Promise<Result> => {
     delete result.hash;
   }
 
-  await Promise.resolve()
-    .then(
-      () =>
-        new Promise((_resolve, reject) => {
-          fs.access(dest, fs.constants.F_OK, (err) => reject(err));
-        }),
-    )
-    .catch((error) => {
-      if (error && destCreate) {
-        return new Promise((resolve) => {
-          fs.mkdir(dest, { recursive: true }, () => resolve(destCreate));
-        });
-      }
+  await ensureDestExists(dest, config.destCreate);
 
-      return error;
-    })
-    .finally(() =>
-      Promise.all(
-        resultFileKeys
-          .filter((type) => result[type] !== undefined)
-          .map((type) => {
-            const content = result[type];
+  await Promise.all(
+    resultFileKeys
+      .filter((type) => result[type] !== undefined)
+      .map(async (type) => {
+        const content = result[type];
 
-            if (content === undefined) {
-              return Promise.resolve();
-            }
+        if (content === undefined) {
+          return;
+        }
 
-            const file = getResultOutputPath(type, result, config, destTemplate);
+        const file = getResultOutputPath(type, result, config, destTemplate);
 
-            return fs.promises.writeFile(file, content);
-          }),
-      ),
-    );
+        await fs.promises.writeFile(file, content);
+      }),
+  );
 
   return result;
 };

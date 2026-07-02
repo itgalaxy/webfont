@@ -176,7 +176,7 @@ describe("cli", () => {
     it("can set formats with -f", async () => {
       const output = await execCLI(`${source} -d ${destination} -f '["woff2"]'`);
 
-      expect(output.files).toEqual(["webfont.hash", "webfont.woff", "webfont.woff2"]);
+      expect(output.files).toEqual(["webfont.hash", "webfont.woff2"]);
       expect(output.code).toBe(0);
       expect(output.stderr).toBe("");
     });
@@ -255,9 +255,9 @@ describe("cli", () => {
   });
 
   it("should generate only `woff2` font", async () => {
-    const output = await execCLI(`${source} -d ${destination} --formats ["woff2"]`);
+    const output = await execCLI(`${source} -d ${destination} -f '["woff2"]'`);
 
-    expect(output.files).toEqual(["webfont.hash", "webfont.woff", "webfont.woff2"]);
+    expect(output.files).toEqual(["webfont.hash", "webfont.woff2"]);
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
   });

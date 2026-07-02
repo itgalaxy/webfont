@@ -1,6 +1,7 @@
 import type { Formats, FormatsOptions } from "./Format";
 import type { GlyphTransformFn } from "./GlyphTransformFn";
 import type { InitialOptions } from "./InitialOptions";
+import type { MetadataProvider } from "./MetadataProvider";
 
 export interface WebfontOptions extends InitialOptions {
   centerHorizontally: boolean;
@@ -17,7 +18,7 @@ export interface WebfontOptions extends InitialOptions {
   ligatures: boolean;
   maxConcurrency: number;
   metadata: unknown;
-  metadataProvider: null;
+  metadataProvider?: MetadataProvider;
   normalize: boolean;
   prependUnicode: boolean;
   round: number;

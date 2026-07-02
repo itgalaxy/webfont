@@ -64,6 +64,9 @@ temp
 # Environment variables files
 .env
 
+# Lefthook local overrides (see ADR 0003)
+lefthook-local.yml
+
 # Don't commit JavaScript generated files
 src/**/*.js
 src/**/*.d.ts

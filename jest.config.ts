@@ -9,7 +9,6 @@ const config: Config.InitialOptions = {
   displayName: "Webfont",
   modulePathIgnorePatterns: [
     "<rootDir>/.github",
-    "<rootDir>/.husky",
     "<rootDir>/coverage",
     "<rootDir>/dist",
     "<rootDir>/node_modules",

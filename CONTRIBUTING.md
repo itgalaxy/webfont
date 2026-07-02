@@ -49,6 +49,20 @@ And, if you’re raising an issue, please understand that people involved with t
 
 This project uses [Biome](https://biomejs.dev/) for linting and formatting (`biome.json`). Use `npm run lint` to check and `npm run prettify` to auto-fix.
 
+**Do not add legacy ESLint suppressions.** This repository no longer uses ESLint (see [ADR 0001](docs/adr/0001-eslint-vs-biome-linting.md)). Remove `eslint-disable` / `eslint-enable` comments instead of carrying them forward. When a rule must be suppressed, use a targeted `biome-ignore` comment with a short reason.
+
+**Do not suppress TypeScript with `@ts-expect-error` or `@ts-ignore`.** Fix the underlying type issue instead:
+
+| Situation | Prefer |
+|-----------|--------|
+| Extra keys from a loaded config file in tests | `type LoadedConfig = ResultConfig & { foo: string }` and cast `result.config as LoadedConfig` |
+| Untyped or partial mocks (e.g. CLI `meow`) | Import from `__mocks__/` for assertions; if a cast is needed, use `as unknown as MockType` |
+| Async code that should reject | `await expect(promise).rejects.toThrow(...)` or `.rejects.toMatchObject(...)` instead of `try/catch` + conditional `expect` |
+| Intentionally unused parameters | Prefix with `_` (e.g. `_options`) so Biome and TypeScript accept them |
+| Regex style rules | Rewrite the pattern (e.g. `/\s/gu` instead of a capture group only used for whitespace) |
+
+Only use `biome-ignore` when there is no reasonable code change; never use it to paper over type errors—adjust types or test helpers instead.
+
 ### Git hooks
 
 Git hooks are managed by [Lefthook](https://github.com/evilmartians/lefthook) (`lefthook.yml`). They install automatically when you run `npm install` (`prepare` → `lefthook install`).

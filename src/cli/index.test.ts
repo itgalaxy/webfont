@@ -3,7 +3,7 @@ import * as fsPromise from "fs/promises";
 import path from "path";
 import rimraf from "rimraf";
 import { execCLI } from "../lib/execCLI";
-import cli from "./meow";
+import meowMock from "./meow/__mocks__/index";
 
 const timeout = 10000;
 jest.mock("./meow");
@@ -74,7 +74,7 @@ describe("cli", () => {
     const output = await execCLI();
 
     expect(output.code).toBe(2);
-    expect(output.stdout).toBe(cli.showHelp());
+    expect(output.stdout).toBe(meowMock.showHelp());
     expect(output.stderr).toBe("");
   });
 
@@ -82,7 +82,7 @@ describe("cli", () => {
     const output = await execCLI("--help");
 
     expect(output.code).toBe(2);
-    expect(output.stdout).toBe(cli.showHelp());
+    expect(output.stdout).toBe(meowMock.showHelp());
     expect(output.stderr).toBe("");
   });
 
@@ -90,18 +90,15 @@ describe("cli", () => {
     const output = await execCLI("--version");
 
     expect(output.code).toBe(0);
-    expect(output.stdout).toBe(cli.showVersion());
+    expect(output.stdout).toBe(meowMock.showVersion());
     expect(output.stderr).toBe("");
   });
 
   it("should throw error `files glob patterns specified did not match any files` if not found files", async () => {
-    // eslint-disable-next-line max-len
     const output = await execCLI(`${fixturesGlob}/not-found-svg-icons/**/* -d ${destination}`);
 
     expect(output.code).toBe(1);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    expect(output.stdout).toContain(cli.error());
+    expect(output.stdout).toContain(meowMock.error());
     expect(output.stderr).toBe("");
   });
 
@@ -129,7 +126,6 @@ describe("cli", () => {
   });
 
   it("should generate all fonts with build-in template", async () => {
-    // eslint-disable-next-line max-len
     const output = await execCLI(`${source} -d ${destination} --template css --templateCacheString test`);
 
     expect(output.files).toEqual([
@@ -147,7 +143,6 @@ describe("cli", () => {
   });
 
   it("should respect `template` options", async () => {
-    // eslint-disable-next-line max-len
     const output = await execCLI(
       `${source} -d ${destination} --template css --templateClassName foo --templateCacheString test --templateFontPath test/path --templateFontName testname`,
     );
@@ -246,7 +241,6 @@ describe("cli", () => {
   });
 
   it("should respect `font` options", async () => {
-    // eslint-disable-next-line max-len
     const output = await execCLI(
       `${source} -d ${destination} --fontId testId --fontStyle italic --fontWeight 500 --fontHeight 15`,
     );
@@ -266,7 +260,6 @@ describe("cli", () => {
   });
 
   it("can be verbose", async () => {
-    // eslint-disable-next-line max-lines
     const output = await execCLI(`${source} -d ${destination} --verbose`);
 
     expect(output.files).toEqual([
@@ -277,9 +270,7 @@ describe("cli", () => {
       "webfont.woff",
       "webfont.woff2",
     ]);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    expect(output.stdout).toBe(cli.verbose());
+    expect(output.stdout).toBe(meowMock.verbose());
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
   });

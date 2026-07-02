@@ -10,9 +10,8 @@ import ttf2woff from "ttf2woff";
 import wawoff2 from "wawoff2";
 import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
 import { getFontStreamOptions, SVGIcons2SVGFontStream } from "../lib/svgicons2svgfont";
-// eslint-disable-next-line sort-imports -- keep ttf2eot adapter beside font converter imports
 import convertTtfToEot from "../lib/ttf2eot";
-import type { Format, GlyphData, InitialOptions } from "../types";
+import type { Format, GlyphData, GlyphMetadata, InitialOptions } from "../types";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
 import { getGlyphsData } from "./glyphsData";
@@ -40,12 +39,13 @@ const buildConfig = async (options: {
   return config ?? {};
 };
 
+type GlyphReadable = Readable & { metadata: GlyphMetadata };
+
 const toSvg = (glyphsData, options) => {
   let result = "";
 
   return new Promise((resolve, reject) => {
     if (options.verbose) {
-      // eslint-disable-next-line no-console
       console.log("Generating SVG font...");
     }
 
@@ -57,13 +57,10 @@ const toSvg = (glyphsData, options) => {
       .on("error", (error) => reject(error));
 
     glyphsData.forEach((glyphData) => {
-      const glyphStream: Readable = new Readable();
+      const glyphStream: GlyphReadable = new Readable() as GlyphReadable;
 
       glyphStream.push(glyphData.contents);
       glyphStream.push(null);
-
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
       glyphStream.metadata = glyphData.metadata;
 
       fontStream.write(glyphStream);
@@ -81,8 +78,7 @@ const toWoff = (buffer, options) => Buffer.from(ttf2woff(buffer, options).buffer
 
 const toWoff2 = (buffer) => wawoff2.compress(buffer);
 
-// eslint-disable-next-line no-unused-vars
-type Webfont = (initialOptions?: InitialOptions) => Promise<Result>;
+type Webfont = (_initialOptions?: InitialOptions) => Promise<Result>;
 
 export const webfont: Webfont = async (initialOptions) => {
   let options = getOptions(initialOptions);

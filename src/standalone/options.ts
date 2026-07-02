@@ -1,8 +1,7 @@
 import type { InitialOptions } from "../types/InitialOptions";
 import type { WebfontOptions } from "../types/WebfontOptions";
 
-// eslint-disable-next-line no-unused-vars
-type OptionsGetter = (initialOptions?: InitialOptions) => WebfontOptions;
+type OptionsGetter = (_initialOptions?: InitialOptions) => WebfontOptions;
 
 export const getOptions: OptionsGetter = (initialOptions) => {
   if (!initialOptions?.files) {

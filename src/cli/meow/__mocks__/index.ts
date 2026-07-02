@@ -1,4 +1,3 @@
-/* eslint-disable max-len, max-lines-per-function */
 import { version } from "../../../../package.json";
 
 const meowMock = Object.create(null);

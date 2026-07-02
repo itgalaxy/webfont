@@ -9,8 +9,7 @@ export type Output = {
   stdout?: string;
 };
 
-// eslint-disable-next-line no-unused-vars
-export type ExecCLI = (args?: string, destination?: string) => Promise<Output>;
+export type ExecCLI = (_args?: string, _destination?: string) => Promise<Output>;
 
 /**
  * @name execCLI

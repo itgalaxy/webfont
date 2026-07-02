@@ -7,29 +7,23 @@ import isWoff2 from "is-woff2";
 import path from "path";
 import standalone from "../standalone";
 import type { GlyphMetadata, GlyphTransformFn } from "../types";
+import type { ResultConfig } from "../types/ResultConfig";
+
+type DiscoveredRcConfig = ResultConfig & { foo: string };
 
 const fixturesGlob = "src/fixtures";
 
 describe("standalone", () => {
   it("should throw error if `files` not passed", async () => {
-    try {
-      await standalone();
-    } catch (error) {
-      expect(error.message).toMatch("You must pass webfont a `files` glob");
-    }
+    await expect(standalone()).rejects.toThrow("You must pass webfont a `files` glob");
   });
 
   it("should throw error `files glob patterns specified did not match any files` if not found files", async () => {
-    expect.assertions(1);
-
-    try {
-      await standalone({
+    await expect(
+      standalone({
         files: `${fixturesGlob}/not-found-svg-icons/**/*`,
-      });
-    } catch (error) {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch("Files glob patterns specified did not match any files");
-    }
+      }),
+    ).rejects.toThrow("Files glob patterns specified did not match any files");
   });
 
   it("should generate all fonts", async () => {
@@ -168,9 +162,7 @@ describe("standalone", () => {
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    expect(result.config.foo).toBe("bar");
+    expect((result.config as DiscoveredRcConfig).foo).toBe("bar");
     expect(result.config.filePath).toBe(path.resolve(configFile));
   });
 
@@ -239,92 +231,65 @@ describe("standalone", () => {
       template: path.join(fixturesGlob, "templates/template-ordered.css"),
     });
 
-    // eslint-disable-next-line prefer-named-capture-group
-    const actual = templateOutput.replace(/(\s)/gu, "");
-    // eslint-disable-next-line prefer-named-capture-group
-    const expected = result.template.replace(/(\s)/gu, "");
+    const actual = templateOutput.replace(/\s/gu, "");
+    const expected = result.template.replace(/\s/gu, "");
 
     expect(actual).toBe(expected);
   });
 
   it("should throw error on bad svg images - `Unclosed root tag`", async () => {
-    expect.assertions(1);
-
     const configFile = path.join(fixturesGlob, "configs/.webfontrc");
 
-    try {
-      await standalone({
+    await expect(
+      standalone({
         configFile,
         files: `${fixturesGlob}/bad-svg-icons/avatar.svg`,
-      });
-    } catch (error) {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Unclosed root tag/u);
-    }
+      }),
+    ).rejects.toThrow(/Unclosed root tag/u);
   });
 
   it("should throw error on bad svg images - `Unterminated command at index`", async () => {
-    expect.assertions(1);
-
     const configFile = path.join(fixturesGlob, "configs/.webfontrc");
 
-    try {
-      await standalone({
+    await expect(
+      standalone({
         configFile,
         files: `${fixturesGlob}/bad-svg-icons/avatar-1.svg`,
-      });
-    } catch (error) {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Unterminated command at index/u);
-    }
+      }),
+    ).rejects.toThrow(/Unterminated command at index/u);
   });
 
   it('should throw error on bad svg images - `Unexpected character "N"`', async () => {
-    expect.assertions(1);
-
     const configFile = path.join(fixturesGlob, "configs/.webfontrc");
 
-    try {
-      await standalone({
+    await expect(
+      standalone({
         configFile,
         files: `${fixturesGlob}/bad-svg-icons/avatar-2.svg`,
-      });
-    } catch (error) {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Unexpected character "N"/u);
-    }
+      }),
+    ).rejects.toThrow(/Unexpected character "N"/u);
   });
 
   it("should throw error on bad svg images - empty file", async () => {
-    expect.assertions(1);
-
     const configFile = path.join(fixturesGlob, "configs/.webfontrc");
 
-    try {
-      await standalone({
+    await expect(
+      standalone({
         configFile,
         files: `${fixturesGlob}/bad-svg-icons/avatar-3.svg`,
-      });
-    } catch (error) {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.message).toMatch(/Empty file/u);
-    }
+      }),
+    ).rejects.toThrow(/Empty file/u);
   });
 
   it("should throw error of config file not found", async () => {
-    expect.assertions(1);
-
     const configFile = path.join(fixturesGlob, "configs/.not-exist-webfontrc");
 
-    try {
-      await standalone({
+    await expect(
+      standalone({
         configFile,
         files: `${fixturesGlob}/svg-icons/**/*`,
-      });
-    } catch (error) {
-      // eslint-disable-next-line jest/no-conditional-expect
-      expect(error.code).toBe("ENOENT");
-    }
+      }),
+    ).rejects.toMatchObject({ code: "ENOENT" });
   });
 
   it("should create css selectors with transform titles through function", async () => {

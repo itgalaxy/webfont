@@ -111,9 +111,10 @@ When adding a new `execCLI` test, include `expect(output.stderr).toBe("")` along
 
 When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:
 
-1. **Check for user impact** before finishing — compare CLI help (`src/cli/meow/index.ts`), [README.md](./README.md) (Options + CLI sections), and any examples or fixtures that show usage.
+1. **Check for user impact** before finishing — compare CLI help (`src/cli/meow/cliOptions.ts`), [README.md](./README.md) (Input modes, Options, CLI), [FEATURES.md](./FEATURES.md), and any examples or fixtures that show usage.
 2. **Update README.md** when behavior, accepted input formats, or public options change. Keep CLI flag names and short aliases aligned with `meow` (`-f` / `--formats`, `-u` / `--fontName`, etc.).
-3. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
+3. **Update [FEATURES.md](./FEATURES.md)** when capabilities, stability, properties, or test criteria change. Mark features `stable`, `in-progress`, or `planned`; tick test criteria when coverage exists.
+4. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
 
 See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and documentation”.
 

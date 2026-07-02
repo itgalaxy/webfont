@@ -1,7 +1,7 @@
 {
   "name": "webfont",
   "version": "11.5.21",
-  "description": "Generator of fonts from svg icons; convert WOFF/WOFF2 to TTF/OTF; svg font to ttf, ttf to eot, ttf to woff, ttf to woff2",
+  "description": "Generator of fonts from SVG icons; decompress WOFF/WOFF2 to embedded TTF/OTF (not TTF↔OTF transcoding)",
   "directories": {
     "lib": "dist",
     "source": "src"

@@ -50,8 +50,9 @@ export const webfontCliHelpText = `
         -f, --formats
 
             Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
-            comma-separated list (e.g. woff2 or svg, ttf, woff2). For WOFF/WOFF2
-            input, use ttf and/or otf. OTF is not supported for SVG icon input.
+            comma-separated list (e.g. woff2 or svg, ttf, woff2).
+            SVG input: svg, ttf, eot, woff, woff2 (not otf).
+            WOFF/WOFF2 input: ttf and/or otf matching the embedded SFNT flavor.
 
         -d, --dest
 

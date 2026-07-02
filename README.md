@@ -4,23 +4,42 @@
 [![Travis Build Status](https://img.shields.io/travis/itgalaxy/webfont/master.svg?label=build)](https://travis-ci.org/itgalaxy/webfont)
 [![Build status](https://ci.appveyor.com/api/projects/status/a8absovr2r44w1oc?svg=true)](https://ci.appveyor.com/project/evilebottnawi/webfont)
 
-Generator of fonts from SVG icons.
+Generator of fonts from SVG icons, with a separate mode to **decompress** WOFF/WOFF2 containers to the TTF or OTF inside.
+
+See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is stable, in progress, or planned).
 
 ## Features
 
-- Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF`, `OTF` and `SVG`;
-- Convert existing `WOFF` / `WOFF2` fonts to `TTF` or `OTF` (decompress webfont containers);
-- Support config files: use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories;
-- Support all popular browsers, including IE8+;
-- Allows using custom templates (example `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) etc);
-- No extra dependencies as `gulp`, `grunt` or other big tools;
-- Tested on all platforms (`linux`, `windows` and `osx`);
-- CLI;
+- **SVG icon pipeline** (default): `.svg` icons → `svg`, `ttf`, `eot`, `woff`, `woff2` (not `otf`);
+- **Webfont decompression**: one `.woff` or `.woff2` file → `ttf` and/or `otf` matching the **embedded SFNT flavor** (decompress only — not TTF ↔ OTF transcoding);
+- Config files: `JavaScript`, `JSON`, or `YAML` via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig);
+- Built-in and custom CSS templates (`css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/));
+- CLI and programmatic API;
 - [Webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin).
+
+## Input modes
+
+webfont runs one of two pipelines depending on matched input files. They cannot be mixed in a single run.
+
+| Mode | Input | Outputs | Notes |
+|------|--------|---------|--------|
+| **SVG icons** | One or more `.svg` files | `svg`, `ttf`, `eot`, `woff`, `woff2` | Default. Builds TrueType via `svg2ttf`. **`otf` is rejected** — use `ttf`. |
+| **Webfont decompress** | Exactly one `.woff` or `.woff2` | `ttf` and/or `otf` | Exposes the SFNT inside the container. Request the format that matches the payload (TrueType vs `OTTO`). **Does not** transcode TTF to OTF. |
+
+**Not supported today**
+
+- Renaming or re-wrapping without matching the real outline format (e.g. requesting `otf` when the WOFF2 holds TrueType).
+- Converting TTF to OTF (or OTF to TTF) — use [FontForge](https://fontforge.org/) or similar.
+- Templates, `glyphTransformFn`, or multiple font files in webfont decompress mode.
+- Globs that match extension-less or unsupported files together with fonts (the run fails instead of silently ignoring extras).
+
+Every matched path must end in `.svg`, `.woff`, or `.woff2`. See [FEATURES.md](./FEATURES.md) for test-backed criteria.
 
 ## Table Of Contents
 
 - [Webfont](#webfont)
+  - [Features](#features)
+  - [Input modes](#input-modes)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Options](#options)
@@ -84,16 +103,30 @@ webfont({
   });
 ```
 
+### Webfont decompress example
+
+```js
+import webfont from "webfont";
+
+const result = await webfont({
+  files: "path/to/font.woff2",
+  formats: ["ttf"], // use ["otf"] only when the WOFF2 holds OpenType (OTTO)
+});
+
+// result.ttf → Buffer (TrueType SFNT from inside the container)
+```
+
 ### Options
 
 #### `files`
 
 - Type: `string` | `array`
 - Description: A file glob, or array of file globs. Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
-- SVG mode: pass one or more `.svg` icon files (default pipeline).
-- Webfont conversion mode: pass a single `.woff` or `.woff2` file to decompress it to `TTF` or `OTF` (see [`formats`](#formats)).
-- Note: Do not mix `.svg` icons with `.woff` / `.woff2` files in the same run.
-- Note: `node_modules` and `bower_components` are always ignored.
+- **SVG mode**: one or more `.svg` icon paths or globs (default pipeline).
+- **Webfont decompress mode**: exactly one `.woff` or `.woff2` file (see [`formats`](#formats) and [Input modes](#input-modes)).
+- Do not mix `.svg` with `.woff` / `.woff2` in the same run.
+- Every matched file must have a supported extension (`.svg`, `.woff`, `.woff2`); extension-less files such as `LICENSE` are not ignored when matched by a broad glob.
+- `node_modules` and `bower_components` are always ignored.
 
 #### `configFile`
 
@@ -117,7 +150,9 @@ webfont({
 - Type: `array`
 - Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']` (SVG input). For WOFF/WOFF2 input, defaults to `['ttf']` when SVG-pipeline formats are still configured.
 - Possible values: `svg`, `ttf`, `otf`, `eot`, `woff`, `woff2`
-- Description: Font file types to generate. For SVG input, `otf` is not supported (use `ttf`). For WOFF/WOFF2 input, only `ttf` and/or `otf` are supported as outputs (matching the decompressed SFNT flavor).
+- Description: Font file types to generate.
+  - **SVG input**: `svg`, `ttf`, `eot`, `woff`, `woff2` only. **`otf` is not supported** (pipeline uses TrueType outlines).
+  - **WOFF/WOFF2 input**: `ttf` and/or `otf` only — must match the decompressed SFNT flavor inside the file (not arbitrary transcoding). `eot`, `woff`, `woff2`, and `svg` are not produced in this mode.
 - CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
 
 #### `template`
@@ -397,6 +432,8 @@ If you're using cross-env:
 
             Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
             comma-separated list (e.g. woff2 or svg, ttf, woff2).
+            SVG input: svg, ttf, eot, woff, woff2 (not otf).
+            WOFF/WOFF2 input: ttf and/or otf matching the embedded SFNT flavor.
 
         -d, --dest
 
@@ -514,10 +551,8 @@ The CLI can exit the process with the following exit codes:
 
 ## Roadmap
 
-- The ability to generate from any type to any type;
-- More tests, include CLI test;
-- Improved docs;
-- Reduce package size (maybe implement `ttf2woff2` with native js library);
+- Arbitrary format transcoding (e.g. TTF ↔ OTF outline conversion) — see [FEATURES.md](./FEATURES.md) (“Arbitrary format transcoding”, planned);
+- Reduce package size (maybe implement `ttf2woff2` with a native JS library);
 - Improve performance (maybe use cache for this).
 
 ## Contribution

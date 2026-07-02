@@ -64,4 +64,4 @@ Do not use `chore:` or `chore(ci):` for CI-only changes.
 - [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
 - [GitHub Help](https://docs.github.com)
 
-Thanks for contributing to `webfont`! 👏👌✨
+Thanks for contributing to `webfont`! 👏✨

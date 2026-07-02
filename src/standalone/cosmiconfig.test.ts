@@ -42,6 +42,32 @@ describe("cosmiconfig", () => {
       });
     });
 
+    it("should discover an advanced .webfontrc.yaml and still generate fonts", async () => {
+      await withCwd(path.join(discoveryRoot, "yaml-advanced"), async () => {
+        const result = await standalone({ files: svgFiles });
+
+        expect(result.config?.fontName).toBe("config-yaml-advanced");
+        expect(result.config?.filePath).toMatch(/\.webfontrc\.yaml$/u);
+        expect(result.config?.formats).toEqual(["woff2"]);
+        expect(result.config?.templateFontPath).toBe("./assets/fonts/");
+        // cosmiconfig v7 (`yaml` package) preserves YAML 1.1 truthy scalars as strings.
+        expect(result.config?.sort).toBe("yes");
+        expect(result.config?.ligatures).toBe(false);
+        expect(result.config?.normalize).toBe("on");
+        expect(result.config?.round).toBe(2);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error — alias-resolved keys are carried through in effective config
+        expect(result.config?.displayName).toBe("config-yaml-advanced");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        expect(result.config?.alsoFormats).toEqual(["woff2"]);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        expect(result.config?.extraFormats).toEqual(["woff2"]);
+        expect(isWoff2(result.woff2)).toBe(true);
+      });
+    });
+
     it("should discover .webfontrc.js in the working directory", async () => {
       await withCwd(path.join(discoveryRoot, "js-rc"), async () => {
         const result = await standalone({ files: svgFiles });

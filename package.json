@@ -20,7 +20,7 @@
   "types": "dist/src/index.d.ts",
   "typings": "dist/src/index.d.ts",
   "scripts": {
-    "build": "rollup -c",
+    "build": "vite build --mode library && vite build --mode cli",
     "clean": "rm -rf dist/ temp/",
     "demo": "node dist/cli.js './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "lint": "biome check .",
@@ -54,8 +54,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
-    "@rollup/plugin-commonjs": "latest",
-    "@rollup/plugin-typescript": "latest",
     "@swc/core": "1.15.11",
     "@swc/jest": "0.2.39",
     "@types/jest": "30.0.0",
@@ -75,10 +73,10 @@
     "jest": "30.4.2",
     "lefthook": "2.1.9",
     "rimraf": "latest",
-    "rollup": "2.56.3",
     "ts-node": "latest",
     "tslib": "latest",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vite": "8.1.3"
   },
   "overrides": {
     "fast-glob": "3.2.12"

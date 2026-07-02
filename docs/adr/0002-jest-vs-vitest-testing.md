@@ -5,7 +5,7 @@
 
 ## Context
 
-The project uses **Jest 27.1.0** with `babel-jest` and Babel presets to run TypeScript tests. Tests run on every `npm test` via `pretest` → `npm run build` (clean, lint, Rollup, declaration emit) and then `jest src`.
+The project uses **Jest 27.1.0** with `babel-jest` and Babel presets to run TypeScript tests. Tests run on every `npm test` via `pretest` → `npm run build` (clean, lint, Vite library build, declaration emit) and then `jest src`.
 
 Test surface today:
 
@@ -61,7 +61,7 @@ Additional migration friction observed:
 ### Positive
 
 - No churn in test files, snapshots, mocks, or CI scripts.
-- Avoids introducing Vite/Vitest into a Node CLI library where the build pipeline is Rollup-based.
+- Avoids introducing Vitest into a Node CLI library where the build pipeline uses Vite library mode ([ADR 0006](./0006-vite-instead-of-rollup.md)).
 - Benchmark and compatibility findings are documented for a future revisit.
 
 ### Negative / trade-offs

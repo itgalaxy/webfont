@@ -26,6 +26,17 @@ describe("standalone", () => {
     ).rejects.toThrow("Files glob patterns specified did not match any supported files");
   });
 
+  it("should reject otf output when input is svg icons", async () => {
+    await expect(
+      standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        formats: ["otf"],
+      }),
+    ).rejects.toThrow(
+      'OTF output is only supported when converting WOFF/WOFF2 input. Request "ttf" for SVG icons, or pass a .woff/.woff2 file.',
+    );
+  });
+
   it("should generate all fonts", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

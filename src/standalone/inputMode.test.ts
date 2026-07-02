@@ -1,4 +1,9 @@
-import { classifyInputFiles, filterInputFilesByMode, resolveWebfontConversionFormats } from "./inputMode";
+import {
+  assertSvgPipelineFormats,
+  classifyInputFiles,
+  filterInputFilesByMode,
+  resolveWebfontConversionFormats,
+} from "./inputMode";
 
 describe("classifyInputFiles", () => {
   it("should return empty when no files are provided", () => {
@@ -31,6 +36,31 @@ describe("classifyInputFiles", () => {
 
   it("should return empty for unsupported extensions", () => {
     expect(classifyInputFiles(["readme.txt"])).toBe("empty");
+  });
+
+  it("should return empty when extension-less files are mixed with webfont inputs", () => {
+    expect(classifyInputFiles(["LICENSE", "src/fixtures/fonts/iconfont.woff2"])).toBe("empty");
+    expect(classifyInputFiles([".webfontrc", "src/fixtures/fonts/iconfont.woff2"])).toBe("empty");
+  });
+
+  it("should return empty for extension-less files only", () => {
+    expect(classifyInputFiles(["LICENSE", ".webfontrc"])).toBe("empty");
+  });
+});
+
+describe("assertSvgPipelineFormats", () => {
+  it("should reject otf output requests in the svg pipeline", () => {
+    expect(() => assertSvgPipelineFormats(["otf"])).toThrow(
+      'OTF output is only supported when converting WOFF/WOFF2 input. Request "ttf" for SVG icons, or pass a .woff/.woff2 file.',
+    );
+    expect(() => assertSvgPipelineFormats(["svg", "otf", "woff2"])).toThrow(
+      'OTF output is only supported when converting WOFF/WOFF2 input. Request "ttf" for SVG icons, or pass a .woff/.woff2 file.',
+    );
+  });
+
+  it("should allow svg pipeline formats without otf", () => {
+    expect(() => assertSvgPipelineFormats(["svg", "ttf", "eot", "woff", "woff2"])).not.toThrow();
+    expect(() => assertSvgPipelineFormats(["woff2"])).not.toThrow();
   });
 });
 

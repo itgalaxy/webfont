@@ -51,7 +51,7 @@ export const webfontCliHelpText = `
 
             Font formats to generate. Pass a JSON array (e.g. '["woff2"]') or a
             comma-separated list (e.g. woff2 or svg, ttf, woff2). For WOFF/WOFF2
-            input, use ttf and/or otf.
+            input, use ttf and/or otf. OTF is not supported for SVG icon input.
 
         -d, --dest
 

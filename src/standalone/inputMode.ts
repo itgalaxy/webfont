@@ -7,32 +7,46 @@ const WEBFONT_EXTENSIONS = new Set([".woff", ".woff2"]);
 const SVG_EXTENSION = ".svg";
 const SVG_PIPELINE_DEFAULT: Format[] = ["svg", "ttf", "eot", "woff", "woff2"];
 
+const isSvgExtension = (extension: string): boolean => extension === SVG_EXTENSION;
+const isWebfontExtension = (extension: string): boolean => WEBFONT_EXTENSIONS.has(extension);
+const isSupportedInputExtension = (extension: string): boolean =>
+  isSvgExtension(extension) || isWebfontExtension(extension);
+
 export const classifyInputFiles = (filePaths: readonly string[]): InputMode => {
   if (filePaths.length === 0) {
     return "empty";
   }
 
-  const extensions = new Set(filePaths.map((filePath) => path.extname(filePath).toLowerCase()));
-  const hasSvg = extensions.has(SVG_EXTENSION);
-  const hasWebfont = [...extensions].some((extension) => WEBFONT_EXTENSIONS.has(extension));
-  const hasOnlyWebfont = [...extensions].every(
-    (extension) => extension === "" || WEBFONT_EXTENSIONS.has(extension),
-  );
-  const hasOnlySvg = [...extensions].every((extension) => extension === "" || extension === SVG_EXTENSION);
+  const extensions = filePaths.map((filePath) => path.extname(filePath).toLowerCase());
+
+  if (!extensions.every(isSupportedInputExtension)) {
+    return "empty";
+  }
+
+  const hasSvg = extensions.some(isSvgExtension);
+  const hasWebfont = extensions.some(isWebfontExtension);
 
   if (hasSvg && hasWebfont) {
     return "mixed";
   }
 
-  if (hasWebfont && hasOnlyWebfont) {
+  if (hasWebfont) {
     return "webfont";
   }
 
-  if (hasSvg && hasOnlySvg) {
+  if (hasSvg) {
     return "svg";
   }
 
   return "empty";
+};
+
+export const assertSvgPipelineFormats = (formats: readonly Format[]): void => {
+  if (formats.includes("otf")) {
+    throw new Error(
+      'OTF output is only supported when converting WOFF/WOFF2 input. Request "ttf" for SVG icons, or pass a .woff/.woff2 file.',
+    );
+  }
 };
 
 export const filterInputFilesByMode = (filePaths: readonly string[], mode: InputMode): string[] => {

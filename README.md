@@ -117,7 +117,7 @@ webfont({
 - Type: `array`
 - Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']` (SVG input). For WOFF/WOFF2 input, defaults to `['ttf']` when SVG-pipeline formats are still configured.
 - Possible values: `svg`, `ttf`, `otf`, `eot`, `woff`, `woff2`
-- Description: Font file types to generate. For WOFF/WOFF2 input, only `ttf` and/or `otf` are supported as outputs (matching the decompressed SFNT flavor).
+- Description: Font file types to generate. For SVG input, `otf` is not supported (use `ttf`). For WOFF/WOFF2 input, only `ttf` and/or `otf` are supported as outputs (matching the decompressed SFNT flavor).
 - CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
 
 #### `template`

@@ -15,7 +15,7 @@ import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
 import { convertWebfontInput } from "./convertWebfontInput";
 import { getGlyphsData } from "./glyphsData";
-import { classifyInputFiles, filterInputFilesByMode } from "./inputMode";
+import { assertSvgPipelineFormats, classifyInputFiles, filterInputFilesByMode } from "./inputMode";
 import { getOptions } from "./options";
 import { getTemplateFontBase64 } from "./templateFonts";
 import toTtf from "./toTtf";
@@ -130,6 +130,8 @@ export const webfont: Webfont = async (initialOptions) => {
 
     return result;
   }
+
+  assertSvgPipelineFormats(options.formats);
 
   const filteredFiles = filterInputFilesByMode(foundFiles, "svg");
 

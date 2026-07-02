@@ -32,7 +32,7 @@ export const getGlyphsData: GlyphsDataGetter = (files, options) => {
     files.map((srcPath: GlyphData["srcPath"]) =>
       throttle(
         () =>
-          new Promise((resolve, reject) => {
+          new Promise<GlyphData>((resolve, reject) => {
             const glyph = createReadStream(srcPath);
             let glyphContents = "";
 
@@ -63,7 +63,7 @@ export const getGlyphsData: GlyphsDataGetter = (files, options) => {
           }),
       ),
     ),
-  ).then((glyphsData) => {
+  ).then((glyphsData: GlyphData[]) => {
     let sortedGlyphsData = glyphsData;
 
     if (options.sort) {
@@ -76,7 +76,7 @@ export const getGlyphsData: GlyphsDataGetter = (files, options) => {
     return Promise.all(
       sortedGlyphsData.map(
         (glyphData: GlyphData) =>
-          new Promise((resolve, reject) => {
+          new Promise<GlyphData>((resolve, reject) => {
             metadataProvider(glyphData.srcPath, (error, metadata) => {
               if (error) {
                 return reject(error);

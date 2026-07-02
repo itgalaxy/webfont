@@ -9,6 +9,7 @@ const external = [...Object.keys(dependencies), "crypto", "fs", "os", "path", "s
 const plugins = [
   typescript({
     exclude: ["src/**/*.test.ts", "jest/**"],
+    module: "esnext",
   }),
   commonjs(),
 ];

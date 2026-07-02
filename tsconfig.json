@@ -2,7 +2,10 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "lib": ["ES2020"],
-    "moduleResolution": "Node",
+    "module": "commonjs",
+    "moduleResolution": "bundler",
+    "noImplicitAny": false,
+    "strictNullChecks": false,
     "outDir": "dist",
     "resolveJsonModule": true,
     "rootDir": ".",

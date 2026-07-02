@@ -110,10 +110,13 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Properties**:
   - Built-in: `css`, `scss`, `styl`.
   - Custom template: path to a Nunjucks file.
-  - SVG pipeline only (not webfont decompression mode).
+  - SVG pipeline only (not webfont decompression or TTF encoding mode).
+  - `templateCacheString`: manual query string on font URLs (default `Date.now()`).
+  - `addHashInFontUrl`: append MD5 `&v=<hash>` from SVG font content; **filenames stay** `fontName.*` ([#125](https://github.com/itgalaxy/webfont/issues/125)).
 - **Test Criteria**:
   - [x] Built-in `css` template snapshot / integration coverage
   - [x] Subset `formats` with template omits unused format URLs
+  - [x] `addHashInFontUrl` on `css` and `scss` templates appends content hash to URLs
 
 ### Command-line interface (CLI)
 

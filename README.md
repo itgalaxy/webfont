@@ -256,6 +256,42 @@ const remote = await webfont({
 - Default: Gets is from `fontName` if not set, but you can specify any value.
 - Description: Template font family name you want.
 
+#### `templateCacheString`
+
+- Type: `string`
+- Default: `Date.now()` at generation time
+- Description: Query string appended to font `url(...)` values in built-in templates (before optional `&v=` hash). Use a fixed value (for example `v=1`) when you only need manual cache busting; pair with [`addHashInFontUrl`](#addhashinfonturl) for automatic content-based busting.
+
+#### `addHashInFontUrl`
+
+- Type: `boolean`
+- Default: `false`
+- Description: When `true` and a built-in `template` is used, append `&v=<md5>` to each font URL in the generated CSS/SCSS/Styl. The hash is derived from the SVG font output — it changes only when icon data changes. **Output filenames stay** `fontName.woff2`, `fontName.scss`, etc. (stable `@import` paths).
+- CLI: `--addHashInFontUrl`
+- Addresses browser cache issues without renaming font files on every build ([#125](https://github.com/itgalaxy/webfont/issues/125)).
+
+**Example — stable `webfont.scss`, cache-busted font URLs:**
+
+```shell
+webfont "icons/*.svg" -d dist/icons -t scss --addHashInFontUrl
+```
+
+```js
+import webfont from "webfont";
+
+await webfont({
+  files: "src/icons/**/*.svg",
+  fontName: "webfont",
+  template: "scss",
+  templateFontPath: "./fonts/",
+  addHashInFontUrl: true,
+});
+// Writes dist/icons/webfont.scss and dist/icons/webfont.woff2 (fixed names).
+// SCSS contains url("./fonts/webfont.woff2?...&v=<md5>") — hash updates when icons change.
+```
+
+Do **not** use `Math.random()` in `fontName` — that renames both font files and the stylesheet on every run.
+
 #### `ligatures`
 
 - Type: `boolean`

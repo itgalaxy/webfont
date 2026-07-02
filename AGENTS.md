@@ -138,7 +138,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
 
 1. **Check whether the current branch is already merged** (see [Merged branches](#merged-branches) below). If it is, create a **new branch from `master`** — do not push follow-up commits to a merged PR branch.
-2. **Create a branch** from `master` (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`).
+2. **Create a branch** from `master` using a **lowercase** name (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`). The entire branch name must stay lowercase — no camelCase or uppercase segments (avoid names like `test/toTtf-unit-tests`).
 3. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
 4. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
 5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template.

@@ -154,7 +154,7 @@
       }
     },
     {
-      "includes": ["*.js", "**/*.config.js"],
+      "includes": ["*.js", "**/*.config.js", "src/fixtures/**/*.js"],
       "linter": {
         "rules": {
           "correctness": {

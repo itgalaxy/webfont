@@ -1,9 +1,24 @@
-import type {GlyphData, WebfontOptions} from "../types";
-import { createReadStream } from "fs";
-import fileSorter from "svgicons2svgfont/src/filesorter";
-import getMetadataService from "svgicons2svgfont/src/metadata";
+import type {GlyphData, GlyphMetadata, WebfontOptions} from "../types";
+import {fileSorter, getMetadataService, getMetadataServiceOptions} from "../lib/svgicons2svgfont";
+import {createReadStream} from "fs";
 import pLimit from "p-limit";
 import xml2js from "xml2js";
+
+const normalizeUnicode = (unicode: GlyphMetadata["unicode"]): string[] => {
+  if (Array.isArray(unicode)) {
+    return unicode;
+  }
+
+  return [unicode];
+};
+
+const toGlyphMetadata = (metadata: {
+  name: string;
+  unicode: GlyphMetadata["unicode"] | string | string[];
+}): GlyphMetadata => ({
+  name: metadata.name,
+  unicode: normalizeUnicode(metadata.unicode as GlyphMetadata["unicode"]),
+});
 
 // eslint-disable-next-line no-unused-vars
 type GlyphsDataGetter = (files: Array<GlyphData["srcPath"]>, options: WebfontOptions) => unknown;
@@ -11,10 +26,7 @@ type GlyphsDataGetter = (files: Array<GlyphData["srcPath"]>, options: WebfontOpt
 export const getGlyphsData : GlyphsDataGetter = (files, options) => {
   const metadataProvider =
     options.metadataProvider ||
-    getMetadataService({
-      prependUnicode: options.prependUnicode,
-      startUnicode: options.startUnicode,
-    });
+    getMetadataService(getMetadataServiceOptions(options));
 
   const xmlParser = new xml2js.Parser();
   const throttle = pLimit(options.maxConcurrency);
@@ -65,11 +77,13 @@ export const getGlyphsData : GlyphsDataGetter = (files, options) => {
           return reject(error);
         }
 
+        const glyphMetadata = toGlyphMetadata(metadata);
+
         if (ligatures) {
-          metadata.unicode.push(metadata.name.replace(/-/gu, "_"));
+          glyphMetadata.unicode.push(metadata.name.replace(/-/gu, "_"));
         }
 
-        glyphData.metadata = metadata;
+        glyphData.metadata = glyphMetadata;
 
         return resolve(glyphData);
       });

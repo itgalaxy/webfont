@@ -13,7 +13,9 @@ import convertTtfToEot from "../lib/ttf2eot";
 import type { Format, GlyphData, GlyphMetadata, InitialOptions, WebfontOptions } from "../types";
 import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
+import { convertWebfontInput } from "./convertWebfontInput";
 import { getGlyphsData } from "./glyphsData";
+import { classifyInputFiles, filterInputFilesByMode } from "./inputMode";
 import { getOptions } from "./options";
 import { getTemplateFontBase64 } from "./templateFonts";
 import toTtf from "./toTtf";
@@ -108,11 +110,28 @@ export const webfont: Webfont = async (initialOptions) => {
   }
 
   const foundFiles = await globby(filePatterns);
-  const filteredFiles = foundFiles.filter((foundFile) => path.extname(foundFile) === ".svg");
+  const inputMode = classifyInputFiles(foundFiles);
 
-  if (filteredFiles.length === 0) {
-    throw new Error("Files glob patterns specified did not match any files");
+  if (inputMode === "mixed") {
+    throw new Error("Cannot mix SVG icons with WOFF/WOFF2 font files in the same run");
   }
+
+  if (inputMode === "empty") {
+    throw new Error("Files glob patterns specified did not match any supported files");
+  }
+
+  if (inputMode === "webfont") {
+    const fontFiles = filterInputFilesByMode(foundFiles, inputMode);
+    const result = await convertWebfontInput(fontFiles, options);
+
+    if (discoveredConfigPath) {
+      result.config = { ...options, filePath: discoveredConfigPath };
+    }
+
+    return result;
+  }
+
+  const filteredFiles = filterInputFilesByMode(foundFiles, "svg");
 
   let glyphsData = (await getGlyphsData(filteredFiles, options)) as GlyphData[];
 
@@ -217,6 +236,10 @@ export const webfont: Webfont = async (initialOptions) => {
 
   if (!formats.includes("ttf")) {
     delete result.ttf;
+  }
+
+  if (!formats.includes("otf")) {
+    delete result.otf;
   }
 
   if (discoveredConfigPath) {

@@ -8,7 +8,8 @@ Generator of fonts from SVG icons.
 
 ## Features
 
-- Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF` and `SVG`;
+- Supported font formats: `WOFF2`, `WOFF`, `EOT`, `TTF`, `OTF` and `SVG`;
+- Convert existing `WOFF` / `WOFF2` fonts to `TTF` or `OTF` (decompress webfont containers);
 - Support config files: use a `JavaScript`, `JSON` or `YAML` file to specify configuration information for an entire directory and all of its subdirectories;
 - Support all popular browsers, including IE8+;
 - Allows using custom templates (example `css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/) etc);
@@ -89,6 +90,9 @@ webfont({
 
 - Type: `string` | `array`
 - Description: A file glob, or array of file globs. Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
+- SVG mode: pass one or more `.svg` icon files (default pipeline).
+- Webfont conversion mode: pass a single `.woff` or `.woff2` file to decompress it to `TTF` or `OTF` (see [`formats`](#formats)).
+- Note: Do not mix `.svg` icons with `.woff` / `.woff2` files in the same run.
 - Note: `node_modules` and `bower_components` are always ignored.
 
 #### `configFile`
@@ -111,9 +115,9 @@ webfont({
 #### `formats`
 
 - Type: `array`
-- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']`
-- Possible values: `svg`, `ttf`, `eot`, `woff`, `woff2`
-- Description: Font file types to generate.
+- Default: `['svg', 'ttf', 'eot', 'woff', 'woff2']` (SVG input). For WOFF/WOFF2 input, defaults to `['ttf']` when SVG-pipeline formats are still configured.
+- Possible values: `svg`, `ttf`, `otf`, `eot`, `woff`, `woff2`
+- Description: Font file types to generate. For WOFF/WOFF2 input, only `ttf` and/or `otf` are supported as outputs (matching the decompressed SFNT flavor).
 - CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
 
 #### `template`

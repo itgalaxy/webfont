@@ -10,7 +10,7 @@ const formatCliStdout = (value: string): string => value.replace(/\n$/u, "");
 const expectedHelp = () => formatCliStdout(`${createMeowCli([]).help}\n`);
 const expectedVersion = () => version;
 const expectedVerbose = () => "Generating SVG font...";
-const expectedGlobError = () => "Error: Files glob patterns specified did not match any files";
+const expectedGlobError = () => "Error: Files glob patterns specified did not match any supported files";
 
 const destination = "temp/cli";
 const fixturesGlob = "src/fixtures";
@@ -510,5 +510,20 @@ describe("cli", () => {
     const svg = await fsPromise.readFile(`${destination}/webfont.svg`, { encoding: "utf-8" });
     expect(svg).toContain('font-weight="500"');
     expect(svg).toContain("<metadata>test-meta</metadata>");
+  });
+
+  it("should convert woff2 input to ttf output via the CLI", async () => {
+    const conversionDest = "temp/cli-woff2-conversion";
+    const output = await execCLI(
+      `src/fixtures/fonts/iconfont.woff2 -d ${conversionDest} -f ttf -u iconfont --dest-create`,
+      conversionDest,
+    );
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    expect(output.files).toEqual(["iconfont.ttf"]);
+
+    const ttf = await fsPromise.readFile(`${conversionDest}/iconfont.ttf`);
+    expect(ttf.length).toBeGreaterThan(0);
   });
 });

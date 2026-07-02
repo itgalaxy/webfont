@@ -1,6 +1,6 @@
 import type { Format, Formats } from "../types/Format";
 
-const VALID_FORMATS = new Set<Format>(["eot", "svg", "ttf", "woff", "woff2"]);
+const VALID_FORMATS = new Set<Format>(["eot", "otf", "svg", "ttf", "woff", "woff2"]);
 
 const assertValidFormat = (value: unknown): Format => {
   if (typeof value !== "string" || !VALID_FORMATS.has(value as Format)) {

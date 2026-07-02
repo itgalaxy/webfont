@@ -23,7 +23,7 @@ describe("standalone", () => {
       standalone({
         files: `${fixturesGlob}/not-found-svg-icons/**/*`,
       }),
-    ).rejects.toThrow("Files glob patterns specified did not match any files");
+    ).rejects.toThrow("Files glob patterns specified did not match any supported files");
   });
 
   it("should generate all fonts", async () => {

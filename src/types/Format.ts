@@ -1,4 +1,4 @@
-export type Format = "eot" | "woff" | "woff2" | "svg" | "ttf";
+export type Format = "eot" | "otf" | "woff" | "woff2" | "svg" | "ttf";
 export type Formats = Array<Format>;
 type FormatOption = {
   copyright: null;

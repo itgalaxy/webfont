@@ -170,7 +170,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
   - Expected rejections: `await expect(fn()).rejects.toThrow(...)` (not `try/catch` + conditional expects).
   - Unused parameters: `_name` prefix on the parameter or property.
 - **No `ignoreDeprecations` in `tsconfig.json` (or any tsconfig).** On TypeScript upgrades, migrate deprecated compiler options and fix type errors instead of silencing warnings (see [CONTRIBUTING.md](./CONTRIBUTING.md)).
-- After edits, run `npm test` and confirm `rg 'eslint-disable|@ts-expect-error|@ts-ignore|ignoreDeprecations'` returns no matches.
+- **Enforced automatically.** `npm run lint:suppressions` (`scripts/check-no-suppressions.mjs`) scans tracked source files for banned suppressions and fails the build. It runs on **Lefthook pre-commit** and in **CI** (`.github/workflows/pr.yml`), so reintroducing an `eslint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, or `ignoreDeprecations` blocks the commit/PR. After edits you can run it directly; `biome-ignore` remains allowed only when a rule cannot be satisfied by a small code change.
 
 ## GitHub issues workflow
 

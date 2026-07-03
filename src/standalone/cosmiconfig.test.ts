@@ -58,15 +58,14 @@ describe("cosmiconfig", () => {
         expect(result.config?.ligatures).toBe(false);
         expect(result.config?.normalize).toBe("on");
         expect(result.config?.round).toBe(2);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error — alias-resolved keys are carried through in effective config
-        expect(result.config?.displayName).toBe("config-yaml-advanced");
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        expect(result.config?.alsoFormats).toEqual(["woff2"]);
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        expect(result.config?.extraFormats).toEqual(["woff2"]);
+        // Alias-resolved keys are carried through in the effective config but are not
+        // part of the static ResultConfig type; widen the view instead of suppressing.
+        const aliasedConfig = result.config as
+          | (ResultConfig & { displayName?: string; alsoFormats?: string[]; extraFormats?: string[] })
+          | undefined;
+        expect(aliasedConfig?.displayName).toBe("config-yaml-advanced");
+        expect(aliasedConfig?.alsoFormats).toEqual(["woff2"]);
+        expect(aliasedConfig?.extraFormats).toEqual(["woff2"]);
         expect(isWoff2(result.woff2)).toBe(true);
       });
     });

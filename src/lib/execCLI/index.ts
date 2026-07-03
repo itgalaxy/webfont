@@ -37,7 +37,7 @@ export const execCLI: ExecCLI = (args = "", destination = "temp/cli") =>
         }
 
         let outputCode = 0;
-        if (error?.code) {
+        if (error && typeof error.code === "number") {
           outputCode = error.code;
         }
 

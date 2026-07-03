@@ -9,6 +9,8 @@ pre-commit:
 
 pre-push:
   commands:
+    typecheck:
+      run: npm run typecheck
     depcheck:
       run: npm run depcheck
     test:

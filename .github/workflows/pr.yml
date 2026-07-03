@@ -22,6 +22,7 @@ jobs:
         cache: npm
     - run: npm ci
     - run: npm run lint:suppressions
+    - run: npm run typecheck
     - run: npm run depcheck
     - run: npm test
     - name: Validate published package surface (publint + attw + pack-smoke)

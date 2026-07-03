@@ -12,7 +12,7 @@ describe("ttf2eot", () => {
       formats: ["ttf"],
     });
 
-    const eot = convertTtfToEot(ttf);
+    const eot = convertTtfToEot(ttf!);
 
     expect(isEot(eot)).toBe(true);
     expect(eot.length).toBeGreaterThan(0);
@@ -24,7 +24,7 @@ describe("ttf2eot", () => {
       formats: ["ttf"],
     });
 
-    const hash = crypto.createHash("md5").update(convertTtfToEot(ttf)).digest("hex");
+    const hash = crypto.createHash("md5").update(convertTtfToEot(ttf!)).digest("hex");
 
     expect(hash).toBe("0da1e32d0196eceb273968727af10d99");
   });
@@ -35,6 +35,6 @@ describe("ttf2eot", () => {
       formats: ["ttf", "eot"],
     });
 
-    expect(convertTtfToEot(ttf)).toEqual(eot);
+    expect(convertTtfToEot(ttf!)).toEqual(eot);
   });
 });

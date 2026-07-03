@@ -77,7 +77,7 @@ describe("glyphsData", () => {
     glyphsData.forEach((glyph) => {
       expect(glyph.contents).toContain("<svg");
       expect(glyph.metadata?.name).toBeTruthy();
-      expect(glyph.metadata?.unicode.length).toBeGreaterThan(0);
+      expect(glyph.metadata?.unicode?.length).toBeGreaterThan(0);
     });
   });
 
@@ -357,7 +357,7 @@ describe("glyphsData", () => {
 
       expect(error).toBeNull();
       expect(result).not.toBeNull();
-      expect(Object.hasOwn(result?.root, "__proto__")).toBe(true);
+      expect(Object.hasOwn((result as { root?: object })?.root ?? {}, "__proto__")).toBe(true);
       expect(({} as Record<string, unknown>)[pollutionMarker]).toBeUndefined();
     });
 

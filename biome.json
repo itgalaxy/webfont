@@ -149,6 +149,9 @@
         "rules": {
           "complexity": {
             "noExcessiveLinesPerFunction": "off"
+          },
+          "style": {
+            "noNonNullAssertion": "off"
           }
         }
       }

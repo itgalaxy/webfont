@@ -1,4 +1,4 @@
-import { getInputExtension } from "../lib/inputSource";
+import { getInputExtension } from "../lib/inputSourceUtils";
 import type { Format } from "../types/Format";
 
 export type InputMode = "empty" | "mixed" | "svg" | "ttf" | "webfont";

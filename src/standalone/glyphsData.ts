@@ -22,7 +22,7 @@ const toGlyphMetadata = (metadata: FileMetadata): GlyphMetadata & { unicode: str
   unicode: normalizeUnicode(metadata.unicode),
 });
 
-type GlyphsDataGetter = (_files: Array<GlyphData["srcPath"]>, _options: WebfontOptions) => unknown;
+type GlyphsDataGetter = (_files: Array<GlyphData["srcPath"]>, _options: WebfontOptions) => Promise<GlyphData[]>;
 
 export const getGlyphsData: GlyphsDataGetter = (files, options) => {
   const metadataProvider = options.metadataProvider || getMetadataService(getMetadataServiceOptions(options));

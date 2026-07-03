@@ -52,6 +52,7 @@ And, if you’re raising an issue, please understand that people involved with t
 - Non-trivial changes are often best discussed in an issue first, to prevent you from doing unnecessary work;
 - For ambitious tasks, you should try to get your work in front of the community for feedback as soon as possible;
 - New features should be accompanied with tests and documentation;
+- Bug fixes should include a regression test that fails without the fix;
 - Please, don’t include unrelated changes;
 
 ### User-facing changes and documentation
@@ -90,10 +91,13 @@ Write the comment in English so future contributors and bots (for example Depend
 
 ### Testing and coverage
 
+**Tests are required.** Every pull request that changes runtime behavior must add or update automated tests in the **same PR** — not in a follow-up. Docs-only changes are the exception; say so explicitly in the PR **Testing** section.
+
 New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md) (“Testing”) for Vitest patterns in this repo.
 
 | Expectation | Guidance |
 |-------------|----------|
+| **Same PR** | Land tests with the code they protect. Reviewers should block merges that add features or fixes without coverage. |
 | **Unit + integration** | Error paths and guards should have **unit tests** in the module under test. Add integration tests when the full pipeline matters, but do not use them as the only coverage for a guard. |
 | **Explicit, not implicit** | Name tests after the invariant they protect (for example, why a guard exists). If a dependency quirk motivated the code, add a small test that documents the quirk. |
 | **Pipeline ordering** | When step B must not run if step A fails, assert B was not called (spy/mock), not only that the final promise rejected. |

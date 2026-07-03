@@ -15,6 +15,7 @@
   "exclude": [
     "vitest.config.ts",
     "vitest/**",
+    "demo/**",
     "src/**/*.test.ts",
     "src/**/__mocks__/**",
     "src/cli/**",

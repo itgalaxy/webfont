@@ -486,6 +486,16 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
+  it("should log stroke-only diagnostics on stdout when --svg-diagnose is enabled", async () => {
+    const output = await execCLI(
+      `${fixturesGlob}/svg-stroke-icons/stroked-plus.svg -d ${destination} --svg-diagnose -f ttf`,
+    );
+
+    expect(output.stdout).toContain("stroke-based paths");
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
   it("should create dest directory if it does not exist and --dest-create flag is provided", async () => {
     const nonExistentDestination = `${destination}/that/does/not/exist`;
     const output = await execCLI(`${source} -d ${nonExistentDestination} --dest-create`);

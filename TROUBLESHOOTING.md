@@ -232,6 +232,8 @@ The same SVG looks correct in Inkscape, Illustrator, or Affinity Designer.
 
 Run with **`--verbose`** to log a warning when webfont detects `fill-rule: evenodd` in a source SVG.
 
+**Alpha — broader diagnostics:** use **`--svg-diagnose`** (CLI) or `svgTools: { diagnose: true }` (API) to also flag stroke-only SVGs and unsupported elements (`<line>`, `<polyline>`, `<clipPath>`). webfont does not auto-fix these — preprocess with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) when needed (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+
 ### Steps to try to resolve
 
 1. **Inspect the SVG with nonzero fill rule.** Temporarily change `fill-rule:evenodd` to `fill-rule:nonzero` in the file and reopen it in a vector editor. Missing pieces usually indicate path direction or compound-path issues, not a silent webfont failure.
@@ -251,7 +253,7 @@ Run with **`--verbose`** to log a warning when webfont detects `fill-rule: eveno
    });
    ```
 
-4. **Preprocess difficult SVGs** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) (for example retrace or flatten strokes with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer)) before generating the font.
+4. **Preprocess difficult SVGs** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) (for example retrace or flatten strokes with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer), installed in your project) before generating the font.
 
 5. **Remove percentage `width` / `height`** on the root `<svg>` if a preprocessor errors; keep a numeric `viewBox` instead.
 

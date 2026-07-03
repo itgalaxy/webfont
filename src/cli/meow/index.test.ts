@@ -33,6 +33,7 @@ const PROGRAM_CLI_FLAG_KEYS = [
   "templateFontName",
   "templateFontPath",
   "verbose",
+  "svgDiagnose",
   "version",
 ] as const satisfies readonly (keyof CliLike["flags"])[];
 

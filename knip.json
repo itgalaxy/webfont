@@ -7,6 +7,7 @@
     "templates/index.ts",
     "vitest/globby-stub.ts",
     "src/fixtures/config-discovery/js-config/webfont.config.js",
+    "src/fixtures/configs/webfont.config-cli.js",
     "src/fixtures/config-discovery/js-rc/.webfontrc.js",
     "src/fixtures/config-package/index.js"
   ],

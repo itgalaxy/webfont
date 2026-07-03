@@ -161,5 +161,17 @@ describe("cosmiconfig", () => {
       expect(result.config?.filePath).toBe(path.resolve(configFile));
       expect((result.config as DiscoveredRcConfig).foo).toBe("bar");
     });
+
+    it("should load webfont.config.js via configFile (#480)", async () => {
+      const configFile = path.join(configsRoot, "webfont.config-cli.js");
+      const result = await standalone({
+        configFile,
+        files: svgFiles,
+      });
+
+      expect(result.config?.fontName).toBe("cli-config-js-font");
+      expect(result.config?.filePath).toBe(path.resolve(configFile));
+      expect(isWoff2(result.woff2)).toBe(true);
+    });
   });
 });

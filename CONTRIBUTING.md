@@ -169,7 +169,7 @@ See [ADR 0003](docs/adr/0003-lefthook-instead-of-husky-lint-staged.md) for ratio
 Pull requests that change CI configuration (for example, GitHub Actions workflows) must follow these conventions:
 
 - **Branch name:** use the `ci/` prefix (e.g. `ci/update-node-version`).
-- **Commit message:** use the `ci:` type in [Conventional Commits](https://www.conventionalcommits.org/) format (e.g. `ci: upgrade GitHub Actions to Node 22/24`).
+- **Commit message:** use the `ci:` type in [Conventional Commits](https://www.conventionalcommits.org/) format (e.g. `ci: upgrade GitHub Actions to Node 26`).
 
 Do not use `chore:` or `chore(ci):` for CI-only changes.
 

@@ -4,7 +4,7 @@
 
 - [ ] I searched for other issues in this repository and none addresses my problem;
 - [ ] I already tried to make a clean install (deleting `node_modules` dir, `package-lock.json` or `yarn.lock` file and installing again);
-- [ ] I am using a version of Node.js equal to or greater than 10.13.0 (we recently removed support for Node.js versions 8 and below);
+- [ ] I am using Node.js >= 26.0.0 (see [`engines`](../../package.json) in `package.json`);
 - [ ] I tried to reproduce this issue with last version of `webpack`, if my project uses `webpack` directly.
 
 ## Describe the bug
@@ -31,7 +31,7 @@ Please complete the following information:
 
 - OS (e.g. macOS):
 - OS Version (e.g. 10.15.7):
-- Node Version (e.g. v12.17.0):
+- Node Version (e.g. v26.1.0):
 - Webpack version, if applicable (e.g. 4.43.0):
 
 ### `package.json`

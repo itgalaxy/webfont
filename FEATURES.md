@@ -191,7 +191,6 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - [x] Unit tests for stroke/evenodd/element detection
   - [x] `glyphContentTransformFn` applied before font generation (#144)
   - [x] CLI integration tests for `--svg-diagnose`
-  - [x] WASM layout helpers unit tests (`outlineStrokeWasmLayout.test.ts`)
 
 ### Arbitrary format transcoding
 

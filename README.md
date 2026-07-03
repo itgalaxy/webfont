@@ -302,16 +302,26 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 #### `unicodeRange`
 
 - Type: `boolean | string`
-- Default: `true` (auto-computed from glyph code points)
-- Description: When a built-in `template` is used, emit a `unicode-range` declaration in `@font-face` so the browser can load only the icon font that owns the code points on the page. With the default `startUnicode` (`0xEA01`), the range is derived from the minimum and maximum allocated code points (for example `U+EA01-EA03`). Set to `false` to omit the rule, or pass a CSS value string (for example `U+EA01-EAFF`) to override the computed range.
-- CLI: `--no-unicode-range` to disable
-- Helps when multiple icon fonts share a page ([#322](https://github.com/itgalaxy/webfont/issues/322)).
+- Default: `false` (omit `unicode-range` from built-in templates)
+- Description: When `true` and a built-in `template` is used, emit a `unicode-range` declaration in `@font-face` so the browser can load only the icon font that owns the code points on the page. With the default `startUnicode` (`0xEA01`), the range is derived from the minimum and maximum allocated code points (for example `U+EA01-EA03`). Pass a CSS value string (for example `U+EA01-EAFF`) to override the computed range. Set to `false` to omit the rule (default).
+- CLI: `--unicode-range` to enable auto-computed range
+- Helps when **multiple icon fonts** share a page ([#322](https://github.com/itgalaxy/webfont/issues/322)) — each `@font-face` can declare which private-use code points it owns so the browser skips downloading fonts that cannot render the glyphs in use.
+- **Ligature trade-off:** computed `unicode-range` covers **private-use code points only** (ligature names are ignored when building the range). If you type icon names with OpenType ligatures (`font-feature-settings: "liga"`), a PUA-only `unicode-range` prevents the browser from applying the icon font to ASCII letters, so ligatures **do not render**. Prefer class + codepoint icons in production when `unicode-range` is enabled, or leave `unicodeRange` at the default `false` if you rely on ligature names.
 
 #### `ligatures`
 
 - Type: `boolean`
 - Default: `true`
-- Description: Turn on/off adding ligature unicode
+- Description: When `true`, each glyph gets a second unicode entry: the icon name with hyphens replaced by underscores (for example `phone-call` → `phone_call`). Browsers can map that character sequence to the icon glyph when OpenType ligatures are enabled (`font-feature-settings: "liga"`).
+- CLI: `--no-ligatures` to disable ligature glyphs in the font.
+
+#### `templateFontLigatures`
+
+- Type: `boolean`
+- Default: `true`
+- Description: When `true` and the built-in **`html`** preview template is used, the generated CSS enables `font-feature-settings: "liga"` on the **Ligature** section (`#icon-ligatures`) so ligature names render as icons instead of invisible/missing glyphs. If you also enable [`unicodeRange`](#unicoderange), the HTML template **omits** `unicode-range` on `@font-face` while ligature preview is on (ligature strings are ASCII; a PUA-only `unicode-range` would block the icon font for those characters). Set to `false` if you inject your own ligature CSS.
+- CLI: `--no-template-font-ligatures` to omit the CSS rule.
+- Requires [`ligatures`](#ligatures) enabled (default). Class-based icons (`.font-name-icon::before` with a private-use codepoint) work without this option.
 
 #### `glyphTransformFn`
 
@@ -347,8 +357,8 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
 - Type: `function`
 - Default: `null`
-- Description: Transform each SVG glyph **before** font generation (SVG pipeline only). Use this to preprocess stroke-based icons into filled paths, for example with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke). `glyphTransformFn` only changes metadata; this hook receives the full `GlyphData` (`contents`, `srcPath`, optional `metadata`) and must return the new SVG string.
-- Example (stroke icons, #144):
+- Description: Transform each SVG glyph **before** font generation (SVG pipeline only). Use this hook to preprocess SVGs — for example stroke-based icons converted to filled paths. **webfont does not bundle preprocessors**; install tools such as [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) in **your** project and call them from this function (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)). `glyphTransformFn` only changes metadata; this hook receives the full `GlyphData` (`contents`, `srcPath`, optional `metadata`) and must return the new SVG string.
+- Example (stroke icons, #144 — **install `svg-outline-stroke` in your app**, not in webfont):
 
   ```js
   import outlineStroke from "svg-outline-stroke";

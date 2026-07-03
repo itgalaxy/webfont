@@ -98,6 +98,15 @@ describe("validateWebfontOptions", () => {
     ).toThrow("svgoConfig must be an object");
   });
 
+  it("should reject invalid templateFontLigatures option types", () => {
+    expect(() =>
+      validateWebfontOptions({
+        ...baseOptions(),
+        templateFontLigatures: "yes" as never,
+      }),
+    ).toThrow("templateFontLigatures must be a boolean");
+  });
+
   it("should accept template as an array (#158)", () => {
     expect(
       validateWebfontOptions({

@@ -63,6 +63,9 @@ export const renderTemplates = (
     {
       unicodeRange: resolveTemplateUnicodeRange(options.unicodeRange, glyphs),
     },
+    {
+      templateFontLigatures: options.templateFontLigatures !== false,
+    },
   ]);
 
   for (const templateName of templateNames) {

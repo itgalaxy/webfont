@@ -283,13 +283,77 @@ On **older releases**, the command may exit successfully but the icon is **invis
 
 1. **Convert strokes to fills** in your design tool (Outline Stroke / Expand / Object to Path) before export.
 
-2. **Preprocess in your build** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) — for example [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer) installed in your project (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+2. **Preprocess in your build** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn). webfont **does not ship** stroke converters — install a tool in **your** project (for example [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer)) and call it from the hook (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
 
 3. **Scan sources before converting:** `webfont icons/*.svg --svg-diagnose` (or `svgTools: { diagnose: true }` in the API) logs stroke-only and unsupported-element warnings without changing files.
 
 4. **Optional SVGO cleanup:** `webfont icons/*.svg --optimize-svg` (or `optimizeSvg: true`) removes comments and editor metadata before conversion — it does **not** convert strokes. Use **before** `glyphContentTransformFn` when you need both cleanup and stroke outlining ([#724](https://github.com/itgalaxy/webfont/issues/724)).
 
 5. **Optimize with SVGO** only after strokes are outlines — aggressive SVGO presets alone do not fix stroke-only artwork for icon fonts.
+
+---
+
+## `unicode-range` enabled but ligatures stopped working
+
+### What error appeared
+
+There is often **no error**. Icons via **class + codepoint** (`.icon-phone::before`) still work. Typing **ligature names** (`phone_call`) shows fallback text or blank glyphs after you turned on [`unicodeRange`](./README.md#unicoderange) ([#322](https://github.com/itgalaxy/webfont/issues/322)).
+
+### Why it usually happens
+
+- **`unicode-range` is opt-in** (default off). When enabled, webfont emits a range from **private-use code points only** (for example `U+EA01-EA1D`). Ligature identifier strings are ASCII and are **not** included in that range.
+- The browser applies the icon font only for code points inside `unicode-range`. For `phone_call`, letters `p`, `h`, `o`, … use a system font, so OpenType **`liga` cannot substitute** the icon glyph.
+- This is expected CSS behavior — `unicode-range` optimizes multi-font pages; ligature-by-name needs the icon font (or a second `@font-face` without range) for ASCII input.
+
+### Steps to try to resolve
+
+1. **Use class + codepoint icons** in production when `unicode-range` is enabled (recommended with multiple icon fonts on one page).
+
+2. **Disable `unicode-range`** if you rely on ligature names: omit `--unicode-range` / `unicodeRange: true` (default), or set `unicodeRange: false` in config.
+
+3. **HTML preview:** built-in `html` omits `unicode-range` when both `templateFontLigatures` and `unicodeRange` are enabled so the Ligature section can still preview names. Generated `css` / `scss` templates do not — enable `unicodeRange` only when you accept the ligature trade-off.
+
+4. See also [Ligature names show text but no icon](#ligature-names-show-text-but-no-icon-html-preview).
+
+---
+
+## Ligature names show text but no icon (HTML preview)
+
+### What error appeared
+
+There is often **no error**. The built-in **`html`** preview lists icon names under **Ligature**, but the large icon above each name is **blank** or shows **fallback serif text** (for example `bleach`, `drip_dry`) while the **Class** section (`.font-icon-name::before`) shows the glyph.
+
+### Why it usually happens
+
+- **Ligature mode** types the icon name (for example `phone_call`) as normal text. The browser must apply OpenType **`liga`** so that character sequence maps to the icon glyph in the font.
+- Icon fonts typically **do not** include regular Latin letters — without `liga`, the browser looks up `p`, `h`, `o`, … in the icon font, finds no glyphs, and renders nothing.
+- From webfont **12.x** onward, the built-in `html` template adds `font-feature-settings: "liga" 1` on `#icon-ligatures` by default (`templateFontLigatures`, on by default). `unicode-range` is **off by default**; if you enable it, ligature preview may break unless the HTML template strips the rule (see above).
+- **`unicode-range` on `@font-face` limits which characters use the icon font.** When enabled, the computed range covers only private-use code points. Ligature names are ASCII, so the browser keeps a fallback font for those letters and **`liga` never runs**.
+
+### Steps to try to resolve
+
+1. **Regenerate** with a current webfont version (`liga` preview CSS on by default; `unicode-range` off unless you opt in).
+
+2. **If you enabled `unicodeRange`**, see [`unicode-range` enabled but ligatures stopped working](#unicode-range-enabled-but-ligatures-stopped-working).
+3. **In your own CSS or template**, enable ligatures where you type icon names:
+
+   ```css
+   .my-icon-font {
+     font-family: "my-icon-font";
+     font-feature-settings: "liga" 1;
+     font-variant-ligatures: common-ligatures;
+   }
+   ```
+
+4. **Prefer class + codepoint** for production (works without `liga` and with `unicode-range`):
+
+   ```html
+   <i class="my-icon-font my-icon-font-phone-call"></i>
+   ```
+
+5. **Disable preview CSS** if you manage ligatures yourself: `templateFontLigatures: false` or `--no-template-font-ligatures`.
+
+6. Ensure [`ligatures`](./README.md#ligatures) is not disabled (`--no-ligatures` removes ligature glyphs from the font).
 
 ---
 

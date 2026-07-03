@@ -428,7 +428,7 @@ describe("cli", () => {
     expect(scss).toContain('url("./webfont.woff2?');
   });
 
-  it("should include unicode-range in css template by default (#322)", async () => {
+  it("should omit unicode-range in css template by default", async () => {
     const output = await execCLI(
       `${source} -d ${destination} --template css --templateCacheString test --formats woff2`,
     );
@@ -437,18 +437,18 @@ describe("cli", () => {
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
     const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
-    expect(css).toContain("unicode-range: U+EA01-EA03;");
+    expect(css).not.toContain("unicode-range:");
   });
 
-  it("should omit unicode-range when --no-unicode-range is passed", async () => {
+  it("should include unicode-range when --unicode-range is passed (#322)", async () => {
     const output = await execCLI(
-      `${source} -d ${destination} --template css --templateCacheString test --formats woff2 --no-unicode-range`,
+      `${source} -d ${destination} --template css --templateCacheString test --formats woff2 --unicode-range`,
     );
 
     expect(output.code).toBe(0);
     expect(output.stderr).toBe("");
     const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
-    expect(css).not.toContain("unicode-range:");
+    expect(css).toContain("unicode-range: U+EA01-EA03;");
   });
 
   it("should set font name", async () => {

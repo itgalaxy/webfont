@@ -7,8 +7,6 @@ exports[`standalone > should change unicode symbols in the result using async fu
   font-style: normal;
   font-weight: 400;
   
-  unicode-range: U+0001;
-  
   src: url("./webfont.eot?test");
   src: url("./webfont.eot?#iefix") format("embedded-opentype"); 
 }
@@ -128,8 +126,6 @@ exports[`standalone > should change unicode symbols in the result using sync fun
   font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+0001;
   
   src: url("./webfont.eot?test");
   src: url("./webfont.eot?#iefix") format("embedded-opentype"); 
@@ -251,8 +247,6 @@ exports[`standalone > should create css selectors with transform titles through 
   font-style: normal;
   font-weight: 400;
   
-  unicode-range: U+EA01-EA03;
-  
   src: url("./webfont.eot?test");
   src: url("./webfont.eot?#iefix") format("embedded-opentype"); 
 }
@@ -372,8 +366,6 @@ exports[`standalone > should generate all fonts with build-in template 1`] = `
   font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   src: url("./webfont.eot?test");
   src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
@@ -675,7 +667,6 @@ exports[`standalone > should generate built-in html template 1`] = `
         font-style: normal;
         font-weight: 400;
         
-        unicode-range: U+EA01-EA03;
         
         src: url("./webfont.eot?test");
         src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
@@ -773,6 +764,13 @@ exports[`standalone > should generate built-in html template 1`] = `
       .webfont.webfont-pull-right {
         margin-left: 0.3em;
       }
+
+      
+      #icon-ligatures .webfont {
+        font-feature-settings: "liga" 1;
+        font-variant-ligatures: common-ligatures;
+      }
+      
 
       
       .webfont-avatar::before {
@@ -891,8 +889,6 @@ $webfont-phone-call = "\\ea03";
 @font-face {
     font-family: webfont;
     
-    unicode-range: U+EA01-EA03;
-    
     src: url("./webfont.eot");
     src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2") format("woff2"), url("./webfont.woff") format("woff"), url("./webfont.ttf") format("truetype"), url("./webfont.svg#webfont") format("svg");
     font-display: block;
@@ -957,8 +953,6 @@ exports[`standalone > should generate only \`woff\` and \`woff2\` fonts with bui
   font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   
   src: url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"); 
@@ -1079,8 +1073,6 @@ exports[`standalone > should include font hash in template URLs when addHashInFo
   font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   
   src: url("./webfont.woff2?test&v=1154313a3843c5f5ec70890715e8a527") format("woff2"); 
@@ -1209,8 +1201,6 @@ exports[`standalone > should load config and respect \`template\` option with bu
   font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   src: url("./webfont.eot?test");
   src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
@@ -1401,8 +1391,6 @@ exports[`standalone > should respect \`template\` options 1`] = `
   font-family: "bar";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   src: url("./foo-bar/bar.eot?test");
   src: url("./foo-bar/bar.eot?#iefix") format("embedded-opentype"), url("./foo-bar/bar.woff2?test") format("woff2"), url("./foo-bar/bar.woff?test") format("woff"), url("./foo-bar/bar.ttf?test") format("truetype"), url("./foo-bar/bar.svg?test#bar") format("svg");

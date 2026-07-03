@@ -23,13 +23,14 @@ describe("templateUnicodeRange", () => {
     expect(computeUnicodeRangeFromGlyphs([{ unicode: [String.fromCodePoint(0xea01)] }])).toBe("U+EA01");
   });
 
-  it("should resolve auto unicode-range by default", () => {
-    expect(resolveTemplateUnicodeRange(undefined, glyphsWithLigatures)).toBe("U+EA01-EA03");
+  it("should resolve auto unicode-range when enabled", () => {
+    expect(resolveTemplateUnicodeRange(undefined, glyphsWithLigatures)).toBeUndefined();
     expect(resolveTemplateUnicodeRange(true, glyphsWithLigatures)).toBe("U+EA01-EA03");
   });
 
-  it("should omit unicode-range when disabled", () => {
+  it("should omit unicode-range when disabled or unset", () => {
     expect(resolveTemplateUnicodeRange(false, glyphsWithLigatures)).toBeUndefined();
+    expect(resolveTemplateUnicodeRange(undefined, glyphsWithLigatures)).toBeUndefined();
   });
 
   it("should use a manual unicode-range override", () => {

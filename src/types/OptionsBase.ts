@@ -34,6 +34,7 @@ export type OptionsBase = {
   unicodeRange?: boolean | string | unknown;
   optimizeSvg?: boolean | unknown;
   svgoConfig?: unknown;
+  templateFontLigatures?: boolean | unknown;
   /** Alpha. SVG diagnostics and optional pre-conversion fixes. */
   svgTools?: SvgToolsOptions;
 };

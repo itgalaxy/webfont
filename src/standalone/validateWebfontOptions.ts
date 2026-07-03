@@ -61,6 +61,7 @@ export const validateWebfontOptions = (options: WebfontOptions): WebfontOptions 
   assertBooleanOrStringOption("unicodeRange", options.unicodeRange);
   assertBooleanOption("optimizeSvg", options.optimizeSvg);
   assertObjectOption("svgoConfig", options.svgoConfig);
+  assertBooleanOption("templateFontLigatures", options.templateFontLigatures);
   if (options.template !== undefined) {
     normalizeTemplateOption(options.template);
   }

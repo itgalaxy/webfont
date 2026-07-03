@@ -68,7 +68,7 @@ export const resolveTemplateUnicodeRange = (
   unicodeRange: boolean | string | undefined,
   glyphs: readonly Pick<GlyphMetadata, "unicode">[],
 ): string | undefined => {
-  if (unicodeRange === false) {
+  if (unicodeRange === false || unicodeRange === undefined) {
     return undefined;
   }
 

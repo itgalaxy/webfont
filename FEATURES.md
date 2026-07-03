@@ -115,12 +115,12 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - SVG pipeline only (not webfont decompression or TTF encoding mode).
   - `templateCacheString`: manual query string on font URLs (default `Date.now()`).
   - `addHashInFontUrl`: append MD5 `&v=<hash>` from SVG font content; **filenames stay** `fontName.*` ([#125](https://github.com/itgalaxy/webfont/issues/125)).
-  - `unicodeRange`: emit `unicode-range` in built-in `@font-face` from glyph code points (default on); `--no-unicode-range` or `unicodeRange: false` to omit ([#322](https://github.com/itgalaxy/webfont/issues/322)).
+  - `unicodeRange`: opt-in `unicode-range` in built-in `@font-face` from glyph code points (default **off**); `unicodeRange: true`, `--unicode-range`, or a CSS string to enable ([#322](https://github.com/itgalaxy/webfont/issues/322)). Enabling may break ligature-by-name usage — see README / TROUBLESHOOTING.
 - **Test Criteria**:
   - [x] Built-in `css` template snapshot / integration coverage
   - [x] Subset `formats` with template omits unused format URLs
   - [x] `addHashInFontUrl` on `css` and `scss` templates appends content hash to URLs
-  - [x] `unicodeRange` adds computed `U+<min>-<max>` to built-in templates; `false` omits it
+  - [x] `unicodeRange: true` / `--unicode-range` adds computed `U+<min>-<max>` to built-in templates; default omits it
 
 ### Command-line interface (CLI)
 
@@ -154,8 +154,10 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Properties**:
   - `template` accepts a string or array of built-in names (`css`, `html`, `scss`, `styl`, `json`) or custom template paths.
   - `result.templates` lists each rendered output; `result.template` remains the first entry for backward compatibility.
+  - Built-in `html` preview: `templateFontLigatures` (default on) adds `font-feature-settings: "liga"` for the Ligature section; if `unicodeRange` is also enabled, HTML omits PUA-only `unicode-range` on `@font-face` so ASCII ligature names use the icon font.
 - **Test Criteria**:
   - [x] Standalone and CLI tests for `template: ['html', 'scss']` (#158)
+  - [x] HTML template enables `liga` CSS by default; omits `unicode-range` when both ligature preview and `unicodeRange` are enabled
 
 ### Glyph metadata hooks
 

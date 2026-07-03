@@ -51,7 +51,8 @@
         font-family: "{{ fontName }}";
         font-style: normal;
         font-weight: 400;
-        {% if unicodeRange %}
+        {# Ligature preview types ASCII names; unicode-range limited to PUA blocks the font for those code points. #}
+        {% if unicodeRange and not (templateFontLigatures and ligatures) %}
         unicode-range: {{ unicodeRange }};
         {% endif %}
         {% if formats.indexOf('eot')>-1 -%}
@@ -179,6 +180,13 @@
       .{{ className }}.{{ className }}-pull-right {
         margin-left: 0.3em;
       }
+
+      {% if templateFontLigatures %}
+      #icon-ligatures .{{ className }} {
+        font-feature-settings: "liga" 1;
+        font-variant-ligatures: common-ligatures;
+      }
+      {% endif %}
 
       {% for glyph in glyphs %}
       .{{ className }}-{{ glyph.name }}::before {

@@ -7,8 +7,6 @@ exports[`cli > short options > should set destTemplate with -s 1`] = `
   font-style: normal;
   font-weight: 400;
   
-  unicode-range: U+EA01-EA03;
-  
   src: url("./webfont.eot?test");
   src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
 }
@@ -128,8 +126,6 @@ exports[`cli > should generate all fonts with build-in template 1`] = `
   font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   src: url("./webfont.eot?test");
   src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
@@ -299,7 +295,6 @@ exports[`cli > should generate built-in html template 1`] = `
         font-style: normal;
         font-weight: 400;
         
-        unicode-range: U+EA01-EA03;
         
         src: url("./webfont.eot?test");
         src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");
@@ -399,6 +394,13 @@ exports[`cli > should generate built-in html template 1`] = `
       }
 
       
+      #icon-ligatures .webfont {
+        font-feature-settings: "liga" 1;
+        font-variant-ligatures: common-ligatures;
+      }
+      
+
+      
       .webfont-avatar::before {
         content: "\\ea01";
       }
@@ -464,8 +466,6 @@ exports[`cli > should include font hash in template when addHashInFontUrl is ena
   font-family: "webfont";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   src: url("./webfont.eot?test&v=1154313a3843c5f5ec70890715e8a527");
   src: url("./webfont.eot?v=1154313a3843c5f5ec70890715e8a527#iefix") format("embedded-opentype"), url("./webfont.woff2?test&v=1154313a3843c5f5ec70890715e8a527") format("woff2"), url("./webfont.woff?test&v=1154313a3843c5f5ec70890715e8a527") format("woff"), url("./webfont.ttf?test&v=1154313a3843c5f5ec70890715e8a527") format("truetype"), url("./webfont.svg?test&v=1154313a3843c5f5ec70890715e8a527#webfont") format("svg");
@@ -622,8 +622,6 @@ exports[`cli > should respect \`template\` options 1`] = `
   font-family: "testname";
   font-style: normal;
   font-weight: 400;
-  
-  unicode-range: U+EA01-EA03;
   
   src: url("test/path/testname.eot?test");
   src: url("test/path/testname.eot?#iefix") format("embedded-opentype"), url("test/path/testname.woff2?test") format("woff2"), url("test/path/testname.woff?test") format("woff"), url("test/path/testname.ttf?test") format("truetype"), url("test/path/testname.svg?test#testname") format("svg");

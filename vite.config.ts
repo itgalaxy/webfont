@@ -31,10 +31,20 @@ const libraryPlugins: PluginOption[] = [
 export default defineConfig(({ mode }) => {
   const isCliBuild = mode === "cli";
   const isBrowserBuild = mode === "browser";
+  const isLibraryEsmBuild = mode === "library-esm";
   let entry = libraryEntry;
   let outputFileName = "index.js";
   let banner: string | undefined;
   let outputFormat: "cjs" | "es" = "cjs";
+
+  if (isLibraryEsmBuild) {
+    outputFileName = "index.mjs";
+    outputFormat = "es";
+    banner = `import { fileURLToPath as __webfontFileURLToPath } from "node:url";
+const __filename = __webfontFileURLToPath(import.meta.url);
+const __dirname = __webfontFileURLToPath(new URL(".", import.meta.url));
+`;
+  }
 
   if (isBrowserBuild) {
     entry = browserEntry;
@@ -55,13 +65,13 @@ const __dirname = __webfontFileURLToPath(new URL(".", import.meta.url));
 
   let plugins: PluginOption[] = libraryPlugins;
 
-  if (isCliBuild || isBrowserBuild) {
+  if (isCliBuild || isBrowserBuild || isLibraryEsmBuild) {
     plugins = [];
   }
 
   return {
     build: {
-      emptyOutDir: !isCliBuild && !isBrowserBuild,
+      emptyOutDir: !isCliBuild && !isBrowserBuild && !isLibraryEsmBuild,
       lib: {
         entry,
         fileName: () => outputFileName,

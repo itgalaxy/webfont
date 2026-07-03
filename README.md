@@ -99,7 +99,7 @@ CommonJS:
 const { webfont } = require("webfont");
 ```
 
-`import webfont from "webfont"` often fails under `"type": "module"` with `TypeError: webfont is not a function` because the default export is not always the function itself ([#618](https://github.com/itgalaxy/webfont/issues/618)). A default export remains for older tooling; prefer the named import in new code. See [MIGRATION.md](./MIGRATION.md).
+`import webfont from "webfont"` is callable in versions that ship the ESM build (**12.x+**), where the default export is the `webfont` function itself ([#618](https://github.com/itgalaxy/webfont/issues/618)). On older releases the default import resolved to the whole `module.exports` object and threw `TypeError: webfont is not a function` under `"type": "module"`. The named import remains the recommended form for new code. See the [migration notes](./docs/migration/issue-0618-esm-default-import.md).
 
 ### Basic example
 

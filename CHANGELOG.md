@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.1.0](https://github.com/itgalaxy/webfont/compare/v12.0.1...v12.1.0) (2026-07-03)
+
+
+### Features
+
+* add glyphContentTransformFn for stroke SVG icons ([#144](https://github.com/itgalaxy/webfont/issues/144)) ([#712](https://github.com/itgalaxy/webfont/issues/712)) ([d673b44](https://github.com/itgalaxy/webfont/commit/d673b44d62d3387ca9a488c544aab5699f2d455c))
+* encode TTF input to WOFF and WOFF2 ([#13](https://github.com/itgalaxy/webfont/issues/13)) ([#706](https://github.com/itgalaxy/webfont/issues/706)) ([9e3a121](https://github.com/itgalaxy/webfont/commit/9e3a121308d0bd0c06aa6b7cdca598a21460e799))
+* support multiple templates per run ([#158](https://github.com/itgalaxy/webfont/issues/158)) ([#713](https://github.com/itgalaxy/webfont/issues/713)) ([22e27cf](https://github.com/itgalaxy/webfont/commit/22e27cf1d3928ce84a9125571e76b2e7443d6503))
+* **svg:** add opt-in SVGO optimization before font generation ([#724](https://github.com/itgalaxy/webfont/issues/724)) ([#725](https://github.com/itgalaxy/webfont/issues/725)) ([df20252](https://github.com/itgalaxy/webfont/commit/df20252f347fe436f0b394e3f505cb831ff4252a))
+* svgTools diagnostics, ADR 0011, and browser entry stub ([#198](https://github.com/itgalaxy/webfont/issues/198)) ([#715](https://github.com/itgalaxy/webfont/issues/715)) ([3e75307](https://github.com/itgalaxy/webfont/commit/3e753070a298a42c31396a3bdf2aab8e201686f6))
+* **template:** enable liga CSS in built-in HTML preview by default ([#726](https://github.com/itgalaxy/webfont/issues/726)) ([0193c4c](https://github.com/itgalaxy/webfont/commit/0193c4cf24d1ef30f1af2600aa26800acf0f2fdf))
+* **templates:** add unicode-range to built-in [@font-face](https://github.com/font-face) ([#322](https://github.com/itgalaxy/webfont/issues/322)) ([#722](https://github.com/itgalaxy/webfont/issues/722)) ([def7010](https://github.com/itgalaxy/webfont/commit/def70101860a9a74f6f3c71e6ffd212ed98c2ae6))
+* validate webfont options after config merge ([#133](https://github.com/itgalaxy/webfont/issues/133)) ([#711](https://github.com/itgalaxy/webfont/issues/711)) ([b498708](https://github.com/itgalaxy/webfont/commit/b4987084325e59c81a0493d7897a1c8da6a4e41d))
+
+
+### Bug Fixes
+
+* **cli:** coerce round at SVG pipeline, keep string|number API ([#569](https://github.com/itgalaxy/webfont/issues/569)) ([#701](https://github.com/itgalaxy/webfont/issues/701)) ([f15bdd3](https://github.com/itgalaxy/webfont/commit/f15bdd308795339fae9c13bfaa86d80078cd845f))
+* **ligatures:** disable ligatures by default for performance ([#558](https://github.com/itgalaxy/webfont/issues/558)) ([#731](https://github.com/itgalaxy/webfont/issues/731)) ([1cb0741](https://github.com/itgalaxy/webfont/commit/1cb0741022876d472ab35ed91d30569492b1a2e1))
+* **ligatures:** warn on large fonts; document browser slowdown ([#558](https://github.com/itgalaxy/webfont/issues/558)) ([#730](https://github.com/itgalaxy/webfont/issues/730)) ([372c10a](https://github.com/itgalaxy/webfont/commit/372c10a873a1bce67fbec2bc71ff0b25367af2e3))
+* **svg:** reject empty glyph paths from stroke-only SVGs ([#327](https://github.com/itgalaxy/webfont/issues/327)) ([#723](https://github.com/itgalaxy/webfont/issues/723)) ([40dfc9d](https://github.com/itgalaxy/webfont/commit/40dfc9db141ca2185fdfe49edb4270d2c09236df))
+* **templates:** separate fontFamily from font file basename ([#331](https://github.com/itgalaxy/webfont/issues/331)) ([#727](https://github.com/itgalaxy/webfont/issues/727)) ([9e2ae00](https://github.com/itgalaxy/webfont/commit/9e2ae00e462657566cb9f9f2871b954db107d682))
+
 ## [12.0.1](https://github.com/itgalaxy/webfont/compare/v12.0.0...v12.0.1) (2026-07-02)
 
 

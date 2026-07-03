@@ -367,12 +367,20 @@ Bundlers fail while building client code with errors such as:
 Module not found: Error: Can't resolve 'fs'
 ```
 
-The stack trace often includes `globby`, `fast-glob`, `cosmiconfig`, or `webfont/dist/standalone.js` ([#198](https://github.com/itgalaxy/webfont/issues/198)).
+Or at **runtime** in the browser (often with older `webfont` versions bundled into the app):
+
+```text
+TypeError: Cannot read property 'dirname' of undefined
+    at .../node_modules/glob-parent/index.js
+```
+
+The stack trace often includes `globby`, `fast-glob`, `glob-parent`, `cosmiconfig`, or `webfont/dist/standalone.js` ([#198](https://github.com/itgalaxy/webfont/issues/198), [#496](https://github.com/itgalaxy/webfont/issues/496)).
 
 ### Why it usually happens
 
 - **`webfont` is Node.js-only.** It reads SVG files from disk, runs `globby`, and uses other Node built-ins. It is meant for **build time**, not inside browser/React component bundles.
-- **The package was imported from client code** (for example `import webfont from "webfont"` in `App.js`). Webpack/Vite tries to bundle the full Node implementation and fails on `fs`.
+- **The package was imported from client code** (for example `import webfont from "webfont"` in `App.js`). Webpack/Vite tries to bundle the full Node implementation. Without Node’s `path` module, dependencies such as `glob-parent` throw **`Cannot read property 'dirname' of undefined`** ([#496](https://github.com/itgalaxy/webfont/issues/496)).
+- **From webfont 12.x**, the package `browser` / `exports` default entry resolves to a small stub that rejects with a clear message instead of pulling in `globby` — but you must still **not** call `webfont()` from client code; generate fonts in Node and ship the output files.
 
 ### Steps to try to resolve
 
@@ -394,7 +402,7 @@ The stack trace often includes `globby`, `fast-glob`, `cosmiconfig`, or `webfont
 
    Run this from a `.mjs` script, `vite.config.ts`, or webpack config — never from React components loaded in the browser.
 
-4. **If a dependency still pulls `webfont` into the client bundle**, mark it external or move the import to a Node-only file. With webpack 5+, the package `browser` field resolves to a stub that throws a clear error instead of pulling in `fs`.
+4. **If a dependency still pulls `webfont` into the client bundle**, mark it external or move the import to a Node-only file. With **webfont 12.x** and webpack 5+ / modern Vite, the package `browser` field and `exports` default resolve to `dist/browser.js`, which throws a clear error instead of bundling `fs` / `glob-parent`. On **11.x** or webpack 4 without `browser` resolution, you may see `dirname of undefined` until you stop importing `webfont` from client code.
 
 5. **Browser-based generation** is not supported on the current release; see [#708](https://github.com/itgalaxy/webfont/issues/708) for a possible future Web Worker spike.
 

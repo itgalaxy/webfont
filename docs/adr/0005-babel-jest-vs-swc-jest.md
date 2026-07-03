@@ -86,7 +86,7 @@ Keep **Jest 27** as the test runner ([ADR 0002](./0002-jest-vs-vitest-testing.md
 ### Negative / trade-offs
 
 - Absolute time saved per `npm test` is small while build + integration tests dominate.
-- Adds `@swc/core` native binaries (platform-specific); CI must continue to use supported Node/OS images ([`engines`](../../package.json) `>=26.0.0`).
+- Adds `@swc/core` native binaries (platform-specific); CI must continue to use supported Node/OS images ([`engines`](../../package.json) `>=24.14.0`).
 - SWC TypeScript support can lag rare syntax edge cases; pin versions and run the full suite on upgrade.
 
 ### Implementation checklist

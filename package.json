@@ -52,6 +52,7 @@
     "clean": "rm -rf dist/ temp/",
     "demo": "node dist/cli.mjs './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "lint": "biome check .",
+    "lint:suppressions": "node scripts/check-no-suppressions.mjs",
     "depcheck": "knip",
     "prebuild": "npm run clean && npm run lint",
     "prepare": "lefthook install",

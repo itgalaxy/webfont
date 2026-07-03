@@ -1,7 +1,6 @@
 import fs from "fs";
 import * as fsPromise from "fs/promises";
 import path from "path";
-import rimraf from "rimraf";
 import { version } from "../../package.json";
 import { execCLI } from "../lib/execCLI";
 import { createMeowCli } from "./meow/createMeowCli";
@@ -18,17 +17,10 @@ const source = `${fixturesGlob}/svg-icons`;
 const configPackageLink = path.join("node_modules", "webfont-fixture-config");
 const configPackageSource = path.resolve(fixturesGlob, "config-package");
 
-const rimrafAsync = (pattern: string) =>
-  new Promise<void>((resolve, reject) => {
-    rimraf(pattern, (err) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      resolve();
-    });
-  });
+const emptyDir = async (dir: string) => {
+  await fsPromise.rm(dir, { force: true, recursive: true });
+  await fsPromise.mkdir(dir, { recursive: true });
+};
 
 const isENOENT = (error: unknown): error is NodeJS.ErrnoException =>
   typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT";
@@ -64,7 +56,7 @@ describe("cli", () => {
   });
 
   beforeEach(async () => {
-    await rimrafAsync(`${destination}/*`);
+    await emptyDir(destination);
 
     const files = await fsPromise.readdir(destination);
 

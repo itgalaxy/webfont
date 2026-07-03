@@ -20,7 +20,7 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 - **Webfont decompression**: one `.woff` or `.woff2` file → `ttf` and/or `otf` matching the **embedded SFNT flavor** (decompress only — not TTF ↔ OTF transcoding);
 - Config files: `JavaScript`, `JSON`, or `YAML` via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig);
 - Built-in and custom CSS templates (`css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/));
-- CLI and programmatic API;
+- CLI and programmatic API (**Node.js build time only** — see [TROUBLESHOOTING](./TROUBLESHOOTING.md#cant-resolve-fs-webpack--react--vite-client-bundle));
 - [Webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin).
 
 ## Input modes
@@ -75,11 +75,15 @@ Full details, disclaimers, community attribution guidelines, and third-party lib
 
 ## Installation
 
+Requires **Node.js** >= 24.14.0. Install as a dev dependency and run at **build time** (CLI, npm script, or bundler plugin) — not from browser/React client bundles.
+
 ```shell
 npm install --save-dev webfont
 ```
 
 ## Usage
+
+Node.js only — do not import from client-side app code ([#198](https://github.com/itgalaxy/webfont/issues/198)).
 
 ```js
 import webfont from "webfont";
@@ -350,6 +354,29 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
   For better trace quality with `svg-outline-stroke`, use a larger `width` / `height` / `viewBox` on the source SVG (see the library README).
 
+#### `svgTools` (alpha)
+
+- Type: `{ diagnose?: boolean; onMessage?: (message: string) => void }`
+- Default: `undefined` (disabled)
+- Description: **Alpha.** Scan SVG sources for icon-font incompatibilities before font generation (SVG pipeline only). Does **not** modify SVGs — use [`glyphContentTransformFn`](#glyphcontenttransformfn) to preprocess (for example stroke-to-fill with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke), installed in your project). See [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md).
+  - **`diagnose`:** log warnings for `fill-rule: evenodd`, stroke-only paths (`fill="none"` + `stroke`), and poorly supported elements (`<line>`, `<polyline>`, `<clipPath>`). Results are also returned on `result.svgDiagnostics` when enabled.
+  - **`onMessage`:** optional sink for diagnostic log lines (tests, custom UIs).
+- CLI: `--svg-diagnose` (alpha).
+- Example:
+
+  ```js
+  import webfont from "webfont";
+
+  const result = await webfont({
+    files: "src/icons/**/*.svg",
+    svgTools: { diagnose: true },
+  });
+
+  console.log(result.svgDiagnostics);
+  ```
+
+  See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) — “Icon details missing after export”.
+
 #### `metadataProvider`
 
 - Type: `function`
@@ -581,6 +608,10 @@ If you're using cross-env:
         --verbose
 
             Tell me everything!.
+
+        --svg-diagnose
+
+            (Alpha) Scan SVG icons for icon-font incompatibilities and log warnings.
 
     For "svgicons2svgfont":
 

@@ -1,5 +1,6 @@
 import type { TemplateOption } from "../lib/parseTemplateOption";
 import type { Formats } from "./Format";
+import type { SvgToolsOptions } from "./SvgToolsOptions";
 
 export type OptionsBase = {
   configFile?: string;
@@ -30,4 +31,6 @@ export type OptionsBase = {
   sort?: boolean;
   ligatures?: boolean;
   addHashInFontUrl?: boolean | unknown;
+  /** Alpha. SVG diagnostics and optional pre-conversion fixes. */
+  svgTools?: SvgToolsOptions;
 };

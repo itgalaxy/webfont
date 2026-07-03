@@ -49,6 +49,19 @@ it("throws when given binary font buffers", async () => { ... });
 
 When adding or renaming tests, follow this rule even in contract-style `describe` blocks that document library behavior.
 
+### Tests are required for code changes
+
+Every PR that changes **runtime behavior** (features, fixes, refactors with observable effects, CLI/API/demo wiring) must include **automated tests in the same change**. Do not land production code and defer tests to a follow-up.
+
+| Change type | Minimum expectation |
+|-------------|---------------------|
+| New option, flag, or pipeline step | Unit test(s) for the module + integration test when the public entry (CLI, `webfont()`, worker) is affected |
+| Bug fix | A test that **fails without the fix** and names the regression |
+| Guard or workaround | Focused unit test documenting **why** the guard exists (see table below) |
+| Docs-only | No new tests; say so in the PR **Testing** section |
+
+Run `npm test` before pushing.
+
 ### Document guards and error paths with explicit unit tests
 
 When production code works around a library quirk or adds a defensive guard, add **unit tests that name the reason** — not only integration tests through the full pipeline.

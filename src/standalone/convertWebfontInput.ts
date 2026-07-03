@@ -1,6 +1,6 @@
 import fontverter from "fontverter";
 import * as fsPromise from "fs/promises";
-import { isHttpUrl } from "../lib/inputSource";
+import { isHttpUrl } from "../lib/inputSourceUtils";
 import { getSfntFlavor } from "../lib/sfnt/flavor";
 import type { DecompressedFont } from "../types/DecompressedFont";
 import type { Result } from "../types/Result";

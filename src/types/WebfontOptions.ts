@@ -4,6 +4,7 @@ import type { GlyphContentTransformFn } from "./GlyphContentTransformFn";
 import type { GlyphTransformFn } from "./GlyphTransformFn";
 import type { InitialOptions } from "./InitialOptions";
 import type { MetadataProvider } from "./MetadataProvider";
+import type { SvgToolsOptions } from "./SvgToolsOptions";
 
 export interface WebfontOptions extends InitialOptions {
   centerHorizontally: boolean;
@@ -34,4 +35,5 @@ export interface WebfontOptions extends InitialOptions {
   templateFontPath: string;
   verbose: boolean;
   addHashInFontUrl?: boolean;
+  svgTools?: SvgToolsOptions;
 }

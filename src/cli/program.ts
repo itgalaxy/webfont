@@ -9,6 +9,7 @@ import type { OptionsBase } from "../types/OptionsBase";
 import type { RenderedTemplate } from "../types/RenderedTemplate";
 import type { Result } from "../types/Result";
 import type { TranscodedFont } from "../types/TranscodedFont";
+import { buildSvgToolsFromCliFlags } from "./buildSvgToolsFromCliFlags";
 import { parseFormatsFlag } from "./parseFormatsFlag";
 import { parseTemplateFlag } from "./parseTemplateFlag";
 import { resolveCliFiles } from "./resolveCliFiles";
@@ -44,6 +45,7 @@ export type CliLike = {
     templateFontName?: string;
     templateFontPath?: string;
     verbose?: boolean;
+    svgDiagnose?: boolean;
     version?: boolean;
   };
   input: string[];
@@ -169,6 +171,12 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
 
   if (cli.flags.addHashInFontUrl) {
     optionsBase.addHashInFontUrl = cli.flags.addHashInFontUrl;
+  }
+
+  const svgTools = buildSvgToolsFromCliFlags(cli.flags);
+
+  if (svgTools) {
+    optionsBase.svgTools = svgTools;
   }
 
   return optionsBase;

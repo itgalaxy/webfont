@@ -1,6 +1,6 @@
 import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
-import { getInputExtension } from "../lib/inputSource";
+import { getInputExtension } from "../lib/inputSourceUtils";
 
 const assertWebfontContainer = (buffer: Buffer, source: string): void => {
   const extension = getInputExtension(source);

@@ -354,6 +354,23 @@ describe("standalone", () => {
     }
   });
 
+  it("should diagnose stroke-only SVGs when svgTools.diagnose is enabled", async () => {
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
+
+    try {
+      const result = await standalone({
+        files: `${fixturesGlob}/svg-stroke-icons/stroked-plus.svg`,
+        formats: ["ttf"],
+        svgTools: { diagnose: true },
+      });
+
+      expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("stroke-based paths"));
+      expect(result.svgDiagnostics?.some((entry) => entry.code === "stroke-only")).toBe(true);
+    } finally {
+      logSpy.mockRestore();
+    }
+  });
+
   it("should create css selectors with transform titles through function", async () => {
     const glyphTransformFn: GlyphTransformFn = (obj) => {
       obj.name += "_transform";

@@ -10,6 +10,7 @@ const nodeBuiltins = [...builtinModules, ...builtinModules.map((moduleName) => `
 const external = [...Object.keys(dependencies), ...nodeBuiltins, "crypto", "fs", "os", "path", "stream", "util"];
 
 const libraryEntry = resolve(__dirname, "src/index.ts");
+const browserEntry = resolve(__dirname, "src/browser.ts");
 const cliEntry = resolve(__dirname, "src/cli/index.ts");
 
 const libraryPlugins: PluginOption[] = [
@@ -29,10 +30,17 @@ const libraryPlugins: PluginOption[] = [
 
 export default defineConfig(({ mode }) => {
   const isCliBuild = mode === "cli";
+  const isBrowserBuild = mode === "browser";
   let entry = libraryEntry;
   let outputFileName = "index.js";
   let banner: string | undefined;
   let outputFormat: "cjs" | "es" = "cjs";
+
+  if (isBrowserBuild) {
+    entry = browserEntry;
+    outputFileName = "browser.js";
+    outputFormat = "es";
+  }
 
   if (isCliBuild) {
     entry = cliEntry;
@@ -47,13 +55,13 @@ const __dirname = __webfontFileURLToPath(new URL(".", import.meta.url));
 
   let plugins: PluginOption[] = libraryPlugins;
 
-  if (isCliBuild) {
+  if (isCliBuild || isBrowserBuild) {
     plugins = [];
   }
 
   return {
     build: {
-      emptyOutDir: !isCliBuild,
+      emptyOutDir: !isCliBuild && !isBrowserBuild,
       lib: {
         entry,
         fileName: () => outputFileName,

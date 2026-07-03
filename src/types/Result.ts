@@ -2,6 +2,7 @@ import type { DecompressedFont } from "./DecompressedFont";
 import type { GlyphData } from "./GlyphData";
 import type { RenderedTemplate } from "./RenderedTemplate";
 import type { ResultConfig } from "./ResultConfig";
+import type { SvgGlyphDiagnostic } from "./SvgToolsOptions";
 import type { TranscodedFont } from "./TranscodedFont";
 
 export type { DecompressedFont } from "./DecompressedFont";
@@ -22,4 +23,6 @@ export type Result = {
   usedBuildInTemplate?: boolean;
   woff?: Buffer;
   woff2?: Buffer;
+  /** Alpha. Populated when `svgTools.diagnose` is enabled. */
+  svgDiagnostics?: SvgGlyphDiagnostic[];
 };

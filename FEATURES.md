@@ -178,6 +178,20 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Test Criteria**:
   - [x] Options forwarded via `getFontStreamOptions` / standalone integration tests
 
+### SVG tools — diagnostics (alpha)
+
+- **Stability**: alpha
+- **Description**: Scan SVG icon sources for icon-font incompatibilities before font generation. Stroke-to-fill and other SVG repairs are **out of scope** — use `glyphContentTransformFn` (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+- **Properties**:
+  - `svgTools.diagnose`: warn about `fill-rule: evenodd`, stroke-only paths, and unsupported SVG elements; populate `result.svgDiagnostics`.
+  - CLI flag: `--svg-diagnose` (alpha).
+  - `--verbose` still logs evenodd warnings for backward compatibility.
+  - Programmatic helpers: `diagnoseSvgContents`, `diagnoseGlyphsData` exported from the package entry.
+- **Test Criteria**:
+  - [x] Unit tests for stroke/evenodd/element detection
+  - [x] `glyphContentTransformFn` applied before font generation (#144)
+  - [x] CLI integration tests for `--svg-diagnose`
+
 ### Arbitrary format transcoding
 
 - **Stability**: planned

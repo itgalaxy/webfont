@@ -7,6 +7,7 @@ export const WEBFONT_CLI_HELP_MARKERS = [
   "--no-sort",
   "--no-ligatures",
   "--addHashInFontUrl",
+  "svg-diagnose",
 ] as const;
 
 export const webfontCliHelpText = `
@@ -99,6 +100,11 @@ export const webfontCliHelpText = `
         --verbose
 
             Tell me everything!.
+
+        --svg-diagnose
+
+            (Alpha) Scan SVG icons for icon-font incompatibilities (stroke-only paths,
+            fill-rule: evenodd, unsupported elements) and log warnings.
 
     For "svgicons2svgfont":
 
@@ -263,6 +269,10 @@ export const webfontMeowFlags = {
     type: "string",
   },
   verbose: {
+    default: false,
+    type: "boolean",
+  },
+  svgDiagnose: {
     default: false,
     type: "boolean",
   },

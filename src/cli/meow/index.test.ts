@@ -32,6 +32,7 @@ const PROGRAM_CLI_FLAG_KEYS = [
   "templateClassName",
   "templateFontName",
   "templateFontPath",
+  "unicodeRange",
   "verbose",
   "svgDiagnose",
   "version",
@@ -90,22 +91,24 @@ describe("cli/meow", () => {
       expect(createMeowCli(["-v"]).flags.version).toBe(true);
     });
 
-    it("should apply boolean defaults for sort, ligatures, verbose, destCreate, and addHashInFontUrl", () => {
+    it("should apply boolean defaults for sort, ligatures, unicodeRange, verbose, destCreate, and addHashInFontUrl", () => {
       const cli = createMeowCli(["input.svg"]);
 
       expect(cli.flags.sort).toBe(true);
       expect(cli.flags.ligatures).toBe(true);
+      expect(cli.flags.unicodeRange).toBe(true);
       expect(cli.flags.verbose).toBe(false);
       expect(cli.flags.destCreate).toBe(false);
       expect(cli.flags.addHashInFontUrl).toBe(false);
       expect(cli.flags.templateCacheString).toBe("");
     });
 
-    it("should parse --no-sort and --no-ligatures negated booleans", () => {
-      const cli = createMeowCli(["input.svg", "--no-sort", "--no-ligatures"]);
+    it("should parse --no-sort, --no-ligatures, and --no-unicode-range negated booleans", () => {
+      const cli = createMeowCli(["input.svg", "--no-sort", "--no-ligatures", "--no-unicode-range"]);
 
       expect(cli.flags.sort).toBe(false);
       expect(cli.flags.ligatures).toBe(false);
+      expect(cli.flags.unicodeRange).toBe(false);
     });
 
     it("should parse short aliases for common flags", () => {
@@ -254,6 +257,7 @@ describe("cli/meow", () => {
           "meta",
           "--no-sort",
           "--no-ligatures",
+          "--no-unicode-range",
           "--addHashInFontUrl",
           "--config",
           "webfont.config.js",
@@ -286,6 +290,7 @@ describe("cli/meow", () => {
       expect(options.metadata).toBe("meta");
       expect(options.sort).toBe(false);
       expect(options.ligatures).toBe(false);
+      expect(options.unicodeRange).toBe(false);
       expect(options.addHashInFontUrl).toBe(true);
       expect(options.configFile).toContain("webfont.config.js");
     });

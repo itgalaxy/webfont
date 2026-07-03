@@ -35,5 +35,6 @@ export interface WebfontOptions extends InitialOptions {
   templateFontPath: string;
   verbose: boolean;
   addHashInFontUrl?: boolean;
+  unicodeRange?: boolean | string;
   svgTools?: SvgToolsOptions;
 }

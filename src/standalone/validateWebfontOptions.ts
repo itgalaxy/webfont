@@ -8,6 +8,12 @@ const assertStringOption = (name: string, value: unknown): void => {
   }
 };
 
+const assertBooleanOrStringOption = (name: string, value: unknown): void => {
+  if (value !== undefined && typeof value !== "boolean" && typeof value !== "string") {
+    throw new Error(`${name} must be a boolean or string`);
+  }
+};
+
 const assertFilesOption = (files: unknown): void => {
   if (typeof files === "string") {
     if (files.length === 0) {
@@ -40,6 +46,7 @@ export const validateWebfontOptions = (options: WebfontOptions): WebfontOptions 
   assertFilesOption(options.files);
   options.formats = assertFormatsOption(options.formats);
   assertStringOption("fontName", options.fontName);
+  assertBooleanOrStringOption("unicodeRange", options.unicodeRange);
   if (options.template !== undefined) {
     normalizeTemplateOption(options.template);
   }

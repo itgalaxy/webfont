@@ -73,6 +73,15 @@ describe("validateWebfontOptions", () => {
     ).toThrow("fontName must be a string");
   });
 
+  it("should reject invalid unicodeRange option types", () => {
+    expect(() =>
+      validateWebfontOptions({
+        ...baseOptions(),
+        unicodeRange: 123 as never,
+      }),
+    ).toThrow("unicodeRange must be a boolean or string");
+  });
+
   it("should accept template as an array (#158)", () => {
     expect(
       validateWebfontOptions({

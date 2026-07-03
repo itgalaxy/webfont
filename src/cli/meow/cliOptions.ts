@@ -6,6 +6,7 @@ export const WEBFONT_CLI_HELP_MARKERS = [
   "--dest-create",
   "--no-sort",
   "--no-ligatures",
+  "--no-unicode-range",
   "--addHashInFontUrl",
   "svg-diagnose",
 ] as const;
@@ -96,6 +97,10 @@ export const webfontCliHelpText = `
         --no-ligatures
 
             Prevents adding ligature unicode
+
+        --no-unicode-range
+
+            Omit unicode-range from built-in @font-face rules
 
         --verbose
 
@@ -267,6 +272,10 @@ export const webfontMeowFlags = {
   templateCacheString: {
     default: "",
     type: "string",
+  },
+  unicodeRange: {
+    default: true,
+    type: "boolean",
   },
   verbose: {
     default: false,

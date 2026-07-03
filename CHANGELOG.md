@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.2.0](https://github.com/itgalaxy/webfont/compare/v12.1.1...v12.2.0) (2026-07-03)
+
+
+### Features
+
+* add ttfPostProcess hook to post-process generated TTF ([#749](https://github.com/itgalaxy/webfont/issues/749)) ([#751](https://github.com/itgalaxy/webfont/issues/751)) ([90cf54f](https://github.com/itgalaxy/webfont/commit/90cf54fa032f57d27d5cda364ef40c0e7cdccc5b))
+* expose centerVertically option to center glyphs vertically ([#576](https://github.com/itgalaxy/webfont/issues/576)) ([#747](https://github.com/itgalaxy/webfont/issues/747)) ([e84f0b1](https://github.com/itgalaxy/webfont/commit/e84f0b17df33692d7a08b131892feb8f80e4713d)), closes [#746](https://github.com/itgalaxy/webfont/issues/746)
+
 ## [12.1.1](https://github.com/itgalaxy/webfont/compare/v12.1.0...v12.1.1) (2026-07-03)
 
 

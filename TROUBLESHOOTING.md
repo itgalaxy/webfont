@@ -353,7 +353,7 @@ There is often **no error**. The built-in **`html`** preview lists icon names un
 
 5. **Disable preview CSS** if you manage ligatures yourself: `templateFontLigatures: false` or `--no-template-font-ligatures`.
 
-6. Ensure [`ligatures`](./README.md#ligatures) is not disabled (`--no-ligatures` removes ligature glyphs from the font).
+6. Ensure [`ligatures`](./README.md#ligatures) is enabled when using ligature names (`--ligatures` adds ligature glyphs to the font).
 
 ---
 
@@ -371,27 +371,34 @@ See [#558](https://github.com/itgalaxy/webfont/issues/558), [MaterialDesign#6519
 
 ### Why it usually happens
 
-- From webfont **10+**, **`ligatures` default to `true`**: each icon name is also encoded as an OpenType ligature (for example `phone_call` → glyph).
+- From webfont **12.x**, **`ligatures` default to `false`** (performance on large fonts). **webfont 10.x–11.x** enabled ligatures by default — upgrading from those versions without regenerating fonts is a common trigger for this issue.
+- When **`ligatures: true`** (or `--ligatures`), each icon name is also encoded as an OpenType ligature (for example `phone_call` → glyph).
 - **Thousands of ligatures** produce a very large GSUB table. Windows Firefox uses DirectWrite to process ligature lookups during layout — reflow can take seconds per tab switch.
-- **WOFF2 is not the root cause** — the same ligature-heavy TTF/WOFF triggers the behavior. Older builds without ligatures (or with `--no-ligatures`) perform normally.
+- **WOFF2 is not the root cause** — the same ligature-heavy TTF/WOFF triggers the behavior. Fonts built without ligatures perform normally.
 
 ### Steps to try to resolve
 
-1. **Disable ligatures for large icon sets** (recommended for MDI-scale fonts):
+1. **Keep ligatures disabled** (default on webfont 12.x). On older releases use `--no-ligatures` / `ligatures: false`:
 
    ```shell
-   webfont "icons/*.svg" -d dist/fonts --no-ligatures
+   webfont "icons/*.svg" -d dist/fonts
    ```
 
    ```js
-   await webfont({ files: "icons/**/*.svg", ligatures: false });
+   await webfont({ files: "icons/**/*.svg" });
+   ```
+
+   Only enable ligatures if you need ligature-by-name text and accept the performance cost:
+
+   ```shell
+   webfont "icons/*.svg" -d dist/fonts --ligatures
    ```
 
 2. **Use class + codepoint CSS** in the app (`.mdi-phone::before { content: "\\f001"; }`) — not ligature-by-name text.
 
 3. **In CSS**, if you cannot regenerate the font yet, try `font-variant-ligatures: none` on icon classes — this helps only when the page does not rely on `liga` for icons; regenerating without ligatures is more reliable.
 
-4. **webfont warns** when glyph count exceeds **2000** with ligatures enabled (stdout). Treat it as a signal to pass `--no-ligatures`.
+4. **webfont warns** when glyph count exceeds **2000** with ligatures enabled (stdout). Do not pass `--ligatures` on MDI-scale sets.
 
 5. Prefer **`@mdi/svg` / SVG or JS icon packages** for web apps when the upstream project documents webfont alternatives.
 

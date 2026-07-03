@@ -380,7 +380,9 @@ describe("cli", () => {
   });
 
   it("should generate built-in html template", async () => {
-    const output = await execCLI(`${source} -d ${destination} --template html --templateCacheString test`);
+    const output = await execCLI(
+      `${source} -d ${destination} --template html --templateCacheString test --ligatures`,
+    );
 
     expect(output.files).toEqual([
       "webfont.eot",
@@ -614,8 +616,8 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
-  it("should honor --no-sort and --no-ligatures flags", async () => {
-    const output = await execCLI(`${source} -d ${destination} --no-sort --no-ligatures`);
+  it("should honor --no-sort flag (ligatures off by default)", async () => {
+    const output = await execCLI(`${source} -d ${destination} --no-sort`);
 
     expect(output.files).toEqual([
       "webfont.eot",

@@ -97,7 +97,7 @@ describe("cli/meow", () => {
       const cli = createMeowCli(["input.svg"]);
 
       expect(cli.flags.sort).toBe(true);
-      expect(cli.flags.ligatures).toBe(true);
+      expect(cli.flags.ligatures).toBe(false);
       expect(cli.flags.unicodeRange).toBe(false);
       expect(cli.flags.templateFontLigatures).toBe(true);
       expect(cli.flags.verbose).toBe(false);
@@ -107,11 +107,11 @@ describe("cli/meow", () => {
       expect(cli.flags.templateCacheString).toBe("");
     });
 
-    it("should parse --no-sort, --no-ligatures, and --no-template-font-ligatures negated booleans", () => {
-      const cli = createMeowCli(["input.svg", "--no-sort", "--no-ligatures", "--no-template-font-ligatures"]);
+    it("should parse --no-sort, --ligatures, and --no-template-font-ligatures flags", () => {
+      const cli = createMeowCli(["input.svg", "--no-sort", "--ligatures", "--no-template-font-ligatures"]);
 
       expect(cli.flags.sort).toBe(false);
-      expect(cli.flags.ligatures).toBe(false);
+      expect(cli.flags.ligatures).toBe(true);
       expect(cli.flags.templateFontLigatures).toBe(false);
     });
 
@@ -266,7 +266,7 @@ describe("cli/meow", () => {
           "--metadata",
           "meta",
           "--no-sort",
-          "--no-ligatures",
+          "--ligatures",
           "--addHashInFontUrl",
           "--config",
           "webfont.config.js",
@@ -298,7 +298,7 @@ describe("cli/meow", () => {
       expect(options.prependUnicode).toBe(true);
       expect(options.metadata).toBe("meta");
       expect(options.sort).toBe(false);
-      expect(options.ligatures).toBe(false);
+      expect(options.ligatures).toBe(true);
       expect(options.unicodeRange).toBeUndefined();
       expect(options.addHashInFontUrl).toBe(true);
       expect(options.configFile).toContain("webfont.config.js");

@@ -311,10 +311,10 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 #### `ligatures`
 
 - Type: `boolean`
-- Default: `true`
+- Default: `false` (ligature glyphs are **not** added unless you opt in)
 - Description: When `true`, each glyph gets a second unicode entry: the icon name with hyphens replaced by underscores (for example `phone-call` → `phone_call`). Browsers can map that character sequence to the icon glyph when OpenType ligatures are enabled (`font-feature-settings: "liga"`).
-- CLI: `--no-ligatures` to disable ligature glyphs in the font.
-- **Large icon fonts (thousands of glyphs):** ligature tables can make **Firefox on Windows** (DirectWrite) extremely slow or hang when the font loads ([#558](https://github.com/itgalaxy/webfont/issues/558)). Material Design Icons and similar sets should use **`ligatures: false`** / `--no-ligatures` and class + codepoint CSS instead. webfont prints a warning when glyph count exceeds 2000 with ligatures enabled.
+- CLI: `--ligatures` to enable ligature glyphs in the font.
+- **Why off by default:** large icon sets (thousands of glyphs) produce huge GSUB tables. **Firefox on Windows** (DirectWrite) can hang or slow dramatically when ligatures are enabled ([#558](https://github.com/itgalaxy/webfont/issues/558)). Prefer **class + private-use codepoint** CSS for MDI-scale fonts. webfont prints a warning when glyph count exceeds 2000 with ligatures enabled.
 
 #### `templateFontLigatures`
 
@@ -322,7 +322,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 - Default: `true`
 - Description: When `true` and the built-in **`html`** preview template is used, the generated CSS enables `font-feature-settings: "liga"` on the **Ligature** section (`#icon-ligatures`) so ligature names render as icons instead of invisible/missing glyphs. If you also enable [`unicodeRange`](#unicoderange), the HTML template **omits** `unicode-range` on `@font-face` while ligature preview is on (ligature strings are ASCII; a PUA-only `unicode-range` would block the icon font for those characters). Set to `false` if you inject your own ligature CSS.
 - CLI: `--no-template-font-ligatures` to omit the CSS rule.
-- Requires [`ligatures`](#ligatures) enabled (default). Class-based icons (`.font-name-icon::before` with a private-use codepoint) work without this option.
+- Requires [`ligatures`](#ligatures) enabled (`--ligatures` / `ligatures: true`). Class-based icons (`.font-name-icon::before` with a private-use codepoint) work without this option.
 
 #### `glyphTransformFn`
 

@@ -5,7 +5,7 @@ export const WEBFONT_CLI_HELP_MARKERS = [
   "--formats",
   "--dest-create",
   "--no-sort",
-  "--no-ligatures",
+  "--ligatures",
   "--unicode-range",
   "--no-template-font-ligatures",
   "--addHashInFontUrl",
@@ -96,9 +96,10 @@ export const webfontCliHelpText = `
 
             Keeps the files in the same order of entry
 
-        --no-ligatures
+        --ligatures
 
-            Prevents adding ligature unicode
+            Add OpenType ligature glyphs (icon names as text). Off by default — large
+            icon sets can hang Firefox on Windows (#558). Prefer class + codepoint CSS.
 
         --unicode-range
 
@@ -239,7 +240,7 @@ export const webfontMeowFlags = {
     type: "boolean",
   },
   ligatures: {
-    default: true,
+    default: false,
     type: "boolean",
   },
   metadata: {

@@ -839,7 +839,6 @@ exports[`standalone > should generate built-in json template 1`] = `
     "name": "Avatar",
     "unicode": [
       "ea01",
-      "avatar",
     ],
   },
   {
@@ -847,7 +846,6 @@ exports[`standalone > should generate built-in json template 1`] = `
     "name": "Envelope",
     "unicode": [
       "ea02",
-      "envelope",
     ],
   },
   {
@@ -855,7 +853,6 @@ exports[`standalone > should generate built-in json template 1`] = `
     "name": "Phone Call",
     "unicode": [
       "ea03",
-      "phone_call",
     ],
   },
 ]
@@ -866,17 +863,17 @@ exports[`standalone > should generate built-in json template 2`] = `
   {
     "id": "avatar",
     "name": "Avatar",
-    "unicode": ["ea01", "avatar"]
+    "unicode": ["ea01"]
   },
 {
     "id": "envelope",
     "name": "Envelope",
-    "unicode": ["ea02", "envelope"]
+    "unicode": ["ea02"]
   },
 {
     "id": "phone-call",
     "name": "Phone Call",
-    "unicode": ["ea03", "phone_call"]
+    "unicode": ["ea03"]
   }
 ]"
 `;
@@ -1075,7 +1072,7 @@ exports[`standalone > should include font hash in template URLs when addHashInFo
   font-weight: 400;
   
   
-  src: url("./webfont.woff2?test&v=1154313a3843c5f5ec70890715e8a527") format("woff2"); 
+  src: url("./webfont.woff2?test&v=ead2b6f69fc603bf1cbd00bf9f8a8a33") format("woff2"); 
 }
 
 .webfont {

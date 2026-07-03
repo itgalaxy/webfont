@@ -515,8 +515,18 @@ describe("cli", () => {
     );
 
     expect(output.stdout).toContain("stroke-based paths");
-    expect(output.code).toBe(0);
+    expect(output.stdout).toContain("Empty glyph path");
+    expect(output.code).toBe(1);
     expect(output.stderr).toBe("");
+  });
+
+  it("should fail when stroke-only SVGs produce empty glyph paths (#327)", async () => {
+    const output = await execCLI(`${fixturesGlob}/svg-icons-stroke-only/wave.svg -d ${destination} -f woff2`);
+
+    expect(output.code).toBe(1);
+    expect(output.stderr).toBe("");
+    expect(output.stdout).toContain("Empty glyph path");
+    expect(output.stdout).toContain("wave.svg");
   });
 
   it("should create dest directory if it does not exist and --dest-create flag is provided", async () => {

@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { assertNonEmptySvgFontGlyphs } from "../lib/svgFontOutput/emptyGlyphPaths";
 import { applySvgToolsToGlyphs } from "../lib/svgTools/applySvgTools";
 import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
 import type { GlyphData, WebfontOptions } from "../types";
@@ -74,6 +75,7 @@ export const runSvgPipeline = async (glyphsData: GlyphData[], options: WebfontOp
   }
 
   const svg = await generateSvgFont(pipelineGlyphs, options);
+  assertNonEmptySvgFontGlyphs(svg, pipelineGlyphs);
   const ttf = toTtf(svg, ttfOptions);
 
   const result: Result = {

@@ -33,7 +33,7 @@ describe("validateWebfontOptions", () => {
     expect(() =>
       validateWebfontOptions({
         ...baseOptions(),
-        formats: ["icon"],
+        formats: ["icon"] as unknown as WebfontOptions["formats"],
       }),
     ).toThrow('Invalid format "icon". Expected one of: eot, otf, svg, ttf, woff, woff2');
   });

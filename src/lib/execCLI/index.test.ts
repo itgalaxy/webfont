@@ -20,7 +20,7 @@ describe("execCLI", () => {
   it("should reject when destination readdir fails", async () => {
     const readdirError = Object.assign(new Error("readdir failed"), { code: "ENOENT" });
     const readdirSpy = vi.spyOn(fs, "readdir").mockImplementation((_destination, _encoding, callback) => {
-      (callback as (error: NodeJS.ErrnoException | null, files: string[]) => void)(readdirError, []);
+      (callback as unknown as (error: NodeJS.ErrnoException | null, files: string[]) => void)(readdirError, []);
       return undefined as never;
     });
 

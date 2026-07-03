@@ -25,7 +25,7 @@ describe("convertTtfInput", () => {
         files: fixtureTtf,
         formats: ["woff2"],
         glyphTransformFn: async () => ({ name: "x", unicode: [] }),
-      }),
+      } as unknown as WebfontOptions),
     ).rejects.toThrow("glyphTransformFn is not supported when converting TTF input");
   });
 
@@ -35,7 +35,7 @@ describe("convertTtfInput", () => {
         files: fixtureTtf,
         formats: ["woff2"],
         glyphContentTransformFn: async () => "<svg></svg>",
-      }),
+      } as unknown as WebfontOptions),
     ).rejects.toThrow("glyphContentTransformFn is not supported when converting TTF input");
   });
 
@@ -44,7 +44,7 @@ describe("convertTtfInput", () => {
       convertTtfInput([], {
         files: fixtureTtf,
         formats: ["woff2"],
-      }),
+      } as WebfontOptions),
     ).rejects.toThrow("No TTF files matched");
   });
 
@@ -59,7 +59,7 @@ describe("convertTtfInput", () => {
         convertTtfInput([invalidPath], {
           files: invalidPath,
           formats: ["woff2"],
-        }),
+        } as WebfontOptions),
       ).rejects.toThrow(`Input is not a valid TrueType font: ${invalidPath}`);
     } finally {
       await fsPromise.rm(invalidPath, { force: true });
@@ -73,7 +73,7 @@ describe("convertTtfInput", () => {
       convertTtfInput([remoteUrl], {
         files: remoteUrl,
         formats: ["woff2"],
-      }),
+      } as WebfontOptions),
     ).rejects.toThrow(`Remote TTF URLs are not supported. Download the file first: ${remoteUrl}`);
   });
 
@@ -85,7 +85,7 @@ describe("convertTtfInput", () => {
         files: fixtureTtf,
         formats: ["woff2"],
         verbose: true,
-      });
+      } as WebfontOptions);
 
       expect(logSpy).toHaveBeenCalledWith(`Encoding ${fixtureTtf}...`);
     } finally {
@@ -97,7 +97,7 @@ describe("convertTtfInput", () => {
     const result = await convertTtfInput([fixtureTtf], {
       files: fixtureTtf,
       formats: ["ttf", "woff2"],
-    });
+    } as WebfontOptions);
 
     expect(isTtf(result.ttf)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
@@ -108,7 +108,7 @@ describe("convertTtfInput", () => {
     const result = await convertTtfInput([fixtureTtf, fixtureTtf], {
       files: [fixtureTtf, fixtureTtf],
       formats: ["woff2"],
-    });
+    } as WebfontOptions);
 
     expect(result.woff2).toBeUndefined();
     expect(result.transcodedFonts).toHaveLength(2);

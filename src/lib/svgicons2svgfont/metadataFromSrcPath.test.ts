@@ -12,7 +12,7 @@ const getMetadata = (
         return;
       }
 
-      resolve({ name: metadata.name, unicode: metadata.unicode });
+      resolve({ name: metadata.name, unicode: metadata.unicode as string[] });
     });
   });
 

@@ -17,14 +17,14 @@ const libraryPlugins: PluginOption[] = [
   checker({
     enableBuild: true,
     typescript: {
-      tsconfigPath: "tsconfig.json",
+      tsconfigPath: "tsconfig.build.json",
     },
   }),
   dts({
     entryRoot: ".",
     outDirs: "dist",
     strictOutput: true,
-    tsconfigPath: "tsconfig.json",
+    tsconfigPath: "tsconfig.build.json",
   }),
 ];
 

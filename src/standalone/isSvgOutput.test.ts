@@ -62,7 +62,7 @@ describe("is-svg output validation", () => {
       });
 
       expect(result.svg).toBeDefined();
-      expect(isSvg(result.svg)).toBe(true);
+      expect(isSvg(result.svg as string)).toBe(true);
     });
 
     it("should not emit result.svg when only woff2 is requested", async () => {

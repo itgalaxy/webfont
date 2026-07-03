@@ -1,5 +1,5 @@
 vi.mock("svg2ttf", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("svg2ttf")>();
+  const actual = await importOriginal<{ default: typeof import("svg2ttf") }>();
   return {
     default: vi.fn(actual.default),
   };
@@ -32,7 +32,7 @@ const getSvgFontString = async (): Promise<string> => {
 describe("svg2ttf output validation", () => {
   beforeEach(async () => {
     mockedSvg2ttf.mockClear();
-    const actual = await vi.importActual<typeof import("svg2ttf")>("svg2ttf");
+    const actual = await vi.importActual<{ default: typeof import("svg2ttf") }>("svg2ttf");
     mockedSvg2ttf.mockImplementation(actual.default);
   });
 
@@ -73,7 +73,9 @@ describe("svg2ttf output validation", () => {
     it("should document that svg2ttf rejects non-string version options", async () => {
       const svgFont = await getSvgFontString();
 
-      expect(() => svg2ttf(svgFont, { version: 1 })).toThrow(/version option should be a string/u);
+      expect(() => svg2ttf(svgFont, { version: 1 as unknown as string })).toThrow(
+        /version option should be a string/u,
+      );
     });
 
     it("should document that svg2ttf rejects invalid version strings", async () => {

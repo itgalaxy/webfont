@@ -24,6 +24,8 @@ await webfont({ files: "icons/*.svg" });
 - `import { webfont } from "webfont"` → still works (named export).
 - `const { webfont } = require("webfont")` → still works (CJS named export).
 
+Both interops are now guarded on every PR and on release by the `test:pack` script (`scripts/pack-smoke-test.mjs`), which runs `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape can generate a real `woff2` from fixtures. This prevents future regressions of `package.json#exports`, `files`, or the ESM/CJS build outputs from shipping to npm.
+
 ## Workaround on older versions
 
 Use the **named import** instead of the default import — no upgrade required:

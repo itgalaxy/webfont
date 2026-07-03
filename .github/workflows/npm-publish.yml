@@ -30,6 +30,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: Pack and smoke-test the tarball as a consumer (ESM + CJS)
+        run: npm run test:pack
 
   publish-npm:
     needs: build

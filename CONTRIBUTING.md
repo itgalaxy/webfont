@@ -113,6 +113,20 @@ New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md)
 
 Run `npm test` before pushing. Integration-only coverage for a localized guard is incomplete.
 
+#### Packaged consumer smoke test (`npm run test:pack`)
+
+`npm run test:pack` runs `scripts/pack-smoke-test.mjs`, which packs the current build with `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape works end-to-end:
+
+- `import webfont from "webfont"` (ESM default) → `typeof === "function"` and can generate a real `woff2` from fixtures.
+- `import { webfont } from "webfont"` (ESM named) → same.
+- `const { webfont } = require("webfont")` (CJS named) and `require("webfont").default` (CJS default) → same.
+
+This guards `package.json#exports`, `package.json#files`, and the built `dist/*.mjs` / `dist/*.js` against regressions the in-source Vitest suite cannot see (for example [#618](https://github.com/itgalaxy/webfont/issues/618), where the ESM default import returned the module namespace object and threw `TypeError: webfont is not a function`).
+
+The pack smoke test runs on every pull request in [`.github/workflows/pr.yml`](.github/workflows/pr.yml) and is wired into `prepublishOnly`, so `npm publish` fails locally if the tarball would ship a broken import shape.
+
+When adding or removing files from `dist/`, updating `package.json#exports`, or touching the Vite build modes, run `npm run test:pack` locally before pushing.
+
 - Lint and test before submitting code by running `$ npm test`;
 - Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;
 - Write a [convincing description](https://github.com/itgalaxy/webfont/blob/master/.github/pull_request_template.md) of why we should land your pull request: it’s your job to convince us.

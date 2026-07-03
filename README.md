@@ -299,6 +299,14 @@ await webfont({
 
 Do **not** use `Math.random()` in `fontName` — that renames both font files and the stylesheet on every run.
 
+#### `unicodeRange`
+
+- Type: `boolean | string`
+- Default: `true` (auto-computed from glyph code points)
+- Description: When a built-in `template` is used, emit a `unicode-range` declaration in `@font-face` so the browser can load only the icon font that owns the code points on the page. With the default `startUnicode` (`0xEA01`), the range is derived from the minimum and maximum allocated code points (for example `U+EA01-EA03`). Set to `false` to omit the rule, or pass a CSS value string (for example `U+EA01-EAFF`) to override the computed range.
+- CLI: `--no-unicode-range` to disable
+- Helps when multiple icon fonts share a page ([#322](https://github.com/itgalaxy/webfont/issues/322)).
+
 #### `ligatures`
 
 - Type: `boolean`

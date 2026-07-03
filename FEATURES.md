@@ -115,10 +115,12 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - SVG pipeline only (not webfont decompression or TTF encoding mode).
   - `templateCacheString`: manual query string on font URLs (default `Date.now()`).
   - `addHashInFontUrl`: append MD5 `&v=<hash>` from SVG font content; **filenames stay** `fontName.*` ([#125](https://github.com/itgalaxy/webfont/issues/125)).
+  - `unicodeRange`: emit `unicode-range` in built-in `@font-face` from glyph code points (default on); `--no-unicode-range` or `unicodeRange: false` to omit ([#322](https://github.com/itgalaxy/webfont/issues/322)).
 - **Test Criteria**:
   - [x] Built-in `css` template snapshot / integration coverage
   - [x] Subset `formats` with template omits unused format URLs
   - [x] `addHashInFontUrl` on `css` and `scss` templates appends content hash to URLs
+  - [x] `unicodeRange` adds computed `U+<min>-<max>` to built-in templates; `false` omits it
 
 ### Command-line interface (CLI)
 

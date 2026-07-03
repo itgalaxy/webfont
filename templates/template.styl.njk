@@ -3,6 +3,9 @@
 {% endfor %}
 @font-face {
     font-family: {{ fontName }};
+    {% if unicodeRange %}
+    unicode-range: {{ unicodeRange }};
+    {% endif %}
     {% if formats.indexOf('eot')>-1 -%}
         src: url("{{ fontPath }}{{ fontName }}.eot{% if hash %}?v={{ hash }}{% endif %}");
     {%- endif -%}

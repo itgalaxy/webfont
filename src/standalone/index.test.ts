@@ -519,6 +519,41 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
+  it("should include unicode-range in built-in templates by default (#322)", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "css",
+      templateCacheString: "test",
+      formats: ["woff2"],
+    });
+
+    expect(result.template).toContain("unicode-range: U+EA01-EA03;");
+  });
+
+  it("should omit unicode-range when unicodeRange is false", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "css",
+      templateCacheString: "test",
+      formats: ["woff2"],
+      unicodeRange: false,
+    });
+
+    expect(result.template).not.toContain("unicode-range:");
+  });
+
+  it("should use a manual unicode-range override", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "css",
+      templateCacheString: "test",
+      formats: ["woff2"],
+      unicodeRange: "U+EA01-EAFF",
+    });
+
+    expect(result.template).toContain("unicode-range: U+EA01-EAFF;");
+  });
+
   it("should export `glyphsData` in `result`", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

@@ -3,8 +3,10 @@ import nunjucks from "nunjucks";
 import path from "path";
 import { getBuiltInTemplates, getTemplateFilePath } from "../../templates";
 import { normalizeTemplateOption } from "../lib/parseTemplateOption";
+import { resolveTemplateUnicodeRange } from "../lib/templateUnicodeRange";
 import type { Format } from "../types/Format";
 import type { GlyphData } from "../types/GlyphData";
+import type { GlyphMetadata } from "../types/GlyphMetadata";
 import type { RenderedTemplate } from "../types/RenderedTemplate";
 import type { Result } from "../types/Result";
 import type { WebfontOptions } from "../types/WebfontOptions";
@@ -36,9 +38,14 @@ export const renderTemplates = (
     hashOption = { hash: result.hash };
   }
 
+  const glyphs =
+    result.glyphsData
+      ?.map((glyph: GlyphData) => glyph.metadata)
+      .filter((metadata): metadata is GlyphMetadata => metadata !== undefined) ?? [];
+
   const nunjucksBaseOptions = deepmerge.all([
     {
-      glyphs: result.glyphsData?.map((glyph: GlyphData) => glyph.metadata) ?? [],
+      glyphs,
     },
     options,
     {
@@ -52,6 +59,9 @@ export const renderTemplates = (
       fonts: Object.fromEntries(
         new Map(formats.map((format: Format) => [format, () => getTemplateFontBase64(format, result)])),
       ),
+    },
+    {
+      unicodeRange: resolveTemplateUnicodeRange(options.unicodeRange, glyphs),
     },
   ]);
 

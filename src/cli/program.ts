@@ -39,6 +39,7 @@ export type CliLike = {
     round?: string;
     sort?: boolean;
     startUnicode?: string;
+    unicodeRange?: boolean;
     template?: string;
     templateCacheString?: string;
     templateClassName?: string;
@@ -167,6 +168,10 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
 
   if (cli.flags.ligatures === false) {
     optionsBase.ligatures = cli.flags.ligatures;
+  }
+
+  if (cli.flags.unicodeRange === false) {
+    optionsBase.unicodeRange = cli.flags.unicodeRange;
   }
 
   if (cli.flags.addHashInFontUrl) {

@@ -51,6 +51,9 @@
         font-family: "{{ fontName }}";
         font-style: normal;
         font-weight: 400;
+        {% if unicodeRange %}
+        unicode-range: {{ unicodeRange }};
+        {% endif %}
         {% if formats.indexOf('eot')>-1 -%}
           src: url("{{ fontPath }}{{ fontName }}.eot?{{ cacheString }}{% if hash %}&v={{ hash }}{% endif %}");
         {%- endif %}

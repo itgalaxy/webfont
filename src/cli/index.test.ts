@@ -428,6 +428,29 @@ describe("cli", () => {
     expect(scss).toContain('url("./webfont.woff2?');
   });
 
+  it("should include unicode-range in css template by default (#322)", async () => {
+    const output = await execCLI(
+      `${source} -d ${destination} --template css --templateCacheString test --formats woff2`,
+    );
+
+    expect(output.files).toEqual(["webfont.css", "webfont.woff2"]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
+    expect(css).toContain("unicode-range: U+EA01-EA03;");
+  });
+
+  it("should omit unicode-range when --no-unicode-range is passed", async () => {
+    const output = await execCLI(
+      `${source} -d ${destination} --template css --templateCacheString test --formats woff2 --no-unicode-range`,
+    );
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    const css = await fsPromise.readFile(`${destination}/webfont.css`, { encoding: "utf-8" });
+    expect(css).not.toContain("unicode-range:");
+  });
+
   it("should set font name", async () => {
     const output = await execCLI(`${source} -d ${destination} --fontName foobar`);
 

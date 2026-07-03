@@ -625,7 +625,7 @@ describe("cli", () => {
 
   it("should respect svgicons2svgfont flags passed on the CLI", async () => {
     const output = await execCLI(
-      `${source} -d ${destination} --normalize --centerHorizontally --fixedWidth --fontWeight 500 --metadata test-meta`,
+      `${source} -d ${destination} --normalize --centerHorizontally --centerVertically --fixedWidth --fontWeight 500 --metadata test-meta`,
     );
 
     expect(output.code).toBe(0);

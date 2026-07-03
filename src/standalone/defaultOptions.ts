@@ -4,6 +4,7 @@ import type { WebfontOptions } from "../types/WebfontOptions";
 export const defaultWebfontOptions = (): Omit<WebfontOptions, "files"> =>
   ({
     centerHorizontally: false,
+    centerVertically: false,
     descent: 0,
     fixedWidth: false,
     fontHeight: undefined,

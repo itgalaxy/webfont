@@ -9,6 +9,7 @@ import type { SvgToolsOptions } from "./SvgToolsOptions";
 
 export interface WebfontOptions extends InitialOptions {
   centerHorizontally: boolean;
+  centerVertically: boolean;
   descent: number;
   fixedWidth: boolean;
   fontHeight: unknown;

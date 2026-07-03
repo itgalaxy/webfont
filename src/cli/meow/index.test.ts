@@ -7,6 +7,7 @@ const PROGRAM_CLI_FLAG_KEYS = [
   "addHashInFontUrl",
   "ascent",
   "centerHorizontally",
+  "centerVertically",
   "config",
   "descent",
   "dest",
@@ -179,6 +180,7 @@ describe("cli/meow", () => {
         "700",
         "--fixedWidth",
         "--centerHorizontally",
+        "--centerVertically",
         "--normalize",
         "--fontHeight",
         "100",
@@ -201,6 +203,7 @@ describe("cli/meow", () => {
       expect(cli.flags.fontWeight).toBe("700");
       expect(cli.flags.fixedWidth).toBe(true);
       expect(cli.flags.centerHorizontally).toBe(true);
+      expect(cli.flags.centerVertically).toBe(true);
       expect(cli.flags.normalize).toBe(true);
       expect(cli.flags.fontHeight).toBe("100");
       expect(cli.flags.round).toBe("1");
@@ -251,6 +254,7 @@ describe("cli/meow", () => {
           "700",
           "--fixedWidth",
           "--centerHorizontally",
+          "--centerVertically",
           "--normalize",
           "--fontHeight",
           "100",
@@ -289,6 +293,7 @@ describe("cli/meow", () => {
       expect(options.fontWeight).toBe("700");
       expect(options.fixedWidth).toBe(true);
       expect(options.centerHorizontally).toBe(true);
+      expect(options.centerVertically).toBe(true);
       expect(options.normalize).toBe(true);
       expect(options.fontHeight).toBe("100");
       expect(options.round).toBe("1");

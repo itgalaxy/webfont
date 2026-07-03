@@ -50,6 +50,7 @@ describe("cli program", () => {
             ascent: "10",
             addHashInFontUrl: true,
             centerHorizontally: true,
+            centerVertically: true,
             config: "webfont.config.js",
             descent: "5",
             dest: "temp/out",
@@ -97,6 +98,7 @@ describe("cli program", () => {
       expect(options.fontWeight).toBe("700");
       expect(options.fixedWidth).toBe(true);
       expect(options.centerHorizontally).toBe(true);
+      expect(options.centerVertically).toBe(true);
       expect(options.normalize).toBe(true);
       expect(options.fontHeight).toBe("100");
       expect(options.round).toBe("1");

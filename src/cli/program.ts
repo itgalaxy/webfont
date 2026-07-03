@@ -19,6 +19,7 @@ export type CliLike = {
     addHashInFontUrl?: boolean;
     ascent?: string;
     centerHorizontally?: boolean;
+    centerVertically?: boolean;
     config?: string;
     descent?: string;
     dest?: string;
@@ -130,6 +131,10 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
 
   if (cli.flags.centerHorizontally) {
     optionsBase.centerHorizontally = cli.flags.centerHorizontally;
+  }
+
+  if (cli.flags.centerVertically) {
+    optionsBase.centerVertically = cli.flags.centerVertically;
   }
 
   if (cli.flags.normalize) {

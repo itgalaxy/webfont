@@ -45,5 +45,27 @@ describe("svgicons2svgfont helpers", () => {
 
       expect(getFontStreamOptions(options).round).toBe(4);
     });
+
+    it("should forward centerHorizontally to the font stream", () => {
+      const options = {
+        centerHorizontally: true,
+      } as WebfontOptions;
+
+      expect(getFontStreamOptions(options).centerHorizontally).toBe(true);
+    });
+
+    it("should forward centerVertically to the font stream (#576)", () => {
+      const options = {
+        centerVertically: true,
+      } as WebfontOptions;
+
+      expect(getFontStreamOptions(options).centerVertically).toBe(true);
+    });
+
+    it("should not enable centerVertically by default", () => {
+      const options = {} as WebfontOptions;
+
+      expect(getFontStreamOptions(options).centerVertically).toBeUndefined();
+    });
   });
 });

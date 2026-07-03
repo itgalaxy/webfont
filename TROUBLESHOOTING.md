@@ -261,6 +261,36 @@ See also [MDN: fill-rule](https://developer.mozilla.org/en-US/docs/Web/SVG/Attri
 
 ---
 
+## Stroke-only SVGs produce blank icons
+
+### What error appeared
+
+On releases **after** the [#327](https://github.com/itgalaxy/webfont/issues/327) fix, webfont **fails the run** with a message similar to:
+
+```text
+Empty glyph path(s) in SVG font output for: wave (icons/wave.svg). Stroke-only SVGs (fill="none" with stroke) often produce empty glyphs because svgicons2svgfont does not convert strokes. ...
+```
+
+On **older releases**, the command may exit successfully but the icon is **invisible** in the browser — the font file exists, yet the glyph path is empty (`d=""`).
+
+### Why it usually happens
+
+- The SVG uses **strokes** instead of **filled paths** (`fill="none"` with `stroke`, or `<line>` / `<polyline>` elements).
+- **svgicons2svgfont** (the library that merges SVGs into a font) does **not** convert strokes to outlines. Stroke geometry is dropped, so the exported glyph has no path data.
+- Design tools and browsers still preview the SVG correctly; only the font export is affected.
+
+### Steps to try to resolve
+
+1. **Convert strokes to fills** in your design tool (Outline Stroke / Expand / Object to Path) before export.
+
+2. **Preprocess in your build** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) — for example [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer) installed in your project (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+
+3. **Scan sources before converting:** `webfont icons/*.svg --svg-diagnose` (or `svgTools: { diagnose: true }` in the API) logs stroke-only and unsupported-element warnings without changing files.
+
+4. **Optimize with SVGO** only after strokes are outlines — SVGO alone does not fix stroke-only artwork for icon fonts.
+
+---
+
 ## Can't resolve `fs` (webpack / React / Vite client bundle)
 
 ### What error appeared

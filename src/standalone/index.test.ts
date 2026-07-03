@@ -315,13 +315,16 @@ describe("standalone", () => {
 
   it("should transform SVG glyph contents before font generation (#144)", async () => {
     const strokedPath = `${fixturesGlob}/svg-stroke-icons/stroked-plus.svg`;
-    const filledContents = await fsPromise.readFile(`${fixturesGlob}/svg-stroke-icons/plus-filled.svg`, "utf8");
+    const filledPath = `${fixturesGlob}/svg-stroke-icons/plus-filled.svg`;
+    const filledContents = await fsPromise.readFile(filledPath, "utf8");
 
-    const withoutTransform = await standalone({
-      files: strokedPath,
-      formats: ["ttf"],
-      fontName: "plus",
-    });
+    await expect(
+      standalone({
+        files: strokedPath,
+        formats: ["ttf"],
+        fontName: "plus",
+      }),
+    ).rejects.toThrow(/Empty glyph path/u);
 
     const withTransform = await standalone({
       files: strokedPath,
@@ -330,11 +333,8 @@ describe("standalone", () => {
       glyphContentTransformFn: () => filledContents,
     });
 
-    const hash = (buffer: Buffer) => crypto.createHash("md5").update(buffer).digest("hex");
-
     expect(withTransform.glyphsData[0]?.contents).toBe(filledContents);
-    expect(hash(withTransform.ttf)).not.toBe(hash(withoutTransform.ttf));
-    expect(withTransform.ttf.length).toBeGreaterThan(withoutTransform.ttf.length);
+    expect(withTransform.ttf.length).toBeGreaterThan(1500);
     expect(isTtf(withTransform.ttf)).toBe(true);
   });
 
@@ -358,17 +358,27 @@ describe("standalone", () => {
     const logSpy = vi.spyOn(console, "log").mockImplementation(() => undefined);
 
     try {
-      const result = await standalone({
-        files: `${fixturesGlob}/svg-stroke-icons/stroked-plus.svg`,
-        formats: ["ttf"],
-        svgTools: { diagnose: true },
-      });
+      await expect(
+        standalone({
+          files: `${fixturesGlob}/svg-stroke-icons/stroked-plus.svg`,
+          formats: ["ttf"],
+          svgTools: { diagnose: true },
+        }),
+      ).rejects.toThrow(/Empty glyph path/u);
 
       expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("stroke-based paths"));
-      expect(result.svgDiagnostics?.some((entry) => entry.code === "stroke-only")).toBe(true);
     } finally {
       logSpy.mockRestore();
     }
+  });
+
+  it("should reject stroke-only SVGs that produce empty glyph paths (#327)", async () => {
+    await expect(
+      standalone({
+        files: `${fixturesGlob}/svg-icons-stroke-only/*.svg`,
+        formats: ["woff2"],
+      }),
+    ).rejects.toThrow(/Empty glyph path\(s\) in SVG font output/u);
   });
 
   it("should create css selectors with transform titles through function", async () => {

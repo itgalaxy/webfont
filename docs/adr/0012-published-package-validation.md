@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-07-03
-- **Related:** PR [#735](https://github.com/itgalaxy/webfont/pull/735) (ESM default import fix), PR [#737](https://github.com/itgalaxy/webfont/pull/737) (pack-smoke + publint + attw), issue [#618](https://github.com/itgalaxy/webfont/issues/618)
+- **Related:** PR [#735](https://github.com/itgalaxy/webfont/pull/735) (ESM default import fix), PR [#737](https://github.com/itgalaxy/webfont/pull/737) (publint + attw + pack-smoke + build changes), issue [#618](https://github.com/itgalaxy/webfont/issues/618)
 
 ## Context
 
@@ -16,23 +16,39 @@ The root cause was structural: `package.json#exports["."].node.import` pointed a
 - **Fail before publish:** a broken tarball must never reach npm. Guard runs in every PR and gates `npm publish` via `prepublishOnly`.
 - **Layered, not monolithic:** each tool catches a different class of issue. Running all three together is fast (~10s combined) and gives orthogonal signals.
 - **Zero flake:** every guard runs against the actual build artifacts (`npm pack` output), not source or a mock.
-- **Progressive tightening:** where a check reveals a known gap that requires a bigger build change, ignore that specific rule and document the follow-up in this ADR — do not silence the whole tool.
+- **Zero ignore rules.** Each layer runs with its default rule set. Where a check surfaced a real defect (types not resolving under node16-from-ESM, missing `sideEffects`), we fixed the underlying issue instead of adding an allowlist.
 
 ## Decision
 
 Adopt a **three-layer package validation** wired into `npm run test:package`, CI, and `prepublishOnly`.
 
+### Why three layers, not one
+
+The layers detect **different classes** of failure. They do not overlap in a way that would let us drop any of them:
+
+| Failure class | Detected by | Why the others miss it |
+|---------------|-------------|------------------------|
+| `package.json#exports` routes `import` to a CJS file (`false-esm`, `cjs-resolves-to-esm`) | **attw** (static) — flags the module-system mismatch | pack-smoke sees the runtime symptom but not the structural cause; publint does not model TS module resolution. |
+| `import webfont from "webfont"` returns an object instead of a function (`#618`) | **pack-smoke** (runtime) — actually calls `typeof webfont === "function"` and generates a woff2 | attw checks *types*, not runtime interop; a package with correct types can still have broken runtime default exports because of CJS ↔ ESM interop. |
+| `dist/index.mjs` missing from the tarball because `files` shrank | **pack-smoke** (tarball manifest check + runtime import) | publint validates static shape but does not open the tarball; attw errors would surface but as an obscure `no-resolution`. |
+| Types resolve under `bundler` but not `node16 (from ESM)` | **attw** — separate columns per module system | pack-smoke doesn't run TypeScript against types; publint doesn't simulate `moduleResolution`. |
+| `exports` condition ordering wrong (`default` before `node`) | **publint** | attw's happy-path resolution might still succeed for the tested module systems; pack-smoke doesn't audit `exports` structure. |
+| `types` extension mismatches runtime extension (`.d.ts` for `.mjs`) | **publint** (warning) and **attw** (error under `node16 from ESM`) | pack-smoke doesn't touch types. |
+| `main`, `module`, `bin`, `files` pointing at paths that were never built | **publint** and **pack-smoke** (tarball manifest check) | attw only inspects entry points that `exports` mentions. |
+| `sideEffects` missing so bundlers can't tree-shake | **publint** (suggestion) | Nothing else surfaces packaging metadata quality. |
+
+The rule of thumb: **publint = static package-metadata invariants**; **attw = static types resolution across module systems**; **pack-smoke = runtime interop from an actual consumer install**. Each is fast enough (<10s each) that running all three every PR is trivial.
+
 ### Layer 1: `publint` — `package.json` publish lint
 
 - `test:publint` runs [`publint`](https://publint.dev/) against the packed tarball.
 - Checks `main`, `module`, `browser`, `types`, `exports`, `files`, engine consistency, condition ordering, and other publish-surface invariants.
-- Exit status: **exits 0 on warnings/suggestions, non-zero only on errors**. We accept the two remaining suggestions on the current package (see §Known gaps) and let CI print them for information.
+- Ran at `--level=warning` so CI output stays actionable — informational suggestions are still visible on-demand via `npx publint` locally.
 
 ### Layer 2: `@arethetypeswrong/cli` (attw) — types resolution across module systems
 
 - `test:attw` runs [`attw --pack .`](https://arethetypeswrong.github.io/) which packs, extracts, and probes types resolution under **node10**, **node16 (from CJS)**, **node16 (from ESM)**, and **bundler**.
-- Green when every module-system column resolves a type declaration.
-- We currently ignore **only** `internal-resolution-error` because our `.d.mts` files use extension-less internal imports (see §Known gaps). All other rules — including `no-resolution`, `untyped-resolution`, `false-cjs`, `false-esm`, `cjs-resolves-to-esm`, `cjs-only-exports-default`, `named-exports`, `false-export-default`, `missing-export-equals` — are enforced.
+- **Zero ignore rules.** Every default rule is enforced — including `no-resolution`, `untyped-resolution`, `false-cjs`, `false-esm`, `cjs-resolves-to-esm`, `cjs-only-exports-default`, `named-exports`, `false-export-default`, `missing-export-equals`, `internal-resolution-error`.
 
 ### Layer 3: `scripts/pack-smoke-test.mjs` — consumer smoke test
 
@@ -49,10 +65,10 @@ Adopt a **three-layer package validation** wired into `npm run test:package`, CI
 ```json
 {
   "scripts": {
-    "test:attw": "attw --pack . --ignore-rules internal-resolution-error",
+    "test:attw": "attw --pack .",
     "test:pack": "node scripts/pack-smoke-test.mjs",
     "test:package": "npm run test:publint && npm run test:attw && npm run test:pack",
-    "test:publint": "publint",
+    "test:publint": "publint --level=warning",
     "prepublishOnly": "npm run build && npm run test:package"
   }
 }
@@ -63,11 +79,17 @@ Wired into `.github/workflows/pr.yml` (matrix Node 24.x + 26.x) and the `build` 
 ### Supporting build changes
 
 - New `"type": "commonjs"` in `package.json` — tells Node the default module system without extension-based sniffing.
+- New `"sideEffects": false` — the library entry (`dist/index.js` / `dist/index.mjs`) has no top-level side effects that survive tree-shaking; declaring purity lets downstream bundlers drop unused imports.
 - New `"exports"` routing with `types` per condition:
-  - `import` → `dist/src/index.d.mts` (types) + `dist/index.mjs` (runtime)
-  - `require` → `dist/src/index.d.ts` (types) + `dist/index.js` (runtime)
-  - `default` (browser) → `dist/src/index.d.ts` (types) + `dist/browser.js` (runtime)
-- New `scripts/emit-mts-types.mjs` runs after the Vite builds and duplicates every `dist/**/*.d.ts` to `.d.mts` so ESM consumers can resolve types with matching extensions.
+  - `browser` → `dist/src/index.d.ts` + `dist/browser.js`
+  - `node.import` → `dist/src/index.d.mts` (types) + `dist/index.mjs` (runtime)
+  - `node.require` → `dist/src/index.d.ts` (types) + `dist/index.js` (runtime)
+  - `default` → `dist/src/index.d.ts` (types) + `dist/browser.js` (runtime)
+- Legacy top-level `pkg.browser: "dist/browser.js"` is **kept intentionally** for webpack 4 / older bundlers that do not resolve `exports["."].browser`. publint prints a suggestion to migrate; we accept the suggestion (filtered out by `--level=warning`) because removing the top-level field is a real breaking change for those consumers and the modern `exports["."].browser` already covers new bundlers.
+- New `scripts/emit-mts-types.mjs` runs after the Vite builds:
+  1. Duplicates every `dist/**/*.d.ts` to a matching `.d.mts` so `package.json#exports["."].node.import.types` can point at `.d.mts` types with matching extension.
+  2. Rewrites every relative import specifier inside the emitted `.d.mts` files to end in `.mjs` (`from "./standalone"` → `from "./standalone/index.mjs"`), so TypeScript's `nodenext` / `node16` module resolution accepts them. Fails with a non-zero exit if any relative import cannot be resolved to a matching `.d.mts` — the same signal attw would produce.
+- The rewrite step in `emit-mts-types.mjs` is the reason attw runs with **zero ignore rules**. Before it existed, `internal-resolution-error` had to be silenced under node16-from-ESM.
 
 ## Consequences
 
@@ -75,27 +97,16 @@ Wired into `.github/workflows/pr.yml` (matrix Node 24.x + 26.x) and the `build` 
 
 - **#618-class regressions cannot ship.** Every PR runs the same tarball an npm consumer would install.
 - **Types resolve on every module system** used by TypeScript today (`node10`, `node16 CJS`, `node16 ESM`, `bundler`) — was ❌ for three of four before.
-- **Orthogonal signals.** publint catches `package.json` invariants; attw catches types-resolution mismatches; pack-smoke catches runtime interop bugs.
+- **Orthogonal signals.** publint catches `package.json` invariants; attw catches types-resolution mismatches; pack-smoke catches runtime interop bugs. Each covers a distinct failure class the others cannot see (see the table above).
+- **Zero ignore rules and zero silenced warnings.** attw runs with defaults; publint runs at `--level=warning` (which is filtering, not silencing — the `pkg.browser` legacy-shim suggestion is still visible via `npx publint`).
 - **Fast.** All three run in under ~10 seconds against a fresh build.
-- **Progressive quality bar.** New warnings or suggestions from publint are visible in every CI log without failing the build; new errors block the merge.
+- **Progressive quality bar.** New warnings from publint or new failures from attw block the merge; new suggestions surface on request.
 
 ### Negative / trade-offs
 
 - **Adds two devDependencies** (`publint`, `@arethetypeswrong/cli`) — mitigated by the alternative being another #618-scale outage.
-- **`emit-mts-types.mjs` duplicates every `.d.ts` as `.d.mts`.** The tarball roughly doubled in file count (81 → 141), though total size grew marginally because declaration files are small.
-- **One attw ignore rule** (`internal-resolution-error`) accepts a known limitation of our current type layout (see §Known gaps).
-
-### Known gaps (follow-up work)
-
-Documented here rather than silenced across the whole tool, so upgrades or scope changes surface them again:
-
-1. **`attw`: `internal-resolution-error` under node16-from-ESM.**
-   Our `dist/**/*.d.mts` files were duplicated from `.d.ts` and keep extension-less internal imports (`from "./standalone"`). TypeScript's `nodenext`/`node16` resolution on `.d.mts` files requires explicit `.mjs` extensions.
-   Fix: either bundle types into a single file (vite-plugin-dts `rollupTypes: true` did not collapse cross-file references in this repo), or post-process `.d.mts` files to rewrite internal specifiers to `.mjs`.
-2. **`publint` suggestion: `"sideEffects"` field missing.**
-   Bundlers cannot tree-shake unless the package declares side-effect purity. The Node CLI wrapper has intentional top-level side effects (banner); the library surface is pure. A follow-up should either mark files individually (`sideEffects: ["dist/cli.mjs"]`) after auditing, or add `"sideEffects": false` at the root only after verifying no import triggers module-load work.
-3. **`publint` suggestion: legacy `pkg.browser` string.**
-   The top-level `browser` field could migrate under `exports["."].browser`. Marked as *may be a breaking change* by publint; requires a coordinated release note.
+- **`emit-mts-types.mjs` duplicates every `.d.ts` as `.d.mts` and rewrites specifiers.** The tarball roughly doubled in file count (81 → 141), though total size grew marginally because declaration files are small. The rewrite step is regex-based on relative specifiers only — it fails loud if any specifier cannot be resolved.
+- **Kept `pkg.browser` string as a legacy shim.** publint suggests migrating fully to `exports["."].browser`; we filter suggestions (`--level=warning`) and document the decision so webpack 4 users are not broken. The modern `exports["."].browser` condition is already in place for new bundlers.
 
 ## Alternatives considered
 
@@ -105,14 +116,16 @@ Documented here rather than silenced across the whole tool, so upgrades or scope
 | **Only add pack-smoke** (proposed initially) | Catches runtime interop, but does not catch types-resolution regressions or `package.json` invariants. Two additional tools give orthogonal signals for negligible cost. |
 | **Only add publint** | Static analysis of `package.json`; misses the runtime interop that caused #618. |
 | **Only add attw** | Types-focused; misses runtime interop and general `package.json` hygiene. |
-| **Publish preview package to npm alpha channel** | Slow feedback loop, requires an npm write on every PR, and still needs the same three checks locally. |
-| **Skip validators entirely and file a bug report loop** | The failure mode is user-facing (`TypeError: webfont is not a function`); the cost of a bad release is higher than any tool overhead. |
+| **Use `@microsoft/api-extractor` (`rollupTypes: true`) to bundle all types into one file** | Would remove the need for the specifier-rewrite step, but drags in a ~10 MB peer dependency, requires an `api-extractor.json` config, and re-tests failed to collapse cross-file references on this codebase's `vite-plugin-dts@5.0.3`. The regex-based rewrite in `emit-mts-types.mjs` is ~40 lines and fails loud on any unresolvable specifier. |
+| **Silence attw `internal-resolution-error` with `--ignore-rules`** | Was the initial approach in draft #737 for ~15 minutes. Rejected — silencing hides real type-resolution bugs from future changes. |
+| **Publish preview package to npm alpha channel per PR** | Slow feedback loop, requires an npm write on every PR, and still needs the same three checks locally. |
 
 ## References
 
 - Issue [#618: `TypeError: webfont is not a function`](https://github.com/itgalaxy/webfont/issues/618)
 - PR [#735: `fix(build): expose callable default export from ESM build`](https://github.com/itgalaxy/webfont/pull/735)
-- PR [#737: `ci: guard published tarball import shapes with a pack-smoke test`](https://github.com/itgalaxy/webfont/pull/737)
+- PR [#737: `build(deps): guard published package with publint + attw + pack-smoke`](https://github.com/itgalaxy/webfont/pull/737)
 - [publint](https://publint.dev/)
 - [Are the Types Wrong?](https://arethetypeswrong.github.io/)
 - [Node.js `package.json` exports](https://nodejs.org/api/packages.html#exports)
+- [TypeScript module resolution: `node16` / `nodenext`](https://www.typescriptlang.org/docs/handbook/modules/reference.html#node16-nodenext)

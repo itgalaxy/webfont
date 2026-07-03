@@ -16,6 +16,7 @@
     "NOTICE.md"
   ],
   "type": "commonjs",
+  "sideEffects": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "browser": "dist/browser.js",
@@ -25,6 +26,10 @@
   "typings": "dist/src/index.d.ts",
   "exports": {
     ".": {
+      "browser": {
+        "types": "./dist/src/index.d.ts",
+        "default": "./dist/browser.js"
+      },
       "node": {
         "import": {
           "types": "./dist/src/index.d.mts",
@@ -55,10 +60,10 @@
     "pretest": "npm run build",
     "prettify": "biome check --write .",
     "test": "vitest run src",
-    "test:attw": "attw --pack . --ignore-rules internal-resolution-error",
+    "test:attw": "attw --pack .",
     "test:pack": "node scripts/pack-smoke-test.mjs",
     "test:package": "npm run test:publint && npm run test:attw && npm run test:pack",
-    "test:publint": "publint",
+    "test:publint": "publint --level=warning",
     "testc": "vitest run src --coverage",
     "test-debug": "vitest run src --no-file-parallelism",
     "testu": "vitest run src -u",

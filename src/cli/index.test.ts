@@ -333,6 +333,15 @@ describe("cli", () => {
     expect(output.stderr).toBe("");
   });
 
+  it("should load a JavaScript config via --config (#480)", async () => {
+    const configPath = `${fixturesGlob}/configs/webfont.config-cli.js`;
+    const output = await execCLI(`${source} -d ${destination} --config ${configPath}`);
+
+    expect(output.files).toEqual(["cli-config-js-font.hash", "cli-config-js-font.woff2"]);
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+  });
+
   it("should load config via --config with an absolute path", async () => {
     const configPath = path.resolve(fixturesGlob, "configs/.webfontrc-cli.json");
     const output = await execCLI(`${source} -d ${destination} --config ${configPath}`);

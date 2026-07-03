@@ -153,7 +153,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.
 - Run `npm run depcheck` (Knip) when changing imports or `package.json` dependencies; see [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md). The **pre-push** Lefthook runs `depcheck` before `npm test`.
-- Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `ci`).
+- Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `ci`, `build`). Prefer **`build(deps):`** or **`chore(deps):`** when the PR changes `package.json` / lockfile dependencies — even if the diff is mostly tests or docs (see [Pull requests](#pull-requests)).
 - Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)). Release git tags use **`v{semver}`** (`v12.0.0`); `release-please-config.json` sets `include-component-in-tag: false` — do not use `webfont-v*` tags.
 - Keep changes focused; match surrounding code style and tooling (Biome, Vitest, Lefthook).
 - Do not commit unless explicitly asked.
@@ -221,7 +221,7 @@ When a task produces branch changes intended for review (features, fixes, CI, do
 2. **Create a branch** from `master` using a **lowercase** name (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`). The entire branch name must stay lowercase — no camelCase or uppercase segments (avoid names like `test/toTtf-unit-tests`).
 3. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
 4. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
-5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template. **PR title must follow [Conventional Commits](https://www.conventionalcommits.org/)** (`type: description`, optional scope — e.g. `chore(deps): bump svg2ttf to 6.1.0`). Strip bot prefixes (`[Snyk]`, `[Dependabot]`) and rewrite to the correct type.
+5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template. **PR title must follow [Conventional Commits](https://www.conventionalcommits.org/)** (`type: description`, optional scope). Strip bot prefixes (`[Snyk]`, `[Dependabot]`) and rewrite to the correct type — use **`build(deps):`** or **`chore(deps):`** when dependencies change (see **Dependency bumps** under Scope, title, and description).
 6. **Return the PR URL** in the final response.
 
 **Squash merge only.** Routine merges to `master` use **Squash and merge** so the PR title is the single commit on `master` (Release Please depends on this). Do not use merge commits or rebase-merge unless a maintainer explicitly requests it.
@@ -276,7 +276,8 @@ Keep the template **headings and order**, but write each section critically — 
 
 ### Scope, title, and description
 
-- **PR title = Conventional Commits.** Match commit style (`feat:`, `fix:`, `chore(deps):`, `docs:`, `test:`, `ci:`, …). When the PR is open and the title is wrong, fix it with `gh pr edit` before ending the task.
+- **PR title = Conventional Commits.** Match commit style (`feat:`, `fix:`, `build(deps):`, `chore(deps):`, `docs:`, `test:`, `ci:`, …). When the PR is open and the title is wrong, fix it with `gh pr edit` before ending the task. Squash merge puts the title on `master`; Release Please reads it.
+- **Dependency bumps set the type.** If the PR updates **`package.json` / `package-lock.json` dependencies**, the title must be **`build(deps):`** or **`chore(deps):`** — not `test:`, `docs:`, or `refactor:` even when most of the diff is new tests. Example: `build(deps): bump wawoff2 to 2.0.1; add ttfEncode tests`. Strip `[Dependabot]` / `[Snyk]` prefixes and rewrite.
 - **Re-read the PR title and body whenever the branch scope changes.** After adding commits, update the title and **Proposed changes** section so reviewers see the full picture — not just the first commit message.
 - **Split when it grows too much.** If a branch picks up unrelated fixes, large test extractions, or docs on top of the original goal, prefer **separate PRs** for follow-up work rather than one ever-growing branch. This PR accumulated extra scope before that rule was written; use smaller PRs from here on.
 - **Explain why when closing a PR.** Leave an English comment (superseded, obsolete, duplicate, out of scope, etc.) — do not close without context. See [CONTRIBUTING.md](./CONTRIBUTING.md) (“Closing pull requests”).

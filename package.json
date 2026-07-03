@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
-    "@types/node": "^22.15.0",
+    "@types/node": "^26.1.0",
     "@types/nunjucks": "3.2.6",
     "@types/rimraf": "latest",
     "@types/svg2ttf": "5.0.3",

@@ -83,7 +83,7 @@ Font generation can finish before files are written. If the destination folder i
 6. **When using the programmatic API**, set `destCreate: true` if the folder may not exist yet:
 
    ```js
-   import webfont from "webfont";
+   import { webfont } from "webfont";
 
    await webfont({
      files: "src/icons/*.svg",
@@ -232,7 +232,7 @@ The same SVG looks correct in Inkscape, Illustrator, or Affinity Designer.
 
 Run with **`--verbose`** to log a warning when webfont detects `fill-rule: evenodd` in a source SVG.
 
-**Alpha — broader diagnostics:** use **`--svg-diagnose`** (CLI) or `svgTools: { diagnose: true }` (API) to also flag stroke-only SVGs and unsupported elements (`<line>`, `<polyline>`, `<clipPath>`). webfont does not auto-fix these — preprocess with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) when needed (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+**Alpha — broader diagnostics:** use **`--svg-diagnose`** (CLI) or `svgTools: { diagnose: true }` (API) to also flag stroke-only SVGs, `<use>` symbol references ([#612](https://github.com/itgalaxy/webfont/issues/612)), and unsupported elements (`<line>`, `<polyline>`, `<clipPath>`). webfont does not auto-fix these — preprocess with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) when needed (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
 
 ### Steps to try to resolve
 
@@ -290,6 +290,51 @@ On **older releases**, the command may exit successfully but the icon is **invis
 4. **Optional SVGO cleanup:** `webfont icons/*.svg --optimize-svg` (or `optimizeSvg: true`) removes comments and editor metadata before conversion — it does **not** convert strokes. Use **before** `glyphContentTransformFn` when you need both cleanup and stroke outlining ([#724](https://github.com/itgalaxy/webfont/issues/724)).
 
 5. **Optimize with SVGO** only after strokes are outlines — aggressive SVGO presets alone do not fix stroke-only artwork for icon fonts.
+
+---
+
+## SVG transform and `<use>` references
+
+### What error appeared
+
+There is often **no build error**. The font generates, but a glyph is **empty**, **wrong**, or **missing a flip/offset** that looks correct in the browser. Source SVGs may look like:
+
+```xml
+<use transform="matrix(1 0 0 -1 0 21.985684)" xlink:href="#symbol-id"></use>
+```
+
+See [#612](https://github.com/itgalaxy/webfont/issues/612).
+
+### Why it usually happens
+
+- **svgicons2svgfont** (the library that merges SVGs into a font) converts **filled paths** on each icon file. It does **not** resolve **`<use>` / `<symbol>`** references or bake **`transform`** on those instances into standalone path data.
+- **`transform` on paths/groups** is experimental upstream; **`<use xlink:href="#…">`** is a separate limitation — the referenced geometry is never inlined.
+- Design tools and browsers render `<use>` + `transform` correctly; the font pipeline does not.
+
+### Steps to try to resolve
+
+1. **Flatten before webfont** — in Illustrator, Inkscape, or Figma export: **Expand / Flatten / Outline stroke**, or export **plain SVG** without symbols/instances.
+
+2. **SVGO** (in your build): plugins such as **`convertShapeToPath`** and **`cleanupIds`** help; use a preset that inlines or removes `<use>` where possible. webfont’s **`--optimize-svg`** does **not** inline `<use>` — run SVGO in `glyphContentTransformFn` if you need that step.
+
+3. **Scan sources:** `webfont icons/*.svg --svg-diagnose` warns when `<use>` is detected (**12.1.0+**).
+
+4. **Preprocess in code:**
+
+   ```js
+   import { webfont } from "webfont";
+   import { optimize } from "svgo";
+
+   await webfont({
+     files: "src/icons/**/*.svg",
+     glyphContentTransformFn: async (glyph) =>
+       optimize(glyph.contents, { plugins: ["preset-default"] }).data,
+   });
+   ```
+
+   Adjust SVGO plugins to your icons; test output glyphs in the HTML preview.
+
+See also [`docs/migration/issue-0612-svg-use-transform.md`](./docs/migration/issue-0612-svg-use-transform.md).
 
 ---
 

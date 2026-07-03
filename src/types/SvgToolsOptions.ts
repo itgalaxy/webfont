@@ -1,4 +1,4 @@
-export type SvgDiagnosticCode = "evenodd-fill-rule" | "stroke-only" | "unsupported-element";
+export type SvgDiagnosticCode = "evenodd-fill-rule" | "stroke-only" | "unsupported-element" | "use-reference";
 
 export type SvgGlyphDiagnostic = {
   code: SvgDiagnosticCode;

@@ -4,7 +4,7 @@
 
 @font-face {
   font-display: block;
-  font-family: "{{ fontName }}";
+  font-family: "{{ fontFamily }}";
   font-style: normal;
   font-weight: 400;
   {% if unicodeRange %}
@@ -39,13 +39,13 @@
     {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
   {%- endif -%}
   {%- if svgIndex != -1 -%}
-    url("{{ fontPath }}{{ fontName }}.svg?{{ cacheString }}{% if hash %}&v={{ hash }}{% endif %}#{{ fontName }}") format("svg");
+    url("{{ fontPath }}{{ fontName }}.svg?{{ cacheString }}{% if hash %}&v={{ hash }}{% endif %}#{{ svgFontId }}") format("svg");
   {%- endif %}
 }
 
 %{{ className }} {
 display: inline-block;
-  font-family: "{{ fontName }}";
+  font-family: "{{ fontFamily }}";
   font-weight: 400;
   font-style: normal;
   font-variant: normal;

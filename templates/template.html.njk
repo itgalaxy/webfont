@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{{ fontName }}</title>
+    <title>{{ fontFamily }}</title>
     <style type="text/css">
       body {
         margin: 0;
@@ -48,7 +48,7 @@
 
       @font-face {
         font-display: block;
-        font-family: "{{ fontName }}";
+        font-family: "{{ fontFamily }}";
         font-style: normal;
         font-weight: 400;
         {# Ligature preview types ASCII names; unicode-range limited to PUA blocks the font for those code points. #}
@@ -84,13 +84,13 @@
           {%- if formats.length != 0 -%}, {% else -%}; {% endif -%}
         {%- endif -%}
         {%- if svgIndex != -1 -%}
-          url("{{ fontPath }}{{ fontName }}.svg?{{ cacheString }}{% if hash %}&v={{ hash }}{% endif %}#{{ fontName }}") format("svg");
+          url("{{ fontPath }}{{ fontName }}.svg?{{ cacheString }}{% if hash %}&v={{ hash }}{% endif %}#{{ svgFontId }}") format("svg");
         {%- endif %}
       }
 
       .{{ className }} {
         display: inline-block;
-        font-family: "{{ fontName }}";
+        font-family: "{{ fontFamily }}";
         font-weight: 400;
         font-style: normal;
         font-variant: normal;

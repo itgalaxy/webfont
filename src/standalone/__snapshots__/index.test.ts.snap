@@ -1392,8 +1392,8 @@ exports[`standalone > should respect \`template\` options 1`] = `
   font-style: normal;
   font-weight: 400;
   
-  src: url("./foo-bar/bar.eot?test");
-  src: url("./foo-bar/bar.eot?#iefix") format("embedded-opentype"), url("./foo-bar/bar.woff2?test") format("woff2"), url("./foo-bar/bar.woff?test") format("woff"), url("./foo-bar/bar.ttf?test") format("truetype"), url("./foo-bar/bar.svg?test#bar") format("svg");
+  src: url("./foo-bar/webfont.eot?test");
+  src: url("./foo-bar/webfont.eot?#iefix") format("embedded-opentype"), url("./foo-bar/webfont.woff2?test") format("woff2"), url("./foo-bar/webfont.woff?test") format("woff"), url("./foo-bar/webfont.ttf?test") format("truetype"), url("./foo-bar/webfont.svg?test#webfont") format("svg");
 }
 
 .foo {

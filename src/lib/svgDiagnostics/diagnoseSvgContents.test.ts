@@ -1,7 +1,12 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { hasEvenoddFillRule } from "../evenoddFillRule";
-import { diagnoseSvgContents, hasStrokeOnlySvg, hasUnsupportedSvgElements } from "./diagnoseSvgContents";
+import {
+  diagnoseSvgContents,
+  hasStrokeOnlySvg,
+  hasUnsupportedSvgElements,
+  hasUseReference,
+} from "./diagnoseSvgContents";
 
 const fixturesGlob = resolve(__dirname, "../../fixtures");
 
@@ -32,6 +37,18 @@ describe("diagnoseSvgContents", () => {
 
     expect(hasStrokeOnlySvg(svg)).toBe(false);
     expect(hasUnsupportedSvgElements(svg)).toBe(false);
+    expect(hasUseReference(svg)).toBe(false);
     expect(diagnoseSvgContents("plus-filled.svg", svg)).toEqual([]);
+  });
+
+  it("should detect <use> references with transform (#612)", () => {
+    const svg = readFileSync(`${fixturesGlob}/svg-use-icons/use-transform.svg`, "utf8");
+
+    expect(hasUseReference(svg)).toBe(true);
+
+    const diagnostics = diagnoseSvgContents("use-transform.svg", svg);
+
+    expect(diagnostics.some((entry) => entry.code === "use-reference")).toBe(true);
+    expect(diagnostics[0]?.message).toContain("612");
   });
 });

@@ -85,8 +85,26 @@ npm install --save-dev webfont
 
 Node.js only — do not import from client-side app code ([#198](https://github.com/itgalaxy/webfont/issues/198)).
 
+### Import (ESM and CommonJS)
+
+Use the **named export** — required for native ESM and recommended since webfont **10+**:
+
 ```js
-import webfont from "webfont";
+import { webfont } from "webfont";
+```
+
+CommonJS:
+
+```js
+const { webfont } = require("webfont");
+```
+
+`import webfont from "webfont"` often fails under `"type": "module"` with `TypeError: webfont is not a function` because the default export is not always the function itself ([#618](https://github.com/itgalaxy/webfont/issues/618)). A default export remains for older tooling; prefer the named import in new code. See [MIGRATION.md](./MIGRATION.md).
+
+### Basic example
+
+```js
+import { webfont } from "webfont";
 
 webfont({
   files: "src/svg-icons/**/*.svg",
@@ -106,7 +124,7 @@ webfont({
 or
 
 ```js
-const webfont = require("webfont").default;
+const { webfont } = require("webfont");
 
 webfont({
   files: "src/svg-icons/**/*.svg",
@@ -126,7 +144,7 @@ webfont({
 ### TTF encoding examples
 
 ```js
-import webfont from "webfont";
+import { webfont } from "webfont";
 
 // Single local TTF → WOFF + WOFF2 (default when formats unset)
 const encoded = await webfont({
@@ -150,7 +168,7 @@ const batch = await webfont({
 ### Webfont decompress examples
 
 ```js
-import webfont from "webfont";
+import { webfont } from "webfont";
 
 // Single local file
 const one = await webfont({
@@ -284,7 +302,7 @@ webfont "icons/*.svg" -d dist/icons -t scss --addHashInFontUrl
 ```
 
 ```js
-import webfont from "webfont";
+import { webfont } from "webfont";
 
 await webfont({
   files: "src/icons/**/*.svg",
@@ -332,7 +350,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 - Example:
 
   ```js
-  import webfont from "webfont";
+  import { webfont } from "webfont";
 
   webfont({
     files: "src/svg-icons/**/*.svg",
@@ -363,7 +381,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
   ```js
   import outlineStroke from "svg-outline-stroke";
-  import webfont from "webfont";
+  import { webfont } from "webfont";
 
   await webfont({
     files: "src/svg-icons/**/*.svg",
@@ -382,7 +400,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 - Optional: `svgoConfig` — SVGO `Config` object; when `plugins` is set, it replaces the built-in conservative plugin list.
 
   ```js
-  import webfont from "webfont";
+  import { webfont } from "webfont";
 
   await webfont({
     files: "src/icons/**/*.svg",
@@ -399,13 +417,13 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 - Type: `{ diagnose?: boolean; onMessage?: (message: string) => void }`
 - Default: `undefined` (disabled)
 - Description: **Alpha.** Scan SVG sources for icon-font incompatibilities before font generation (SVG pipeline only). Does **not** modify SVGs — use [`glyphContentTransformFn`](#glyphcontenttransformfn) to preprocess (for example stroke-to-fill with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke), installed in your project). See [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md).
-  - **`diagnose`:** log warnings for `fill-rule: evenodd`, stroke-only paths (`fill="none"` + `stroke`), and poorly supported elements (`<line>`, `<polyline>`, `<clipPath>`). Results are also returned on `result.svgDiagnostics` when enabled.
+  - **`diagnose`:** log warnings for `fill-rule: evenodd`, stroke-only paths (`fill="none"` + `stroke`), `<use>` symbol references ([#612](https://github.com/itgalaxy/webfont/issues/612)), and poorly supported elements (`<line>`, `<polyline>`, `<clipPath>`). Results are also returned on `result.svgDiagnostics` when enabled.
   - **`onMessage`:** optional sink for diagnostic log lines (tests, custom UIs).
 - CLI: `--svg-diagnose` (alpha).
 - Example:
 
   ```js
-  import webfont from "webfont";
+  import { webfont } from "webfont";
 
   const result = await webfont({
     files: "src/icons/**/*.svg",
@@ -424,7 +442,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 - Description: Custom callback to resolve glyph metadata for each source file. Receives the file path and a Node-style callback `(error, metadata)` where `metadata` is `{ name: string, unicode?: string | string[] }`. When omitted, webfont uses its default metadata reader.
 
   ```js
-  import webfont from "webfont";
+  import { webfont } from "webfont";
 
   webfont({
     files: "src/svg-icons/**/*.svg",

@@ -4,6 +4,7 @@ import { hasEvenoddFillRule } from "../evenoddFillRule";
 const STROKE_ATTR_PATTERN = /\bstroke\s*=|\bstroke\s*:/iu;
 const FILL_NONE_PATTERN = /fill\s*=\s*["']none["']|fill\s*:\s*none/iu;
 const UNSUPPORTED_ELEMENT_PATTERN = /<(line|polyline|clipPath)\b/iu;
+const USE_REFERENCE_PATTERN = /<use\b/iu;
 
 export const hasStrokeOnlySvg = (svgContents: string): boolean => {
   if (!STROKE_ATTR_PATTERN.test(svgContents)) {
@@ -16,6 +17,8 @@ export const hasStrokeOnlySvg = (svgContents: string): boolean => {
 export const hasUnsupportedSvgElements = (svgContents: string): boolean =>
   UNSUPPORTED_ELEMENT_PATTERN.test(svgContents);
 
+export const hasUseReference = (svgContents: string): boolean => USE_REFERENCE_PATTERN.test(svgContents);
+
 const diagnosticMessage = (code: SvgDiagnosticCode, srcPath: string): string => {
   switch (code) {
     case "evenodd-fill-rule":
@@ -24,6 +27,8 @@ const diagnosticMessage = (code: SvgDiagnosticCode, srcPath: string): string => 
       return `[webfont:diagnose] ${srcPath} uses stroke-based paths (fill="none"). svgicons2svgfont ignores stroke; outlines may render as solid shapes or lose detail. Preprocess with glyphContentTransformFn (for example svg-outline-stroke) before conversion. See TROUBLESHOOTING.md ("Icon details missing after export").`;
     case "unsupported-element":
       return `[webfont:diagnose] ${srcPath} contains <line>, <polyline>, or <clipPath>. These elements are poorly supported in icon fonts; results may differ from the browser preview. Convert to filled paths or preprocess with glyphContentTransformFn.`;
+    case "use-reference":
+      return `[webfont:diagnose] ${srcPath} contains <use> (symbol/instance references). svgicons2svgfont does not resolve <use> or apply transform on references — the glyph may be empty or wrong. Flatten to paths in your editor, or preprocess with SVGO / glyphContentTransformFn before conversion. See TROUBLESHOOTING.md ("SVG transform and <use> references", #612).`;
     default: {
       const exhaustive: never = code;
       return exhaustive;
@@ -54,6 +59,14 @@ export const diagnoseSvgContents = (srcPath: string, svgContents: string): SvgGl
     diagnostics.push({
       code: "unsupported-element",
       message: diagnosticMessage("unsupported-element", srcPath),
+      srcPath,
+    });
+  }
+
+  if (hasUseReference(svgContents)) {
+    diagnostics.push({
+      code: "use-reference",
+      message: diagnosticMessage("use-reference", srcPath),
       srcPath,
     });
   }

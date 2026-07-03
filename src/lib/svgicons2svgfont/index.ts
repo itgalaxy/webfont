@@ -50,6 +50,7 @@ export const getFontStreamOptions = (options: WebfontOptions): Partial<SVGIcons2
   ({
     ascent: options.ascent,
     centerHorizontally: options.centerHorizontally,
+    centerVertically: options.centerVertically,
     descent: options.descent,
     fixedWidth: options.fixedWidth,
     fontHeight: options.fontHeight,

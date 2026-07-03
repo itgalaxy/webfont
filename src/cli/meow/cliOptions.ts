@@ -146,6 +146,10 @@ export const webfontCliHelpText = `
 
             Calculate the bounds of a glyph and center it horizontally.
 
+        --centerVertically
+
+            Center the glyphs vertically in the generated font.
+
         --normalize
 
             Normalize icons by scaling them to the height of the highest icon.
@@ -190,6 +194,9 @@ export const webfontMeowFlags = {
     type: "string",
   },
   centerHorizontally: {
+    type: "boolean",
+  },
+  centerVertically: {
     type: "boolean",
   },
   config: {

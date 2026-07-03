@@ -7,6 +7,7 @@ const baseOptions = (): WebfontOptions =>
     fontName: "webfont",
     formats: ["woff2"],
     centerHorizontally: false,
+    centerVertically: false,
     descent: 0,
     fixedWidth: false,
     fontStyle: "normal",

@@ -184,7 +184,13 @@ Process open issues **oldest to newest** (`gh issue list --state open`, sort by 
 
 ### Fix PR (when a code or docs change is needed)
 
-1. Comment on the issue **in English**: investigation is in progress; link the PR when it exists.
+1. Comment on the issue **in English** as soon as you understand the report:
+   - What you are investigating.
+   - **What was discovered** (root cause, reproduction, or why it is not a bug).
+   - **How it will be fixed** (approach) and link the PR when it exists.
+   - **Release expectation:** fix is in review / will ship in the **next npm release** after merge — it is **not** on npm until published.
+   - A **workaround** for users on the current npm version when practical.
+   Do not leave reporters waiting with only a PR link and no explanation.
 2. **Tests first:** check coverage for the affected area. Add or extend tests that name the failure **before** changing production code when coverage is missing.
 3. Implement the fix; run `npm test`.
 4. **Bugs and behavior changes across releases:** add **`docs/migration/issue-NNNN-<slug>.md`** using the [entry structure](./MIGRATION.md#entry-structure) (*Before* → *After* → **Workaround on older versions** → *After upgrading*). Do not edit `MIGRATION.md` body for new entries — only add a file under `docs/migration/` ([workflow](./docs/migration/README.md)). Link the GitHub issue. Use [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) only when the entry is not version-specific.
@@ -193,7 +199,7 @@ Process open issues **oldest to newest** (`gh issue list --state open`, sort by 
 
 ### After merge (before release)
 
-1. Comment on the issue **in English**: the fix is on `master`, planned for the **next** npm release, with a link to the merged PR.
+1. Comment on the issue **in English** with a short **post-merge update**: fix is on `master`, planned for the **next** npm release, link to the merged PR, and repeat the workaround until upgrade.
 2. **Keep the issue open** until the fix is published on npm.
 3. Point reporters to the migration file for their issue under [`docs/migration/`](./docs/migration/) (workarounds on their version) when the fix is not on npm yet.
 

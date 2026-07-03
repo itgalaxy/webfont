@@ -24,8 +24,14 @@ When working through the issue tracker (see also [AGENTS.md](./AGENTS.md) — �
 
 1. Triage: assignee, milestone `next`, type label (`bug`, `enhancement`, etc.).
 2. Fix PR: tests where needed, code change, and for **issue fixes that change behavior across releases** a new file `docs/migration/issue-NNNN-<slug>.md` ([workflow](./docs/migration/README.md), [entry structure](./MIGRATION.md#entry-structure)).
-3. After merge: comment on the issue in English that the fix is on `master` and planned for the next release; **leave the issue open** until npm publish.
-4. On release: comment with the **version number** and the exact steps from MIGRATION.md, then **close** the issue.
+3. **Keep reporters informed on the issue thread (English):**
+   - When investigation starts: what you are checking; link the PR when it exists.
+   - **Explain what was discovered** (root cause, not only “we’ll fix it”).
+   - **Explain how it will be resolved** (PR link, expected behavior after merge).
+   - **State release status** clearly: fix on `master` / in review / **planned for the next npm release** — not on npm until published.
+   - Include a **workaround** on the current npm version when one exists.
+4. After merge: comment that the fix is on `master` and planned for the next release; **leave the issue open** until npm publish.
+5. On release: comment with the **version number** and the exact steps from MIGRATION.md, then **close** the issue.
 
 ## Giving feedback on issues
 

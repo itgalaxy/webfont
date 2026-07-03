@@ -318,7 +318,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
 - Type: `boolean`
 - Default: `true`
-- Description: When `true` and the built-in **`html`** preview template is used, the generated CSS enables `font-feature-settings: "liga"` on the **Ligature** section (`#icon-ligatures`) so ligature names render as icons instead of invisible/missing glyphs. Set to `false` if you inject your own ligature CSS.
+- Description: When `true` and the built-in **`html`** preview template is used, the generated CSS enables `font-feature-settings: "liga"` on the **Ligature** section (`#icon-ligatures`) so ligature names render as icons instead of invisible/missing glyphs. The HTML template also **omits** [`unicodeRange`](#unicoderange) on `@font-face` while this is enabled (ligature strings are ASCII; a PUA-only `unicode-range` would prevent the browser from applying the icon font to those characters). Set to `false` if you inject your own ligature CSS.
 - CLI: `--no-template-font-ligatures` to omit the CSS rule.
 - Requires [`ligatures`](#ligatures) enabled (default). Class-based icons (`.font-name-icon::before` with a private-use codepoint) work without this option.
 

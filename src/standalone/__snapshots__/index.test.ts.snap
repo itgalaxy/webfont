@@ -675,7 +675,6 @@ exports[`standalone > should generate built-in html template 1`] = `
         font-style: normal;
         font-weight: 400;
         
-        unicode-range: U+EA01-EA03;
         
         src: url("./webfont.eot?test");
         src: url("./webfont.eot?#iefix") format("embedded-opentype"), url("./webfont.woff2?test") format("woff2"), url("./webfont.woff?test") format("woff"), url("./webfont.ttf?test") format("truetype"), url("./webfont.svg?test#webfont") format("svg");

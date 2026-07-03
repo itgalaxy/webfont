@@ -154,10 +154,10 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Properties**:
   - `template` accepts a string or array of built-in names (`css`, `html`, `scss`, `styl`, `json`) or custom template paths.
   - `result.templates` lists each rendered output; `result.template` remains the first entry for backward compatibility.
-  - Built-in `html` preview: `templateFontLigatures` (default on) adds `font-feature-settings: "liga"` for the Ligature section; `--no-template-font-ligatures` or `templateFontLigatures: false` to omit.
+  - Built-in `html` preview: `templateFontLigatures` (default on) adds `font-feature-settings: "liga"` for the Ligature section and omits PUA-only `unicode-range` on `@font-face` so ASCII ligature names use the icon font; `--no-template-font-ligatures` or `templateFontLigatures: false` to omit liga CSS and restore `unicode-range` in HTML.
 - **Test Criteria**:
   - [x] Standalone and CLI tests for `template: ['html', 'scss']` (#158)
-  - [x] HTML template enables `liga` CSS by default; `templateFontLigatures: false` omits it
+  - [x] HTML template enables `liga` CSS by default and omits `unicode-range` so ligature preview works; `templateFontLigatures: false` restores `unicode-range` and omits liga CSS
 
 ### Glyph metadata hooks
 

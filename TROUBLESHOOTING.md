@@ -297,19 +297,21 @@ On **older releases**, the command may exit successfully but the icon is **invis
 
 ### What error appeared
 
-There is often **no error**. The built-in **`html`** preview lists icon names under **Ligature**, but the large icon above each name is **blank** while the **Class** section (`.font-icon-name::before`) shows the glyph.
+There is often **no error**. The built-in **`html`** preview lists icon names under **Ligature**, but the large icon above each name is **blank** or shows **fallback serif text** (for example `bleach`, `drip_dry`) while the **Class** section (`.font-icon-name::before`) shows the glyph.
 
 ### Why it usually happens
 
 - **Ligature mode** types the icon name (for example `phone_call`) as normal text. The browser must apply OpenType **`liga`** so that character sequence maps to the icon glyph in the font.
 - Icon fonts typically **do not** include regular Latin letters — without `liga`, the browser looks up `p`, `h`, `o`, … in the icon font, finds no glyphs, and renders nothing.
 - From webfont **12.x** onward, the built-in `html` template adds `font-feature-settings: "liga" 1` on `#icon-ligatures` by default (`templateFontLigatures`, on by default). Older HTML output or custom templates may omit this rule.
+- **`unicode-range` on `@font-face` limits which characters use the icon font.** Auto `unicode-range` (default for `css` / `scss` templates) covers only private-use code points (for example `U+EA01-EA1D`). Ligature names are ASCII (`bleach`, `drip_dry`, …), so the browser keeps a fallback font for those letters and **`liga` never runs**. The built-in `html` template omits `unicode-range` when ligature preview is enabled; production CSS can keep `unicode-range` if you use class + codepoint icons instead of typed names.
 
 ### Steps to try to resolve
 
-1. **Regenerate** with a current webfont version (built-in `html` template enables `liga` by default).
+1. **Regenerate** with a current webfont version (built-in `html` template enables `liga` by default and omits `unicode-range` on `@font-face` for ligature preview).
 
-2. **In your own CSS or template**, enable ligatures where you type icon names:
+2. **If ligatures still show as system serif text**, check for `unicode-range` on `@font-face` in your own CSS — it must not exclude ASCII when you type icon names. Use class + codepoint icons in production, or omit / widen `unicode-range` for ligature usage.
+3. **In your own CSS or template**, enable ligatures where you type icon names:
 
    ```css
    .my-icon-font {
@@ -319,15 +321,15 @@ There is often **no error**. The built-in **`html`** preview lists icon names un
    }
    ```
 
-3. **Prefer class + codepoint** for production (works without `liga`):
+4. **Prefer class + codepoint** for production (works without `liga` and with `unicode-range`):
 
    ```html
    <i class="my-icon-font my-icon-font-phone-call"></i>
    ```
 
-4. **Disable preview CSS** if you manage ligatures yourself: `templateFontLigatures: false` or `--no-template-font-ligatures`.
+5. **Disable preview CSS** if you manage ligatures yourself: `templateFontLigatures: false` or `--no-template-font-ligatures`.
 
-5. Ensure [`ligatures`](./README.md#ligatures) is not disabled (`--no-ligatures` removes ligature glyphs from the font).
+6. Ensure [`ligatures`](./README.md#ligatures) is not disabled (`--no-ligatures` removes ligature glyphs from the font).
 
 ---
 

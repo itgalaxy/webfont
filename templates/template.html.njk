@@ -51,7 +51,8 @@
         font-family: "{{ fontName }}";
         font-style: normal;
         font-weight: 400;
-        {% if unicodeRange %}
+        {# Ligature preview types ASCII names; unicode-range limited to PUA blocks the font for those code points. #}
+        {% if unicodeRange and not (templateFontLigatures and ligatures) %}
         unicode-range: {{ unicodeRange }};
         {% endif %}
         {% if formats.indexOf('eot')>-1 -%}

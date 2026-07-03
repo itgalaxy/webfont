@@ -513,10 +513,11 @@ describe("standalone", () => {
     expect(result.template).toContain("<!doctype html>");
     expect(result.template).toContain('font-feature-settings: "liga" 1');
     expect(result.template).toContain("#icon-ligatures");
+    expect(result.template).not.toContain("unicode-range:");
     expect(result.template).toMatchSnapshot();
   });
 
-  it("should omit liga CSS in html template when templateFontLigatures is false", async () => {
+  it("should include unicode-range in html template when templateFontLigatures is false", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: "html",
@@ -524,9 +525,9 @@ describe("standalone", () => {
       templateFontLigatures: false,
     });
 
+    expect(result.template).toContain("unicode-range: U+EA01-EA03;");
     expect(result.template).not.toContain('font-feature-settings: "liga"');
   });
-
   it("should generate built-in json template", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

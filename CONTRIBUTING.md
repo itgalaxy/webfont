@@ -80,11 +80,12 @@ Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.m
 
 ### Pull request title and description
 
-- **Use [Conventional Commits](https://www.conventionalcommits.org/) for the PR title** — the same format as commit messages (`feat:`, `fix:`, `chore(deps):`, `docs:`, `test:`, `ci:`, etc.). The title should describe the **overall** change in the PR, not bot prefixes like `[Snyk]` or `[Dependabot]`.
+- **Use [Conventional Commits](https://www.conventionalcommits.org/) for the PR title** — the same format as commit messages (`feat:`, `fix:`, `build(deps):`, `chore(deps):`, `docs:`, `test:`, `ci:`, etc.). The title should describe the **overall** change in the PR, not bot prefixes like `[Snyk]` or `[Dependabot]`.
+- **Dependency updates drive the PR type.** If the PR changes **`package.json` or `package-lock.json` dependencies**, use **`build(deps):`** or **`chore(deps):`** in the title — not `test:` or `docs:` even when the diff is mostly new tests or migration notes. Example: `build(deps): bump wawoff2 to 2.0.1; add ttfEncode tests`. Release Please reads the squash-merge title on `master`.
 - **Merge pull requests with squash.** The PR title becomes the commit message on `master` (Release Please reads it). Do not merge with merge commits or rebase-merge for routine work.
 - **Write pull request titles, descriptions, and review comments in English** (commits and code comments in English as well).
 - **Keep the PR title and body in sync with the actual diff.** When new commits change what the PR does (extra fixes, tests, docs, refactors), update the title and description before asking for review — do not leave a narrow title like “enable strictNullChecks” on a PR that also ships CLI bug fixes and README changes.
-- **Rename non-conforming PR titles** before review when the title uses vendor labels (`[Snyk]`, `[Dependabot]`), plain prose, or the wrong type. Example: `chore(deps): bump svg2ttf from 6.0.3 to 6.1.0` instead of `[Snyk] Security upgrade svg2ttf from 6.0.3 to 6.1.0`.
+- **Rename non-conforming PR titles** before review when the title uses vendor labels (`[Snyk]`, `[Dependabot]`), plain prose, the wrong type, or **`test:` / `docs:` on a dependency bump**. Example: `build(deps): bump svg2ttf from 6.0.3 to 6.1.0` instead of `[Snyk] Security upgrade svg2ttf from 6.0.3 to 6.1.0` or `test: add coverage after svg2ttf bump`.
 - **Prefer focused PRs.** If the scope keeps growing (unrelated fixes, large test refactors, docs, and feature work in one branch), stop stacking and **split follow-up work into separate PRs** instead. Land the original change first, then open new branches for the rest.
 
 See [AGENTS.md](./AGENTS.md) (“Pull requests”) for agents and automation.

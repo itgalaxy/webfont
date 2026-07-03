@@ -23,3 +23,5 @@ jobs:
     - run: npm ci
     - run: npm run depcheck
     - run: npm test
+    - name: Validate published package surface (publint + attw + pack-smoke)
+      run: npm run test:package

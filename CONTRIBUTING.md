@@ -113,19 +113,23 @@ New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md)
 
 Run `npm test` before pushing. Integration-only coverage for a localized guard is incomplete.
 
-#### Packaged consumer smoke test (`npm run test:pack`)
+#### Published package validation (`npm run test:package`)
 
-`npm run test:pack` runs `scripts/pack-smoke-test.mjs`, which packs the current build with `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape works end-to-end:
+`npm run test:package` runs three orthogonal layers of validation against the packed tarball (see [ADR 0012](docs/adr/0012-published-package-validation.md)):
 
-- `import webfont from "webfont"` (ESM default) → `typeof === "function"` and can generate a real `woff2` from fixtures.
-- `import { webfont } from "webfont"` (ESM named) → same.
-- `const { webfont } = require("webfont")` (CJS named) and `require("webfont").default` (CJS default) → same.
+1. **`npm run test:publint`** — [publint](https://publint.dev/) lints `package.json` for publish-surface issues (`exports`, `files`, `main`, `module`, `types`, condition ordering). Prints warnings and suggestions in every CI log; fails only on errors.
+2. **`npm run test:attw`** — [`@arethetypeswrong/cli`](https://arethetypeswrong.github.io/) probes types resolution across **node10**, **node16 (from CJS)**, **node16 (from ESM)**, and **bundler** to catch types that would fail to resolve for TypeScript consumers under any module system.
+3. **`npm run test:pack`** — `scripts/pack-smoke-test.mjs` packs with `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape works end-to-end:
+   - `import webfont from "webfont"` (ESM default) → `typeof === "function"` and generates a real `woff2` from fixtures.
+   - `import { webfont } from "webfont"` (ESM named) → same.
+   - `const { webfont } = require("webfont")` (CJS named) and `require("webfont").default` (CJS default) → same.
+   - Also asserts the tarball ships `dist/index.js`, `dist/index.mjs`, `dist/browser.js`, and `dist/cli.mjs`.
 
-This guards `package.json#exports`, `package.json#files`, and the built `dist/*.mjs` / `dist/*.js` against regressions the in-source Vitest suite cannot see (for example [#618](https://github.com/itgalaxy/webfont/issues/618), where the ESM default import returned the module namespace object and threw `TypeError: webfont is not a function`).
+Together these guard `package.json#exports`, `#files`, `#types`, and the built `dist/*.mjs` / `dist/*.js` / `dist/**/*.d.{ts,mts}` against regressions the in-source Vitest suite cannot see (for example [#618](https://github.com/itgalaxy/webfont/issues/618), where the ESM default import returned the module namespace object and threw `TypeError: webfont is not a function`).
 
-The pack smoke test runs on every pull request in [`.github/workflows/pr.yml`](.github/workflows/pr.yml) and is wired into `prepublishOnly`, so `npm publish` fails locally if the tarball would ship a broken import shape.
+The meta script runs on every pull request in [`.github/workflows/pr.yml`](.github/workflows/pr.yml), gates the publish job in [`.github/workflows/npm-publish.yml`](.github/workflows/npm-publish.yml), and is wired into `prepublishOnly` so `npm publish` fails locally if the tarball would ship a broken import shape.
 
-When adding or removing files from `dist/`, updating `package.json#exports`, or touching the Vite build modes, run `npm run test:pack` locally before pushing.
+When adding or removing files from `dist/`, updating `package.json#exports` / `#files` / `#types`, or touching the Vite build modes, run `npm run test:package` locally before pushing.
 
 - Lint and test before submitting code by running `$ npm test`;
 - Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;

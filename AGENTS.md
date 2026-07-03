@@ -58,10 +58,10 @@ Every PR that changes **runtime behavior** (features, fixes, refactors with obse
 | New option, flag, or pipeline step | Unit test(s) for the module + integration test when the public entry (CLI, `webfont()`, worker) is affected |
 | Bug fix | A test that **fails without the fix** and names the regression |
 | Guard or workaround | Focused unit test documenting **why** the guard exists (see table below) |
-| Packaging / build (`vite.config.ts`, `package.json#exports`, `files`, `main`, `module`, `browser`, `bin`, or `dist/` layout) | Run `npm run test:pack` locally and rely on the CI pack-smoke step; add or extend `scripts/pack-smoke-test.mjs` when a new consumer entry point ships |
+| Packaging / build (`vite.config.ts`, `package.json#exports`, `files`, `main`, `module`, `browser`, `bin`, `types`, or `dist/` layout) | Run `npm run test:package` locally (publint + attw + pack-smoke) and rely on the CI step; extend `scripts/pack-smoke-test.mjs` when a new consumer entry point ships. See [ADR 0012](docs/adr/0012-published-package-validation.md). |
 | Docs-only | No new tests; say so in the PR **Testing** section |
 
-Run `npm test` before pushing. For packaging or build changes, also run **`npm run test:pack`** — it packs the current build with `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts every documented import shape (ESM default/named, CJS default/named) works and can generate real output. This is the guardrail that catches regressions of `package.json#exports` / `files` / `dist/*.mjs` that Vitest-in-source cannot see (for example [#618](https://github.com/itgalaxy/webfont/issues/618)).
+Run `npm test` before pushing. For packaging or build changes, also run **`npm run test:package`** — a meta script that runs `publint` (package.json lint), `@arethetypeswrong/cli` (types resolution across node10 / node16 CJS / node16 ESM / bundler), and `scripts/pack-smoke-test.mjs` (pack + install + ESM & CJS consumer smoke tests that generate a real woff2). This is the layered guardrail that catches regressions of `package.json#exports` / `files` / `types` / `dist/*.{js,mjs,d.ts,d.mts}` that Vitest-in-source cannot see (for example [#618](https://github.com/itgalaxy/webfont/issues/618)). See [ADR 0012](docs/adr/0012-published-package-validation.md).
 
 ### Document guards and error paths with explicit unit tests
 

@@ -15,6 +15,7 @@
     "README.md",
     "NOTICE.md"
   ],
+  "type": "commonjs",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "browser": "dist/browser.js",
@@ -25,15 +26,24 @@
   "exports": {
     ".": {
       "node": {
-        "import": "./dist/index.mjs",
-        "require": "./dist/index.js"
+        "import": {
+          "types": "./dist/src/index.d.mts",
+          "default": "./dist/index.mjs"
+        },
+        "require": {
+          "types": "./dist/src/index.d.ts",
+          "default": "./dist/index.js"
+        }
       },
-      "default": "./dist/browser.js"
+      "default": {
+        "types": "./dist/src/index.d.ts",
+        "default": "./dist/browser.js"
+      }
     },
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "vite build --mode library && vite build --mode library-esm && vite build --mode browser && vite build --mode cli",
+    "build": "vite build --mode library && vite build --mode library-esm && vite build --mode browser && vite build --mode cli && node scripts/emit-mts-types.mjs",
     "clean": "rm -rf dist/ temp/",
     "demo": "node dist/cli.mjs './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
     "lint": "biome check .",
@@ -41,11 +51,14 @@
     "prebuild": "npm run clean && npm run lint",
     "prepare": "lefthook install",
     "predemo": "npm run build",
-    "prepublishOnly": "npm run build && npm run test:pack",
+    "prepublishOnly": "npm run build && npm run test:package",
     "pretest": "npm run build",
     "prettify": "biome check --write .",
     "test": "vitest run src",
+    "test:attw": "attw --pack . --ignore-rules internal-resolution-error",
     "test:pack": "node scripts/pack-smoke-test.mjs",
+    "test:package": "npm run test:publint && npm run test:attw && npm run test:pack",
+    "test:publint": "publint",
     "testc": "vitest run src --coverage",
     "test-debug": "vitest run src --no-file-parallelism",
     "testu": "vitest run src -u",
@@ -69,6 +82,7 @@
     "xml2js": "0.6.2"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "0.18.4",
     "@biomejs/biome": "2.5.2",
     "@types/node": "26.1.0",
     "@types/nunjucks": "3.2.6",
@@ -87,6 +101,7 @@
     "is-woff2": "latest",
     "knip": "6.24.0",
     "lefthook": "2.1.9",
+    "publint": "0.3.21",
     "rimraf": "latest",
     "typescript": "6.0.3",
     "vite": "8.1.3",

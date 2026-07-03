@@ -24,7 +24,13 @@ await webfont({ files: "icons/*.svg" });
 - `import { webfont } from "webfont"` → still works (named export).
 - `const { webfont } = require("webfont")` → still works (CJS named export).
 
-Both interops are now guarded on every PR and on release by the `test:pack` script (`scripts/pack-smoke-test.mjs`), which runs `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape can generate a real `woff2` from fixtures. This prevents future regressions of `package.json#exports`, `files`, or the ESM/CJS build outputs from shipping to npm.
+Both interops are now guarded on every PR and on release by `npm run test:package`, a three-layer validation of the built tarball (see [ADR 0012](../adr/0012-published-package-validation.md)):
+
+1. `publint` — lints `package.json#exports`, `files`, `main`, `module`, `types`, and condition ordering.
+2. `@arethetypeswrong/cli` (attw) — probes types resolution under node10, node16 (from CJS), node16 (from ESM), and bundler.
+3. `scripts/pack-smoke-test.mjs` — packs, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape can generate a real `woff2` from fixtures.
+
+This prevents future regressions of `package.json#exports`, `files`, `types`, or the ESM/CJS build outputs from shipping to npm.
 
 ## Workaround on older versions
 

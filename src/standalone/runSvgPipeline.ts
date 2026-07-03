@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { applyOptimizeSvgToGlyphs } from "../lib/applyOptimizeSvgToGlyphs";
+import { formatLargeFontLigatureWarning, shouldWarnLargeFontLigatures } from "../lib/largeFontLigatures";
 import { assertNonEmptySvgFontGlyphs } from "../lib/svgFontOutput/emptyGlyphPaths";
 import { applySvgToolsToGlyphs } from "../lib/svgTools/applySvgTools";
 import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
@@ -71,6 +72,11 @@ export const runSvgPipeline = async (glyphsData: GlyphData[], options: WebfontOp
         };
       }),
     );
+  }
+
+  if (shouldWarnLargeFontLigatures(pipelineGlyphs.length, options.ligatures)) {
+    // biome-ignore lint/suspicious/noConsole: user-facing performance warning (#558)
+    console.log(formatLargeFontLigatureWarning(pipelineGlyphs.length));
   }
 
   let ttfOptions = {};

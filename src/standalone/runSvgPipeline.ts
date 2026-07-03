@@ -87,7 +87,15 @@ export const runSvgPipeline = async (glyphsData: GlyphData[], options: WebfontOp
 
   const svg = await generateSvgFont(pipelineGlyphs, options);
   assertNonEmptySvgFontGlyphs(svg, pipelineGlyphs);
-  const ttf = toTtf(svg, ttfOptions);
+  let ttf = toTtf(svg, ttfOptions);
+
+  if (options.ttfPostProcess) {
+    const processed = await options.ttfPostProcess(ttf, {
+      fontName: options.fontName,
+      formats: options.formats,
+    });
+    ttf = Buffer.from(processed);
+  }
 
   const result: Result = {
     config: options,

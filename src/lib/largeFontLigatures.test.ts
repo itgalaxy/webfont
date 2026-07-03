@@ -15,7 +15,7 @@ describe("largeFontLigatures", () => {
 
   it("should format a warning that points to docs and the issue", () => {
     expect(formatLargeFontLigatureWarning(5000)).toContain("5000 glyphs");
-    expect(formatLargeFontLigatureWarning(5000)).toContain("--no-ligatures");
+    expect(formatLargeFontLigatureWarning(5000)).toContain("--ligatures");
     expect(formatLargeFontLigatureWarning(5000)).toContain("issues/558");
   });
 });

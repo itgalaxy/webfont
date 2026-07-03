@@ -156,7 +156,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - `template` accepts a string or array of built-in names (`css`, `html`, `scss`, `styl`, `json`) or custom template paths.
   - `result.templates` lists each rendered output; `result.template` remains the first entry for backward compatibility.
   - Built-in `html` preview: `templateFontLigatures` (default on) adds `font-feature-settings: "liga"` for the Ligature section; if `unicodeRange` is also enabled, HTML omits PUA-only `unicode-range` on `@font-face` so ASCII ligature names use the icon font.
-  - `ligatures` default on; for **>2k glyphs** use `--no-ligatures` to avoid browser hangs ([#558](https://github.com/itgalaxy/webfont/issues/558)); runtime warning when threshold exceeded.
+  - `ligatures` default **off** (performance on large fonts, [#558](https://github.com/itgalaxy/webfont/issues/558)); opt in with `--ligatures`; runtime warning when >2k glyphs with ligatures enabled.
 - **Test Criteria**:
   - [x] Standalone and CLI tests for `template: ['html', 'scss']` (#158)
   - [x] HTML template enables `liga` CSS by default; omits `unicode-range` when both ligature preview and `unicodeRange` are enabled

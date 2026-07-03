@@ -55,7 +55,6 @@ describe("cli program with createMeowCli argv", () => {
       "-u",
       "argv-font",
       "--no-sort",
-      "--no-ligatures",
       "--addHashInFontUrl",
     ]);
 
@@ -68,7 +67,6 @@ describe("cli program with createMeowCli argv", () => {
         fontName: "argv-font",
         formats: ["woff2"],
         sort: false,
-        ligatures: false,
         addHashInFontUrl: true,
       }),
     );

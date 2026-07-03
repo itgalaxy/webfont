@@ -5,4 +5,4 @@ export const shouldWarnLargeFontLigatures = (glyphCount: number, ligaturesEnable
   ligaturesEnabled && glyphCount > LARGE_FONT_LIGATURE_GLYPH_THRESHOLD;
 
 export const formatLargeFontLigatureWarning = (glyphCount: number): string =>
-  `Warning: ${glyphCount} glyphs with ligatures enabled may cause severe browser slowdown or hangs (especially Firefox on Windows). Disable ligatures for large icon fonts: --no-ligatures or ligatures: false. See TROUBLESHOOTING.md and https://github.com/itgalaxy/webfont/issues/558`;
+  `Warning: ${glyphCount} glyphs with ligatures enabled may cause severe browser slowdown or hangs (especially Firefox on Windows). Ligatures are off by default; enable only if needed: --ligatures or ligatures: true. See TROUBLESHOOTING.md and https://github.com/itgalaxy/webfont/issues/558`;

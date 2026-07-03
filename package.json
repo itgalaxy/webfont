@@ -46,7 +46,8 @@
     "test": "vitest run src",
     "testc": "vitest run src --coverage",
     "test-debug": "vitest run src --no-file-parallelism",
-    "testu": "vitest run src -u"
+    "testu": "vitest run src -u",
+    "deprecate-pre-12": "npm deprecate 'webfont@>=10.0.0 <12.0.0' 'Deprecated: upgrade to webfont@12. v10–11 enabled ligatures by default (browser hangs on large fonts, #558). 12.x: ligatures off, Node 12+, named import, unicode-range off, template fixes. See MIGRATION.md'"
   },
   "dependencies": {
     "cosmiconfig": "9.0.2",

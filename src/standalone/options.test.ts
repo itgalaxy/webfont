@@ -14,7 +14,7 @@ describe("options", () => {
     expect(options.formats).toEqual(["svg", "ttf", "eot", "woff", "woff2"]);
     expect(options.maxConcurrency).toBe(100);
     expect(options.templateFontPath).toBe("./");
-    expect(options.ligatures).toBe(true);
+    expect(options.ligatures).toBe(false);
     expect(options.sort).toBe(true);
     expect(options.unicodeRange).toBe(false);
     expect(options.verbose).toBe(false);

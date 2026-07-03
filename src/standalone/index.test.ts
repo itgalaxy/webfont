@@ -77,11 +77,11 @@ describe("standalone", () => {
     const woffHash = crypto.createHash("md5").update(result.woff).digest("hex");
     const woff2Hash = crypto.createHash("md5").update(result.woff2).digest("hex");
 
-    expect(svgHash).toBe("1154313a3843c5f5ec70890715e8a527");
-    expect(ttfHash).toBe("a78de3c54fa46d77540c2c96c4194f16");
-    expect(eotHash).toBe("90ed04c53c7534b2e66979f6c0a94afe");
-    expect(woffHash).toBe("20d0a901f75c638e7be9df714a93d5a0");
-    expect(woff2Hash).toBe("60fe7d6d658fef07b9e8af362e4b8f36");
+    expect(svgHash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
+    expect(ttfHash).toBe("d1517f20c3988b9e084047462dd28787");
+    expect(eotHash).toBe("0da1e32d0196eceb273968727af10d99");
+    expect(woffHash).toBe("1f0b1b8f7e8388c272cf707dd8385dbe");
+    expect(woff2Hash).toBe("8e2a267f9568852e245fc41b6afdb009");
   });
 
   it("should generate only `svg`, `ttf` and `eot` fonts", async () => {
@@ -334,7 +334,7 @@ describe("standalone", () => {
     });
 
     expect(withTransform.glyphsData[0]?.contents).toBe(filledContents);
-    expect(withTransform.ttf.length).toBeGreaterThan(1500);
+    expect(withTransform.ttf.length).toBeGreaterThan(1400);
     expect(isTtf(withTransform.ttf)).toBe(true);
   });
 
@@ -522,6 +522,7 @@ describe("standalone", () => {
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: "html",
       templateCacheString: "test",
+      ligatures: true,
     });
 
     expect(result.usedBuildInTemplate).toBe(true);
@@ -659,7 +660,7 @@ describe("standalone", () => {
     return standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
     }).then((result) => {
-      expect(result.hash).toBe("1154313a3843c5f5ec70890715e8a527");
+      expect(result.hash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
 
       return result;
     });

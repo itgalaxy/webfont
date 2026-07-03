@@ -172,7 +172,7 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
     optionsBase.sort = cli.flags.sort;
   }
 
-  if (cli.flags.ligatures === false) {
+  if (cli.flags.ligatures) {
     optionsBase.ligatures = cli.flags.ligatures;
   }
 

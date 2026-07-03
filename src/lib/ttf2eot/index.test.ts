@@ -26,7 +26,7 @@ describe("ttf2eot", () => {
 
     const hash = crypto.createHash("md5").update(convertTtfToEot(ttf)).digest("hex");
 
-    expect(hash).toBe("90ed04c53c7534b2e66979f6c0a94afe");
+    expect(hash).toBe("0da1e32d0196eceb273968727af10d99");
   });
 
   it("should match eot from the standalone eot format pipeline", async () => {

@@ -62,7 +62,7 @@ describe("cli program", () => {
             fontStyle: "italic",
             fontWeight: "700",
             formats: '["woff2"]',
-            ligatures: false,
+            ligatures: true,
             metadata: "meta",
             normalize: true,
             prependUnicode: true,
@@ -106,7 +106,7 @@ describe("cli program", () => {
       expect(options.prependUnicode).toBe(true);
       expect(options.metadata).toBe("meta");
       expect(options.sort).toBe(false);
-      expect(options.ligatures).toBe(false);
+      expect(options.ligatures).toBe(true);
       expect(options.addHashInFontUrl).toBe(true);
     });
   });

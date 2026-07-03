@@ -19,7 +19,7 @@ export const defaultWebfontOptions = (): Omit<WebfontOptions, "files"> =>
         version: null,
       },
     },
-    ligatures: true,
+    ligatures: false,
     maxConcurrency: 100,
     metadata: undefined,
     normalize: false,

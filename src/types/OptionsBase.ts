@@ -32,6 +32,8 @@ export type OptionsBase = {
   ligatures?: boolean;
   addHashInFontUrl?: boolean | unknown;
   unicodeRange?: boolean | string | unknown;
+  optimizeSvg?: boolean | unknown;
+  svgoConfig?: unknown;
   /** Alpha. SVG diagnostics and optional pre-conversion fixes. */
   svgTools?: SvgToolsOptions;
 };

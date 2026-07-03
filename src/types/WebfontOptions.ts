@@ -1,3 +1,4 @@
+import type { Config as SvgoConfig } from "svgo";
 import type { TemplateOption } from "../lib/parseTemplateOption";
 import type { Formats, FormatsOptions } from "./Format";
 import type { GlyphContentTransformFn } from "./GlyphContentTransformFn";
@@ -36,5 +37,7 @@ export interface WebfontOptions extends InitialOptions {
   verbose: boolean;
   addHashInFontUrl?: boolean;
   unicodeRange?: boolean | string;
+  optimizeSvg?: boolean;
+  svgoConfig?: SvgoConfig;
   svgTools?: SvgToolsOptions;
 }

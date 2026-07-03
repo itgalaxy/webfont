@@ -35,6 +35,7 @@ export type CliLike = {
     ligatures?: boolean;
     metadata?: string;
     normalize?: boolean;
+    optimizeSvg?: boolean;
     prependUnicode?: boolean;
     round?: string;
     sort?: boolean;
@@ -132,6 +133,10 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
 
   if (cli.flags.normalize) {
     optionsBase.normalize = cli.flags.normalize;
+  }
+
+  if (cli.flags.optimizeSvg) {
+    optionsBase.optimizeSvg = cli.flags.optimizeSvg;
   }
 
   if (cli.flags.fontHeight) {

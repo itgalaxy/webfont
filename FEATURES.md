@@ -165,10 +165,14 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - `metadataProvider`: replace default SVG metadata lookup.
   - `glyphTransformFn`: transform metadata after load (SVG mode only).
   - `glyphContentTransformFn`: transform SVG glyph contents before font generation (SVG mode only; e.g. stroke-to-fill via `svg-outline-stroke`, #144).
+  - `optimizeSvg`: optional conservative SVGO pass before `glyphContentTransformFn` (default off; #724). Does not fix stroke-only SVGs alone (#327).
+  - `svgoConfig`: optional SVGO `Config` when `optimizeSvg` is enabled.
 - **Test Criteria**:
   - [x] `glyphTransformFn` applied before font generation
   - [x] `glyphContentTransformFn` applied before font generation (#144)
   - [x] `metadataProvider` error paths unit-tested (`glyphsData`)
+  - [x] `optimizeSvg` strips comments/metadata without breaking default fixtures (#724)
+  - [x] Empty SVG font glyph paths reject with guidance (#327)
 
 ### svgicons2svgfont options
 

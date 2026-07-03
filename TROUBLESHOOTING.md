@@ -287,7 +287,9 @@ On **older releases**, the command may exit successfully but the icon is **invis
 
 3. **Scan sources before converting:** `webfont icons/*.svg --svg-diagnose` (or `svgTools: { diagnose: true }` in the API) logs stroke-only and unsupported-element warnings without changing files.
 
-4. **Optimize with SVGO** only after strokes are outlines — SVGO alone does not fix stroke-only artwork for icon fonts.
+4. **Optional SVGO cleanup:** `webfont icons/*.svg --optimize-svg` (or `optimizeSvg: true`) removes comments and editor metadata before conversion — it does **not** convert strokes. Use **before** `glyphContentTransformFn` when you need both cleanup and stroke outlining ([#724](https://github.com/itgalaxy/webfont/issues/724)).
+
+5. **Optimize with SVGO** only after strokes are outlines — aggressive SVGO presets alone do not fix stroke-only artwork for icon fonts.
 
 ---
 

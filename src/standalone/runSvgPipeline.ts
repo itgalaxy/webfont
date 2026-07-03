@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { applyOptimizeSvgToGlyphs } from "../lib/applyOptimizeSvgToGlyphs";
 import { assertNonEmptySvgFontGlyphs } from "../lib/svgFontOutput/emptyGlyphPaths";
 import { applySvgToolsToGlyphs } from "../lib/svgTools/applySvgTools";
 import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
@@ -39,6 +40,10 @@ export const runSvgPipeline = async (glyphsData: GlyphData[], options: WebfontOp
   });
 
   let pipelineGlyphs = diagnosedGlyphs;
+
+  if (options.optimizeSvg) {
+    pipelineGlyphs = applyOptimizeSvgToGlyphs(pipelineGlyphs, options.svgoConfig);
+  }
 
   if (options.glyphContentTransformFn) {
     const glyphContentTransformFn = options.glyphContentTransformFn;

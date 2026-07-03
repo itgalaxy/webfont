@@ -51,8 +51,9 @@ export const renderTemplates = (
     {
       cacheString: options.templateCacheString || Date.now(),
       className: options.templateClassName || options.fontName,
-      fontName: options.templateFontName || options.fontName,
+      fontFamily: options.templateFontName || options.fontName,
       fontPath: options.templateFontPath.replace(/\/?$/u, "/"),
+      svgFontId: options.fontId || options.fontName,
     },
     hashOption,
     {

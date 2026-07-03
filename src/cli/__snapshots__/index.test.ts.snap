@@ -623,8 +623,8 @@ exports[`cli > should respect \`template\` options 1`] = `
   font-style: normal;
   font-weight: 400;
   
-  src: url("test/path/testname.eot?test");
-  src: url("test/path/testname.eot?#iefix") format("embedded-opentype"), url("test/path/testname.woff2?test") format("woff2"), url("test/path/testname.woff?test") format("woff"), url("test/path/testname.ttf?test") format("truetype"), url("test/path/testname.svg?test#testname") format("svg");
+  src: url("test/path/webfont.eot?test");
+  src: url("test/path/webfont.eot?#iefix") format("embedded-opentype"), url("test/path/webfont.woff2?test") format("woff2"), url("test/path/webfont.woff?test") format("woff"), url("test/path/webfont.ttf?test") format("truetype"), url("test/path/webfont.svg?test#webfont") format("svg");
 }
 
 .foo {

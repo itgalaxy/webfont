@@ -486,6 +486,21 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
+  it("should use fontName for file URLs and templateFontName for font-family (#331)", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "css",
+      fontName: "icons-a",
+      templateFontName: "icons",
+      templateCacheString: "test",
+      formats: ["woff2"],
+    });
+
+    expect(result.template).toContain('font-family: "icons"');
+    expect(result.template).toContain('url("./icons-a.woff2?test")');
+    expect(result.template).not.toContain('url("./icons.woff2');
+  });
+
   it("should generate multiple built-in templates (#158)", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,

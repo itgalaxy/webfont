@@ -121,6 +121,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - [x] Subset `formats` with template omits unused format URLs
   - [x] `addHashInFontUrl` on `css` and `scss` templates appends content hash to URLs
   - [x] `unicodeRange: true` / `--unicode-range` adds computed `U+<min>-<max>` to built-in templates; default omits it
+  - [x] `templateFontName` sets CSS `font-family` (`fontFamily`); `fontName` stays on output file URLs ([#331](https://github.com/itgalaxy/webfont/issues/331))
 
 ### Command-line interface (CLI)
 

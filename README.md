@@ -260,8 +260,8 @@ const remote = await webfont({
 #### `templateFontName`
 
 - Type: `string`
-- Default: Gets is from `fontName` if not set, but you can specify any value.
-- Description: Template font family name you want.
+- Default: Same as [`fontName`](#fontname) when not set.
+- Description: CSS `font-family` name emitted by built-in templates (`fontFamily` in Nunjucks context). Output **font files** are always named after `fontName` (for example `icons-a.woff2`); built-in templates reference those files with `{{ fontName }}` in `url(...)` while `font-family` uses `{{ fontFamily }}` ([#331](https://github.com/itgalaxy/webfont/issues/331)).
 
 #### `templateCacheString`
 

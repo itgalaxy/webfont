@@ -225,11 +225,11 @@ Publishing from GitHub Actions uses the **`NPM_TOKEN`** repository secret (Autom
 git fetch origin --tags
 git checkout v12.0.1   # tag from Release Please
 npm ci
-npm login              # or ensure a valid token; see the login guard below
+npm login              # or ensure a valid token
 npm publish --access public
 ```
 
-`prepublishOnly` runs [`scripts/require-npm-login.mjs`](./scripts/require-npm-login.mjs) **before** the build and package validation, so a local `npm publish` fails fast with a clear message if you are not logged in — instead of building and validating the tarball only to fail on authentication at the end. The guard is a **no-op in CI** (`CI` is set), where the publish workflow authenticates via `NPM_TOKEN` / Trusted Publishing.
+`prepublishOnly` starts with `npm whoami`, so a local `npm publish` fails fast if you are not logged in — before the build and package validation run, instead of failing on authentication at the very end. In CI the publish workflow authenticates via `NPM_TOKEN`, so `whoami` passes there; revisit this if you migrate to Trusted Publishing (OIDC).
 
 Automated publishing does **not** retroactively upload versions that already exist as git tags only (for example `11.5.x` never published to npm).
 

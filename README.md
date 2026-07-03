@@ -75,7 +75,7 @@ Full details, disclaimers, community attribution guidelines, and third-party lib
 
 ## Installation
 
-Requires **Node.js** >= 24.14.0. Install as a dev dependency and run at **build time** (CLI, npm script, or bundler plugin) — not from browser/React client bundles.
+Requires **Node.js** >= 24.14.0 (aligned with `svgicons2svgfont@16`). CI tests on Node 24.x and 26.x. Install as a dev dependency and run at **build time** (CLI, npm script, or bundler plugin) — not from browser/React client bundles.
 
 ```shell
 npm install --save-dev webfont

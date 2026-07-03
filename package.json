@@ -47,7 +47,7 @@
     "testc": "vitest run src --coverage",
     "test-debug": "vitest run src --no-file-parallelism",
     "testu": "vitest run src -u",
-    "deprecate-pre-12": "npm deprecate 'webfont@>=10.0.0 <12.0.0' 'Deprecated: upgrade to webfont@12. v10–11 enabled ligatures by default (browser hangs on large fonts, #558). 12.x: ligatures off, Node 12+, named import, unicode-range off, template fixes. See MIGRATION.md'"
+    "deprecate-pre-12": "npm deprecate 'webfont@>=10.0.0 <12.0.0' 'Deprecated: upgrade to webfont@12. v10–11 enabled ligatures by default (browser hangs on large fonts, #558). 12.x: ligatures off, Node 24.14+, named import, unicode-range off, template fixes. See MIGRATION.md'"
   },
   "dependencies": {
     "cosmiconfig": "9.0.2",
@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
-    "@types/node": "^22.15.0",
+    "@types/node": "26.1.0",
     "@types/nunjucks": "3.2.6",
     "@types/rimraf": "latest",
     "@types/svg2ttf": "5.0.3",
@@ -121,7 +121,7 @@
   },
   "homepage": "https://github.com/itgalaxy/webfont#readme",
   "engines": {
-    "node": ">= 24.14.0"
+    "node": ">=24.14.0"
   },
   "keywords": [
     "cli",

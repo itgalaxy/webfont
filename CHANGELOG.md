@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.1.1](https://github.com/itgalaxy/webfont/compare/v12.1.0...v12.1.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* **build:** expose callable default export from ESM build ([#618](https://github.com/itgalaxy/webfont/issues/618)) ([#735](https://github.com/itgalaxy/webfont/issues/735)) ([862247f](https://github.com/itgalaxy/webfont/commit/862247f59ae226fd4443f451be8a8d1486bff8e2))
+
 ## [12.1.0](https://github.com/itgalaxy/webfont/compare/v12.0.1...v12.1.0) (2026-07-03)
 
 

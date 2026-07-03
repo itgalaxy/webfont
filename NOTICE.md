@@ -116,6 +116,7 @@ webfont depends on the following **runtime** npm packages (direct dependencies).
 | [nunjucks](https://github.com/mozilla/nunjucks) | BSD-2-Clause | CSS / SCSS / Styl templates |
 | [p-limit](https://github.com/sindresorhus/p-limit) | MIT | Concurrency limiting |
 | [resolve-from](https://github.com/sindresorhus/resolve-from) | MIT | Module resolution |
+| [svgo](https://github.com/svg/svgo) | MIT | Optional SVG optimization (`optimizeSvg`) |
 | [svg2ttf](https://github.com/fontello/svg2ttf) | MIT | SVG font → TTF |
 | [svgicons2svgfont](https://github.com/nfroidure/svgicons2svgfont) | MIT | SVG icons → SVG font |
 | [ttf2eot](https://github.com/fontello/ttf2eot) | MIT | TTF → EOT |

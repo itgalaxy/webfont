@@ -8,6 +8,7 @@ export const WEBFONT_CLI_HELP_MARKERS = [
   "--no-ligatures",
   "--no-unicode-range",
   "--addHashInFontUrl",
+  "--optimize-svg",
   "svg-diagnose",
 ] as const;
 
@@ -101,6 +102,11 @@ export const webfontCliHelpText = `
         --no-unicode-range
 
             Omit unicode-range from built-in @font-face rules
+
+        --optimize-svg
+
+            Run a conservative SVGO pass on each SVG before font generation
+            (does not convert strokes to fills; use glyphContentTransformFn for that)
 
         --verbose
 
@@ -262,6 +268,10 @@ export const webfontMeowFlags = {
     type: "string",
   },
   addHashInFontUrl: {
+    default: false,
+    type: "boolean",
+  },
+  optimizeSvg: {
     default: false,
     type: "boolean",
   },

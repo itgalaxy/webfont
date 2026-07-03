@@ -23,6 +23,7 @@ const PROGRAM_CLI_FLAG_KEYS = [
   "ligatures",
   "metadata",
   "normalize",
+  "optimizeSvg",
   "prependUnicode",
   "round",
   "sort",
@@ -100,6 +101,7 @@ describe("cli/meow", () => {
       expect(cli.flags.verbose).toBe(false);
       expect(cli.flags.destCreate).toBe(false);
       expect(cli.flags.addHashInFontUrl).toBe(false);
+      expect(cli.flags.optimizeSvg).toBe(false);
       expect(cli.flags.templateCacheString).toBe("");
     });
 

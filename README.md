@@ -362,6 +362,27 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
   For better trace quality with `svg-outline-stroke`, use a larger `width` / `height` / `viewBox` on the source SVG (see the library README).
 
+#### `optimizeSvg`
+
+- Type: `boolean`
+- Default: `false`
+- Description: When `true`, run a **conservative** [SVGO](https://github.com/svg/svgo) pass on each SVG **after** diagnostics and **before** `glyphContentTransformFn`. Removes editor cruft (comments, metadata, doctype) without rewriting paths or removing `viewBox`. Does **not** convert stroke-only artwork to fills — pair with [`glyphContentTransformFn`](#glyphcontenttransformfn) for stroke icons ([#327](https://github.com/itgalaxy/webfont/issues/327), [#724](https://github.com/itgalaxy/webfont/issues/724)).
+- CLI: `--optimize-svg`
+- Optional: `svgoConfig` — SVGO `Config` object; when `plugins` is set, it replaces the built-in conservative plugin list.
+
+  ```js
+  import webfont from "webfont";
+
+  await webfont({
+    files: "src/icons/**/*.svg",
+    optimizeSvg: true,
+    glyphContentTransformFn: async (glyph) => {
+      // optional: stroke-to-fill after SVGO cleanup
+      return glyph.contents;
+    },
+  });
+  ```
+
 #### `svgTools` (alpha)
 
 - Type: `{ diagnose?: boolean; onMessage?: (message: string) => void }`

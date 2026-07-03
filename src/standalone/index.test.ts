@@ -381,6 +381,28 @@ describe("standalone", () => {
     ).rejects.toThrow(/Empty glyph path\(s\) in SVG font output/u);
   });
 
+  it("should optimize messy SVGs when optimizeSvg is enabled (#724)", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons-messy/*.svg`,
+      formats: ["woff2"],
+      optimizeSvg: true,
+    });
+
+    expect(result.glyphsData[0]?.contents).not.toContain("Inkscape export cruft");
+    expect(result.glyphsData[0]?.contents).not.toContain("<metadata>");
+    expect(isWoff2(result.woff2)).toBe(true);
+  });
+
+  it("should still reject stroke-only SVGs when optimizeSvg is enabled (#327)", async () => {
+    await expect(
+      standalone({
+        files: `${fixturesGlob}/svg-icons-stroke-only/*.svg`,
+        formats: ["woff2"],
+        optimizeSvg: true,
+      }),
+    ).rejects.toThrow(/Empty glyph path\(s\) in SVG font output/u);
+  });
+
   it("should create css selectors with transform titles through function", async () => {
     const glyphTransformFn: GlyphTransformFn = (obj) => {
       obj.name += "_transform";

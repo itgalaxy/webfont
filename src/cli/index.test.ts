@@ -529,6 +529,16 @@ describe("cli", () => {
     expect(output.stdout).toContain("wave.svg");
   });
 
+  it("should optimize messy SVGs when --optimize-svg is enabled (#724)", async () => {
+    const output = await execCLI(
+      `${fixturesGlob}/svg-icons-messy/triangle.svg -d ${destination} -f woff2 --optimize-svg`,
+    );
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    expect(output.files).toEqual(["webfont.hash", "webfont.woff2"]);
+  });
+
   it("should create dest directory if it does not exist and --dest-create flag is provided", async () => {
     const nonExistentDestination = `${destination}/that/does/not/exist`;
     const output = await execCLI(`${source} -d ${nonExistentDestination} --dest-create`);

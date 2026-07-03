@@ -14,6 +14,18 @@ const assertBooleanOrStringOption = (name: string, value: unknown): void => {
   }
 };
 
+const assertBooleanOption = (name: string, value: unknown): void => {
+  if (value !== undefined && typeof value !== "boolean") {
+    throw new Error(`${name} must be a boolean`);
+  }
+};
+
+const assertObjectOption = (name: string, value: unknown): void => {
+  if (value !== undefined && (typeof value !== "object" || value === null || Array.isArray(value))) {
+    throw new Error(`${name} must be an object`);
+  }
+};
+
 const assertFilesOption = (files: unknown): void => {
   if (typeof files === "string") {
     if (files.length === 0) {
@@ -47,6 +59,8 @@ export const validateWebfontOptions = (options: WebfontOptions): WebfontOptions 
   options.formats = assertFormatsOption(options.formats);
   assertStringOption("fontName", options.fontName);
   assertBooleanOrStringOption("unicodeRange", options.unicodeRange);
+  assertBooleanOption("optimizeSvg", options.optimizeSvg);
+  assertObjectOption("svgoConfig", options.svgoConfig);
   if (options.template !== undefined) {
     normalizeTemplateOption(options.template);
   }

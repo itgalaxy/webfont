@@ -82,6 +82,22 @@ describe("validateWebfontOptions", () => {
     ).toThrow("unicodeRange must be a boolean or string");
   });
 
+  it("should reject invalid optimizeSvg and svgoConfig option types", () => {
+    expect(() =>
+      validateWebfontOptions({
+        ...baseOptions(),
+        optimizeSvg: "yes" as never,
+      }),
+    ).toThrow("optimizeSvg must be a boolean");
+
+    expect(() =>
+      validateWebfontOptions({
+        ...baseOptions(),
+        svgoConfig: "invalid" as never,
+      }),
+    ).toThrow("svgoConfig must be an object");
+  });
+
   it("should accept template as an array (#158)", () => {
     expect(
       validateWebfontOptions({

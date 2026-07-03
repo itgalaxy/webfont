@@ -6,7 +6,8 @@ export const WEBFONT_CLI_HELP_MARKERS = [
   "--dest-create",
   "--no-sort",
   "--no-ligatures",
-  "--no-unicode-range",
+  "--unicode-range",
+  "--no-template-font-ligatures",
   "--addHashInFontUrl",
   "--optimize-svg",
   "svg-diagnose",
@@ -99,9 +100,14 @@ export const webfontCliHelpText = `
 
             Prevents adding ligature unicode
 
-        --no-unicode-range
+        --unicode-range
 
-            Omit unicode-range from built-in @font-face rules
+            Emit unicode-range in built-in @font-face rules (computed from glyph code points).
+            Off by default — enabling may prevent ligature names from rendering; see README.
+
+        --no-template-font-ligatures
+
+            Omit font-feature-settings: "liga" from the built-in HTML preview template
 
         --optimize-svg
 
@@ -284,6 +290,10 @@ export const webfontMeowFlags = {
     type: "string",
   },
   unicodeRange: {
+    default: false,
+    type: "boolean",
+  },
+  templateFontLigatures: {
     default: true,
     type: "boolean",
   },

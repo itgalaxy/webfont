@@ -39,5 +39,6 @@ export interface WebfontOptions extends InitialOptions {
   unicodeRange?: boolean | string;
   optimizeSvg?: boolean;
   svgoConfig?: SvgoConfig;
+  templateFontLigatures?: boolean;
   svgTools?: SvgToolsOptions;
 }

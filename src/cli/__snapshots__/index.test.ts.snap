@@ -399,6 +399,13 @@ exports[`cli > should generate built-in html template 1`] = `
       }
 
       
+      #icon-ligatures .webfont {
+        font-feature-settings: "liga" 1;
+        font-variant-ligatures: common-ligatures;
+      }
+      
+
+      
       .webfont-avatar::before {
         content: "\\ea01";
       }

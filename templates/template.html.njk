@@ -180,6 +180,13 @@
         margin-left: 0.3em;
       }
 
+      {% if templateFontLigatures %}
+      #icon-ligatures .{{ className }} {
+        font-feature-settings: "liga" 1;
+        font-variant-ligatures: common-ligatures;
+      }
+      {% endif %}
+
       {% for glyph in glyphs %}
       .{{ className }}-{{ glyph.name }}::before {
         content: "\{{ glyph.unicode[0].charCodeAt(0).toString(16) }}";

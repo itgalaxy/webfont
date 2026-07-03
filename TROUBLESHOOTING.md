@@ -283,13 +283,51 @@ On **older releases**, the command may exit successfully but the icon is **invis
 
 1. **Convert strokes to fills** in your design tool (Outline Stroke / Expand / Object to Path) before export.
 
-2. **Preprocess in your build** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) — for example [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer) installed in your project (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+2. **Preprocess in your build** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn). webfont **does not ship** stroke converters — install a tool in **your** project (for example [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer)) and call it from the hook (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
 
 3. **Scan sources before converting:** `webfont icons/*.svg --svg-diagnose` (or `svgTools: { diagnose: true }` in the API) logs stroke-only and unsupported-element warnings without changing files.
 
 4. **Optional SVGO cleanup:** `webfont icons/*.svg --optimize-svg` (or `optimizeSvg: true`) removes comments and editor metadata before conversion — it does **not** convert strokes. Use **before** `glyphContentTransformFn` when you need both cleanup and stroke outlining ([#724](https://github.com/itgalaxy/webfont/issues/724)).
 
 5. **Optimize with SVGO** only after strokes are outlines — aggressive SVGO presets alone do not fix stroke-only artwork for icon fonts.
+
+---
+
+## Ligature names show text but no icon (HTML preview)
+
+### What error appeared
+
+There is often **no error**. The built-in **`html`** preview lists icon names under **Ligature**, but the large icon above each name is **blank** while the **Class** section (`.font-icon-name::before`) shows the glyph.
+
+### Why it usually happens
+
+- **Ligature mode** types the icon name (for example `phone_call`) as normal text. The browser must apply OpenType **`liga`** so that character sequence maps to the icon glyph in the font.
+- Icon fonts typically **do not** include regular Latin letters — without `liga`, the browser looks up `p`, `h`, `o`, … in the icon font, finds no glyphs, and renders nothing.
+- From webfont **12.x** onward, the built-in `html` template adds `font-feature-settings: "liga" 1` on `#icon-ligatures` by default (`templateFontLigatures`, on by default). Older HTML output or custom templates may omit this rule.
+
+### Steps to try to resolve
+
+1. **Regenerate** with a current webfont version (built-in `html` template enables `liga` by default).
+
+2. **In your own CSS or template**, enable ligatures where you type icon names:
+
+   ```css
+   .my-icon-font {
+     font-family: "my-icon-font";
+     font-feature-settings: "liga" 1;
+     font-variant-ligatures: common-ligatures;
+   }
+   ```
+
+3. **Prefer class + codepoint** for production (works without `liga`):
+
+   ```html
+   <i class="my-icon-font my-icon-font-phone-call"></i>
+   ```
+
+4. **Disable preview CSS** if you manage ligatures yourself: `templateFontLigatures: false` or `--no-template-font-ligatures`.
+
+5. Ensure [`ligatures`](./README.md#ligatures) is not disabled (`--no-ligatures` removes ligature glyphs from the font).
 
 ---
 

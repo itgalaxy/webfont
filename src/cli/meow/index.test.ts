@@ -33,6 +33,7 @@ const PROGRAM_CLI_FLAG_KEYS = [
   "templateClassName",
   "templateFontName",
   "templateFontPath",
+  "templateFontLigatures",
   "unicodeRange",
   "verbose",
   "svgDiagnose",
@@ -98,6 +99,7 @@ describe("cli/meow", () => {
       expect(cli.flags.sort).toBe(true);
       expect(cli.flags.ligatures).toBe(true);
       expect(cli.flags.unicodeRange).toBe(true);
+      expect(cli.flags.templateFontLigatures).toBe(true);
       expect(cli.flags.verbose).toBe(false);
       expect(cli.flags.destCreate).toBe(false);
       expect(cli.flags.addHashInFontUrl).toBe(false);
@@ -105,12 +107,19 @@ describe("cli/meow", () => {
       expect(cli.flags.templateCacheString).toBe("");
     });
 
-    it("should parse --no-sort, --no-ligatures, and --no-unicode-range negated booleans", () => {
-      const cli = createMeowCli(["input.svg", "--no-sort", "--no-ligatures", "--no-unicode-range"]);
+    it("should parse --no-sort, --no-ligatures, --no-unicode-range, and --no-template-font-ligatures negated booleans", () => {
+      const cli = createMeowCli([
+        "input.svg",
+        "--no-sort",
+        "--no-ligatures",
+        "--no-unicode-range",
+        "--no-template-font-ligatures",
+      ]);
 
       expect(cli.flags.sort).toBe(false);
       expect(cli.flags.ligatures).toBe(false);
       expect(cli.flags.unicodeRange).toBe(false);
+      expect(cli.flags.templateFontLigatures).toBe(false);
     });
 
     it("should parse short aliases for common flags", () => {

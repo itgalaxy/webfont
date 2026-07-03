@@ -154,8 +154,10 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Properties**:
   - `template` accepts a string or array of built-in names (`css`, `html`, `scss`, `styl`, `json`) or custom template paths.
   - `result.templates` lists each rendered output; `result.template` remains the first entry for backward compatibility.
+  - Built-in `html` preview: `templateFontLigatures` (default on) adds `font-feature-settings: "liga"` for the Ligature section; `--no-template-font-ligatures` or `templateFontLigatures: false` to omit.
 - **Test Criteria**:
   - [x] Standalone and CLI tests for `template: ['html', 'scss']` (#158)
+  - [x] HTML template enables `liga` CSS by default; `templateFontLigatures: false` omits it
 
 ### Glyph metadata hooks
 

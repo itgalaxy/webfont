@@ -179,6 +179,19 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - [x] `optimizeSvg` strips comments/metadata without breaking default fixtures (#724)
   - [x] Empty SVG font glyph paths reject with guidance (#327)
 
+### TTF output hook (`ttfPostProcess`)
+
+- **Stability**: stable
+- **Description**: Caller-owned post-processing of the generated TTF buffer, before WOFF/WOFF2/EOT are derived from it (SVG pipeline only). Keeps optional/native steps (e.g. autohinting via `ttfautohint`) out of the core — same philosophy as `glyphContentTransformFn` ([ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)); enabling package for [#749](https://github.com/itgalaxy/webfont/issues/749).
+- **Properties**:
+  - Signature `(ttf, { fontName, formats }) => Buffer | Uint8Array | Promise<…>`.
+  - Runs once, after `toTtf`; all derived formats come from the returned buffer.
+  - webfont bundles no hinting/native dependency; the hook is opt-in.
+- **Test Criteria**:
+  - [x] Called with the generated TTF and context; return value used as `result.ttf`
+  - [x] Derived `woff2` produced from the post-processed TTF
+  - [x] Async hook supported
+
 ### svgicons2svgfont options
 
 - **Stability**: stable

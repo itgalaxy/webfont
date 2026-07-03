@@ -7,7 +7,7 @@ import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
 import path from "path";
 import standalone from "../standalone";
-import type { Format, GlyphMetadata, GlyphTransformFn } from "../types";
+import type { Format, GlyphMetadata, GlyphTransformFn, TtfPostProcessContext } from "../types";
 import type { ResultConfig } from "../types/ResultConfig";
 
 type DiscoveredRcConfig = ResultConfig & { foo: string };
@@ -464,6 +464,72 @@ describe("standalone", () => {
     } catch (error) {
       expect((error as Error).message).toMatch("Name is invalid");
     }
+  });
+
+  describe("ttfPostProcess", () => {
+    it("should call ttfPostProcess with the generated ttf and context", async () => {
+      let calls = 0;
+      let receivedTtf: Buffer | undefined;
+      let receivedContext: TtfPostProcessContext | undefined;
+
+      const result = await standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        fontName: "hinted-font",
+        formats: ["ttf"],
+        ttfPostProcess: (ttf, context) => {
+          calls += 1;
+          receivedTtf = ttf;
+          receivedContext = context;
+
+          return ttf;
+        },
+      });
+
+      expect(calls).toBe(1);
+      expect(isTtf(receivedTtf)).toBe(true);
+      expect(receivedContext?.fontName).toBe("hinted-font");
+      expect(receivedContext?.formats).toEqual(["ttf"]);
+      expect(isTtf(result.ttf)).toBe(true);
+    });
+
+    it("should use the ttfPostProcess return value as result.ttf", async () => {
+      const sentinel = Buffer.from("post-processed-ttf-bytes");
+
+      const result = await standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        formats: ["ttf"],
+        ttfPostProcess: () => sentinel,
+      });
+
+      expect(result.ttf?.equals(sentinel)).toBe(true);
+    });
+
+    it("should derive woff2 from the post-processed ttf", async () => {
+      let receivedTtf: Buffer | undefined;
+
+      const result = await standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        formats: ["ttf", "woff2"],
+        ttfPostProcess: (ttf) => {
+          receivedTtf = ttf;
+
+          return Buffer.from(ttf);
+        },
+      });
+
+      expect(isTtf(receivedTtf)).toBe(true);
+      expect(isWoff2(result.woff2)).toBe(true);
+    });
+
+    it("should support an async ttfPostProcess", async () => {
+      const result = await standalone({
+        files: `${fixturesGlob}/svg-icons/**/*`,
+        formats: ["ttf"],
+        ttfPostProcess: (ttf) => Promise.resolve(ttf),
+      });
+
+      expect(isTtf(result.ttf)).toBe(true);
+    });
   });
 
   it("should respect `template` options", async () => {

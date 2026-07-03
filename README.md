@@ -314,6 +314,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 - Default: `true`
 - Description: When `true`, each glyph gets a second unicode entry: the icon name with hyphens replaced by underscores (for example `phone-call` → `phone_call`). Browsers can map that character sequence to the icon glyph when OpenType ligatures are enabled (`font-feature-settings: "liga"`).
 - CLI: `--no-ligatures` to disable ligature glyphs in the font.
+- **Large icon fonts (thousands of glyphs):** ligature tables can make **Firefox on Windows** (DirectWrite) extremely slow or hang when the font loads ([#558](https://github.com/itgalaxy/webfont/issues/558)). Material Design Icons and similar sets should use **`ligatures: false`** / `--no-ligatures` and class + codepoint CSS instead. webfont prints a warning when glyph count exceeds 2000 with ligatures enabled.
 
 #### `templateFontLigatures`
 

@@ -357,6 +357,46 @@ There is often **no error**. The built-in **`html`** preview lists icon names un
 
 ---
 
+## Browser hangs or extreme slowdown (large icon webfont, Firefox on Windows)
+
+### What error appeared
+
+There is often **no build error**. After upgrading `webfont` (for example v9 → v11+) and shipping a **large** icon font (thousands of glyphs — Material Design Icons, Tabler, etc.), users report:
+
+- Firefox on **Windows** freezing for seconds when opening a tab or switching tabs
+- High CPU in **DirectWrite** / `LigatureSubstitution` during layout reflow
+- Chrome slower than before; macOS/Linux often less affected
+
+See [#558](https://github.com/itgalaxy/webfont/issues/558), [MaterialDesign#6519](https://github.com/Templarian/MaterialDesign/issues/6519), and [tabler-icons#1327](https://github.com/tabler/tabler-icons/issues/1327).
+
+### Why it usually happens
+
+- From webfont **10+**, **`ligatures` default to `true`**: each icon name is also encoded as an OpenType ligature (for example `phone_call` → glyph).
+- **Thousands of ligatures** produce a very large GSUB table. Windows Firefox uses DirectWrite to process ligature lookups during layout — reflow can take seconds per tab switch.
+- **WOFF2 is not the root cause** — the same ligature-heavy TTF/WOFF triggers the behavior. Older builds without ligatures (or with `--no-ligatures`) perform normally.
+
+### Steps to try to resolve
+
+1. **Disable ligatures for large icon sets** (recommended for MDI-scale fonts):
+
+   ```shell
+   webfont "icons/*.svg" -d dist/fonts --no-ligatures
+   ```
+
+   ```js
+   await webfont({ files: "icons/**/*.svg", ligatures: false });
+   ```
+
+2. **Use class + codepoint CSS** in the app (`.mdi-phone::before { content: "\\f001"; }`) — not ligature-by-name text.
+
+3. **In CSS**, if you cannot regenerate the font yet, try `font-variant-ligatures: none` on icon classes — this helps only when the page does not rely on `liga` for icons; regenerating without ligatures is more reliable.
+
+4. **webfont warns** when glyph count exceeds **2000** with ligatures enabled (stdout). Treat it as a signal to pass `--no-ligatures`.
+
+5. Prefer **`@mdi/svg` / SVG or JS icon packages** for web apps when the upstream project documents webfont alternatives.
+
+---
+
 ## Can't resolve `fs` (webpack / React / Vite client bundle)
 
 ### What error appeared
@@ -367,12 +407,20 @@ Bundlers fail while building client code with errors such as:
 Module not found: Error: Can't resolve 'fs'
 ```
 
-The stack trace often includes `globby`, `fast-glob`, `cosmiconfig`, or `webfont/dist/standalone.js` ([#198](https://github.com/itgalaxy/webfont/issues/198)).
+Or at **runtime** in the browser (often with older `webfont` versions bundled into the app):
+
+```text
+TypeError: Cannot read property 'dirname' of undefined
+    at .../node_modules/glob-parent/index.js
+```
+
+The stack trace often includes `globby`, `fast-glob`, `glob-parent`, `cosmiconfig`, or `webfont/dist/standalone.js` ([#198](https://github.com/itgalaxy/webfont/issues/198), [#496](https://github.com/itgalaxy/webfont/issues/496)).
 
 ### Why it usually happens
 
 - **`webfont` is Node.js-only.** It reads SVG files from disk, runs `globby`, and uses other Node built-ins. It is meant for **build time**, not inside browser/React component bundles.
-- **The package was imported from client code** (for example `import webfont from "webfont"` in `App.js`). Webpack/Vite tries to bundle the full Node implementation and fails on `fs`.
+- **The package was imported from client code** (for example `import webfont from "webfont"` in `App.js`). Webpack/Vite tries to bundle the full Node implementation. Without Node’s `path` module, dependencies such as `glob-parent` throw **`Cannot read property 'dirname' of undefined`** ([#496](https://github.com/itgalaxy/webfont/issues/496)).
+- **From webfont 12.x**, the package `browser` / `exports` default entry resolves to a small stub that rejects with a clear message instead of pulling in `globby` — but you must still **not** call `webfont()` from client code; generate fonts in Node and ship the output files.
 
 ### Steps to try to resolve
 
@@ -394,7 +442,7 @@ The stack trace often includes `globby`, `fast-glob`, `cosmiconfig`, or `webfont
 
    Run this from a `.mjs` script, `vite.config.ts`, or webpack config — never from React components loaded in the browser.
 
-4. **If a dependency still pulls `webfont` into the client bundle**, mark it external or move the import to a Node-only file. With webpack 5+, the package `browser` field resolves to a stub that throws a clear error instead of pulling in `fs`.
+4. **If a dependency still pulls `webfont` into the client bundle**, mark it external or move the import to a Node-only file. With **webfont 12.x** and webpack 5+ / modern Vite, the package `browser` field and `exports` default resolve to `dist/browser.js`, which throws a clear error instead of bundling `fs` / `glob-parent`. On **11.x** or webpack 4 without `browser` resolution, you may see `dirname of undefined` until you stop importing `webfont` from client code.
 
 5. **Browser-based generation** is not supported on the current release; see [#708](https://github.com/itgalaxy/webfont/issues/708) for a possible future Web Worker spike.
 

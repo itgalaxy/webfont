@@ -1,7 +1,7 @@
 name: npm publish
 
-# Publishes via npm Trusted Publishing (OIDC). Configure the trusted publisher on
-# npmjs.com for workflow filename npm-publish.yml (see CONTRIBUTING.md).
+# Publishes with the NPM_TOKEN repository secret (see CONTRIBUTING.md).
+# Trusted Publishing (OIDC) may replace this when configured on npmjs.com.
 on:
   release:
     types: [published]
@@ -16,7 +16,6 @@ env:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
   build:
@@ -43,6 +42,7 @@ jobs:
         with:
           node-version: 24.x
           registry-url: https://registry.npmjs.org/
+          node-auth-token: ${{ secrets.NPM_TOKEN }}
           package-manager-cache: false
       - run: npm ci
       - run: npm publish --access public

@@ -189,16 +189,16 @@ Do not run local `npm version` or push version tags manually unless coordinating
 
 #### npm publishing
 
-Publishing from GitHub Actions uses **[npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers)** (OIDC) — not long-lived publish tokens with bypass 2FA.
+Publishing from GitHub Actions uses the **`NPM_TOKEN`** repository secret (Automation/publish token on npmjs.com). The [`npm-publish`](.github/workflows/npm-publish.yml) workflow passes it to `actions/setup-node` as `node-auth-token`.
 
-**One-time setup on npmjs.com** (package maintainer):
+**One-time setup** (package maintainer):
 
-1. Open [webfont package settings](https://www.npmjs.com/package/webfont) → **Trusted publishing** → **GitHub Actions**.
-2. Set **Repository** to `itgalaxy/webfont`.
-3. Set **Workflow filename** to `npm-publish.yml` (filename only, including `.yml`).
-4. Save. Allow action **npm publish** if prompted.
+1. Create an npm **Automation** or **Publish** token for the `webfont` package (with publish access; OTP requirement disabled for automation if your org allows it).
+2. Add it as a GitHub repository secret named **`NPM_TOKEN`** ([Settings → Secrets and variables → Actions](https://github.com/itgalaxy/webfont/settings/secrets/actions)).
 
-**Workflow:** [`.github/workflows/npm-publish.yml`](.github/workflows/npm-publish.yml) requests `id-token: write` and runs `npm publish` without `NPM_TOKEN`. Releases created by `github-actions[bot]` usually do not trigger downstream workflows — use **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.0.1`) after merging a Release PR.
+**After merging a Release PR:** the [`npm-publish`](.github/workflows/npm-publish.yml) workflow listens for `release: published`, but releases created with the default `GITHUB_TOKEN` usually **do not** trigger downstream workflows — use **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.1.0`) if publish does not start automatically.
+
+**Future:** [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC) can replace `NPM_TOKEN` when a maintainer configures it on npmjs.com for workflow `npm-publish.yml`.
 
 **Manual publish** from a maintainer machine (browser/web auth or local npm login) is still supported:
 
@@ -209,8 +209,6 @@ npm ci
 npm test
 npm publish --access public
 ```
-
-Do not create npm tokens with **bypass 2FA** for CI — npm flags that as insecure; use Trusted Publishing instead.
 
 Automated publishing does **not** retroactively upload versions that already exist as git tags only (for example `11.5.x` never published to npm).
 

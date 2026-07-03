@@ -3,6 +3,7 @@ import * as fsPromise from "fs/promises";
 import path from "path";
 import { webfont } from "../standalone";
 import type { Result } from "../types/Result";
+import type { ResultConfig } from "../types/ResultConfig";
 import {
   buildOptionsBase,
   type CliLike,
@@ -34,6 +35,32 @@ const createCli = (overrides: Partial<CliLike> = {}): CliLike => ({
   input: ["src/fixtures/svg-icons/*.svg"],
   showHelp: vi.fn(),
   showVersion: vi.fn(),
+  ...overrides,
+});
+
+const makeResultConfig = (overrides: Partial<ResultConfig> = {}): ResultConfig => ({
+  centerHorizontally: false,
+  centerVertically: false,
+  descent: 0,
+  files: "icons/*.svg",
+  fixedWidth: false,
+  fontHeight: undefined,
+  fontId: undefined,
+  fontName: "webfont",
+  fontStyle: "",
+  fontWeight: "",
+  formats: ["svg"],
+  formatsOptions: {},
+  ligatures: false,
+  maxConcurrency: 1,
+  metadata: undefined,
+  normalize: false,
+  prependUnicode: false,
+  round: 1000,
+  sort: false,
+  startUnicode: 0xea01,
+  templateFontPath: "",
+  verbose: false,
   ...overrides,
 });
 
@@ -119,13 +146,13 @@ describe("cli program", () => {
     });
 
     it("should return config when present", () => {
-      const config = {
+      const config = makeResultConfig({
         files: "icons/*.svg",
         fontName: "webfont",
         formats: ["svg"],
         formatsOptions: {},
         maxConcurrency: 1,
-      };
+      });
 
       expect(ensureResultConfig({ config })).toBe(config);
     });
@@ -138,13 +165,13 @@ describe("cli program", () => {
 
     it("should merge dest and destTemplate into result config", () => {
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
       };
 
       mergeCliDestIntoConfig(result, {
@@ -342,14 +369,14 @@ describe("cli program", () => {
 
     it("should write batch decompressed fonts without using fontName for every file", async () => {
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: destination,
           files: ["src/fixtures/fonts/iconfont.woff", "src/fixtures/fonts/iconfont.woff2"],
           fontName: "webfont",
           formats: ["ttf"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         decompressedFonts: [
           { source: "src/fixtures/fonts/iconfont.woff", ttf: Buffer.from("woff-ttf") },
           { source: "src/fixtures/fonts/iconfont.woff2", ttf: Buffer.from("woff2-ttf") },
@@ -364,14 +391,14 @@ describe("cli program", () => {
 
     it("should write font outputs and hash files", async () => {
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: destination,
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg", "woff2"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         hash: "abc123",
         svg: Buffer.from("svg"),
         woff2: Buffer.from("woff2"),
@@ -386,7 +413,7 @@ describe("cli program", () => {
 
     it("should write template files to the resolved destination", async () => {
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: destination,
           files: "icons/*.svg",
           fontName: "webfont",
@@ -394,7 +421,7 @@ describe("cli program", () => {
           formatsOptions: {},
           maxConcurrency: 1,
           template: "css",
-        },
+        }),
         svg: Buffer.from("svg"),
         template: "body { color: red; }",
         usedBuildInTemplate: true,
@@ -408,7 +435,7 @@ describe("cli program", () => {
 
     it("should write multiple template files (#158)", async () => {
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: destination,
           files: "icons/*.svg",
           fontName: "webfont",
@@ -416,7 +443,7 @@ describe("cli program", () => {
           formatsOptions: {},
           maxConcurrency: 1,
           template: ["html", "scss"],
-        },
+        }),
         svg: Buffer.from("svg"),
         template: "<html></html>",
         templates: [
@@ -435,7 +462,7 @@ describe("cli program", () => {
     it("should create destination when destCreate is enabled", async () => {
       const nestedDestination = path.join(destination, "nested", "fonts");
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: nestedDestination,
           destCreate: true,
           files: "icons/*.svg",
@@ -443,7 +470,7 @@ describe("cli program", () => {
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
       };
 
@@ -456,14 +483,14 @@ describe("cli program", () => {
     it("should reject with a clear error when destination is missing and destCreate is disabled", async () => {
       const missingDestination = path.join(destination, "missing", "fonts");
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: missingDestination,
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
       };
 
@@ -477,14 +504,14 @@ describe("cli program", () => {
       const missingDestination = path.join(destination, "missing-no-write");
       const writeSpy = vi.spyOn(fs.promises, "writeFile");
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: missingDestination,
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
         woff2: Buffer.from("woff2"),
       };
@@ -497,14 +524,14 @@ describe("cli program", () => {
     it("should propagate write errors", async () => {
       const writeSpy = vi.spyOn(fs.promises, "writeFile").mockRejectedValueOnce(new Error("disk full"));
       const result: Result = {
-        config: {
+        config: makeResultConfig({
           dest: destination,
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
       };
 
@@ -542,14 +569,14 @@ describe("cli program", () => {
 
     it("should invoke help and version handlers when flags are set", async () => {
       mockedWebfont.mockResolvedValue({
-        config: {
+        config: makeResultConfig({
           dest: "temp/cli-program-run",
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
       });
 
@@ -571,14 +598,14 @@ describe("cli program", () => {
       await fsPromise.mkdir(destination, { recursive: true });
 
       mockedWebfont.mockResolvedValue({
-        config: {
+        config: makeResultConfig({
           dest: destination,
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
         hash: "hash-value",
       });
@@ -600,14 +627,14 @@ describe("cli program", () => {
       const missingDestination = "temp/cli-program-missing-dest";
 
       mockedWebfont.mockResolvedValue({
-        config: {
+        config: makeResultConfig({
           dest: missingDestination,
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
       });
 
@@ -667,14 +694,14 @@ describe("cli program", () => {
       });
 
       mockedWebfont.mockResolvedValue({
-        config: {
+        config: makeResultConfig({
           dest: missingDestination,
           files: "icons/*.svg",
           fontName: "webfont",
           formats: ["svg"],
           formatsOptions: {},
           maxConcurrency: 1,
-        },
+        }),
         svg: Buffer.from("svg"),
       });
 

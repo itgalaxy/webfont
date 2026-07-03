@@ -1,5 +1,5 @@
 import type { TemplateOption } from "../lib/parseTemplateOption";
-import type { Formats } from "./Format";
+import type { Formats, FormatsOptions } from "./Format";
 import type { SvgToolsOptions } from "./SvgToolsOptions";
 
 export type OptionsBase = {
@@ -8,6 +8,7 @@ export type OptionsBase = {
   destCreate?: boolean;
   fontName?: string | unknown;
   formats?: Formats;
+  formatsOptions?: FormatsOptions;
   template?: TemplateOption;
   templateClassName?: string | unknown;
   templateFontPath?: string;

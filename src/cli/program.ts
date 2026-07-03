@@ -8,6 +8,7 @@ import type { InitialOptions } from "../types/InitialOptions";
 import type { OptionsBase } from "../types/OptionsBase";
 import type { RenderedTemplate } from "../types/RenderedTemplate";
 import type { Result } from "../types/Result";
+import type { ResultConfig } from "../types/ResultConfig";
 import type { TranscodedFont } from "../types/TranscodedFont";
 import { buildSvgToolsFromCliFlags } from "./buildSvgToolsFromCliFlags";
 import { parseFormatsFlag } from "./parseFormatsFlag";

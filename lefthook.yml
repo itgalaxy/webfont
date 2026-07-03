@@ -4,9 +4,13 @@ pre-commit:
       glob: "*.{ts,js,json}"
       run: npx @biomejs/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
       stage_fixed: true
+    suppressions:
+      run: npm run lint:suppressions
 
 pre-push:
   commands:
+    typecheck:
+      run: npm run typecheck
     depcheck:
       run: npm run depcheck
     test:

@@ -1,6 +1,7 @@
 import * as fsPromise from "fs/promises";
 import path from "path";
 import { webfont } from "../standalone";
+import type { ResultConfig } from "../types/ResultConfig";
 import { createMeowCli } from "./meow/createMeowCli";
 import { runCli } from "./program";
 
@@ -25,6 +26,32 @@ const wrapMeowCli = (argv: readonly string[]) => {
   };
 };
 
+const makeResultConfig = (overrides: Partial<ResultConfig> = {}): ResultConfig => ({
+  centerHorizontally: false,
+  centerVertically: false,
+  descent: 0,
+  files: "icons/*.svg",
+  fixedWidth: false,
+  fontHeight: undefined,
+  fontId: undefined,
+  fontName: "webfont",
+  fontStyle: "",
+  fontWeight: "",
+  formats: ["svg"],
+  formatsOptions: {},
+  ligatures: false,
+  maxConcurrency: 1,
+  metadata: undefined,
+  normalize: false,
+  prependUnicode: false,
+  round: 1000,
+  sort: false,
+  startUnicode: 0xea01,
+  templateFontPath: "",
+  verbose: false,
+  ...overrides,
+});
+
 describe("cli program with createMeowCli argv", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -35,14 +62,14 @@ describe("cli program with createMeowCli argv", () => {
     await fsPromise.mkdir(destination, { recursive: true });
 
     mockedWebfont.mockResolvedValue({
-      config: {
+      config: makeResultConfig({
         dest: destination,
         files: "src/fixtures/svg-icons/*.svg",
         fontName: "webfont",
         formats: ["woff2"],
         formatsOptions: {},
         maxConcurrency: 1,
-      },
+      }),
       woff2: Buffer.from("woff2"),
     });
 
@@ -85,14 +112,14 @@ describe("cli program with createMeowCli argv", () => {
     await fsPromise.mkdir(destination, { recursive: true });
 
     mockedWebfont.mockResolvedValue({
-      config: {
+      config: makeResultConfig({
         dest: destination,
         files: "icons/*.svg",
         fontName: "webfont",
         formats: ["svg"],
         formatsOptions: {},
         maxConcurrency: 1,
-      },
+      }),
       svg: Buffer.from("svg"),
     });
 
@@ -109,7 +136,7 @@ describe("cli program with createMeowCli argv", () => {
     await fsPromise.rm(destination, { recursive: true, force: true });
 
     mockedWebfont.mockResolvedValue({
-      config: {
+      config: makeResultConfig({
         dest: destination,
         destCreate: true,
         files: "icons/*.svg",
@@ -117,7 +144,7 @@ describe("cli program with createMeowCli argv", () => {
         formats: ["svg"],
         formatsOptions: {},
         maxConcurrency: 1,
-      },
+      }),
       svg: Buffer.from("svg"),
     });
 

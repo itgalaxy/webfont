@@ -7,7 +7,7 @@ import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
 import path from "path";
 import standalone from "../standalone";
-import type { GlyphMetadata, GlyphTransformFn, TtfPostProcessContext } from "../types";
+import type { Format, GlyphMetadata, GlyphTransformFn, TtfPostProcessContext } from "../types";
 import type { ResultConfig } from "../types/ResultConfig";
 
 type DiscoveredRcConfig = ResultConfig & { foo: string };
@@ -42,7 +42,7 @@ describe("standalone", () => {
     await expect(
       standalone({
         files: `${fixturesGlob}/svg-icons/**/*`,
-        formats: ["icon"],
+        formats: ["icon"] as unknown as Format[],
       }),
     ).rejects.toThrow('Invalid format "icon". Expected one of: eot, otf, svg, ttf, woff, woff2');
   });
@@ -52,7 +52,7 @@ describe("standalone", () => {
       files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
@@ -65,17 +65,17 @@ describe("standalone", () => {
       files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
 
-    const svgHash = crypto.createHash("md5").update(result.svg).digest("hex");
-    const ttfHash = crypto.createHash("md5").update(result.ttf).digest("hex");
-    const eotHash = crypto.createHash("md5").update(result.eot).digest("hex");
-    const woffHash = crypto.createHash("md5").update(result.woff).digest("hex");
-    const woff2Hash = crypto.createHash("md5").update(result.woff2).digest("hex");
+    const svgHash = crypto.createHash("md5").update(result.svg!).digest("hex");
+    const ttfHash = crypto.createHash("md5").update(result.ttf!).digest("hex");
+    const eotHash = crypto.createHash("md5").update(result.eot!).digest("hex");
+    const woffHash = crypto.createHash("md5").update(result.woff!).digest("hex");
+    const woff2Hash = crypto.createHash("md5").update(result.woff2!).digest("hex");
 
     expect(svgHash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
     expect(ttfHash).toBe("d1517f20c3988b9e084047462dd28787");
@@ -90,7 +90,7 @@ describe("standalone", () => {
       formats: ["svg", "ttf", "eot"],
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(result.woff).toBeUndefined();
@@ -117,7 +117,7 @@ describe("standalone", () => {
       templateCacheString: "test",
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
@@ -148,7 +148,7 @@ describe("standalone", () => {
       templateCacheString: "test",
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
@@ -163,7 +163,7 @@ describe("standalone", () => {
       templateCacheString: "test",
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
@@ -178,13 +178,13 @@ describe("standalone", () => {
       files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     expect((result.config as DiscoveredRcConfig).foo).toBe("bar");
-    expect(result.config.filePath).toBe(path.resolve(configFile));
+    expect(result.config!.filePath).toBe(path.resolve(configFile));
   });
 
   it("should load config and respect `template` option with build-in template value", async () => {
@@ -196,12 +196,12 @@ describe("standalone", () => {
       templateCacheString: "test",
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    expect(result.config.template).toBe("scss");
+    expect(result.config!.template).toBe("scss");
     expect(result.template).toMatchSnapshot();
   });
 
@@ -212,12 +212,12 @@ describe("standalone", () => {
       files: `${fixturesGlob}/svg-icons/**/*`,
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    expect(result.config.template).toBe("src/fixtures/templates/template.css");
+    expect(result.config!.template).toBe("src/fixtures/templates/template.css");
     expect(result.template).toMatchSnapshot();
   });
 
@@ -253,7 +253,7 @@ describe("standalone", () => {
     });
 
     const actual = templateOutput.replace(/\s/gu, "");
-    const expected = result.template.replace(/\s/gu, "");
+    const expected = result.template!.replace(/\s/gu, "");
 
     expect(actual).toBe(expected);
   });
@@ -333,8 +333,8 @@ describe("standalone", () => {
       glyphContentTransformFn: () => filledContents,
     });
 
-    expect(withTransform.glyphsData[0]?.contents).toBe(filledContents);
-    expect(withTransform.ttf.length).toBeGreaterThan(1400);
+    expect(withTransform.glyphsData![0]?.contents).toBe(filledContents);
+    expect(withTransform.ttf!.length).toBeGreaterThan(1400);
     expect(isTtf(withTransform.ttf)).toBe(true);
   });
 
@@ -388,8 +388,8 @@ describe("standalone", () => {
       optimizeSvg: true,
     });
 
-    expect(result.glyphsData[0]?.contents).not.toContain("Inkscape export cruft");
-    expect(result.glyphsData[0]?.contents).not.toContain("<metadata>");
+    expect(result.glyphsData![0]?.contents).not.toContain("Inkscape export cruft");
+    expect(result.glyphsData![0]?.contents).not.toContain("<metadata>");
     expect(isWoff2(result.woff2)).toBe(true);
   });
 
@@ -462,7 +462,7 @@ describe("standalone", () => {
         template: "css",
       });
     } catch (error) {
-      expect(error.message).toMatch("Name is invalid");
+      expect((error as Error).message).toMatch("Name is invalid");
     }
   });
 
@@ -542,12 +542,12 @@ describe("standalone", () => {
       templateFontPath: "./foo-bar",
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(isTtf(result.ttf)).toBe(true);
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    expect(result.config.template).toBe("css");
+    expect(result.config!.template).toBe("css");
     expect(result.usedBuildInTemplate).toBe(true);
     expect(result.template).toMatchSnapshot();
   });
@@ -619,7 +619,7 @@ describe("standalone", () => {
     });
 
     expect(result.usedBuildInTemplate).toBe(true);
-    expect(JSON.parse(result.template)).toMatchSnapshot();
+    expect(JSON.parse(result.template!)).toMatchSnapshot();
     expect(result.template).toMatchSnapshot();
   });
 
@@ -702,7 +702,7 @@ describe("standalone", () => {
     });
 
     expect(Array.isArray(result.glyphsData)).toBe(true);
-    expect(result.glyphsData.length > 0).toBe(true);
+    expect(result.glyphsData!.length > 0).toBe(true);
   });
 
   it("should remove ligature unicode when `ligatures` set to `false`", async () => {
@@ -713,9 +713,9 @@ describe("standalone", () => {
     });
 
     expect(Array.isArray(result.glyphsData)).toBe(true);
-    expect(result.glyphsData.length > 0).toBe(true);
+    expect(result.glyphsData!.length > 0).toBe(true);
 
-    result.glyphsData.forEach((glyph) => {
+    result.glyphsData!.forEach((glyph) => {
       expect(glyph.metadata?.unicode).toHaveLength(1);
     });
   });
@@ -737,7 +737,7 @@ describe("standalone", () => {
       files: `${fixturesGlob}/svg-icons/avatar.svg`,
     });
 
-    expect(isSvg(result.svg)).toBe(true);
+    expect(isSvg(result.svg as string)).toBe(true);
     expect(result.glyphsData).toHaveLength(1);
   });
 
@@ -772,8 +772,8 @@ describe("standalone", () => {
       template: `${fixturesGlob}/templates/template-fonts-base64.njk`,
     });
 
-    expect(result.template.length).toBeGreaterThan(0);
-    expect(Buffer.from(result.template, "base64").length).toBeGreaterThan(0);
+    expect(result.template!.length).toBeGreaterThan(0);
+    expect(Buffer.from(result.template!, "base64").length).toBeGreaterThan(0);
   });
 
   it("should throw when template rendering requests a missing font buffer", async () => {

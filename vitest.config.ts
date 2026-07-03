@@ -2,6 +2,7 @@ import path from "node:path";
 import { defineConfig } from "vitest/config";
 
 const esmNodeModules = [
+  "globby",
   "meow",
   "p-limit",
   "svgicons2svgfont",
@@ -19,7 +20,6 @@ const esmNodeModules = [
 export default defineConfig({
   resolve: {
     alias: {
-      globby: path.resolve(__dirname, "vitest/globby-stub.ts"),
       "@file-type/xml": path.resolve(__dirname, "node_modules/@file-type/xml/lib/index.js"),
     },
   },

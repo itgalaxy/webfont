@@ -97,7 +97,6 @@
     "@types/wawoff2": "1.0.2",
     "@types/xml2js": "0.4.14",
     "@vitest/coverage-v8": "4.1.9",
-    "fast-glob": "3.2.12",
     "is-eot": "latest",
     "is-svg": "6.1.0",
     "is-ttf": "latest",
@@ -113,7 +112,6 @@
     "vitest": "4.1.9"
   },
   "overrides": {
-    "fast-glob": "3.2.12",
     "minimatch": "10.2.5",
     "test-exclude": "7.0.2",
     "woff2sfnt-sfnt2woff": "1.0.0"

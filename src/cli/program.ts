@@ -176,7 +176,7 @@ export const buildOptionsBase = (cli: CliLike): OptionsBase => {
     optionsBase.ligatures = cli.flags.ligatures;
   }
 
-  if (cli.flags.unicodeRange === false) {
+  if (cli.flags.unicodeRange) {
     optionsBase.unicodeRange = cli.flags.unicodeRange;
   }
 

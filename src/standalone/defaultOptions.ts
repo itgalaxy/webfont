@@ -28,5 +28,6 @@ export const defaultWebfontOptions = (): Omit<WebfontOptions, "files"> =>
     sort: true,
     startUnicode: 0xea01,
     templateFontPath: "./",
+    unicodeRange: false,
     verbose: false,
   }) as Omit<WebfontOptions, "files">;

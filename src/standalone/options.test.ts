@@ -16,6 +16,7 @@ describe("options", () => {
     expect(options.templateFontPath).toBe("./");
     expect(options.ligatures).toBe(true);
     expect(options.sort).toBe(true);
+    expect(options.unicodeRange).toBe(false);
     expect(options.verbose).toBe(false);
     expect(options.fontHeight).toBeUndefined();
     expect(options.template).toBeUndefined();

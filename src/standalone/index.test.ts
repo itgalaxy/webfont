@@ -517,12 +517,13 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
-  it("should include unicode-range in html template when templateFontLigatures is false", async () => {
+  it("should include unicode-range in html template when templateFontLigatures is false and unicodeRange is enabled", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: "html",
       templateCacheString: "test",
       templateFontLigatures: false,
+      unicodeRange: true,
     });
 
     expect(result.template).toContain("unicode-range: U+EA01-EA03;");
@@ -565,7 +566,19 @@ describe("standalone", () => {
     expect(result.template).toMatchSnapshot();
   });
 
-  it("should include unicode-range in built-in templates by default (#322)", async () => {
+  it("should include unicode-range in built-in templates when unicodeRange is true (#322)", async () => {
+    const result = await standalone({
+      files: `${fixturesGlob}/svg-icons/**/*`,
+      template: "css",
+      templateCacheString: "test",
+      formats: ["woff2"],
+      unicodeRange: true,
+    });
+
+    expect(result.template).toContain("unicode-range: U+EA01-EA03;");
+  });
+
+  it("should omit unicode-range in built-in templates by default", async () => {
     const result = await standalone({
       files: `${fixturesGlob}/svg-icons/**/*`,
       template: "css",
@@ -573,7 +586,7 @@ describe("standalone", () => {
       formats: ["woff2"],
     });
 
-    expect(result.template).toContain("unicode-range: U+EA01-EA03;");
+    expect(result.template).not.toContain("unicode-range:");
   });
 
   it("should omit unicode-range when unicodeRange is false", async () => {

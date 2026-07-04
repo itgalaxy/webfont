@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.4.0](https://github.com/itgalaxy/webfont/compare/v12.3.0...v12.4.0) (2026-07-04)
+
+
+### Features
+
+* add TTF to SVG font encoder ([#765](https://github.com/itgalaxy/webfont/issues/765)) ([02a7b44](https://github.com/itgalaxy/webfont/commit/02a7b4475e5291b05b833ebb24fab12965380793))
+
 ## [12.3.0](https://github.com/itgalaxy/webfont/compare/v12.2.0...v12.3.0) (2026-07-04)
 
 ### Features

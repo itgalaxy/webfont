@@ -10,7 +10,7 @@
 
 ## Decision
 
-- **Template** stays in `MIGRATION.md` (entry structure, links).
+- **Template** lives in [`docs/migration/README.md`](../migration/README.md) (naming, workflow, entry structure); `MIGRATION.md` stays a reader-facing overview.
 - **Each behavior change** gets its own file: `docs/migration/issue-NNNN-<slug>.md` (issue number zero-padded to four digits).
 - PRs **add a new file**; they do not append sections to `MIGRATION.md`.
 - On release, maintainers edit **only** that issue’s file (set minimum version, trim workarounds).

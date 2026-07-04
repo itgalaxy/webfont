@@ -70,6 +70,9 @@ const __dirname = __webfontFileURLToPath(new URL(".", import.meta.url));
   }
 
   return {
+    // The repo root holds a public/ folder used only by the VitePress docs site.
+    // Disable Vite's public-dir copying so the library build never bundles it.
+    publicDir: false,
     build: {
       emptyOutDir: !isCliBuild && !isBrowserBuild && !isLibraryEsmBuild,
       lib: {

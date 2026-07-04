@@ -145,7 +145,7 @@ When a task changes **how users interact with webfont** (CLI flags, programmatic
 3. **Update [FEATURES.md](./FEATURES.md)** when capabilities, stability, properties, or test criteria change. Mark features `stable`, `in-progress`, or `planned`; tick test criteria when coverage exists.
 4. **Update [NOTICE.md](./NOTICE.md)** when legal notices, font licensing guidance, attribution rules, or runtime dependency licenses change.
 5. **Update [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** for operational errors (symptoms and fixes on the **current** release, not version-to-version deltas).
-6. **Update migration docs** when a fix or change alters behavior across releases: add **`docs/migration/issue-NNNN-<slug>.md`** (one new file per issue — do **not** append to `MIGRATION.md`; see [entry structure](./MIGRATION.md#entry-structure) and [docs/migration/README.md](./docs/migration/README.md)). Include *What changed* → *Before* → *After* → **Workaround on older versions** (when users on older npm releases have a practical alternative) → *After upgrading*. Link the GitHub issue; set **minimum fixed version** in that file when the release ships.
+6. **Update migration docs** when a fix or change alters behavior across releases: add **`docs/migration/issue-NNNN-<slug>.md`** (one new file per issue — do **not** append to `MIGRATION.md`; see [docs/migration/README.md](./docs/migration/README.md#entry-structure) for naming, workflow, and entry structure). Include *What changed* → *Before* → *After* → **Workaround on older versions** (when users on older npm releases have a practical alternative) → *After upgrading*. Link the GitHub issue; set **minimum fixed version** in that file when the release ships.
 7. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
 
 See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and documentation”.
@@ -198,7 +198,7 @@ Process open issues **oldest to newest** (`gh issue list --state open`, sort by 
    Do not leave reporters waiting with only a PR link and no explanation.
 2. **Tests first:** check coverage for the affected area. Add or extend tests that name the failure **before** changing production code when coverage is missing.
 3. Implement the fix; run `npm test`.
-4. **Bugs and behavior changes across releases:** add **`docs/migration/issue-NNNN-<slug>.md`** using the [entry structure](./MIGRATION.md#entry-structure) (*Before* → *After* → **Workaround on older versions** → *After upgrading*). Do not edit `MIGRATION.md` body for new entries — only add a file under `docs/migration/` ([workflow](./docs/migration/README.md)). Link the GitHub issue. Use [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) only when the entry is not version-specific.
+4. **Bugs and behavior changes across releases:** add **`docs/migration/issue-NNNN-<slug>.md`** using the [entry structure](./docs/migration/README.md#entry-structure) (*Before* → *After* → **Workaround on older versions** → *After upgrading*). Do not edit `MIGRATION.md` body for new entries — only add a file under `docs/migration/` ([workflow](./docs/migration/README.md)). Link the GitHub issue. Use [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) only when the entry is not version-specific.
 5. Open a PR (English title/body, Conventional Commits). Link the issue in **Related issue**; do **not** use `Closes #n` if the issue should stay open until npm publish.
 6. Wait for CI; wait for maintainer merge.
 

@@ -72,3 +72,10 @@ lefthook-local.yml
 src/**/*.js
 !src/fixtures/**/*.js
 src/**/*.d.ts
+
+# VitePress docs site build output and cache (project root is the srcDir)
+.vitepress/dist
+.vitepress/cache
+
+# Generated font demo for the docs site (built by `npm run docs:demo`)
+public/font-demo

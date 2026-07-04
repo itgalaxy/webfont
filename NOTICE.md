@@ -1,4 +1,4 @@
-# webfont — Legal notice
+# webfont — Legal Notices
 
 This document covers **copyright and licensing for fonts you process**, **disclaimers** about using the webfont software, **community attribution guidelines**, and **third-party open-source components** bundled with or used by this project.
 

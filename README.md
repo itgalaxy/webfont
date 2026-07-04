@@ -190,6 +190,71 @@ const remote = await webfont({
 });
 ```
 
+### Autohinting
+
+webfont does not bundle a hinting engine — [`ttfautohint`](https://www.freetype.org/ttfautohint/) is a native binary, so it stays out of the core install. Run it yourself through the [`ttfPostProcess`](#ttfpostprocess) hook: it receives the generated **TTF before** WOFF/WOFF2/EOT are derived, so the hinted outlines flow into every format.
+
+**Option A — npm wrapper (no system install).** The [`ttfautohint`](https://www.npmjs.com/package/ttfautohint) package ships a prebuilt binary and a Buffer API:
+
+```bash
+npm i -D ttfautohint
+```
+
+```js
+import { webfont } from "webfont";
+import TTFAutohint from "ttfautohint";
+
+await webfont({
+  files: "src/svg-icons/**/*.svg",
+  formats: ["ttf", "woff", "woff2", "eot"],
+  // `icon: true` applies icon-font-tuned hinting metrics
+  ttfPostProcess: (ttf) => TTFAutohint.transform(ttf, { icon: true }),
+});
+```
+
+`TTFAutohint.transform(buffer, options)` returns the hinted `Buffer`, which webfont uses as the TTF and as the source for the other formats.
+
+**Option B — system binary (no extra npm dependency).** If `ttfautohint` is already installed (Homebrew, apt, …), pipe the buffer through it:
+
+```js
+import { execFileSync } from "node:child_process";
+import { webfont } from "webfont";
+
+const autohint = (ttf) =>
+  execFileSync("ttfautohint", ["-W", "-i", "-s", "-x", "24", "-l", "12", "-r", "48"], {
+    input: ttf,
+    maxBuffer: 64 * 1024 * 1024,
+  });
+
+await webfont({
+  files: "src/svg-icons/**/*.svg",
+  formats: ["ttf", "woff2"],
+  ttfPostProcess: (ttf) => autohint(ttf),
+});
+```
+
+**CLI.** Flags can't carry a function, but webfont loads a JS config via cosmiconfig — put the hook in `webfont.config.js`:
+
+```js
+// webfont.config.js
+const TTFAutohint = require("ttfautohint");
+
+module.exports = {
+  files: "src/svg-icons/**/*.svg",
+  formats: ["ttf", "woff2"],
+  ttfPostProcess: (ttf) => TTFAutohint.transform(ttf, { icon: true }),
+};
+```
+
+then run `webfont`.
+
+Notes:
+
+- The hook is **opt-in**; webfont core stays free of native dependencies.
+- CI must have the binary available — the npm wrapper installs one; the system-binary option requires `ttfautohint` on `PATH`.
+- The callback may be async: return a `Promise<Buffer | Uint8Array>` if your tool is asynchronous.
+- See [#749](https://github.com/itgalaxy/webfont/issues/749) for autohinting tracking and a possible first-party companion package.
+
 ### Options
 
 #### `files`
@@ -439,7 +504,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
 - Type: `function`
 - Default: `undefined`
-- Description: Post-process the generated **TTF** buffer **after** it is built and **before** webfont derives WOFF/WOFF2/EOT from it (SVG pipeline only). The callback receives `(ttf, { fontName, formats })` and returns the new font bytes (`Buffer` or `Uint8Array`, sync or async). Every derived format is produced from the returned buffer. This is a **caller-owned** extension point — webfont bundles nothing here, so optional/native steps such as **autohinting** (`ttfautohint`) live in **your** project or a separate package, keeping the core free of native dependencies (same philosophy as [`glyphContentTransformFn`](#glyphcontenttransformfn) and [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md); see [#749](https://github.com/itgalaxy/webfont/issues/749)).
+- Description: Post-process the generated **TTF** buffer **after** it is built and **before** webfont derives WOFF/WOFF2/EOT from it (SVG pipeline only). The callback receives `(ttf, { fontName, formats })` and returns the new font bytes (`Buffer` or `Uint8Array`, sync or async). Every derived format is produced from the returned buffer. This is a **caller-owned** extension point — webfont bundles nothing here, so optional/native steps such as **autohinting** (`ttfautohint`) live in **your** project or a separate package, keeping the core free of native dependencies (same philosophy as [`glyphContentTransformFn`](#glyphcontenttransformfn) and [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md); see [#749](https://github.com/itgalaxy/webfont/issues/749)). See the [Autohinting](#autohinting) recipe for npm-wrapper, system-binary, and CLI variants.
 - Example (autohinting — **install the hinting tool in your app**, not in webfont):
 
   ```js

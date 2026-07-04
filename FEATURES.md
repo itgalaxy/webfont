@@ -182,7 +182,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 ### TTF output hook (`ttfPostProcess`)
 
 - **Stability**: stable
-- **Description**: Caller-owned post-processing of the generated TTF buffer, before WOFF/WOFF2/EOT are derived from it (SVG pipeline only). Keeps optional/native steps (e.g. autohinting via `ttfautohint`) out of the core — same philosophy as `glyphContentTransformFn` ([ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)); enabling package for [#749](https://github.com/itgalaxy/webfont/issues/749).
+- **Description**: Caller-owned post-processing of the generated TTF buffer, before WOFF/WOFF2/EOT are derived from it (SVG pipeline only). Keeps optional/native steps (e.g. autohinting via `ttfautohint`) out of the core — same philosophy as `glyphContentTransformFn` ([ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)); enabling package for [#749](https://github.com/itgalaxy/webfont/issues/749). Recipe: [Autohinting](./README.md#autohinting).
 - **Properties**:
   - Signature `(ttf, { fontName, formats }) => Buffer | Uint8Array | Promise<…>`.
   - Runs once, after `toTtf`; all derived formats come from the returned buffer.

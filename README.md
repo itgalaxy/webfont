@@ -81,6 +81,31 @@ webfont "fonts/*.ttf" -f woff2,woff,eot,svg -d dist --dest-create
 
 `webfont` adds `woff2` (much smaller than the legacy formats), lets you emit only what you ship, and needs no Java toolchain.
 
+## Comparison with `grunt-webfont`
+
+[`grunt-webfont`](https://github.com/sapegin/grunt-webfont) is the classic "SVG → webfont" **Grunt plugin** (~1.1k★, MIT). It is **archived** (read-only since 2021, last release `v1.2.0`), and its best-fidelity output relies on a native **FontForge** binary (its pure-`node` engine can't do ligatures). `webfont` is a framework-agnostic, actively maintained, pure-JS library **and** CLI: it does everything grunt-webfont *generated* — plus TTF encoding, WOFF/WOFF2 decompression, more templates, and programmatic hooks. The one thing grunt-webfont has that `webfont` doesn't is native Grunt wiring (tracked in [#771](https://github.com/itgalaxy/webfont/issues/771)); you can already drive `webfont()` from a small custom Grunt task.
+
+| Capability | `webfont` (this project) | `grunt-webfont` ([sapegin/grunt-webfont](https://github.com/sapegin/grunt-webfont)) |
+|------------|:------------------------:|:----------------------------------------------------------------------------------:|
+| Maintained | ✅ | ❌ (archived 2021, `v1.2.0`) |
+| Runtime | Node API **+ CLI** (any build tool) | **Grunt task only** |
+| Engine | Pure JS (`svg2ttf`) | `node` **or** FontForge binary |
+| SVG icons → font | ✅ | ✅ |
+| Output formats | `svg, ttf, eot, woff, woff2` | `eot, woff2, woff, ttf, svg` |
+| TTF input → web formats | ✅ | ❌ |
+| WOFF/WOFF2 → TTF/OTF decompression | ✅ | ❌ |
+| Stylesheets | `css, scss, styl, html, json` + custom Nunjucks, multiple per run | `css, sass, scss, less, stylus` + custom |
+| CSS syntax presets (BEM / Bootstrap) | ❌ (use a custom template) | ✅ |
+| `data:uri` embedding in CSS | ❌ | ✅ (`embed`) |
+| Autohinting (`ttfautohint`) | via `ttfPostProcess` hook (external, opt-in) | built-in (`autoHint`) |
+| Ligatures | ✅ (opt-in) | ✅ (FontForge engine only) |
+| Codepoint map persistence | ❌ | ✅ (`codepointsFile`) |
+| Programmatic API | ✅ (`webfont()`) | ❌ (Grunt only) |
+| SVG diagnostics | ✅ (alpha) | ❌ |
+| Grunt integration | ⏳ ([#771](https://github.com/itgalaxy/webfont/issues/771)) | ✅ (native) |
+
+If you only need the generation that grunt-webfont did, `webfont` is a maintained, FontForge-free replacement. If you specifically need BEM/Bootstrap CSS presets or `data:uri` embedding today, use a [custom template](#template).
+
 ## Table Of Contents
 
 - [Webfont](#webfont)
@@ -88,6 +113,7 @@ webfont "fonts/*.ttf" -f woff2,woff,eot,svg -d dist --dest-create
   - [Input modes](#input-modes)
   - [Font licensing](#font-licensing)
   - [Comparison with `webfonts`](#comparison-with-webfonts)
+  - [Comparison with `grunt-webfont`](#comparison-with-grunt-webfont)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Options](#options)
@@ -900,6 +926,7 @@ The CLI can exit the process with the following exit codes:
 - [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
 - [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
 - [wawoff2](https://github.com/fontello/wawoff2) - Converts TTF fonts to WOFF2 and versa vice.
+- [fontTools](https://github.com/fonttools/fonttools) - Complementary low-level font toolkit (Python) for jobs webfont does not cover: subsetting, variable fonts, OpenType feature compilation, table editing, and TTX (font ⇄ XML). Generate the font with webfont, then inspect or optimize it with fontTools.
 
 ## Roadmap
 

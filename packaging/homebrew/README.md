@@ -20,19 +20,16 @@ brew install itgalaxy/tap/webfont
 brew install itgalaxy/tap/webfonts
 ```
 
-Both install the same maintained, pure-JS `webfont` CLI.
+Both install the same `webfont` CLI — `webfonts` is just an alternate name.
 
-## Why an alias?
+## The `webfonts` alias
 
-The older [`uipoet/webfonts`](https://github.com/uipoet/webfonts) package is
-unmaintained and not on Homebrew. The `webfonts` alias helps people looking for
-that tool land on the maintained one.
+`webfonts` is a convenience alias for `webfont` (a common alternate spelling).
 
-**Policy:** Homebrew **personal taps** allow arbitrary aliases (they are
-namespaced to the tap and users opt in with `brew tap`), so this alias is
-allowed there. **homebrew-core does not** accept it — core reserves aliases for
-renamed/legacy formulae and requires non-conflicting names. Keep the alias
-tap-only.
+Aliases like this are a tap feature: Homebrew **personal taps** allow arbitrary
+aliases (they are namespaced to the tap and users opt in with `brew tap`).
+**homebrew-core** reserves aliases for renamed/legacy formulae, so keep this one
+**tap-only**.
 
 ## Publishing / updating the tap
 

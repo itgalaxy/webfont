@@ -127,7 +127,7 @@ If you only need the generation that grunt-webfont did, `webfont` is a maintaine
 - [Roadmap](#roadmap)
 - [Contribution](#contribution)
 - [Changelog](#changelog)
-- [Legal notice](#legal-notice)
+- [Legal Notices](#legal-notices)
 - [License](#license)
 
 ---
@@ -942,7 +942,7 @@ Feel free to push your code if you agree with publishing under the MIT license.
 
 Check our [Changelog](CHANGELOG.md)
 
-## Legal notice
+## Legal Notices
 
 Copyright, disclaimers, font licensing expectations (including WOFF/WOFF2 decompression), community attribution guidelines, and third-party open-source dependencies are documented in **[NOTICE.md](./NOTICE.md)**.
 

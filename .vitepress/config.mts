@@ -67,7 +67,7 @@ export default defineConfig({
           { text: "Troubleshooting", link: "/introduction/troubleshooting" },
           { text: "What's New", link: "/introduction/whats-new" },
           { text: "Migrating", link: "/migrating/" },
-          { text: "Legal notices", link: "/introduction/licenses" },
+          { text: "Legal Notices", link: "/introduction/licenses" },
         ],
       },
       {

@@ -87,7 +87,11 @@ describe("ttfEncode", () => {
       const ttf = await fsPromise.readFile(fixtureTtf);
       const svg = encodeTtfToSvg(ttf);
 
-      expect(svg).toContain("<metadata></metadata>");
+      // Assert the intent ("no non-empty metadata") rather than fonteditor-core's
+      // exact empty-element serialization, which may vary across releases
+      // (`<metadata></metadata>`, `<metadata/>`, or omitted) without changing behavior.
+      expect(isSvg(svg)).toBe(true);
+      expect(svg).not.toMatch(/<metadata>[^<]+<\/metadata>/u);
     });
   });
 });

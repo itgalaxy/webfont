@@ -1,7 +1,21 @@
 name: npm publish
 
-# Publishes with the NPM_TOKEN repository secret (see CONTRIBUTING.md).
-# Trusted Publishing (OIDC) may replace this when configured on npmjs.com.
+# Release pipeline. Triggered by a published GitHub Release (or manually with a
+# tag). It builds and validates once, then deploys to two environments:
+#
+#   - `npm`             → public registry (https://registry.npmjs.org, `webfont`)
+#   - `github-packages` → GitHub Packages (https://npm.pkg.github.com, `@itgalaxy/webfont`)
+#
+# The `build` job is the single place that builds `dist/`, runs the full test
+# suite, and validates the published surface (publint + attw + pack-smoke). It
+# uploads `dist/` and the release archives as artifacts so the deploy jobs ship
+# the exact same build without repeating it. Deploy jobs run
+# `npm publish --ignore-scripts`, so `prepublishOnly` does not rebuild or
+# re-validate on the publish runners (avoids the duplicated build in #742).
+#
+# Auth: `npm` uses the NODE_AUTH_TOKEN repository secret; `github-packages` uses the
+# built-in GITHUB_TOKEN (`packages: write`). Environment deployment URLs link to
+# each published package page. See CONTRIBUTING.md → "npm publishing".
 on:
   release:
     types: [published]
@@ -20,6 +34,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.pack.outputs.version }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -32,10 +48,87 @@ jobs:
       - run: npm test
       - name: Validate published package surface (publint + attw + pack-smoke)
         run: npm run test:package
+      - name: Pack npm tarball and archive dist/
+        id: pack
+        run: |
+          version="$(node -p 'require("./package.json").version')"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          mkdir -p artifacts
+          npm pack --ignore-scripts --pack-destination artifacts
+          ( cd dist && zip -r "../artifacts/webfont-dist-$version.zip" . )
+      - name: Upload built dist/ for the deploy jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 1
+      - name: Upload release archives (npm tarball + dist zip)
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: artifacts
+          if-no-files-found: error
+          retention-days: 1
+
+  release-assets:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download release archives
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+          path: artifacts
+      - name: Attach archives to the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" artifacts/* --clobber --repo "$GITHUB_REPOSITORY"
 
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/webfont/v/${{ steps.meta.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - name: Resolve published version
+        id: meta
+        run: echo "version=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 26.x
+          package-manager-cache: false
+      - name: Download dist/ built by the build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      # CI is non-interactive (no `npm login`): write ~/.npmrc so `npm publish`
+      # reads the token from NODE_AUTH_TOKEN at runtime (npm expands
+      # ${NODE_AUTH_TOKEN}); the raw token never touches disk or the logs.
+      # The NODE_AUTH_TOKEN secret must be an npm access token (npmjs.com ->
+      # Access Tokens), not a GitHub PAT — npmjs.org rejects GitHub tokens.
+      - name: Write ~/.npmrc for npmjs.org
+        run: printf '%s\n' 'registry=https://registry.npmjs.org/' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$HOME/.npmrc"
+      - run: npm publish --ignore-scripts --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
+  publish-github-packages:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    environment:
+      name: github-packages
+      url: https://github.com/${{ github.repository }}/pkgs/npm/webfont
     steps:
       - uses: actions/checkout@v7
         with:
@@ -43,8 +136,23 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 26.x
-          registry-url: https://registry.npmjs.org/
-          node-auth-token: ${{ secrets.NPM_TOKEN }}
           package-manager-cache: false
-      - run: npm ci
-      - run: npm publish --access public
+      - name: Download dist/ built by the build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      # GitHub Packages requires a scope matching the repo owner. Rename in the
+      # checkout only (not committed) so the same build publishes as
+      # `@itgalaxy/webfont` alongside the unscoped `webfont` on npmjs.org.
+      - name: Scope package to the repository owner
+        run: npm pkg set name=@itgalaxy/webfont
+      # Non-interactive CI auth: write ~/.npmrc pointing the @itgalaxy scope at
+      # GitHub Packages, with the token read from NODE_AUTH_TOKEN at runtime.
+      # The built-in GITHUB_TOKEN (packages: write) works out of the box; swap
+      # for a PAT secret with `write:packages` if you prefer a personal token.
+      - name: Write ~/.npmrc for GitHub Packages
+        run: printf '%s\n' '@itgalaxy:registry=https://npm.pkg.github.com/' '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' > "$HOME/.npmrc"
+      - run: npm publish --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

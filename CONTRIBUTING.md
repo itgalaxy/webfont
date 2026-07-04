@@ -208,16 +208,46 @@ Do not run local `npm version` or push version tags manually unless coordinating
 
 #### npm publishing
 
-Publishing from GitHub Actions uses the **`NPM_TOKEN`** repository secret (Automation/publish token on npmjs.com). The [`npm-publish`](.github/workflows/npm-publish.yml) workflow passes it to `actions/setup-node` as `node-auth-token`.
+Publishing from GitHub Actions deploys the same validated build to **two environments** — `npm` (public registry, `webfont`) and `github-packages` (GitHub Packages, `@itgalaxy/webfont`). CI is **non-interactive** — there is no `npm login`. Each deploy job writes `~/.npmrc` with `//<registry>/:_authToken=${NODE_AUTH_TOKEN}` and sets `NODE_AUTH_TOKEN` from a secret at the `npm publish` step, so npm expands the token at runtime and it never lands on disk or in the logs:
+
+- **`npm`** → `NODE_AUTH_TOKEN` = **`NODE_AUTH_TOKEN`** repository secret (an npm access token from npmjs.com; a GitHub PAT does **not** authenticate to npmjs.org).
+- **`github-packages`** → `NODE_AUTH_TOKEN` = built-in **`GITHUB_TOKEN`** (`packages: write`); no extra secret. Swap for a PAT secret with `write:packages` if you prefer a personal token.
+
+> `actions/setup-node` has **no** `node-auth-token` input — `registry-url` only wires auth to read from `env.NODE_AUTH_TOKEN`. Passing a token to a non-existent input silently publishes unauthenticated (the `E404` in [#742](https://github.com/itgalaxy/webfont/issues/742)); writing `~/.npmrc` + setting `NODE_AUTH_TOKEN` is the fix.
 
 **One-time setup** (package maintainer):
 
-1. Create an npm **Automation** or **Publish** token for the `webfont` package (with publish access; OTP requirement disabled for automation if your org allows it).
-2. Add it as a GitHub repository secret named **`NPM_TOKEN`** ([Settings → Secrets and variables → Actions](https://github.com/itgalaxy/webfont/settings/secrets/actions)).
+1. Create an npm **Automation** or **Granular** access token for the `webfont` package (npmjs.com → **Access Tokens**) with publish permission (OTP/2FA-for-writes disabled for automation, or use a token type that bypasses it).
+2. Add it as a GitHub repository secret named **`NODE_AUTH_TOKEN`** ([Settings → Secrets and variables → Actions](https://github.com/itgalaxy/webfont/settings/secrets/actions)). GitHub Packages needs no secret — it uses `GITHUB_TOKEN`.
 
 **After merging a Release PR:** the [`npm-publish`](.github/workflows/npm-publish.yml) workflow listens for `release: published`, but releases created with the default `GITHUB_TOKEN` usually **do not** trigger downstream workflows — use **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.1.0`) if publish does not start automatically.
 
-**Future:** [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC) can replace `NPM_TOKEN` when a maintainer configures it on npmjs.com for workflow `npm-publish.yml`.
+**Future:** [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC) can replace the `NODE_AUTH_TOKEN` secret when a maintainer configures it on npmjs.com for workflow `npm-publish.yml`.
+
+##### Deployment environments and GitHub Packages
+
+The workflow runs two deploy jobs after `build`, each mapped to a GitHub **Environment** so every release appears under the repo's **Deployments** with a link to the published package:
+
+| Environment | Registry | Package | Auth | Deploy URL |
+|-------------|----------|---------|------|------------|
+| `npm` | `registry.npmjs.org` | `webfont` | `NODE_AUTH_TOKEN` secret | `npmjs.com/package/webfont/v/<version>` |
+| `github-packages` | `npm.pkg.github.com` | `@itgalaxy/webfont` | `GITHUB_TOKEN` (`packages: write`) | repo **Packages** page |
+
+GitHub Packages requires a scope matching the repo owner, so the `publish-github-packages` job renames the package to `@itgalaxy/webfont` in the checkout only (via `npm pkg set name=…`, never committed) — the unscoped `webfont` on npmjs.org is unaffected.
+
+Add protection rules (required reviewers, wait timers) per environment in **Settings → Environments** if you want manual approval to gate a deploy.
+
+**Install from GitHub Packages** (needs a GitHub token with `read:packages`):
+
+```shell
+echo "@itgalaxy:registry=https://npm.pkg.github.com" >> .npmrc
+echo "//npm.pkg.github.com/:_authToken=\${GITHUB_TOKEN}" >> .npmrc
+npm install @itgalaxy/webfont
+```
+
+##### Release assets
+
+The `release-assets` job attaches two archives to each GitHub Release: the npm tarball **`webfont-<version>.tgz`** (the exact published package) and **`webfont-dist-<version>.zip`** (the built `dist/` only). It needs `contents: write` and uploads with `gh release upload "$RELEASE_TAG" --clobber`.
 
 **Manual publish** from a maintainer machine (browser/web auth or local npm login) is still supported:
 
@@ -229,7 +259,7 @@ npm login              # or ensure a valid token
 npm publish --access public
 ```
 
-`prepublishOnly` starts with `npm whoami`, so a local `npm publish` fails fast if you are not logged in — before the build and package validation run, instead of failing on authentication at the very end. In CI the publish workflow authenticates via `NPM_TOKEN`, so `whoami` passes there; revisit this if you migrate to Trusted Publishing (OIDC).
+`prepublishOnly` starts with `npm whoami`, so a local `npm publish` fails fast if you are not logged in — before the build and package validation run, instead of failing on authentication at the very end. In CI the workflow builds and validates `dist/` **once** in the `build` job, uploads it as an artifact, and the `publish-npm` job runs `npm publish --ignore-scripts` against that artifact — so `prepublishOnly` (and its `whoami`) does not run on the publish runner and the build is not repeated (see [#742](https://github.com/itgalaxy/webfont/issues/742)). The `publish-npm` job depends on `build`, so `test:package` still gates every publish.
 
 Automated publishing does **not** retroactively upload versions that already exist as git tags only (for example `11.5.x` never published to npm).
 

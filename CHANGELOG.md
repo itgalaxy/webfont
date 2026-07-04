@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.4.1](https://github.com/itgalaxy/webfont/compare/v12.4.0...v12.4.1) (2026-07-04)
+
+
+### Bug Fixes
+
+* gate VitePress docs build in pre-push and PR CI ([#777](https://github.com/itgalaxy/webfont/issues/777)) ([8134d0e](https://github.com/itgalaxy/webfont/commit/8134d0eec7044a71340f50a25dbe41e4f93c4c82))
+
 ## [12.4.0](https://github.com/itgalaxy/webfont/compare/v12.3.0...v12.4.0) (2026-07-04)
 
 

@@ -161,8 +161,8 @@ Git hooks are managed by [Lefthook](https://github.com/evilmartians/lefthook) (`
 
 | Hook | What runs |
 |------|-----------|
-| `pre-commit` | Biome check (with safe fixes) on staged `*.{ts,js,json}` files |
-| `pre-push` | `npm test` (full build + lint + Vitest) |
+| `pre-commit` | Biome check (with safe fixes) on staged `*.{ts,js,json}` files; banned-suppression scan |
+| `pre-push` | `npm run typecheck` and `npm run depcheck` (parallel), then `npm test`, then `npm run docs:site` (sequential) |
 
 To simulate hooks without committing or pushing:
 
@@ -192,8 +192,10 @@ Pull requests that change CI configuration (for example, GitHub Actions workflow
 Do not use `chore:` or `chore(ci):` for CI-only changes.
 
 - **Pin tool versions.** Do not install CLIs with `@latest` (or other floating tags) on deploy or release paths — pin a semver in the workflow and optionally allow override via a repository **variable** with a safe default (for example `VERCEL_CLI_VERSION` defaulting to `54.20.1` in [`.github/workflows/vercel-deploy.yml`](.github/workflows/vercel-deploy.yml)). Bump pins in focused `ci(deps):` pull requests.
-- **Bind secrets once.** Map repository secrets to `env` at the job or step level and let the tool read them from the environment. Do not repeat `${{ secrets.* }}` inline across multiple `run` commands — it is error-prone and harder to audit. See [`npm-publish.yml`](.github/workflows/npm-publish.yml) (`NODE_AUTH_TOKEN`) and [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml) (`VERCEL_TOKEN`) for the pattern.
+- **Bind secrets once.** Map repository secrets to `env` at the job or step level and let the tool read them from the environment. Do not repeat GitHub Actions `secrets.*` expressions inline across multiple `run` commands — it is error-prone and harder to audit. See [`npm-publish.yml`](.github/workflows/npm-publish.yml) (`NODE_AUTH_TOKEN`) and [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml) (`VERCEL_TOKEN`) for the pattern.
 - **GitHub Environments for deploy jobs.** Map production deploy jobs to a named [GitHub Environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) so runs appear under **Deployments** with a URL (`npm` / `github-packages` in [`npm-publish.yml`](.github/workflows/npm-publish.yml); `vercel` in [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml)). Optionally scope secrets per environment and add protection rules in **Settings → Environments**.
+- **Validate the docs site.** Changes that touch markdown published by VitePress (see `.vitepress/config.mts` rewrites) must pass `npm run docs:site` (runs `docs:demo` + `vitepress build`; builds `dist/cli.mjs` first when missing). Pre-push and [`.github/workflows/pr.yml`](.github/workflows/pr.yml) run it after `npm test`; Vercel production deploy runs the full `npm run docs:build`.
+- **VitePress markdown.** VitePress compiles published pages as Vue templates. Do not put mustache-style double braces (Vue interpolation syntax) in those markdown files outside fenced code blocks — `vitepress build` fails when Vue tries to parse them. Rephrase (for example “Nunjucks `fontName` placeholder”); if you must show literal braces, use HTML entities (`&#123;&#123;` / `&#125;&#125;`) so Vue never sees interpolation delimiters.
 
 **AppVeyor:** a legacy project may still receive GitHub webhooks. Root `appveyor.yml` disables builds via a non-matching branch filter (`appveyor-disabled`) because maintainers may lack AppVeyor dashboard access. Do not delete it until the AppVeyor project is removed upstream.
 

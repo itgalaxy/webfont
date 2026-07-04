@@ -1,125 +1,37 @@
 {
-  "name": "webfont",
-  "version": "12.4.1",
-  "description": "Generator of fonts from SVG icons; decompress WOFF/WOFF2 to embedded TTF/OTF (not TTF↔OTF transcoding)",
-  "directories": {
-    "lib": "dist",
-    "source": "src"
-  },
-  "files": [
-    "dist",
-    "dist/src/index.d.ts",
-    "templates",
-    "!**/__tests__",
-    "!**/__mocks__",
-    "README.md",
-    "NOTICE.md"
+  "name": "webfont-workspace",
+  "private": true,
+  "description": "Monorepo for webfont — npm workspaces",
+  "workspaces": [
+    "packages/*"
   ],
-  "type": "commonjs",
-  "sideEffects": false,
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "browser": "dist/browser.js",
-  "bin": "dist/cli.mjs",
-  "source": "src/index.ts",
-  "types": "dist/src/index.d.ts",
-  "typings": "dist/src/index.d.ts",
-  "exports": {
-    ".": {
-      "browser": {
-        "types": "./dist/src/index.d.ts",
-        "default": "./dist/browser.js"
-      },
-      "node": {
-        "import": {
-          "types": "./dist/src/index.d.mts",
-          "default": "./dist/index.mjs"
-        },
-        "require": {
-          "types": "./dist/src/index.d.ts",
-          "default": "./dist/index.js"
-        }
-      },
-      "default": {
-        "types": "./dist/src/index.d.ts",
-        "default": "./dist/browser.js"
-      }
-    },
-    "./package.json": "./package.json"
-  },
   "scripts": {
-    "build": "vite build --mode library && vite build --mode library-esm && vite build --mode browser && vite build --mode cli && node scripts/emit-mts-types.mjs",
-    "clean": "rm -rf dist/ temp/",
-    "demo": "node dist/cli.mjs './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
+    "build": "npm run build -w webfont",
+    "clean": "npm run clean -w webfont",
+    "demo": "npm run demo -w webfont",
     "docs:build": "npm run build && npm run docs:site",
-    "docs:demo": "node dist/cli.mjs './src/fixtures/svg-icons/*.svg' -d public/font-demo -t html --normalize --center-horizontally --dest-create",
-    "predocs:site": "node -e \"require('node:fs').existsSync('dist/cli.mjs')||require('node:child_process').execSync('npm run build',{stdio:'inherit'})\"",
+    "docs:demo": "node packages/webfont/dist/cli.mjs './packages/webfont/src/fixtures/svg-icons/*.svg' -d public/font-demo -t html --normalize --center-horizontally --dest-create",
+    "predocs:site": "node -e \"require('node:fs').existsSync('packages/webfont/dist/cli.mjs')||require('node:child_process').execSync('npm run build',{stdio:'inherit'})\"",
     "docs:site": "npm run docs:demo && vitepress build",
     "docs:dev": "vitepress dev",
     "docs:preview": "vitepress preview",
     "lint": "biome check .",
     "lint:suppressions": "node scripts/check-no-suppressions.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "depcheck": "knip",
-    "prebuild": "npm run clean && npm run lint",
+    "typecheck": "npm run typecheck -w webfont",
+    "depcheck": "npm run depcheck -w webfont",
     "prepare": "lefthook install",
-    "predemo": "npm run build",
-    "prepublishOnly": "npm whoami && npm run build && npm run test:package",
-    "pretest": "npm run build",
     "prettify": "biome check --write .",
-    "test": "vitest run src",
-    "test:attw": "attw --pack .",
-    "test:pack": "node scripts/pack-smoke-test.mjs",
-    "test:package": "npm run test:publint && npm run test:attw && npm run test:pack",
-    "test:publint": "publint --level=warning",
-    "testc": "vitest run src --coverage",
-    "test-debug": "vitest run src --no-file-parallelism",
-    "testu": "vitest run src -u",
-    "deprecate-pre-12": "npm deprecate 'webfont@>=10.0.0 <12.0.0' 'Deprecated: upgrade to webfont@12. v10–11 enabled ligatures by default (browser hangs on large fonts, #558). 12.x: ligatures off, Node 24.14+, named import, unicode-range off, template fixes. See MIGRATION.md'"
-  },
-  "dependencies": {
-    "cosmiconfig": "9.0.2",
-    "deepmerge": "^4.2.2",
-    "fonteditor-core": "2.6.3",
-    "fontverter": "2.0.0",
-    "globby": "16.2.0",
-    "meow": "14.1.0",
-    "nunjucks": "3.2.4",
-    "p-limit": "7.3.0",
-    "resolve-from": "^5.0.0",
-    "svg2ttf": "^6.1.0",
-    "svgicons2svgfont": "^16.0.0",
-    "svgo": "4.0.1",
-    "ttf2eot": "3.1.0",
-    "ttf2woff": "^3.0.0",
-    "wawoff2": "2.0.1",
-    "xml2js": "0.6.2"
+    "test": "npm run test -w webfont",
+    "test:package": "npm run test:package -w webfont",
+    "testc": "npm run testc -w webfont",
+    "test-debug": "npm run test-debug -w webfont",
+    "testu": "npm run testu -w webfont",
+    "deprecate-pre-12": "npm run deprecate-pre-12 -w webfont"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "0.18.4",
     "@biomejs/biome": "2.5.2",
-    "@types/node": "26.1.0",
-    "@types/nunjucks": "3.2.6",
-    "@types/svg2ttf": "5.0.3",
-    "@types/ttf2eot": "2.0.2",
-    "@types/ttf2woff": "2.0.4",
-    "@types/wawoff2": "1.0.2",
-    "@types/xml2js": "0.4.14",
-    "@vitest/coverage-v8": "4.1.9",
-    "is-eot": "1.0.0",
-    "is-svg": "6.1.0",
-    "is-ttf": "0.2.2",
-    "is-woff": "1.0.3",
-    "is-woff2": "1.0.0",
-    "knip": "6.24.0",
     "lefthook": "2.1.9",
-    "publint": "0.3.21",
-    "typescript": "6.0.3",
-    "vite": "8.1.3",
-    "vite-plugin-checker": "0.14.4",
-    "vite-plugin-dts": "5.0.3",
-    "vitepress": "1.6.4",
-    "vitest": "4.1.9"
+    "vitepress": "1.6.4"
   },
   "overrides": {
     "minimatch": "10.2.5",
@@ -132,44 +44,7 @@
   },
   "author": "itgalaxy <development@itgalaxy.company>",
   "license": "MIT",
-  "contributors": [
-    {
-      "name": "Alexander Krasnoyarov",
-      "email": "alexander.krasnoyarov@itgalaxy.company",
-      "url": "https://vk.com/sterling_archer"
-    },
-    {
-      "name": "Jimmy Andrade",
-      "email": "webfont@jimmyandrade.com",
-      "url": "https://github.com/jimmyandrade"
-    }
-  ],
-  "bugs": {
-    "url": "https://github.com/itgalaxy/webfont/issues"
-  },
-  "homepage": "https://github.com/itgalaxy/webfont#readme",
   "engines": {
     "node": ">=24.14.0"
-  },
-  "keywords": [
-    "cli",
-    "standalone",
-    "font",
-    "fonts",
-    "webfont",
-    "webfonts",
-    "svg",
-    "ttf",
-    "woff",
-    "woff2",
-    "otf",
-    "ttf2eot",
-    "ttf2woff",
-    "ttf2svg",
-    "svg2ttf",
-    "css",
-    "scss",
-    "builder",
-    "generator"
-  ]
+  }
 }

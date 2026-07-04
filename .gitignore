@@ -60,6 +60,7 @@ temp
 
 # CLI output when run from repo root without --dest (default cwd)
 /webfont.svg
+packages/webfont/webfont.svg
 output/
 
 # Environment variables files
@@ -69,9 +70,9 @@ output/
 lefthook-local.yml
 
 # Don't commit JavaScript generated files
-src/**/*.js
-!src/fixtures/**/*.js
-src/**/*.d.ts
+packages/webfont/src/**/*.js
+!packages/webfont/src/fixtures/**/*.js
+packages/webfont/src/**/*.d.ts
 
 # VitePress docs site build output and cache (project root is the srcDir)
 .vitepress/dist

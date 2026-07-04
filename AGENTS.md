@@ -4,6 +4,10 @@ Instructions for AI agents and contributors automating work in this repository.
 
 **GitHub Copilot:** repository custom instructions live at [`.github/instructions/webfont.instructions.md`](./.github/instructions/webfont.instructions.md) (symlink to this file). Edit **AGENTS.md** only — not the symlink target path in `.github/instructions/`.
 
+## Monorepo layout
+
+npm workspaces monorepo ([ADR 0013](./docs/adr/0013-npm-workspaces-monorepo.md)): published library in **`packages/webfont`** (`name: "webfont"` on npm); VitePress docs and user-facing markdown at the **repo root**. Run `npm ci` at root; `npm test` / `npm run build` / `npm run test:package` delegate to the `webfont` workspace.
+
 ## Testing (Vitest)
 
 ### Do not mix sync-throwing `fs` calls inside async callbacks
@@ -58,10 +62,10 @@ Every PR that changes **runtime behavior** (features, fixes, refactors with obse
 | New option, flag, or pipeline step | Unit test(s) for the module + integration test when the public entry (CLI, `webfont()`, worker) is affected |
 | Bug fix | A test that **fails without the fix** and names the regression |
 | Guard or workaround | Focused unit test documenting **why** the guard exists (see table below) |
-| Packaging / build (`vite.config.ts`, `package.json#exports`, `files`, `main`, `module`, `browser`, `bin`, `types`, or `dist/` layout) | Run `npm run test:package` locally (publint + attw + pack-smoke) and rely on the CI step; extend `scripts/pack-smoke-test.mjs` when a new consumer entry point ships. See [ADR 0012](docs/adr/0012-published-package-validation.md). |
+| Packaging / build (`packages/webfont/vite.config.ts`, `packages/webfont/package.json#exports`, `files`, `main`, `module`, `browser`, `bin`, `types`, or `dist/` layout) | Run `npm run test:package` locally (publint + attw + pack-smoke) and rely on the CI step; extend `packages/webfont/scripts/pack-smoke-test.mjs` when a new consumer entry point ships. See [ADR 0012](docs/adr/0012-published-package-validation.md). |
 | Docs-only | No new tests; say so in the PR **Testing** section |
 
-Run `npm test` before pushing. For packaging or build changes, also run **`npm run test:package`** — a meta script that runs `publint` (package.json lint), `@arethetypeswrong/cli` (types resolution across node10 / node16 CJS / node16 ESM / bundler), and `scripts/pack-smoke-test.mjs` (pack + install + ESM & CJS consumer smoke tests that generate a real woff2). This is the layered guardrail that catches regressions of `package.json#exports` / `files` / `types` / `dist/*.{js,mjs,d.ts,d.mts}` that Vitest-in-source cannot see (for example [#618](https://github.com/itgalaxy/webfont/issues/618)). See [ADR 0012](docs/adr/0012-published-package-validation.md).
+Run `npm test` before pushing. For packaging or build changes, also run **`npm run test:package`** — a meta script that runs `publint` (package.json lint), `@arethetypeswrong/cli` (types resolution across node10 / node16 CJS / node16 ESM / bundler), and `packages/webfont/scripts/pack-smoke-test.mjs` (pack + install + ESM & CJS consumer smoke tests that generate a real woff2). This is the layered guardrail that catches regressions of `package.json#exports` / `files` / `types` / `dist/*.{js,mjs,d.ts,d.mts}` that Vitest-in-source cannot see (for example [#618](https://github.com/itgalaxy/webfont/issues/618)). See [ADR 0012](docs/adr/0012-published-package-validation.md).
 
 ### Document guards and error paths with explicit unit tests
 
@@ -107,7 +111,7 @@ Exact message strings are fine for **errors thrown by this repository** when the
 
 ### CLI integration tests (`execCLI`)
 
-Integration tests in `src/cli/index.test.ts` run the built CLI via `child_process.exec` and capture **stdout**, **stderr**, and the exit code.
+Integration tests in `packages/webfont/src/cli/index.test.ts` run the built CLI via `child_process.exec` and capture **stdout**, **stderr**, and the exit code.
 
 | Stream | Contract under test |
 |--------|---------------------|
@@ -140,7 +144,7 @@ Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliL
 
 When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:
 
-1. **Check for user impact** before finishing — compare CLI help (`src/cli/meow/cliOptions.ts`), [README.md](./README.md) (Input modes, Options, CLI), [FEATURES.md](./FEATURES.md), and any examples or fixtures that show usage.
+1. **Check for user impact** before finishing — compare CLI help (`packages/webfont/src/cli/meow/cliOptions.ts`), [README.md](./README.md) (Input modes, Options, CLI), [FEATURES.md](./FEATURES.md), and any examples or fixtures that show usage.
 2. **Update README.md** when behavior, accepted input formats, or public options change. Keep CLI flag names and short aliases aligned with `meow` (`-f` / `--formats`, `-u` / `--fontName`, etc.).
 3. **Update [FEATURES.md](./FEATURES.md)** when capabilities, stability, properties, or test criteria change. Mark features `stable`, `in-progress`, or `planned`; tick test criteria when coverage exists.
 4. **Update [NOTICE.md](./NOTICE.md)** when legal notices, font licensing guidance, attribution rules, or runtime dependency licenses change.
@@ -168,7 +172,7 @@ When adding or editing `.github/workflows/*.yml`, follow [CONTRIBUTING.md](./CON
 - **Pin third-party CLI versions** on deploy/release paths; do not use `@latest`. Prefer a repository **variable** with a safe default in the workflow expression (e.g. `vars.VERCEL_CLI_VERSION || '54.20.1'`).
 - **Bind secrets once** at the job or step `env` block; reference the env var in `run` commands instead of repeating GitHub Actions `secrets.*` expressions inline across steps. Match existing patterns in `npm-publish.yml` (`NODE_AUTH_TOKEN`) and `vercel-deploy.yml` (`VERCEL_TOKEN`).
 - **Map deploy jobs to GitHub Environments** (`npm`, `github-packages`, `vercel`) so production runs appear under **Deployments** with a URL. See [CONTRIBUTING.md](./CONTRIBUTING.md#vercel-docs-deployment).
-- **Validate the docs site** when editing VitePress-published markdown (`.vitepress/config.mts` rewrites): run `npm run docs:site` locally (`predocs:site` builds `dist/cli.mjs` when missing); pre-push and PR CI enforce it after `npm test`.
+- **Validate the docs site** when editing VitePress-published markdown (`.vitepress/config.mts` rewrites): run `npm run docs:site` locally (`predocs:site` builds `packages/webfont/dist/cli.mjs` when missing); pre-push and PR CI enforce it after `npm test`.
 - **VitePress markdown:** published pages compile as Vue templates — no mustache-style double braces outside fenced code blocks (rephrase, or use HTML entities `&#123;&#123;` / `&#125;&#125;` when literals are required).
 
 ### Lint and type hygiene
@@ -183,7 +187,7 @@ When adding or editing `.github/workflows/*.yml`, follow [CONTRIBUTING.md](./CON
   - `assert(value)` from `node:assert` before use — turns `T | undefined` into `T` and fails the test with a clear message if the assumption ever breaks.
   - Optional chaining (`value?.prop`) when the branch tolerates `undefined`.
   - Typed fixtures/factories (e.g. `makeResultConfig`) so the value is never `undefined` in the first place.
-- **No `ignoreDeprecations` in `tsconfig.json` (or any tsconfig).** On TypeScript upgrades, migrate deprecated compiler options and fix type errors instead of silencing warnings (see [CONTRIBUTING.md](./CONTRIBUTING.md)).
+- **No `ignoreDeprecations` in `packages/webfont/tsconfig.json` (or any tsconfig).** On TypeScript upgrades, migrate deprecated compiler options and fix type errors instead of silencing warnings (see [CONTRIBUTING.md](./CONTRIBUTING.md)).
 - **Enforced automatically.** `npm run lint:suppressions` (`scripts/check-no-suppressions.mjs`) scans tracked source files for banned suppressions and fails the build. It runs on **Lefthook pre-commit** and in **CI** (`.github/workflows/pr.yml`), so reintroducing an `eslint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, or `ignoreDeprecations` blocks the commit/PR. After edits you can run it directly; `biome-ignore` remains allowed only when a rule cannot be satisfied by a small code change.
 
 ## GitHub issues workflow

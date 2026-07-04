@@ -23,27 +23,29 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   ignoreDeadLinks: true,
-  // The repo root holds vite.config.ts for the library build; VitePress must not
+  // packages/webfont/vite.config.ts is for the library build; VitePress must not
   // load it as its own Vite config (it is ESM-only under "type":"commonjs").
   vite: { configFile: false },
   srcExclude: [
     "AGENTS.md",
     "docs/adr/**",
     "coverage/**",
-    "temp/**",
-    "demo/**",
+    "packages/webfont/temp/**",
+    "packages/webfont/demo/**",
+    "packages/webfont/src/**",
+    "packages/webfont/templates/**",
     "public/**",
   ],
   rewrites: {
     "README.md": "introduction/getting-started.md",
     "FEATURES.md": "introduction/features.md",
     "TROUBLESHOOTING.md": "introduction/troubleshooting.md",
-    "CHANGELOG.md": "introduction/whats-new.md",
+    "packages/webfont/CHANGELOG.md": "introduction/whats-new.md",
     "CONTRIBUTING.md": "contributing/guidelines.md",
     "CODE_OF_CONDUCT.md": "contributing/code-of-conduct.md",
     "docs/migration/README.md": "contributing/migration-guide.md",
     "MIGRATION.md": "migrating/index.md",
-    "NOTICE.md": "introduction/licenses.md",
+    "packages/webfont/NOTICE.md": "introduction/licenses.md",
     ...migrationRewrites,
   },
   head: [

@@ -6,6 +6,19 @@ This project has a [code of conduct](https://github.com/itgalaxy/webfont/blob/ma
 
 We’re excited that you’re interested in contributing! Take a moment to read the following guidelines.
 
+## Repository layout (monorepo)
+
+This repository is an **npm workspaces** monorepo ([ADR 0013](./docs/adr/0013-npm-workspaces-monorepo.md)):
+
+| Path | Role |
+|------|------|
+| **Root** (`private`) | VitePress docs site, shared Biome/Lefthook, `docs/adr`, migration guides |
+| **`packages/webfont`** | Published **`webfont`** npm package — library, CLI, build, tests, `CHANGELOG.md`, `NOTICE.md` |
+
+Run **`npm ci`** at the **repo root**. Library commands (`npm test`, `npm run build`, `npm run test:package`) delegate to the `webfont` workspace. User-facing markdown (`README.md`, `FEATURES.md`, …) stays at the root for the docs site; VitePress rewrites `packages/webfont/CHANGELOG.md` and `packages/webfont/NOTICE.md`.
+
+Future workspaces (`webfont-studio`, optional CLI split, Homebrew assets) will live under `packages/*` without changing the public npm package name.
+
 There are several ways to contribute, not just by writing code:
 
 ## Improving documentation
@@ -63,17 +76,17 @@ And, if you’re raising an issue, please understand that people involved with t
 
 ### User-facing changes and documentation
 
-Before opening or updating a pull request, check whether your change affects **how people use webfont** — via the CLI (`webfont` / `dist/cli.mjs`), the programmatic API (`webfont({ ... })`), or config files (`.webfontrc`, `package.json` `webfont` key, etc.).
+Before opening or updating a pull request, check whether your change affects **how people use webfont** — via the CLI (`webfont` / `packages/webfont/dist/cli.mjs`), the programmatic API (`webfont({ ... })`), or config files (`.webfontrc`, `package.json` `webfont` key, etc.).
 
 When it does, update documentation in the same PR:
 
 | What changed | Update |
 |--------------|--------|
-| CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section, `src/cli/meow/cliOptions.ts` help text, and [FEATURES.md](./FEATURES.md) when capability changes |
+| CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section, `packages/webfont/src/cli/meow/cliOptions.ts` help text, and [FEATURES.md](./FEATURES.md) when capability changes |
 | `webfont()` options, defaults, return shape, or supported inputs/outputs | [README.md](./README.md) Options / Result / Input modes, [FEATURES.md](./FEATURES.md) |
-| New or removed public options or pipelines | README + [FEATURES.md](./FEATURES.md) + TypeScript types under `src/types/` |
+| New or removed public options or pipelines | README + [FEATURES.md](./FEATURES.md) + TypeScript types under `packages/webfont/src/types/` |
 | Bug fixes or recurring user-facing errors (especially from issues) | New `docs/migration/issue-NNNN-<slug>.md` ([workflow](./docs/migration/README.md)); [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when the fix applies the same on all releases |
-| Legal notices, font licensing copy, attribution, or dependency license table | [NOTICE.md](./NOTICE.md); link from README as needed |
+| Legal notices, font licensing copy, attribution, or dependency license table | [packages/webfont/NOTICE.md](./packages/webfont/NOTICE.md); link from README as needed |
 | Internal-only refactors with no usage change | No README or FEATURES change; say so in the PR **Testing** section |
 
 Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.md) (“Documentation”).
@@ -108,7 +121,7 @@ New behavior and bug fixes should include tests. Follow [AGENTS.md](./AGENTS.md)
 | **Unit + integration** | Error paths and guards should have **unit tests** in the module under test. Add integration tests when the full pipeline matters, but do not use them as the only coverage for a guard. |
 | **Explicit, not implicit** | Name tests after the invariant they protect (for example, why a guard exists). If a dependency quirk motivated the code, add a small test that documents the quirk. |
 | **Pipeline ordering** | When step B must not run if step A fails, assert B was not called (spy/mock), not only that the final promise rejected. |
-| **Fixtures** | Reuse fixtures under `src/fixtures/` for file-based cases; add a fixture when the scenario is stable and reusable. |
+| **Fixtures** | Reuse fixtures under `packages/webfont/src/fixtures/` for file-based cases; add a fixture when the scenario is stable and reusable. |
 | **Test titles** | Every `it(...)` description must include **`should`** or **`should not`** (for example, `should return default options`, `should not call metadataProvider when parse fails`). Avoid bare verbs (`returns`, `throws`, `accepts`) or prefixes like `documents that` without `should`. |
 
 Run `npm test` before pushing. Integration-only coverage for a localized guard is incomplete.
@@ -119,7 +132,7 @@ Run `npm test` before pushing. Integration-only coverage for a localized guard i
 
 1. **`npm run test:publint`** — [publint](https://publint.dev/) lints `package.json` for publish-surface issues (`exports`, `files`, `main`, `module`, `types`, condition ordering). Prints warnings and suggestions in every CI log; fails only on errors.
 2. **`npm run test:attw`** — [`@arethetypeswrong/cli`](https://arethetypeswrong.github.io/) probes types resolution across **node10**, **node16 (from CJS)**, **node16 (from ESM)**, and **bundler** to catch types that would fail to resolve for TypeScript consumers under any module system.
-3. **`npm run test:pack`** — `scripts/pack-smoke-test.mjs` packs with `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape works end-to-end:
+3. **`npm run test:pack`** — `packages/webfont/scripts/pack-smoke-test.mjs` packs with `npm pack`, installs the tarball into throwaway ESM and CJS consumer projects, and asserts each import shape works end-to-end:
    - `import webfont from "webfont"` (ESM default) → `typeof === "function"` and generates a real `woff2` from fixtures.
    - `import { webfont } from "webfont"` (ESM named) → same.
    - `const { webfont } = require("webfont")` (CJS named) and `require("webfont").default` (CJS default) → same.
@@ -129,7 +142,7 @@ Together these guard `package.json#exports`, `#files`, `#types`, and the built `
 
 The meta script runs on every pull request in [`.github/workflows/pr.yml`](.github/workflows/pr.yml), gates the publish job in [`.github/workflows/npm-publish.yml`](.github/workflows/npm-publish.yml), and is wired into `prepublishOnly` so `npm publish` fails locally if the tarball would ship a broken import shape.
 
-When adding or removing files from `dist/`, updating `package.json#exports` / `#files` / `#types`, or touching the Vite build modes, run `npm run test:package` locally before pushing.
+When adding or removing files from `packages/webfont/dist/`, updating `packages/webfont/package.json#exports` / `#files` / `#types`, or touching the Vite build modes, run `npm run test:package` locally before pushing.
 
 - Lint and test before submitting code by running `$ npm test`;
 - Run `$ npm run prettify` to apply Biome formatting and safe fixes before pushing;
@@ -194,7 +207,7 @@ Do not use `chore:` or `chore(ci):` for CI-only changes.
 - **Pin tool versions.** Do not install CLIs with `@latest` (or other floating tags) on deploy or release paths — pin a semver in the workflow and optionally allow override via a repository **variable** with a safe default (for example `VERCEL_CLI_VERSION` defaulting to `54.20.1` in [`.github/workflows/vercel-deploy.yml`](.github/workflows/vercel-deploy.yml)). Bump pins in focused `ci(deps):` pull requests.
 - **Bind secrets once.** Map repository secrets to `env` at the job or step level and let the tool read them from the environment. Do not repeat GitHub Actions `secrets.*` expressions inline across multiple `run` commands — it is error-prone and harder to audit. See [`npm-publish.yml`](.github/workflows/npm-publish.yml) (`NODE_AUTH_TOKEN`) and [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml) (`VERCEL_TOKEN`) for the pattern.
 - **GitHub Environments for deploy jobs.** Map production deploy jobs to a named [GitHub Environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) so runs appear under **Deployments** with a URL (`npm` / `github-packages` in [`npm-publish.yml`](.github/workflows/npm-publish.yml); `vercel` in [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml)). Optionally scope secrets per environment and add protection rules in **Settings → Environments**.
-- **Validate the docs site.** Changes that touch markdown published by VitePress (see `.vitepress/config.mts` rewrites) must pass `npm run docs:site` (runs `docs:demo` + `vitepress build`; builds `dist/cli.mjs` first when missing). Pre-push and [`.github/workflows/pr.yml`](.github/workflows/pr.yml) run it after `npm test`; Vercel production deploy runs the full `npm run docs:build`.
+- **Validate the docs site.** Changes that touch markdown published by VitePress (see `.vitepress/config.mts` rewrites) must pass `npm run docs:site` (runs `docs:demo` + `vitepress build`; builds `packages/webfont/dist/cli.mjs` first when missing). Pre-push and [`.github/workflows/pr.yml`](.github/workflows/pr.yml) run it after `npm test`; Vercel production deploy runs the full `npm run docs:build`.
 - **VitePress markdown.** VitePress compiles published pages as Vue templates. Do not put mustache-style double braces (Vue interpolation syntax) in those markdown files outside fenced code blocks — `vitepress build` fails when Vue tries to parse them. Rephrase (for example “Nunjucks `fontName` placeholder”); if you must show literal braces, use HTML entities (`&#123;&#123;` / `&#125;&#125;`) so Vue never sees interpolation delimiters.
 
 **AppVeyor:** a legacy project may still receive GitHub webhooks. Root `appveyor.yml` disables builds via a non-matching branch filter (`appveyor-disabled`) because maintainers may lack AppVeyor dashboard access. Do not delete it until the AppVeyor project is removed upstream.
@@ -204,7 +217,7 @@ Do not use `chore:` or `chore(ci):` for CI-only changes.
 Versioning is automated with [Release Please](https://github.com/googleapis/release-please) (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
 1. Merge changes to `master` using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `ci:`, etc.).
-2. Release Please opens or updates a **Release PR** with the next version, `CHANGELOG.md`, and `package.json` updates.
+2. Release Please opens or updates a **Release PR** with the next version, `packages/webfont/CHANGELOG.md`, and `packages/webfont/package.json` updates.
 3. Review and merge the Release PR to create the git tag and GitHub Release on GitHub.
 4. Merging the Release PR is enough to publish (see **npm publishing** below): the [Release Please](.github/workflows/release-please.yml) workflow cuts the GitHub Release and then **dispatches** [`npm-publish`](.github/workflows/npm-publish.yml) for the new tag. A `release: published` event created with the default `GITHUB_TOKEN` does not start downstream workflows, so the publish is triggered explicitly via `workflow_dispatch` (the documented exception to that rule).
 

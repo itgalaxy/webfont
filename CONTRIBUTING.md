@@ -23,7 +23,7 @@ Some [issues lack information](https://github.com/itgalaxy/webfont/issues?q=is%3
 When working through the issue tracker (see also [AGENTS.md](./AGENTS.md) — “GitHub issues workflow”):
 
 1. Triage: assignee, milestone `next`, type label (`bug`, `enhancement`, etc.).
-2. Fix PR: tests where needed, code change, and for **issue fixes that change behavior across releases** a new file `docs/migration/issue-NNNN-<slug>.md` ([workflow](./docs/migration/README.md), [entry structure](./MIGRATION.md#entry-structure)).
+2. Fix PR: tests where needed, code change, and for **issue fixes that change behavior across releases** a new file `docs/migration/issue-NNNN-<slug>.md` ([workflow and entry structure](./docs/migration/README.md#entry-structure)).
 3. **Keep reporters informed on the issue thread (English):**
    - When investigation starts: what you are checking; link the PR when it exists.
    - **Explain what was discovered** (root cause, not only “we’ll fix it”).

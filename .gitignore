@@ -72,3 +72,7 @@ lefthook-local.yml
 src/**/*.js
 !src/fixtures/**/*.js
 src/**/*.d.ts
+
+# VitePress docs site build output and cache
+docs/.vitepress/dist
+docs/.vitepress/cache

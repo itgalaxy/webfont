@@ -51,6 +51,9 @@
     "build": "vite build --mode library && vite build --mode library-esm && vite build --mode browser && vite build --mode cli && node scripts/emit-mts-types.mjs",
     "clean": "rm -rf dist/ temp/",
     "demo": "node dist/cli.mjs './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
+    "docs:build": "vitepress build docs",
+    "docs:dev": "vitepress dev docs",
+    "docs:preview": "vitepress preview docs",
     "lint": "biome check .",
     "lint:suppressions": "node scripts/check-no-suppressions.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -112,6 +115,7 @@
     "vite": "8.1.3",
     "vite-plugin-checker": "0.14.4",
     "vite-plugin-dts": "5.0.3",
+    "vitepress": "1.6.4",
     "vitest": "4.1.9"
   },
   "overrides": {

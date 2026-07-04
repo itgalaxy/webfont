@@ -79,3 +79,7 @@ src/**/*.d.ts
 
 # Generated font demo for the docs site (built by `npm run docs:demo`)
 public/font-demo
+
+# Vercel CLI local state (project link + pulled env)
+.vercel
+.env*.local

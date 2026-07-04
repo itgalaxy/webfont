@@ -191,6 +191,9 @@ Pull requests that change CI configuration (for example, GitHub Actions workflow
 
 Do not use `chore:` or `chore(ci):` for CI-only changes.
 
+- **Pin tool versions.** Do not install CLIs with `@latest` (or other floating tags) on deploy or release paths — pin a semver in the workflow and optionally allow override via a repository **variable** with a safe default (for example `VERCEL_CLI_VERSION` defaulting to `54.20.1` in [`.github/workflows/vercel-deploy.yml`](.github/workflows/vercel-deploy.yml)). Bump pins in focused `ci(deps):` pull requests.
+- **Bind secrets once.** Map repository secrets to `env` at the job or step level and let the tool read them from the environment. Do not repeat `${{ secrets.* }}` inline across multiple `run` commands — it is error-prone and harder to audit. See [`npm-publish.yml`](.github/workflows/npm-publish.yml) (`NODE_AUTH_TOKEN`) and [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml) (`VERCEL_TOKEN`) for the pattern.
+
 **AppVeyor:** a legacy project may still receive GitHub webhooks. Root `appveyor.yml` disables builds via a non-matching branch filter (`appveyor-disabled`) because maintainers may lack AppVeyor dashboard access. Do not delete it until the AppVeyor project is removed upstream.
 
 ### Releases

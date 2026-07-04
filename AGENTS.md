@@ -167,8 +167,8 @@ When adding or editing `.github/workflows/*.yml`, follow [CONTRIBUTING.md](./CON
 
 - **Pin third-party CLI versions** on deploy/release paths; do not use `@latest`. Prefer a repository **variable** with a safe default in the workflow expression (e.g. `vars.VERCEL_CLI_VERSION || '54.20.1'`).
 - **Bind secrets once** at the job or step `env` block; reference the env var in `run` commands instead of repeating GitHub Actions `secrets.*` expressions inline across steps. Match existing patterns in `npm-publish.yml` (`NODE_AUTH_TOKEN`) and `vercel-deploy.yml` (`VERCEL_TOKEN`).
-- **Validate the docs site** when editing VitePress-published markdown (`.vitepress/config.mts` rewrites): run `npm run docs:site` locally; pre-push and PR CI enforce it after `npm test`.
-- **VitePress markdown:** published pages compile as Vue templates — no mustache-style double braces outside fenced code blocks (rephrase or use a `{% raw %}...{% endraw %}` block).
+- **Validate the docs site** when editing VitePress-published markdown (`.vitepress/config.mts` rewrites): run `npm run docs:site` locally (`predocs:site` builds `dist/cli.mjs` when missing); pre-push and PR CI enforce it after `npm test`.
+- **VitePress markdown:** published pages compile as Vue templates — no mustache-style double braces outside fenced code blocks (rephrase, or use HTML entities `&#123;&#123;` / `&#125;&#125;` when literals are required).
 
 ### Lint and type hygiene
 

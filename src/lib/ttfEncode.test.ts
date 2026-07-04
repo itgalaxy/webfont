@@ -2,11 +2,12 @@ import crypto from "crypto";
 import fontverter from "fontverter";
 import * as fsPromise from "fs/promises";
 import isEot from "is-eot";
+import isSvg from "is-svg";
 import isTtf from "is-ttf";
 import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
 import wawoff2 from "wawoff2";
-import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "./ttfEncode";
+import { encodeTtfToEot, encodeTtfToSvg, encodeTtfToWoff, encodeTtfToWoff2 } from "./ttfEncode";
 
 const fixtureTtf = "src/fixtures/fonts/iconfont.ttf";
 
@@ -60,6 +61,37 @@ describe("ttfEncode", () => {
       const eot = encodeTtfToEot(ttf);
 
       expect(isEot(eot)).toBe(true);
+    });
+  });
+
+  describe("encodeTtfToSvg (fonteditor-core)", () => {
+    it("should encode a ttf buffer to a valid svg font string", async () => {
+      const ttf = await fsPromise.readFile(fixtureTtf);
+      const svg = encodeTtfToSvg(ttf);
+
+      expect(typeof svg).toBe("string");
+      expect(isSvg(svg)).toBe(true);
+      expect(svg).toContain("<font");
+      expect(svg).toContain("<font-face");
+      expect(svg).toContain("<glyph");
+    });
+
+    it("should embed provided metadata in the svg output", async () => {
+      const ttf = await fsPromise.readFile(fixtureTtf);
+      const svg = encodeTtfToSvg(ttf, { metadata: "webfont-metadata-marker" });
+
+      expect(svg).toContain("<metadata>webfont-metadata-marker</metadata>");
+    });
+
+    it("should not embed metadata when none is provided", async () => {
+      const ttf = await fsPromise.readFile(fixtureTtf);
+      const svg = encodeTtfToSvg(ttf);
+
+      // Assert the intent ("no non-empty metadata") rather than fonteditor-core's
+      // exact empty-element serialization, which may vary across releases
+      // (`<metadata></metadata>`, `<metadata/>`, or omitted) without changing behavior.
+      expect(isSvg(svg)).toBe(true);
+      expect(svg).not.toMatch(/<metadata>[^<]+<\/metadata>/u);
     });
   });
 });

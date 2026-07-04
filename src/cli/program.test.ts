@@ -17,6 +17,7 @@ import {
   startCli,
   writeDecompressedFontFiles,
   writeResultFiles,
+  writeTranscodedFontFiles,
 } from "./program";
 
 vi.mock("../standalone", async (importOriginal) => {
@@ -355,6 +356,28 @@ describe("cli program", () => {
 
       expect(await fsPromise.readFile(path.join(destination, "iconfont-woff.ttf"), "utf8")).toBe("woff-ttf");
       expect(await fsPromise.readFile(path.join(destination, "iconfont-woff2.ttf"), "utf8")).toBe("woff2-ttf");
+    });
+  });
+
+  describe("writeTranscodedFontFiles", () => {
+    it("should write an svg font per transcoded font", async () => {
+      const destination = "temp/cli-program-transcoded-svg";
+      await fsPromise.mkdir(destination, { recursive: true });
+
+      await writeTranscodedFontFiles(
+        [
+          { source: "src/fixtures/fonts/a.ttf", svg: "<svg>a</svg>", woff2: Buffer.from("a2") },
+          { source: "src/fixtures/fonts/b.ttf", svg: "<svg>b</svg>", woff2: Buffer.from("b2") },
+        ],
+        {
+          dest: destination,
+          fontName: "webfont",
+        } as never,
+        destination,
+      );
+
+      expect(await fsPromise.readFile(path.join(destination, "a.svg"), "utf8")).toBe("<svg>a</svg>");
+      expect(await fsPromise.readFile(path.join(destination, "b.svg"), "utf8")).toBe("<svg>b</svg>");
     });
   });
 

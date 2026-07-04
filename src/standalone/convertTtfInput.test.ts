@@ -1,4 +1,5 @@
 import * as fsPromise from "fs/promises";
+import isSvg from "is-svg";
 import isTtf from "is-ttf";
 import isWoff2 from "is-woff2";
 import { vi } from "vitest";
@@ -102,6 +103,38 @@ describe("convertTtfInput", () => {
     expect(isTtf(result.ttf)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
     expect(result.transcodedFonts).toHaveLength(1);
+  });
+
+  it("should encode ttf input to a valid svg font when requested", async () => {
+    const result = await convertTtfInput([fixtureTtf], {
+      files: fixtureTtf,
+      formats: ["svg"],
+    } as WebfontOptions);
+
+    expect(typeof result.svg).toBe("string");
+    expect(isSvg(result.svg as string)).toBe(true);
+    expect(result.transcodedFonts?.[0]?.svg).toBe(result.svg);
+  });
+
+  it("should not emit svg unless it is requested", async () => {
+    const result = await convertTtfInput([fixtureTtf], {
+      files: fixtureTtf,
+      formats: ["woff2"],
+    } as WebfontOptions);
+
+    expect(result.svg).toBeUndefined();
+    expect(result.transcodedFonts?.[0]?.svg).toBeUndefined();
+  });
+
+  it("should encode svg for every input in a batch run", async () => {
+    const result = await convertTtfInput([fixtureTtf, fixtureTtf], {
+      files: [fixtureTtf, fixtureTtf],
+      formats: ["svg"],
+    } as WebfontOptions);
+
+    expect(result.svg).toBeUndefined();
+    expect(result.transcodedFonts).toHaveLength(2);
+    expect(result.transcodedFonts?.every((font) => isSvg(font.svg as string))).toBe(true);
   });
 
   it("should not mirror top-level outputs for batch runs", async () => {

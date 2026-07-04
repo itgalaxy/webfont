@@ -1,6 +1,6 @@
 {
   "name": "webfont",
-  "version": "12.2.0",
+  "version": "12.3.0",
   "description": "Generator of fonts from SVG icons; decompress WOFF/WOFF2 to embedded TTF/OTF (not TTF↔OTF transcoding)",
   "directories": {
     "lib": "dist",

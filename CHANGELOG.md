@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.3.0](https://github.com/itgalaxy/webfont/compare/v12.2.0...v12.3.0) (2026-07-04)
+
+
+### Features
+
+* export Result and ResultConfig types from package entry ([#759](https://github.com/itgalaxy/webfont/issues/759)) ([c785797](https://github.com/itgalaxy/webfont/commit/c7857977855d132a2afe99b3f032d80fd8b567cd)), closes [#758](https://github.com/itgalaxy/webfont/issues/758)
+
 ## [12.2.0](https://github.com/itgalaxy/webfont/compare/v12.1.1...v12.2.0) (2026-07-03)
 
 

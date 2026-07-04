@@ -1,3 +1,4 @@
+import assert from "node:assert";
 import crypto from "crypto";
 import * as fsPromise from "fs/promises";
 import isEot from "is-eot";
@@ -71,11 +72,17 @@ describe("standalone", () => {
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
 
-    const svgHash = crypto.createHash("md5").update(result.svg!).digest("hex");
-    const ttfHash = crypto.createHash("md5").update(result.ttf!).digest("hex");
-    const eotHash = crypto.createHash("md5").update(result.eot!).digest("hex");
-    const woffHash = crypto.createHash("md5").update(result.woff!).digest("hex");
-    const woff2Hash = crypto.createHash("md5").update(result.woff2!).digest("hex");
+    assert(result.svg);
+    assert(result.ttf);
+    assert(result.eot);
+    assert(result.woff);
+    assert(result.woff2);
+
+    const svgHash = crypto.createHash("md5").update(result.svg).digest("hex");
+    const ttfHash = crypto.createHash("md5").update(result.ttf).digest("hex");
+    const eotHash = crypto.createHash("md5").update(result.eot).digest("hex");
+    const woffHash = crypto.createHash("md5").update(result.woff).digest("hex");
+    const woff2Hash = crypto.createHash("md5").update(result.woff2).digest("hex");
 
     expect(svgHash).toBe("ead2b6f69fc603bf1cbd00bf9f8a8a33");
     expect(ttfHash).toBe("d1517f20c3988b9e084047462dd28787");
@@ -183,8 +190,9 @@ describe("standalone", () => {
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
+    assert(result.config);
     expect((result.config as DiscoveredRcConfig).foo).toBe("bar");
-    expect(result.config!.filePath).toBe(path.resolve(configFile));
+    expect(result.config.filePath).toBe(path.resolve(configFile));
   });
 
   it("should load config and respect `template` option with build-in template value", async () => {
@@ -201,7 +209,8 @@ describe("standalone", () => {
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    expect(result.config!.template).toBe("scss");
+    assert(result.config);
+    expect(result.config.template).toBe("scss");
     expect(result.template).toMatchSnapshot();
   });
 
@@ -217,7 +226,8 @@ describe("standalone", () => {
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    expect(result.config!.template).toBe("src/fixtures/templates/template.css");
+    assert(result.config);
+    expect(result.config.template).toBe("src/fixtures/templates/template.css");
     expect(result.template).toMatchSnapshot();
   });
 
@@ -253,7 +263,9 @@ describe("standalone", () => {
     });
 
     const actual = templateOutput.replace(/\s/gu, "");
-    const expected = result.template!.replace(/\s/gu, "");
+    assert(result.template);
+
+    const expected = result.template.replace(/\s/gu, "");
 
     expect(actual).toBe(expected);
   });
@@ -333,8 +345,10 @@ describe("standalone", () => {
       glyphContentTransformFn: () => filledContents,
     });
 
-    expect(withTransform.glyphsData![0]?.contents).toBe(filledContents);
-    expect(withTransform.ttf!.length).toBeGreaterThan(1400);
+    assert(withTransform.glyphsData);
+    assert(withTransform.ttf);
+    expect(withTransform.glyphsData[0]?.contents).toBe(filledContents);
+    expect(withTransform.ttf.length).toBeGreaterThan(1400);
     expect(isTtf(withTransform.ttf)).toBe(true);
   });
 
@@ -388,8 +402,9 @@ describe("standalone", () => {
       optimizeSvg: true,
     });
 
-    expect(result.glyphsData![0]?.contents).not.toContain("Inkscape export cruft");
-    expect(result.glyphsData![0]?.contents).not.toContain("<metadata>");
+    assert(result.glyphsData);
+    expect(result.glyphsData[0]?.contents).not.toContain("Inkscape export cruft");
+    expect(result.glyphsData[0]?.contents).not.toContain("<metadata>");
     expect(isWoff2(result.woff2)).toBe(true);
   });
 
@@ -547,7 +562,8 @@ describe("standalone", () => {
     expect(isEot(result.eot)).toBe(true);
     expect(isWoff(result.woff)).toBe(true);
     expect(isWoff2(result.woff2)).toBe(true);
-    expect(result.config!.template).toBe("css");
+    assert(result.config);
+    expect(result.config.template).toBe("css");
     expect(result.usedBuildInTemplate).toBe(true);
     expect(result.template).toMatchSnapshot();
   });
@@ -619,7 +635,8 @@ describe("standalone", () => {
     });
 
     expect(result.usedBuildInTemplate).toBe(true);
-    expect(JSON.parse(result.template!)).toMatchSnapshot();
+    assert(result.template);
+    expect(JSON.parse(result.template)).toMatchSnapshot();
     expect(result.template).toMatchSnapshot();
   });
 
@@ -701,8 +718,9 @@ describe("standalone", () => {
       template: "css",
     });
 
+    assert(result.glyphsData);
     expect(Array.isArray(result.glyphsData)).toBe(true);
-    expect(result.glyphsData!.length > 0).toBe(true);
+    expect(result.glyphsData.length > 0).toBe(true);
   });
 
   it("should remove ligature unicode when `ligatures` set to `false`", async () => {
@@ -712,10 +730,11 @@ describe("standalone", () => {
       template: "css",
     });
 
+    assert(result.glyphsData);
     expect(Array.isArray(result.glyphsData)).toBe(true);
-    expect(result.glyphsData!.length > 0).toBe(true);
+    expect(result.glyphsData.length > 0).toBe(true);
 
-    result.glyphsData!.forEach((glyph) => {
+    result.glyphsData.forEach((glyph) => {
       expect(glyph.metadata?.unicode).toHaveLength(1);
     });
   });
@@ -772,8 +791,9 @@ describe("standalone", () => {
       template: `${fixturesGlob}/templates/template-fonts-base64.njk`,
     });
 
-    expect(result.template!.length).toBeGreaterThan(0);
-    expect(Buffer.from(result.template!, "base64").length).toBeGreaterThan(0);
+    assert(result.template);
+    expect(result.template.length).toBeGreaterThan(0);
+    expect(Buffer.from(result.template, "base64").length).toBeGreaterThan(0);
   });
 
   it("should throw when template rendering requests a missing font buffer", async () => {

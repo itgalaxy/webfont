@@ -77,7 +77,7 @@
         "noNamespace": "error",
         "noNegationElse": "error",
         "noNestedTernary": "error",
-        "noNonNullAssertion": "warn",
+        "noNonNullAssertion": "error",
         "noParameterAssign": "error",
         "noRestrictedGlobals": "error",
         "noRestrictedImports": "error",
@@ -149,9 +149,6 @@
         "rules": {
           "complexity": {
             "noExcessiveLinesPerFunction": "off"
-          },
-          "style": {
-            "noNonNullAssertion": "off"
           }
         }
       }

@@ -169,6 +169,10 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
   - Mocks: import the `__mocks__` module for assertions, or a small helper type when a cast is unavoidable (`as unknown as MockType`).
   - Expected rejections: `await expect(fn()).rejects.toThrow(...)` (not `try/catch` + conditional expects).
   - Unused parameters: `_name` prefix on the parameter or property.
+- **No non-null assertions (`!`).** The `style/noNonNullAssertion` Biome rule is `error` with **no per-file override** (including tests). Narrow the value instead:
+  - `assert(value)` from `node:assert` before use — turns `T | undefined` into `T` and fails the test with a clear message if the assumption ever breaks.
+  - Optional chaining (`value?.prop`) when the branch tolerates `undefined`.
+  - Typed fixtures/factories (e.g. `makeResultConfig`) so the value is never `undefined` in the first place.
 - **No `ignoreDeprecations` in `tsconfig.json` (or any tsconfig).** On TypeScript upgrades, migrate deprecated compiler options and fix type errors instead of silencing warnings (see [CONTRIBUTING.md](./CONTRIBUTING.md)).
 - **Enforced automatically.** `npm run lint:suppressions` (`scripts/check-no-suppressions.mjs`) scans tracked source files for banned suppressions and fails the build. It runs on **Lefthook pre-commit** and in **CI** (`.github/workflows/pr.yml`), so reintroducing an `eslint-disable`, `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`, or `ignoreDeprecations` blocks the commit/PR. After edits you can run it directly; `biome-ignore` remains allowed only when a rule cannot be satisfied by a small code change.
 

@@ -28,9 +28,7 @@ export default defineConfig({
   vite: { configFile: false },
   srcExclude: [
     "AGENTS.md",
-    "NOTICE.md",
     "docs/adr/**",
-    "docs/migration/README.md",
     "coverage/**",
     "temp/**",
     "demo/**",
@@ -43,7 +41,9 @@ export default defineConfig({
     "CHANGELOG.md": "introduction/whats-new.md",
     "CONTRIBUTING.md": "contributing/guidelines.md",
     "CODE_OF_CONDUCT.md": "contributing/code-of-conduct.md",
+    "docs/migration/README.md": "contributing/migration-guide.md",
     "MIGRATION.md": "migrating/index.md",
+    "NOTICE.md": "introduction/licenses.md",
     ...migrationRewrites,
   },
   head: [
@@ -67,6 +67,7 @@ export default defineConfig({
           { text: "Troubleshooting", link: "/introduction/troubleshooting" },
           { text: "What's New", link: "/introduction/whats-new" },
           { text: "Migrating", link: "/migrating/" },
+          { text: "Licenses", link: "/introduction/licenses" },
         ],
       },
       {
@@ -74,6 +75,7 @@ export default defineConfig({
         items: [
           { text: "Guidelines", link: "/contributing/guidelines" },
           { text: "Code of Conduct", link: "/contributing/code-of-conduct" },
+          { text: "Migration Docs", link: "/contributing/migration-guide" },
           { text: "Reporting a Bug", link: `${repo}/blob/master/.github/ISSUE_TEMPLATE/bug_report.md` },
           { text: "Pull Request Template", link: `${repo}/blob/master/.github/pull_request_template.md` },
         ],

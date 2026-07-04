@@ -9,17 +9,13 @@ pre-commit:
 
 pre-push:
   jobs:
-    static-checks:
-      parallel: true
-      commands:
-        typecheck:
-          run: npm run typecheck
-        depcheck:
-          run: npm run depcheck
-    verify:
-      parallel: false
-      commands:
-        test:
-          run: npm test
-        docs-site:
-          run: npm run docs:site
+    - group:
+        parallel: true
+        jobs:
+          - run: npm run typecheck
+          - run: npm run depcheck
+    - group:
+        piped: true
+        jobs:
+          - run: npm test
+          - run: npm run docs:site

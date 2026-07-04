@@ -51,7 +51,7 @@ jobs:
       - name: Pack npm tarball and archive dist/
         id: pack
         run: |
-          version="$(node -p "require('./package.json').version")"
+          version="$(node -p 'require("./package.json").version')"
           echo "version=$version" >> "$GITHUB_OUTPUT"
           mkdir -p artifacts
           npm pack --ignore-scripts --pack-destination artifacts
@@ -99,7 +99,7 @@ jobs:
           ref: ${{ env.RELEASE_TAG }}
       - name: Resolve published version
         id: meta
-        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v6
         with:
           node-version: 26.x

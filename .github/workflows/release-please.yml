@@ -40,7 +40,20 @@ jobs:
         run: |
           # This job does not check out the repo, so pass --repo explicitly
           # (gh otherwise looks for a local git remote and fails). release-please
-          # just cut the release, so it is the most recent one.
-          tag="$(gh release list --repo "$REPO" --limit 1 --json tagName --jq '.[0].tagName')"
+          # just cut the release, so it is the most recent one. Retry a few times
+          # to absorb GitHub API propagation lag right after the release is made.
+          tag=""
+          for attempt in 1 2 3 4 5; do
+            tag="$(gh release list --repo "$REPO" --limit 1 --json tagName --jq '.[0].tagName')"
+            if [ -n "$tag" ]; then
+              break
+            fi
+            echo "No release visible yet (attempt $attempt/5); retrying in 5s..."
+            sleep 5
+          done
+          if [ -z "$tag" ]; then
+            echo "::error::release-please reported a release but no tag could be resolved; not dispatching npm-publish."
+            exit 1
+          fi
           echo "Release created; dispatching npm-publish.yml for tag: $tag"
           gh workflow run npm-publish.yml --repo "$REPO" --ref master --field tag="$tag"

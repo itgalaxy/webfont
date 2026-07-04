@@ -16,12 +16,16 @@ permissions:
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  # Pin the CLI for deterministic deploys; override via repo variable when bumping.
+  VERCEL_CLI_VERSION: ${{ vars.VERCEL_CLI_VERSION || '54.20.1' }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     # Skip on forks: secrets are not available and the deploy would fail.
     if: github.repository == 'itgalaxy/webfont'
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
       - uses: actions/checkout@v7
       - name: Use Node.js
@@ -30,10 +34,10 @@ jobs:
           node-version: 24.x
           cache: npm
       - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+        run: npm install --global "vercel@${VERCEL_CLI_VERSION}"
       - name: Pull Vercel project settings
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production
       - name: Build with Vercel (runs npm run docs:build)
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod
       - name: Deploy prebuilt output to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: vercel deploy --prebuilt --prod

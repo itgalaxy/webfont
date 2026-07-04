@@ -161,6 +161,13 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 - **Never push to `master`.** Use a branch and open a PR (see [Pull requests](#pull-requests) below).
 - **Push without asking.** After commits on a feature or PR branch, run `git push` as part of finishing the work. Do not end responses with “want me to push?” or similar — push, then report what was pushed and the PR URL if applicable.
 
+### CI workflows
+
+When adding or editing `.github/workflows/*.yml`, follow [CONTRIBUTING.md](./CONTRIBUTING.md#ci-changes) — especially:
+
+- **Pin third-party CLI versions** on deploy/release paths; do not use `@latest`. Prefer a repository **variable** with a safe default in the workflow expression (e.g. `vars.VERCEL_CLI_VERSION || '54.20.1'`).
+- **Bind secrets once** at the job or step `env` block; reference the env var in `run` commands instead of repeating `${{ secrets.* }}` inline across steps. Match existing patterns in `npm-publish.yml` (`NODE_AUTH_TOKEN`) and `vercel-deploy.yml` (`VERCEL_TOKEN`).
+
 ### Lint and type hygiene
 
 - **No `eslint-disable*` comments.** ESLint is not used; Biome is the linter ([ADR 0001](docs/adr/0001-eslint-vs-biome-linting.md)). Delete stale ESLint suppressions; use `biome-ignore` only when a rule cannot be satisfied by a small code change.

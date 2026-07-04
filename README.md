@@ -926,6 +926,7 @@ The CLI can exit the process with the following exit codes:
 - [ttf2eot](https://github.com/fontello/ttf2eot) - Converts TTF fonts to EOT format.
 - [ttf2woff](https://github.com/fontello/ttf2woff) - Converts TTF fonts to WOFF format.
 - [wawoff2](https://github.com/fontello/wawoff2) - Converts TTF fonts to WOFF2 and versa vice.
+- [fontTools](https://github.com/fonttools/fonttools) - Complementary low-level font toolkit (Python) for jobs webfont does not cover: subsetting, variable fonts, OpenType feature compilation, table editing, and TTX (font ⇄ XML). Generate the font with webfont, then inspect or optimize it with fontTools.
 
 ## Roadmap
 

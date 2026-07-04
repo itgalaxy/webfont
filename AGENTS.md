@@ -167,6 +167,7 @@ When adding or editing `.github/workflows/*.yml`, follow [CONTRIBUTING.md](./CON
 
 - **Pin third-party CLI versions** on deploy/release paths; do not use `@latest`. Prefer a repository **variable** with a safe default in the workflow expression (e.g. `vars.VERCEL_CLI_VERSION || '54.20.1'`).
 - **Bind secrets once** at the job or step `env` block; reference the env var in `run` commands instead of repeating `${{ secrets.* }}` inline across steps. Match existing patterns in `npm-publish.yml` (`NODE_AUTH_TOKEN`) and `vercel-deploy.yml` (`VERCEL_TOKEN`).
+- **Map deploy jobs to GitHub Environments** (`npm`, `github-packages`, `vercel`) so production runs appear under **Deployments** with a URL. See [CONTRIBUTING.md](./CONTRIBUTING.md#vercel-docs-deployment).
 
 ### Lint and type hygiene
 

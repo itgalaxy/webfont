@@ -193,6 +193,7 @@ Do not use `chore:` or `chore(ci):` for CI-only changes.
 
 - **Pin tool versions.** Do not install CLIs with `@latest` (or other floating tags) on deploy or release paths — pin a semver in the workflow and optionally allow override via a repository **variable** with a safe default (for example `VERCEL_CLI_VERSION` defaulting to `54.20.1` in [`.github/workflows/vercel-deploy.yml`](.github/workflows/vercel-deploy.yml)). Bump pins in focused `ci(deps):` pull requests.
 - **Bind secrets once.** Map repository secrets to `env` at the job or step level and let the tool read them from the environment. Do not repeat `${{ secrets.* }}` inline across multiple `run` commands — it is error-prone and harder to audit. See [`npm-publish.yml`](.github/workflows/npm-publish.yml) (`NODE_AUTH_TOKEN`) and [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml) (`VERCEL_TOKEN`) for the pattern.
+- **GitHub Environments for deploy jobs.** Map production deploy jobs to a named [GitHub Environment](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment) so runs appear under **Deployments** with a URL (`npm` / `github-packages` in [`npm-publish.yml`](.github/workflows/npm-publish.yml); `vercel` in [`vercel-deploy.yml`](.github/workflows/vercel-deploy.yml)). Optionally scope secrets per environment and add protection rules in **Settings → Environments**.
 
 **AppVeyor:** a legacy project may still receive GitHub webhooks. Root `appveyor.yml` disables builds via a non-matching branch filter (`appveyor-disabled`) because maintainers may lack AppVeyor dashboard access. Do not delete it until the AppVeyor project is removed upstream.
 
@@ -239,6 +240,14 @@ The workflow runs two deploy jobs after `build`, each mapped to a GitHub **Envir
 GitHub Packages requires a scope matching the repo owner, so the `publish-github-packages` job renames the package to `@itgalaxy/webfont` in the checkout only (via `npm pkg set name=…`, never committed) — the unscoped `webfont` on npmjs.org is unaffected.
 
 Add protection rules (required reviewers, wait timers) per environment in **Settings → Environments** if you want manual approval to gate a deploy.
+
+##### Vercel docs deployment
+
+[`.github/workflows/vercel-deploy.yml`](.github/workflows/vercel-deploy.yml) deploys the VitePress site to Vercel on every push to `master` (and via **workflow_dispatch**). The `deploy` job maps to the **`vercel`** GitHub Environment; the deployment URL is captured from `vercel deploy --prebuilt --prod` and shown under **Deployments**.
+
+| Environment | Host | Auth secrets | Deploy URL |
+|-------------|------|--------------|------------|
+| `vercel` | Vercel (`webfont` project) | `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` (repository or environment secrets) | output of `vercel deploy` (production alias, e.g. `webfont-js.vercel.app`) |
 
 **Install from GitHub Packages** (needs a GitHub token with `read:packages`):
 

@@ -2,6 +2,13 @@ name: npm publish
 
 # Publishes with the NPM_TOKEN repository secret (see CONTRIBUTING.md).
 # Trusted Publishing (OIDC) may replace this when configured on npmjs.com.
+#
+# The `build` job is the single place that builds `dist/`, runs the full test
+# suite, and validates the published surface (publint + attw + pack-smoke). It
+# uploads `dist/` as an artifact so `publish-npm` can ship the exact same build
+# without repeating it. `publish-npm` runs `npm publish --ignore-scripts`, so
+# `prepublishOnly` does not rebuild or re-validate on the publish runner
+# (avoids the duplicated build called out in #742).
 on:
   release:
     types: [published]
@@ -32,6 +39,13 @@ jobs:
       - run: npm test
       - name: Validate published package surface (publint + attw + pack-smoke)
         run: npm run test:package
+      - name: Upload built dist/ for the publish job
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 1
 
   publish-npm:
     needs: build
@@ -46,5 +60,12 @@ jobs:
           registry-url: https://registry.npmjs.org/
           node-auth-token: ${{ secrets.NPM_TOKEN }}
           package-manager-cache: false
-      - run: npm ci
-      - run: npm publish --access public
+      - name: Download dist/ built by the build job
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      # `dist/` is prebuilt and validated by the build job. Skip lifecycle
+      # scripts so `prepublishOnly` (build + test:package + whoami) and the
+      # `prepare` hook do not run again here; no `npm ci` is needed to publish.
+      - run: npm publish --ignore-scripts --access public

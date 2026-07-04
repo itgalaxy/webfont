@@ -229,7 +229,7 @@ npm login              # or ensure a valid token
 npm publish --access public
 ```
 
-`prepublishOnly` starts with `npm whoami`, so a local `npm publish` fails fast if you are not logged in — before the build and package validation run, instead of failing on authentication at the very end. In CI the publish workflow authenticates via `NPM_TOKEN`, so `whoami` passes there; revisit this if you migrate to Trusted Publishing (OIDC).
+`prepublishOnly` starts with `npm whoami`, so a local `npm publish` fails fast if you are not logged in — before the build and package validation run, instead of failing on authentication at the very end. In CI the workflow builds and validates `dist/` **once** in the `build` job, uploads it as an artifact, and the `publish-npm` job runs `npm publish --ignore-scripts` against that artifact — so `prepublishOnly` (and its `whoami`) does not run on the publish runner and the build is not repeated (see [#742](https://github.com/itgalaxy/webfont/issues/742)). The `publish-npm` job depends on `build`, so `test:package` still gates every publish.
 
 Automated publishing does **not** retroactively upload versions that already exist as git tags only (for example `11.5.x` never published to npm).
 

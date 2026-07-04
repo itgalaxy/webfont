@@ -8,10 +8,18 @@ pre-commit:
       run: npm run lint:suppressions
 
 pre-push:
-  commands:
-    typecheck:
-      run: npm run typecheck
-    depcheck:
-      run: npm run depcheck
-    test:
-      run: npm test
+  jobs:
+    static-checks:
+      parallel: true
+      commands:
+        typecheck:
+          run: npm run typecheck
+        depcheck:
+          run: npm run depcheck
+    verify:
+      parallel: false
+      commands:
+        test:
+          run: npm test
+        docs-site:
+          run: npm run docs:site

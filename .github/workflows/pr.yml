@@ -25,5 +25,7 @@ jobs:
     - run: npm run typecheck
     - run: npm run depcheck
     - run: npm test
+    - name: Build VitePress docs site
+      run: npm run docs:site
     - name: Validate published package surface (publint + attw + pack-smoke)
       run: npm run test:package

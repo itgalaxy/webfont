@@ -103,15 +103,22 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 26.x
-          registry-url: https://registry.npmjs.org/
-          node-auth-token: ${{ secrets.NPM_TOKEN }}
           package-manager-cache: false
       - name: Download dist/ built by the build job
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
+      # CI is non-interactive (no `npm login`): write ~/.npmrc so `npm publish`
+      # reads the token from NODE_AUTH_TOKEN at runtime (npm expands
+      # ${NODE_AUTH_TOKEN}); the raw token never touches disk or the logs.
+      # NPM_TOKEN must be an npm access token (npmjs.com -> Access Tokens),
+      # not a GitHub PAT — npmjs.org does not accept GitHub tokens.
+      - name: Write ~/.npmrc for npmjs.org
+        run: printf '%s\n' 'registry=https://registry.npmjs.org/' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$HOME/.npmrc"
       - run: npm publish --ignore-scripts --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-github-packages:
     needs: build
@@ -129,8 +136,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 26.x
-          registry-url: https://npm.pkg.github.com
-          scope: "@itgalaxy"
           package-manager-cache: false
       - name: Download dist/ built by the build job
         uses: actions/download-artifact@v4
@@ -142,6 +147,12 @@ jobs:
       # `@itgalaxy/webfont` alongside the unscoped `webfont` on npmjs.org.
       - name: Scope package to the repository owner
         run: npm pkg set name=@itgalaxy/webfont
+      # Non-interactive CI auth: write ~/.npmrc pointing the @itgalaxy scope at
+      # GitHub Packages, with the token read from NODE_AUTH_TOKEN at runtime.
+      # The built-in GITHUB_TOKEN (packages: write) works out of the box; swap
+      # for a PAT secret with `write:packages` if you prefer a personal token.
+      - name: Write ~/.npmrc for GitHub Packages
+        run: printf '%s\n' '@itgalaxy:registry=https://npm.pkg.github.com/' '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' > "$HOME/.npmrc"
       - run: npm publish --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

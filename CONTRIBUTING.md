@@ -200,7 +200,7 @@ Versioning is automated with [Release Please](https://github.com/googleapis/rele
 1. Merge changes to `master` using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `ci:`, etc.).
 2. Release Please opens or updates a **Release PR** with the next version, `CHANGELOG.md`, and `package.json` updates.
 3. Review and merge the Release PR to create the git tag and GitHub Release on GitHub.
-4. Publish to npm (see **npm publishing** below). The [`npm-publish`](.github/workflows/npm-publish.yml) workflow listens for `release: published`, but releases created with the default `GITHUB_TOKEN` usually **do not** trigger downstream workflows — use manual publish or re-run the workflow from the Actions tab if needed.
+4. Merging the Release PR is enough to publish (see **npm publishing** below): the [Release Please](.github/workflows/release-please.yml) workflow cuts the GitHub Release and then **dispatches** [`npm-publish`](.github/workflows/npm-publish.yml) for the new tag. A `release: published` event created with the default `GITHUB_TOKEN` does not start downstream workflows, so the publish is triggered explicitly via `workflow_dispatch` (the documented exception to that rule).
 
 **Git tags** created by Release Please follow **`v{semver}`** (for example `v12.0.0`). The config sets `include-component-in-tag: false` so tags are not prefixed with the package name (`webfont-v12.0.0`). See [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md).
 
@@ -220,7 +220,7 @@ Publishing from GitHub Actions deploys the same validated build to **two environ
 1. Create an npm **Automation** or **Granular** access token for the `webfont` package (npmjs.com → **Access Tokens**) with publish permission (OTP/2FA-for-writes disabled for automation, or use a token type that bypasses it).
 2. Add it as a GitHub repository secret named **`NODE_AUTH_TOKEN`** ([Settings → Secrets and variables → Actions](https://github.com/itgalaxy/webfont/settings/secrets/actions)). GitHub Packages needs no secret — it uses `GITHUB_TOKEN`.
 
-**After merging a Release PR:** the [`npm-publish`](.github/workflows/npm-publish.yml) workflow listens for `release: published`, but releases created with the default `GITHUB_TOKEN` usually **do not** trigger downstream workflows — use **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.1.0`) if publish does not start automatically.
+**After merging a Release PR:** the [Release Please](.github/workflows/release-please.yml) workflow cuts the GitHub Release and then dispatches [`npm-publish`](.github/workflows/npm-publish.yml) with the new tag automatically. (A `release: published` event from the default `GITHUB_TOKEN` does not start downstream workflows, so the dispatch is done explicitly — `workflow_dispatch` and `repository_dispatch` are the exceptions to that rule.) If publish does not start, run it manually: **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.1.0`).
 
 **Future:** [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC) can replace the `NODE_AUTH_TOKEN` secret when a maintainer configures it on npmjs.com for workflow `npm-publish.yml`.
 

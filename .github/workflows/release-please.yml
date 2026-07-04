@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  actions: write
 
 concurrency:
   group: release-please-${{ github.repository }}
@@ -24,3 +25,21 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
           include-component-in-tag: false
+
+      # A GitHub Release created by this workflow uses the built-in GITHUB_TOKEN,
+      # and events triggered by GITHUB_TOKEN do not start other workflows. So the
+      # `release: published` event does NOT trigger npm-publish.yml on its own.
+      # workflow_dispatch is the documented exception: dispatching it with the
+      # GITHUB_TOKEN DOES start the run. Trigger the publish here when (and only
+      # when) release-please actually cut a release.
+      - name: Trigger the npm publish workflow for the new release
+        if: ${{ steps.release.outputs.releases_created == 'true' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.release.outputs['.--tag_name'] }}
+        run: |
+          if [ -z "$TAG" ]; then
+            TAG="$(gh release list --limit 1 --json tagName --jq '.[0].tagName')"
+          fi
+          echo "Release created; dispatching npm-publish.yml for tag: $TAG"
+          gh workflow run npm-publish.yml --ref master --field tag="$TAG"

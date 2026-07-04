@@ -8,7 +8,10 @@ hero:
   actions:
     - theme: brand
       text: Get Started
-      link: /guide/
+      link: /introduction/getting-started
+    - theme: alt
+      text: Demo
+      link: /demo
     - theme: alt
       text: View on GitHub
       link: https://github.com/itgalaxy/webfont

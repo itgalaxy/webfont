@@ -47,64 +47,9 @@ Every matched path must end in `.svg`, `.ttf`, `.woff`, or `.woff2`. See [FEATUR
 
 webfont is a technical tool. **Decompressing or generating fonts does not grant you any rights to those fonts.** You must have permission to use, convert, and redistribute every input file and every output file under the applicable license (commercial fonts, app-bundled webfonts, client icons, etc.). The MIT license applies to **this software only**, not to fonts you pass through it.
 
-Full details, disclaimers, community attribution guidelines, and third-party library notices: **[NOTICE.md](./NOTICE.md)**.
+Full details, disclaimers, community attribution guidelines, and third-party library notices: **[NOTICE.md](./packages/webfont/NOTICE.md)**.
 
-## Comparison with `webfonts`
-
-`webfont` (this project) is sometimes confused with the older, **unmaintained** [`webfonts`](https://github.com/uipoet/webfonts) package (note the trailing `s`). `webfonts` last shipped around 2015 and requires a **Java** runtime (it bundles `batik-ttf2svg`, `sfnt2woff`, and `ttf2eot`). `webfont` is **pure JavaScript**, actively maintained, and does everything the *useful* parts of `webfonts` did — plus SVG-icon fonts, WOFF2, decompression, templates, and a Node.js API.
-
-| Capability | `webfont` (this project) | `webfonts` ([uipoet/webfonts](https://github.com/uipoet/webfonts)) |
-|------------|:------------------------:|:-----------------------------------------------------------------:|
-| Maintained | ✅ | ❌ (last release ~2015) |
-| Runtime | Pure JS (Node.js) | Node.js **+ Java** |
-| SVG icons → font | ✅ (default pipeline) | ❌ |
-| TTF input → web formats | ✅ | ✅ |
-| Output: `woff2` (Brotli) | ✅ | ❌ |
-| Output: `woff` / `eot` | ✅ | ✅ |
-| Output: `svg` font | ✅ (`-f svg`, opt-in) | ✅ |
-| Choose which formats to emit | ✅ (`-f` / `formats`) | ❌ (always `woff` + `eot` + `svg`) |
-| WOFF/WOFF2 → TTF/OTF decompression | ✅ | ❌ |
-| Node.js / programmatic API | ✅ (`webfont()`) | ❌ (CLI only) |
-| CSS / SCSS / Styl templates | ✅ | ❌ (manual `@font-face` snippet) |
-| Config files (cosmiconfig) | ✅ | ❌ |
-| `.otf` as a **source** | ❌ ([tracking #767](https://github.com/itgalaxy/webfont/issues/767)) | ❌ ([requested](https://github.com/uipoet/webfonts/issues/4)) |
-
-### Migrating from `webfonts`
-
-```bash
-# webfonts (unmaintained): converts a directory of TTFs, always emits woff + eot + svg
-webfonts fonts/ -o dist/
-
-# webfont: pick your formats explicitly (woff2 recommended for the web)
-webfont "fonts/*.ttf" -f woff2,woff,eot,svg -d dist --dest-create
-```
-
-`webfont` adds `woff2` (much smaller than the legacy formats), lets you emit only what you ship, and needs no Java toolchain.
-
-## Comparison with `grunt-webfont`
-
-[`grunt-webfont`](https://github.com/sapegin/grunt-webfont) is the classic "SVG → webfont" **Grunt plugin** (~1.1k★, MIT). It is **archived** (read-only since 2021, last release `v1.2.0`), and its best-fidelity output relies on a native **FontForge** binary (its pure-`node` engine can't do ligatures). `webfont` is a framework-agnostic, actively maintained, pure-JS library **and** CLI: it does everything grunt-webfont *generated* — plus TTF encoding, WOFF/WOFF2 decompression, more templates, and programmatic hooks. The one thing grunt-webfont has that `webfont` doesn't is native Grunt wiring (tracked in [#771](https://github.com/itgalaxy/webfont/issues/771)); you can already drive `webfont()` from a small custom Grunt task.
-
-| Capability | `webfont` (this project) | `grunt-webfont` ([sapegin/grunt-webfont](https://github.com/sapegin/grunt-webfont)) |
-|------------|:------------------------:|:----------------------------------------------------------------------------------:|
-| Maintained | ✅ | ❌ (archived 2021, `v1.2.0`) |
-| Runtime | Node API **+ CLI** (any build tool) | **Grunt task only** |
-| Engine | Pure JS (`svg2ttf`) | `node` **or** FontForge binary |
-| SVG icons → font | ✅ | ✅ |
-| Output formats | `svg, ttf, eot, woff, woff2` | `eot, woff2, woff, ttf, svg` |
-| TTF input → web formats | ✅ | ❌ |
-| WOFF/WOFF2 → TTF/OTF decompression | ✅ | ❌ |
-| Stylesheets | `css, scss, styl, html, json` + custom Nunjucks, multiple per run | `css, sass, scss, less, stylus` + custom |
-| CSS syntax presets (BEM / Bootstrap) | ❌ (use a custom template) | ✅ |
-| `data:uri` embedding in CSS | ❌ | ✅ (`embed`) |
-| Autohinting (`ttfautohint`) | via `ttfPostProcess` hook (external, opt-in) | built-in (`autoHint`) |
-| Ligatures | ✅ (opt-in) | ✅ (FontForge engine only) |
-| Codepoint map persistence | ❌ | ✅ (`codepointsFile`) |
-| Programmatic API | ✅ (`webfont()`) | ❌ (Grunt only) |
-| SVG diagnostics | ✅ (alpha) | ❌ |
-| Grunt integration | ⏳ ([#771](https://github.com/itgalaxy/webfont/issues/771)) | ✅ (native) |
-
-If you only need the generation that grunt-webfont did, `webfont` is a maintained, FontForge-free replacement. If you specifically need BEM/Bootstrap CSS presets or `data:uri` embedding today, use a [custom template](#template).
+**Migrating from another tool?** See [MIGRATION.md](./MIGRATION.md#migrating-from-other-tools) (`webfonts`, `grunt-webfont`, and per-release notes under `docs/migration/`).
 
 ## Table Of Contents
 
@@ -112,8 +57,6 @@ If you only need the generation that grunt-webfont did, `webfont` is a maintaine
   - [Features](#features)
   - [Input modes](#input-modes)
   - [Font licensing](#font-licensing)
-  - [Comparison with `webfonts`](#comparison-with-webfonts)
-  - [Comparison with `grunt-webfont`](#comparison-with-grunt-webfont)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Options](#options)
@@ -763,10 +706,15 @@ If you're using cross-env:
 
 ### CLI Usage
 
+<!-- cli-help:begin -->
 ```shell
     Usage: webfont [input] [options]
 
     Input: File(s) or glob(s).
+
+        SVG icons: one or more `.svg` files (default pipeline).
+        Webfont decompression: one or more `.woff` / `.woff2` paths, globs, or http(s) URLs.
+            You must have rights to any font file you process (see NOTICE.md).
 
         If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
         for cross-platform glob support.
@@ -776,13 +724,13 @@ If you're using cross-env:
         --config
 
             Path to a specific configuration file (JSON, YAML, or CommonJS)
-            or the name of a module in \`node_modules\` that points to one.
-            If no \`--config\` argument is provided, webfont will search for
+            or the name of a module in `node_modules` that points to one.
+            If no `--config` argument is provided, webfont will search for
             configuration  files in the following places, in this order:
-               - a \`webfont\` property in \`package.json\`
-               - a \`.webfontrc\` file (with or without filename extension:
-                   \`.json\`, \`.yaml\`, and \`.js\` are available)
-               - a \`webfont.config.js\` file exporting a JS object
+               - a `webfont` property in `package.json`
+               - a `.webfontrc` file (with or without filename extension:
+                   `.json`, `.yaml`, and `.js` are available)
+               - a `webfont.config.js` file exporting a JS object
             The search will begin in the working directory and move up the
             directory tree until a configuration file is found.
 
@@ -810,31 +758,56 @@ If you're using cross-env:
             Destination for generated fonts.
 
         -m, --dest-create
+
             Create destination directory if it does not exist.
 
         -t, --template
 
-            Type of template (\`css\`, \`scss\`, \`styl\`) or path to custom template.
-'
-        -s, --dest-template
+            Built-in template name(s) ('css', 'scss', 'styl', 'html', 'json') or path to a custom template.
+            Pass a JSON array (e.g. '["html","scss"]') or comma-separated list for multiple outputs.
 
-            Destination for generated template. If not passed used \`dest\` argument value.
+        -s, --destTemplate
 
-        -c, --template-class-name
+            Destination for generated template. If not passed used `dest` argument value.
+
+        -c, --templateClassName
 
             Class name in css template.
 
-        -p, --template-font-path
+        -p, --templateFontPath
 
             Font path in css template.
 
-        -n, --template-font-name
+        -n, --templateFontName
 
             Font name in css template.
+
+        --templateCacheString
+
+            Specify cache string in scss/css template.
 
         --no-sort
 
             Keeps the files in the same order of entry
+
+        --ligatures
+
+            Add OpenType ligature glyphs (icon names as text). Off by default — large
+            icon sets can hang Firefox on Windows (#558). Prefer class + codepoint CSS.
+
+        --unicode-range
+
+            Emit unicode-range in built-in @font-face rules (computed from glyph code points).
+            Off by default — enabling may prevent ligature names from rendering; see README.
+
+        --no-template-font-ligatures
+
+            Omit font-feature-settings: "liga" from the built-in HTML preview template
+
+        --optimize-svg
+
+            Run a conservative SVGO pass on each SVG before font generation
+            (does not convert strokes to fills; use glyphContentTransformFn for that)
 
         --verbose
 
@@ -842,31 +815,32 @@ If you're using cross-env:
 
         --svg-diagnose
 
-            (Alpha) Scan SVG icons for icon-font incompatibilities and log warnings.
+            (Alpha) Scan SVG icons for icon-font incompatibilities (stroke-only paths,
+            fill-rule: evenodd, unsupported elements) and log warnings.
 
     For "svgicons2svgfont":
 
-        --font-id
+        --fontId
 
-            The font id you want, default as "--font-name".
+            The font id you want, default as "--fontName".
 
-        --font-style
+        --fontStyle
 
             The font style you want.
 
-        --font-weight
+        --fontWeight
 
             The font weight you want.
 
-        --fixed-width
+        --fixedWidth
 
             Creates a monospace font of the width of the largest input icon.
 
-        --center-horizontally
+        --centerHorizontally
 
             Calculate the bounds of a glyph and center it horizontally.
 
-        --center-vertically
+        --centerVertically
 
             Center the glyphs vertically in the generated font.
 
@@ -874,7 +848,7 @@ If you're using cross-env:
 
             Normalize icons by scaling them to the height of the highest icon.
 
-        --font-height
+        --fontHeight
 
             The outputted font height [MAX(icons.height)].
 
@@ -890,11 +864,11 @@ If you're using cross-env:
 
             The font ascent [height - descent].
 
-        --start-unicode
+        --startUnicode
 
             The start unicode codepoint for files without prefix [0xEA01].
 
-        --prepend-unicode
+        --prependUnicode
 
             Prefix files with their automatically allocated unicode codepoint.
 
@@ -902,11 +876,16 @@ If you're using cross-env:
 
             Content of the metadata tag.
 
-        --add-hash-in-font-url
+        --addHashInFontUrl
 
-            Generated font url will be : [webfont].[ext]?v=[hash]
+            Append an MD5 content hash to font URLs in built-in templates
+            (?v=[hash]) while keeping output filenames stable (fontName.woff2, etc.).
+            Use with a fixed fontName — do not randomize fontName for cache busting.
 
 ```
+<!-- cli-help:end -->
+
+> **Maintainers:** CLI help is generated from `packages/webfont/src/cli/meow/cliHelpText.mjs`. After editing that file, run `npm run docs:cli` at the repo root (a unit test also guards drift).
 
 ### CLI Exit Codes
 
@@ -940,12 +919,12 @@ Feel free to push your code if you agree with publishing under the MIT license.
 
 ## Changelog
 
-Check our [Changelog](CHANGELOG.md)
+Check our [Changelog](./packages/webfont/CHANGELOG.md)
 
 ## Legal Notices
 
-Copyright, disclaimers, font licensing expectations (including WOFF/WOFF2 decompression), community attribution guidelines, and third-party open-source dependencies are documented in **[NOTICE.md](./NOTICE.md)**.
+Copyright, disclaimers, font licensing expectations (including WOFF/WOFF2 decompression), community attribution guidelines, and third-party open-source dependencies are documented in **[NOTICE.md](./packages/webfont/NOTICE.md)**.
 
 ## License
 
-The **webfont software** is licensed under the [MIT License](./LICENSE). That license does **not** apply to fonts or icons you process with the tool — see [NOTICE.md](./NOTICE.md).
+The **webfont software** is licensed under the [MIT License](./LICENSE). That license does **not** apply to fonts or icons you process with the tool — see [NOTICE.md](./packages/webfont/NOTICE.md).

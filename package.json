@@ -26,7 +26,8 @@
     "testc": "npm run testc -w webfont",
     "test-debug": "npm run test-debug -w webfont",
     "testu": "npm run testu -w webfont",
-    "deprecate-pre-12": "npm run deprecate-pre-12 -w webfont"
+    "deprecate-pre-12": "npm run deprecate-pre-12 -w webfont",
+    "docs:cli": "npm run docs:cli -w webfont"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",

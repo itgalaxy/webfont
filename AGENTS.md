@@ -2,7 +2,7 @@
 
 Instructions for AI agents and contributors automating work in this repository.
 
-**GitHub Copilot:** repository custom instructions live at [`.github/instructions/webfont.instructions.md`](./.github/instructions/webfont.instructions.md) (symlink to this file). Edit **AGENTS.md** only — not the symlink target path in `.github/instructions/`.
+**GitHub Copilot:** repository custom instructions live at [`.github/instructions/webfont.instructions.md`](./.github/instructions/webfont.instructions.md) (symlink to this file). Edit **AGENTS.md** only — not the symlink target path in `.github/instructions/`. [CLAUDE.md](./CLAUDE.md) symlinks here for Claude Code.
 
 ## Monorepo layout
 
@@ -144,10 +144,10 @@ Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliL
 
 When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:
 
-1. **Check for user impact** before finishing — compare CLI help (`packages/webfont/src/cli/meow/cliOptions.ts`), [README.md](./README.md) (Input modes, Options, CLI), [FEATURES.md](./FEATURES.md), and any examples or fixtures that show usage.
+1. **Check for user impact** before finishing — compare CLI help (`packages/webfont/src/cli/meow/cliHelpText.mjs` + `npm run docs:cli`), [README.md](./README.md) (Input modes, Options, CLI), [FEATURES.md](./FEATURES.md), and any examples or fixtures that show usage.
 2. **Update README.md** when behavior, accepted input formats, or public options change. Keep CLI flag names and short aliases aligned with `meow` (`-f` / `--formats`, `-u` / `--fontName`, etc.).
 3. **Update [FEATURES.md](./FEATURES.md)** when capabilities, stability, properties, or test criteria change. Mark features `stable`, `in-progress`, or `planned`; tick test criteria when coverage exists.
-4. **Update [NOTICE.md](./NOTICE.md)** when legal notices, font licensing guidance, attribution rules, or runtime dependency licenses change.
+4. **Update [packages/webfont/NOTICE.md](./packages/webfont/NOTICE.md)** when legal notices, font licensing guidance, attribution rules, or runtime dependency licenses change.
 5. **Update [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** for operational errors (symptoms and fixes on the **current** release, not version-to-version deltas).
 6. **Update migration docs** when a fix or change alters behavior across releases: add **`docs/migration/issue-NNNN-<slug>.md`** (one new file per issue — do **not** append to `MIGRATION.md`; see [docs/migration/README.md](./docs/migration/README.md#entry-structure) for naming, workflow, and entry structure). Include *What changed* → *Before* → *After* → **Workaround on older versions** (when users on older npm releases have a practical alternative) → *After upgrading*. Link the GitHub issue; set **minimum fixed version** in that file when the release ships.
 7. **Do not rely on CHANGELOG alone** for unreleased work; Release Please updates `CHANGELOG.md` at release time.
@@ -232,71 +232,4 @@ Skip PRs for duplicates, `wontfix`, or issues that only need a comment (already 
 
 ## Pull requests
 
-**Never push commits directly to `master`.** All changes — including docs, tests, and chores — go through a feature branch and a pull request. Only merge to `master` after review (or explicit maintainer approval on the PR). Do not use `git push origin master` for routine work.
-
-When a task produces branch changes intended for review (features, fixes, CI, docs, refactors):
-
-1. **Check whether the current branch is already merged** (see [Merged branches](#merged-branches) below). If it is, create a **new branch from `master`** — do not push follow-up commits to a merged PR branch.
-2. **Create a branch** from `master` using a **lowercase** name (for example `docs/pr-workflow`, `test/xml2js-guards`, `fix/cli-formats`). The entire branch name must stay lowercase — no camelCase or uppercase segments (avoid names like `test/toTtf-unit-tests`).
-3. **Read** [`.github/pull_request_template.md`](./.github/pull_request_template.md) and use it as the PR body structure (do not substitute a shorter custom format).
-4. **Push** the branch to `origin` (`git push -u origin HEAD`) without asking first.
-5. **Open a PR** with `gh pr create` (title + body in English, base `master`) without asking first. Pass the body via HEREDOC so headings and checklists match the template. **PR title must follow [Conventional Commits](https://www.conventionalcommits.org/)** (`type: description`, optional scope). Strip bot prefixes (`[Snyk]`, `[Dependabot]`) and rewrite to the correct type — use **`chore(deps):`** when dependencies change (or **`ci(deps):`** for GitHub Actions) (see **Dependency bumps** under Scope, title, and description).
-6. **Return the PR URL** in the final response.
-
-**Squash merge only.** Routine merges to `master` use **Squash and merge** so the PR title is the single commit on `master` (Release Please depends on this). Do not use merge commits or rebase-merge unless a maintainer explicitly requests it.
-
-**Fix PR titles proactively.** When working on an open PR, check the title with `gh pr view --json title`. If it does not match Conventional Commits (wrong type, vendor prefix, or scope drift after new commits), run `gh pr edit --title "type(scope): description"` **without asking** — same as push. Re-read the title after every push that changes PR scope.
-
-### Copilot and review comments
-
-Before finishing work on an open PR, **check for unresolved review threads** (Copilot, humans, bots). Do not leave Copilot feedback unanswered.
-
-| Step | Action |
-|------|--------|
-| **List threads** | `gh api graphql` → `pullRequest(number: N) { reviewThreads { nodes { id isResolved comments { nodes { body author { login } } } } } } }` or the PR **Files changed** tab |
-| **Evaluate** | If the suggestion is valid for the **current** branch state, apply it (code, tests, or docs) in the same PR. If it is wrong or obsolete (e.g. based on a reverted approach), explain why in a **reply in English** — cite code, tests, or AGENTS.md |
-| **Reply** | `gh api repos/{owner}/{repo}/pulls/{number}/comments` with `in_reply_to` set to the review comment `databaseId` |
-| **Resolve** | When addressed (fix merged in the branch **or** reply documents why not), resolve the thread: GraphQL `resolveReviewThread(input: { threadId: "PRRT_…" })` |
-
-Resolve only after the thread is truly handled — not when ignoring feedback. If a follow-up commit applies Copilot’s fix, reply briefly (“Fixed in \<sha\>”) then resolve.
-
-**Do not ask the user for permission** to push or open a PR when the task produces reviewable branch changes. Push, `gh pr create`, and returning the PR URL are part of finishing the task — not optional follow-ups to confirm. **Never** close a turn with prompts like “Quer que eu faça o push?” / “Should I push?” after committing on an open PR branch; push first, then summarize. Only skip push/PR when the user explicitly says to keep work local, or when the task is question-only with no code changes.
-
-### Merged branches
-
-**Before every push**, confirm the target branch is still the right vehicle for the work:
-
-| Check | Command / action |
-|-------|------------------|
-| PR state | `gh pr view --head <branch> --json state,mergedAt,url` (or `gh pr list --head <branch>`) |
-| Branch contained in `master` | `git fetch origin master && git log --oneline origin/master..origin/<branch>` — if empty after your last merge, or PR `state` is `MERGED`, stop using that branch |
-
-**If the PR is merged (or the branch is obsolete):**
-
-1. **Do not** push new commits to that branch expecting them to land via the old PR.
-2. **Do** `git fetch origin master`, branch from `origin/master` (e.g. `test/font-output-contracts`), cherry-pick or re-apply only the commits not yet on `master`, then push and **`gh pr create`** a **new** PR.
-3. **Prefer one focused PR per follow-up** after merge — tests, docs, and unrelated fixes on top of merged work belong on a new branch, not on `fix/...` or `feat/...` branches whose PRs are already closed.
-
-Example mistake to avoid: pushing `test: add is-svg coverage` to `fix/cli-missing-dest` after PR #626 merged — those commits stay orphaned until opened on a fresh branch.
-
-### Template sections (be selective)
-
-Keep the template **headings and order**, but write each section critically — only include content that applies to the PR:
-
-| Section | Guidance |
-|---------|----------|
-| **Proposed changes** | Bullet the real changes; remove placeholder text. |
-| **Related issue** | Link the issue, or write `N/A` / `None` when there is none. |
-| **Dependencies** | List adds/updates/removes, or `N/A` when `package.json` is untouched. |
-| **Testing** | Do **not** copy every sub-checkbox from the template. Mark only test types you actually ran or added (e.g. unit test for code changes). Omit sub-items that do not apply instead of leaving them unchecked. For docs-only or config-only PRs, say so explicitly (e.g. “No runtime tests; verified by review / `npm test` still passes”). |
-| **How to test** | Steps a reviewer can follow. For non-user-facing changes, describe what you ran (`npm test`, `npm run lint`, file review). |
-| **Test configuration** | Include Node/npm versions only when the change is version-sensitive or CI-related; otherwise `N/A` or omit the bullet values. |
-| **Checklist** | Mark `[x]` only for items you completed. Leave maintainer-only items (labels) unchecked. |
-
-### Scope, title, and description
-
-- **PR title = Conventional Commits.** Match commit style (`feat:`, `fix:`, `chore(deps):`, `docs:`, `test:`, `ci:`, …). When the PR is open and the title is wrong, fix it with `gh pr edit` before ending the task. Squash merge puts the title on `master`; Release Please reads it.
-- **Dependency bumps set the type.** If the PR updates **`package.json` / `package-lock.json` dependencies**, the title must be **`chore(deps):`** (or **`ci(deps):`** for GitHub Actions) — not `test:`, `docs:`, or `refactor:` even when most of the diff is new tests. Example: `chore(deps): bump wawoff2 to 2.0.1; add ttfEncode tests`. Strip `[Dependabot]` / `[Snyk]` prefixes and rewrite.
-- **Re-read the PR title and body whenever the branch scope changes.** After adding commits, update the title and **Proposed changes** section so reviewers see the full picture — not just the first commit message.
-- **Split when it grows too much.** If a branch picks up unrelated fixes, large test extractions, or docs on top of the original goal, prefer **separate PRs** for follow-up work rather than one ever-growing branch. This PR accumulated extra scope before that rule was written; use smaller PRs from here on.
-- **Explain why when closing a PR.** Leave an English comment (superseded, obsolete, duplicate, out of scope, etc.) — do not close without context. See [CONTRIBUTING.md](./CONTRIBUTING.md) (“Closing pull requests”).
+See **[MAINTAINERS.md](./MAINTAINERS.md)** for branch naming, opening PRs, squash merge, Copilot review threads, merged-branch rules, and template guidance. Agents must push and open PRs without asking when work is review-ready.

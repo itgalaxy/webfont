@@ -74,6 +74,8 @@ And, if you’re raising an issue, please understand that people involved with t
 - Bug fixes should include a regression test that fails without the fix;
 - Please, don’t include unrelated changes;
 
+**Maintainers and automation** (squash merge, PR titles, Copilot threads, merged-branch rules): see **[MAINTAINERS.md](./MAINTAINERS.md)**.
+
 ### User-facing changes and documentation
 
 Before opening or updating a pull request, check whether your change affects **how people use webfont** — via the CLI (`webfont` / `packages/webfont/dist/cli.mjs`), the programmatic API (`webfont({ ... })`), or config files (`.webfontrc`, `package.json` `webfont` key, etc.).
@@ -82,32 +84,14 @@ When it does, update documentation in the same PR:
 
 | What changed | Update |
 |--------------|--------|
-| CLI flags, aliases, or accepted flag values | [README.md](./README.md) CLI section, `packages/webfont/src/cli/meow/cliOptions.ts` help text, and [FEATURES.md](./FEATURES.md) when capability changes |
+| CLI flags, aliases, or accepted flag values | Edit `packages/webfont/src/cli/meow/cliHelpText.mjs`, run `npm run docs:cli`, and update [FEATURES.md](./FEATURES.md) when capability changes |
 | `webfont()` options, defaults, return shape, or supported inputs/outputs | [README.md](./README.md) Options / Result / Input modes, [FEATURES.md](./FEATURES.md) |
 | New or removed public options or pipelines | README + [FEATURES.md](./FEATURES.md) + TypeScript types under `packages/webfont/src/types/` |
 | Bug fixes or recurring user-facing errors (especially from issues) | New `docs/migration/issue-NNNN-<slug>.md` ([workflow](./docs/migration/README.md)); [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when the fix applies the same on all releases |
 | Legal notices, font licensing copy, attribution, or dependency license table | [packages/webfont/NOTICE.md](./packages/webfont/NOTICE.md); link from README as needed |
 | Internal-only refactors with no usage change | No README or FEATURES change; say so in the PR **Testing** section |
 
-Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.md) (“Documentation”).
-
-### Pull request title and description
-
-- **Use [Conventional Commits](https://www.conventionalcommits.org/) for the PR title** — the same format as commit messages (`feat:`, `fix:`, `chore(deps):`, `docs:`, `test:`, `ci:`, etc.). The title should describe the **overall** change in the PR, not bot prefixes like `[Snyk]` or `[Dependabot]`.
-- **Dependency updates drive the PR type.** If the PR changes **`package.json` or `package-lock.json` dependencies**, use **`chore(deps):`** in the title (or **`ci(deps):`** for GitHub Actions) — not `test:` or `docs:` even when the diff is mostly new tests or migration notes. Example: `chore(deps): bump wawoff2 to 2.0.1; add ttfEncode tests`. This matches the prefixes Dependabot generates via [`.github/dependabot.yml`](./.github/dependabot.yml). Release Please reads the squash-merge title on `master`.
-- **Merge pull requests with squash.** The PR title becomes the commit message on `master` (Release Please reads it). Do not merge with merge commits or rebase-merge for routine work.
-- **Write pull request titles, descriptions, and review comments in English** (commits and code comments in English as well).
-- **Keep the PR title and body in sync with the actual diff.** When new commits change what the PR does (extra fixes, tests, docs, refactors), update the title and description before asking for review — do not leave a narrow title like “enable strictNullChecks” on a PR that also ships CLI bug fixes and README changes.
-- **Rename non-conforming PR titles** before review when the title uses vendor labels (`[Snyk]`, `[Dependabot]`), plain prose, the wrong type, or **`test:` / `docs:` on a dependency bump**. Example: `chore(deps): bump svg2ttf from 6.0.3 to 6.1.0` instead of `[Snyk] Security upgrade svg2ttf from 6.0.3 to 6.1.0` or `test: add coverage after svg2ttf bump`.
-- **Prefer focused PRs.** If the scope keeps growing (unrelated fixes, large test refactors, docs, and feature work in one branch), stop stacking and **split follow-up work into separate PRs** instead. Land the original change first, then open new branches for the rest.
-
-See [AGENTS.md](./AGENTS.md) (“Pull requests”) for agents and automation.
-
-### Closing pull requests
-
-When you close a pull request (as author or maintainer), **leave a comment explaining why** — do not close silently. Helpful reasons include: superseded by another PR (link it), obsolete after dependency or codebase changes, out of scope, duplicate, or rejected after review.
-
-Write the comment in English so future contributors and bots (for example Dependabot) understand what happened.
+Agents and automation should follow the same rule — see [AGENTS.md](./AGENTS.md) (“Documentation”) and [MAINTAINERS.md](./MAINTAINERS.md) for PR workflow.
 
 ### Testing and coverage
 

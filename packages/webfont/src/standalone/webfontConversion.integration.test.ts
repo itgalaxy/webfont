@@ -77,7 +77,7 @@ describe("webfont WOFF/WOFF2 conversion", () => {
   it("should reject extension-less files mixed with webfont inputs", async () => {
     await expect(
       standalone({
-        files: ["../../LICENSE", fixtureWoff2],
+        files: ["src/fixtures/extension-less-input", fixtureWoff2],
         formats: ["ttf"],
       }),
     ).rejects.toThrow("did not match any supported files");

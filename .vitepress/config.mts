@@ -28,6 +28,8 @@ export default defineConfig({
   vite: { configFile: false },
   srcExclude: [
     "AGENTS.md",
+    "CLAUDE.md",
+    "MAINTAINERS.md",
     "docs/adr/**",
     "coverage/**",
     "packages/webfont/temp/**",

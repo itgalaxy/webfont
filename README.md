@@ -545,6 +545,24 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
 `webfont()` resolves to an object with generated font buffers (and optional `template` output). The `config` property contains the **effective options** used for the run (defaults, discovered config, and any options you passed in), plus optional **output metadata** when a configuration file was found or loaded.
 
+#### TypeScript
+
+`Result` and `ResultConfig` are exported from the package entry, so you can annotate `webfont()` output directly instead of relying on `ReturnType` inference:
+
+```ts
+import { webfont, type Result, type ResultConfig } from "webfont";
+
+const result: Result = await webfont({
+  files: "src/svg-icons/**/*.svg",
+});
+
+const config: ResultConfig | undefined = result.config;
+
+if (config?.filePath) {
+  console.log(`Loaded config from ${config.filePath}`);
+}
+```
+
 #### `result.config.filePath`
 
 - Type: `string` | `undefined`

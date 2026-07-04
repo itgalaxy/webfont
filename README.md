@@ -49,12 +49,45 @@ webfont is a technical tool. **Decompressing or generating fonts does not grant 
 
 Full details, disclaimers, community attribution guidelines, and third-party library notices: **[NOTICE.md](./NOTICE.md)**.
 
+## Comparison with `webfonts`
+
+`webfont` (this project) is sometimes confused with the older, **unmaintained** [`webfonts`](https://github.com/uipoet/webfonts) package (note the trailing `s`). `webfonts` last shipped around 2015 and requires a **Java** runtime (it bundles `batik-ttf2svg`, `sfnt2woff`, and `ttf2eot`). `webfont` is **pure JavaScript**, actively maintained, and does everything the *useful* parts of `webfonts` did — plus SVG-icon fonts, WOFF2, decompression, templates, and a Node.js API.
+
+| Capability | `webfont` (this project) | `webfonts` ([uipoet/webfonts](https://github.com/uipoet/webfonts)) |
+|------------|:------------------------:|:-----------------------------------------------------------------:|
+| Maintained | ✅ | ❌ (last release ~2015) |
+| Runtime | Pure JS (Node.js) | Node.js **+ Java** |
+| SVG icons → font | ✅ (default pipeline) | ❌ |
+| TTF input → web formats | ✅ | ✅ |
+| Output: `woff2` (Brotli) | ✅ | ❌ |
+| Output: `woff` / `eot` | ✅ | ✅ |
+| Output: `svg` font | ✅ (`-f svg`, opt-in) | ✅ |
+| Choose which formats to emit | ✅ (`-f` / `formats`) | ❌ (always `woff` + `eot` + `svg`) |
+| WOFF/WOFF2 → TTF/OTF decompression | ✅ | ❌ |
+| Node.js / programmatic API | ✅ (`webfont()`) | ❌ (CLI only) |
+| CSS / SCSS / Styl templates | ✅ | ❌ (manual `@font-face` snippet) |
+| Config files (cosmiconfig) | ✅ | ❌ |
+| `.otf` as a **source** | ❌ ([tracking #767](https://github.com/itgalaxy/webfont/issues/767)) | ❌ ([requested](https://github.com/uipoet/webfonts/issues/4)) |
+
+### Migrating from `webfonts`
+
+```bash
+# webfonts (unmaintained): converts a directory of TTFs, always emits woff + eot + svg
+webfonts fonts/ -o dist/
+
+# webfont: pick your formats explicitly (woff2 recommended for the web)
+webfont "fonts/*.ttf" -f woff2,woff,eot,svg -d dist --dest-create
+```
+
+`webfont` adds `woff2` (much smaller than the legacy formats), lets you emit only what you ship, and needs no Java toolchain.
+
 ## Table Of Contents
 
 - [Webfont](#webfont)
   - [Features](#features)
   - [Input modes](#input-modes)
   - [Font licensing](#font-licensing)
+  - [Comparison with `webfonts`](#comparison-with-webfonts)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Options](#options)

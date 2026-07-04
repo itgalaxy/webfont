@@ -75,9 +75,9 @@ export const filterInputFilesByMode = (filePaths: readonly string[], mode: Input
 
 export type ConversionFormat = "otf" | "ttf";
 
-export type TtfEncodeFormat = "eot" | "ttf" | "woff" | "woff2";
+export type TtfEncodeFormat = "eot" | "svg" | "ttf" | "woff" | "woff2";
 
-const TTF_ENCODE_FORMATS = new Set<Format>(["ttf", "eot", "woff", "woff2"]);
+const TTF_ENCODE_FORMATS = new Set<Format>(["ttf", "svg", "eot", "woff", "woff2"]);
 
 export const resolveTtfConversionFormats = (formats: readonly Format[]): TtfEncodeFormat[] => {
   const encodeFormats = formats.filter((format): format is TtfEncodeFormat => TTF_ENCODE_FORMATS.has(format));
@@ -91,7 +91,7 @@ export const resolveTtfConversionFormats = (formats: readonly Format[]): TtfEnco
 
   if (encodeFormats.length === 0) {
     throw new Error(
-      'formats must include at least one of "ttf", "eot", "woff", or "woff2" when converting TTF input',
+      'formats must include at least one of "svg", "ttf", "eot", "woff", or "woff2" when converting TTF input',
     );
   }
 

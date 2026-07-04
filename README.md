@@ -16,7 +16,7 @@ See **[FEATURES.md](./FEATURES.md)** for the canonical capability list (what is 
 ## Features
 
 - **SVG icon pipeline** (default): `.svg` icons → `svg`, `ttf`, `eot`, `woff`, `woff2` (not `otf`);
-- **TTF encoding**: one or more `.ttf` files → `ttf` (pass-through), `eot`, `woff`, and/or `woff2` (auto-detected — no extra flag);
+- **TTF encoding**: one or more `.ttf` files → `ttf` (pass-through), `svg` (SVG font), `eot`, `woff`, and/or `woff2` (auto-detected — no extra flag);
 - **Webfont decompression**: one `.woff` or `.woff2` file → `ttf` and/or `otf` matching the **embedded SFNT flavor** (decompress only — not TTF ↔ OTF transcoding);
 - Config files: `JavaScript`, `JSON`, or `YAML` via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig);
 - Built-in and custom CSS templates (`css`, `scss`, [`styl`](https://github.com/itgalaxy/webfont/pull/164/));
@@ -30,7 +30,7 @@ webfont runs one of three pipelines depending on matched input files. They canno
 | Mode | Input | Outputs | Notes |
 |------|--------|---------|--------|
 | **SVG icons** | One or more `.svg` files | `svg`, `ttf`, `eot`, `woff`, `woff2` | Default. Builds TrueType via `svg2ttf`. **`otf` is rejected** — use `ttf`. |
-| **TTF encoding** | One or more `.ttf` files | `ttf`, `eot`, `woff`, and/or `woff2` per input | Auto-detected. Default when SVG-pipeline `formats` are still configured: `woff` + `woff2`. No templates. |
+| **TTF encoding** | One or more `.ttf` files | `ttf`, `svg` (SVG font), `eot`, `woff`, and/or `woff2` per input | Auto-detected. Default when SVG-pipeline `formats` are still configured: `woff` + `woff2` (`svg` is opt-in). No templates. |
 | **Webfont decompress** | One or more `.woff` / `.woff2` paths, globs, or `http(s)` URLs | `ttf` and/or `otf` per input | One output file per source (basename from filename; collisions get `-woff`/`-woff2`). Not a single merged font. |
 
 **Not supported today**
@@ -156,6 +156,13 @@ const subset = await webfont({
   files: "path/to/font.ttf",
   formats: ["woff2"],
 });
+
+// TTF → SVG font (legacy format; opt-in, pure JS via fonteditor-core)
+const svgFont = await webfont({
+  files: "path/to/font.ttf",
+  formats: ["svg"],
+});
+// svgFont.svg → SVG font as a string
 
 // Batch: multiple TTF files in one run
 const batch = await webfont({
@@ -292,7 +299,7 @@ Notes:
 - Possible values: `svg`, `ttf`, `otf`, `eot`, `woff`, `woff2`
 - Description: Font file types to generate.
   - **SVG input**: `svg`, `ttf`, `eot`, `woff`, `woff2` only. **`otf` is not supported** (pipeline uses TrueType outlines).
-  - **TTF input**: `ttf`, `eot`, `woff`, and/or `woff2` only. **`svg` and `otf` are not produced** in this mode.
+  - **TTF input**: `svg` (SVG font), `ttf`, `eot`, `woff`, and/or `woff2`. `svg` is **opt-in** (not in the default `woff` + `woff2` set); **`otf` is not produced** in this mode.
   - **WOFF/WOFF2 input**: `ttf` and/or `otf` only — must match the decompressed SFNT flavor inside the file (not arbitrary transcoding). `eot`, `woff`, `woff2`, and `svg` are not produced in this mode.
 - CLI: pass `-f` / `--formats` as a JSON array (for example `'["woff2"]'`) or as a comma-separated list (for example `woff2` or `svg, ttf, woff2`). Invalid format names throw an error.
 - API and config files: `formats` must be an array of the values above; unknown names (for example `icon`) throw before the pipeline runs.

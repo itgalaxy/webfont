@@ -1,7 +1,7 @@
 import * as fsPromise from "fs/promises";
 import { isHttpUrl } from "../lib/inputSourceUtils";
 import { getSfntFlavor } from "../lib/sfnt/flavor";
-import { encodeTtfToEot, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
+import { encodeTtfToEot, encodeTtfToSvg, encodeTtfToWoff, encodeTtfToWoff2 } from "../lib/ttfEncode";
 import type { Result } from "../types/Result";
 import type { TranscodedFont } from "../types/TranscodedFont";
 import type { WebfontOptions } from "../types/WebfontOptions";
@@ -41,6 +41,14 @@ const assertValidTtfInput = (buffer: Buffer, source: string): void => {
   }
 };
 
+const resolveMetadata = (options: WebfontOptions): string | undefined => {
+  if (typeof options.metadata === "string") {
+    return options.metadata;
+  }
+
+  return undefined;
+};
+
 const assignTtfOutput = async (
   transcoded: TranscodedFont,
   buffer: Buffer,
@@ -52,19 +60,18 @@ const assignTtfOutput = async (
     return;
   }
 
+  if (format === "svg") {
+    transcoded.svg = encodeTtfToSvg(buffer, { metadata: resolveMetadata(options) });
+    return;
+  }
+
   if (format === "eot") {
     transcoded.eot = encodeTtfToEot(buffer);
     return;
   }
 
   if (format === "woff") {
-    let metadata: string | undefined;
-
-    if (typeof options.metadata === "string") {
-      metadata = options.metadata;
-    }
-
-    transcoded.woff = encodeTtfToWoff(buffer, { metadata });
+    transcoded.woff = encodeTtfToWoff(buffer, { metadata: resolveMetadata(options) });
     return;
   }
 
@@ -114,6 +121,7 @@ export const convertTtfInput = async (fontFiles: readonly string[], options: Web
   if (transcodedFonts.length === 1) {
     const [single] = transcodedFonts;
 
+    result.svg = single.svg;
     result.ttf = single.ttf;
     result.eot = single.eot;
     result.woff = single.woff;

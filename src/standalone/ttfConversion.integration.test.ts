@@ -1,5 +1,6 @@
 import * as fsPromise from "fs/promises";
 import isEot from "is-eot";
+import isSvg from "is-svg";
 import isTtf from "is-ttf";
 import isWoff from "is-woff";
 import isWoff2 from "is-woff2";
@@ -86,14 +87,26 @@ describe("TTF to webfont conversion", () => {
     ).rejects.toThrow("Templates are not supported when converting TTF input");
   });
 
-  it("should reject formats without webfont outputs for ttf input", async () => {
+  it("should encode ttf input to a valid svg font when requested", async () => {
+    const result = await standalone({
+      files: fixtureTtf,
+      formats: ["svg"],
+    });
+
+    expect(typeof result.svg).toBe("string");
+    expect(isSvg(result.svg as string)).toBe(true);
+    expect(result.woff).toBeUndefined();
+    expect(result.glyphsData).toBeUndefined();
+  });
+
+  it("should reject formats without any ttf encoder output", async () => {
     await expect(
       standalone({
         files: fixtureTtf,
-        formats: ["svg"],
+        formats: ["otf"],
       }),
     ).rejects.toThrow(
-      'formats must include at least one of "ttf", "eot", "woff", or "woff2" when converting TTF input',
+      'formats must include at least one of "svg", "ttf", "eot", "woff", or "woff2" when converting TTF input',
     );
   });
 

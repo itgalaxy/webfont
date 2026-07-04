@@ -542,6 +542,18 @@ describe("cli", () => {
     expect(output.files).toEqual(["webfont.hash", "webfont.woff2"]);
   });
 
+  it("should convert a ttf font to an svg font via the CLI (#764)", async () => {
+    const output = await execCLI(`${fixturesGlob}/fonts/iconfont.ttf -d ${destination} -f svg`);
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    expect(output.files).toContain("webfont.svg");
+
+    const svg = await fsPromise.readFile(`${destination}/webfont.svg`, { encoding: "utf-8" });
+    expect(svg).toContain("<font");
+    expect(svg).toContain("<glyph");
+  });
+
   it("should create dest directory if it does not exist and --dest-create flag is provided", async () => {
     const nonExistentDestination = `${destination}/that/does/not/exist`;
     const output = await execCLI(`${source} -d ${nonExistentDestination} --dest-create`);

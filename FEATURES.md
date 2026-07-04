@@ -35,12 +35,13 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 ### TTF to webfont encoding
 
 - **Stability**: in-progress
-- **Description**: Encode one or more `.ttf` TrueType files to `eot`, `woff`, and/or `woff2` (and optional TTF pass-through). Auto-detected from input extension — no separate flag (see [#13](https://github.com/itgalaxy/webfont/issues/13)).
+- **Description**: Encode one or more `.ttf` TrueType files to `svg`, `eot`, `woff`, and/or `woff2` (and optional TTF pass-through). Auto-detected from input extension — no separate flag (see [#13](https://github.com/itgalaxy/webfont/issues/13)).
 - **Properties**:
   - Input: one or more local `.ttf` paths or globs per run.
-  - Output: `ttf` (copy), `eot`, `woff`, and/or `woff2` per input via existing encoders (`ttf2eot`, `ttf2woff`, `wawoff2`).
-  - Batch results on `result.transcodedFonts` (`{ source, ttf?, eot?, woff?, woff2? }[]`). Single input mirrors buffers on `result` top level.
-  - Default `formats` when SVG-pipeline defaults are still configured: `['woff', 'woff2']`.
+  - Output: `ttf` (copy), `svg` (SVG font), `eot`, `woff`, and/or `woff2` per input via existing encoders (`fonteditor-core`, `ttf2eot`, `ttf2woff`, `wawoff2`).
+  - `svg` produces a legacy **SVG font** (glyph outlines + metrics as XML) via [`fonteditor-core`](https://github.com/kekee000/fonteditor-core) — pure JS, no Java/FontForge ([#764](https://github.com/itgalaxy/webfont/issues/764)). Opt-in only; not part of the default output set.
+  - Batch results on `result.transcodedFonts` (`{ source, svg?, ttf?, eot?, woff?, woff2? }[]`). Single input mirrors buffers on `result` top level (`result.svg` is a string).
+  - Default `formats` when SVG-pipeline defaults are still configured: `['woff', 'woff2']` (SVG font stays opt-in).
   - Does **not** accept `.otf` input (TrueType only). Does **not** merge multiple weights into one file.
   - `template` and `glyphTransformFn` are not supported in this mode.
   - `glyphContentTransformFn` is not supported in this mode.
@@ -48,11 +49,12 @@ Canonical list of product capabilities. **Update this file in the same PR** when
   - **Architecture:** see [ADR 0009](docs/adr/0009-ttf-webfont-encoding-pipeline.md).
 - **Test Criteria**:
   - [x] `.ttf` input with `formats: ['woff', 'woff2']` yields valid WOFF and WOFF2
-  - [x] Default formats produce `woff` + `woff2` when SVG defaults are configured
-  - [x] Multiple TTF files encode in one run (`transcodedFonts`)
+  - [x] `.ttf` input with `formats: ['svg']` yields a valid SVG font ([#764](https://github.com/itgalaxy/webfont/issues/764))
+  - [x] Default formats produce `woff` + `woff2` when SVG defaults are configured (no SVG font)
+  - [x] Multiple TTF files encode in one run (`transcodedFonts`), including `svg`
   - [x] Mixed `.svg` + `.ttf` or `.ttf` + `.woff2` inputs reject
   - [x] Template option in TTF mode rejects
-  - [x] CLI writes encoded outputs for a single TTF input
+  - [x] CLI writes encoded outputs (incl. `svg`) for a single TTF input
 
 ### WOFF / WOFF2 container decompression
 
@@ -221,7 +223,7 @@ Canonical list of product capabilities. **Update this file in the same PR** when
 - **Stability**: planned
 - **Description**: Convert between outline/container formats beyond the current three pipelines (e.g. TTF ↔ OTF transcoding, OTF input encoding).
 - **Properties**:
-  - **Partially supported:** TTF → `eot` / `woff` / `woff2` (see TTF to webfont encoding). WOFF/WOFF2 → TTF/OTF decompression.
+  - **Partially supported:** TTF → `svg` (SVG font) / `eot` / `woff` / `woff2` (see TTF to webfont encoding). WOFF/WOFF2 → TTF/OTF decompression.
   - **Out of scope today:** OTF input encoding, TTF ↔ OTF outline conversion.
   - External tools (FontForge, fontTools, etc.) are required for TTF → OTF today.
 - **Test Criteria**:

@@ -137,13 +137,21 @@ describe("resolveTtfConversionFormats", () => {
     expect(resolveTtfConversionFormats(["ttf", "woff2"])).toEqual(["ttf", "woff2"]);
   });
 
+  it("should keep an explicit svg output request", () => {
+    expect(resolveTtfConversionFormats(["svg"])).toEqual(["svg"]);
+  });
+
+  it("should keep svg alongside webfont output requests", () => {
+    expect(resolveTtfConversionFormats(["svg", "woff2"])).toEqual(["svg", "woff2"]);
+  });
+
   it("should deduplicate explicit encode formats", () => {
     expect(resolveTtfConversionFormats(["woff2", "woff2", "woff"])).toEqual(["woff2", "woff"]);
   });
 
-  it("should reject ttf runs without webfont output formats", () => {
-    expect(() => resolveTtfConversionFormats(["svg"])).toThrow(
-      'formats must include at least one of "ttf", "eot", "woff", or "woff2" when converting TTF input',
+  it("should reject ttf runs without any encoder output format", () => {
+    expect(() => resolveTtfConversionFormats(["otf"])).toThrow(
+      'formats must include at least one of "svg", "ttf", "eot", "woff", or "woff2" when converting TTF input',
     );
   });
 });

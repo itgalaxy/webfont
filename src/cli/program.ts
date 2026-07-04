@@ -381,6 +381,10 @@ export const writeTranscodedFontFiles = async (
       const basename = getTranscodedFontOutputBasename(fonts, font, config);
       const writes: Promise<void>[] = [];
 
+      if (font.svg) {
+        writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.svg`)), font.svg));
+      }
+
       if (font.ttf) {
         writes.push(fs.promises.writeFile(path.resolve(path.join(dest, `${basename}.ttf`)), font.ttf));
       }

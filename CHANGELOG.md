@@ -4,13 +4,11 @@ All notable changes to this project will be documented in this file. See [Conven
 
 ## [12.3.0](https://github.com/itgalaxy/webfont/compare/v12.2.0...v12.3.0) (2026-07-04)
 
-
 ### Features
 
 * export Result and ResultConfig types from package entry ([#759](https://github.com/itgalaxy/webfont/issues/759)) ([c785797](https://github.com/itgalaxy/webfont/commit/c7857977855d132a2afe99b3f032d80fd8b567cd)), closes [#758](https://github.com/itgalaxy/webfont/issues/758)
 
 ## [12.2.0](https://github.com/itgalaxy/webfont/compare/v12.1.1...v12.2.0) (2026-07-03)
-
 
 ### Features
 
@@ -19,13 +17,11 @@ All notable changes to this project will be documented in this file. See [Conven
 
 ## [12.1.1](https://github.com/itgalaxy/webfont/compare/v12.1.0...v12.1.1) (2026-07-03)
 
-
 ### Bug Fixes
 
 * **build:** expose callable default export from ESM build ([#618](https://github.com/itgalaxy/webfont/issues/618)) ([#735](https://github.com/itgalaxy/webfont/issues/735)) ([862247f](https://github.com/itgalaxy/webfont/commit/862247f59ae226fd4443f451be8a8d1486bff8e2))
 
 ## [12.1.0](https://github.com/itgalaxy/webfont/compare/v12.0.1...v12.1.0) (2026-07-03)
-
 
 ### Features
 
@@ -49,13 +45,11 @@ All notable changes to this project will be documented in this file. See [Conven
 
 ## [12.0.1](https://github.com/itgalaxy/webfont/compare/v12.0.0...v12.0.1) (2026-07-02)
 
-
 ### Bug Fixes
 
 * **cli:** support files glob from config without CLI input ([#2](https://github.com/itgalaxy/webfont/issues/2)) ([#696](https://github.com/itgalaxy/webfont/issues/696)) ([26d8c3d](https://github.com/itgalaxy/webfont/commit/26d8c3d60000c5032b5426fd37e9628bbb490602))
 
 ## [12.0.0](https://github.com/itgalaxy/webfont/compare/v11.5.21...v12.0.0) (2026-07-02)
-
 
 ### ⚠ BREAKING CHANGES
 
@@ -117,172 +111,57 @@ All notable changes to this project will be documented in this file. See [Conven
 
 * remove Node.js 10 and 11 support ([0f0dbf6](https://github.com/itgalaxy/webfont/commit/0f0dbf64a2b7ce15519bb9ada86fdb2941251a08))
 
-### [11.5.21](https://github.com/itgalaxy/webfont/compare/v11.5.20...v11.5.21) (2026-07-02)
-
+### [11.5.21](https://github.com/itgalaxy/webfont/compare/v11.5.15...v11.5.21) (2026-07-02)
 
 ### Bug Fixes
 
 * allow CommonJS in fixture config files for Biome ([ef53ada](https://github.com/itgalaxy/webfont/commit/ef53ada7cae595e4feb6be560d7ff7ed0c6b21f1))
 * model filePath as result-only metadata ([f557233](https://github.com/itgalaxy/webfont/commit/f5572338f249b5deb2a7b9e1a794b81eb1000978))
 
-### [11.5.20](https://github.com/itgalaxy/webfont/compare/v11.5.19...v11.5.20) (2026-07-02)
-
-### [11.5.19](https://github.com/itgalaxy/webfont/compare/v11.5.18...v11.5.19) (2026-07-02)
-
-### [11.5.18](https://github.com/itgalaxy/webfont/compare/v11.5.16...v11.5.18) (2026-07-02)
-
-### [11.5.16](https://github.com/itgalaxy/webfont/compare/v11.5.15...v11.5.16) (2026-07-02)
-
-### [11.5.15](https://github.com/itgalaxy/webfont/compare/v11.5.14...v11.5.15) (2026-07-02)
-
+### [11.5.15](https://github.com/itgalaxy/webfont/compare/v11.5.11...v11.5.15) (2026-07-02)
 
 ### Bug Fixes
 
 * **deps:** pin @types/nunjucks and document [@types](https://github.com/types) pinning ([8f1a39b](https://github.com/itgalaxy/webfont/commit/8f1a39b311ce69ef8f36bb57e00694d2ec9df74c))
 * **deps:** upgrade nunjucks to 3.2.4 ([090f737](https://github.com/itgalaxy/webfont/commit/090f7375b16596e4cb176eda3d62811fb59752e5)), closes [#651](https://github.com/itgalaxy/webfont/issues/651)
 
-### [11.5.14](https://github.com/itgalaxy/webfont/compare/v11.5.13...v11.5.14) (2026-07-02)
-
-### [11.5.13](https://github.com/itgalaxy/webfont/compare/v11.5.12...v11.5.13) (2026-07-02)
-
-### [11.5.12](https://github.com/itgalaxy/webfont/compare/v11.5.11...v11.5.12) (2026-07-02)
-
-### [11.5.11](https://github.com/itgalaxy/webfont/compare/v11.5.10...v11.5.11) (2026-07-02)
-
+### [11.5.11](https://github.com/itgalaxy/webfont/compare/v11.5.9...v11.5.11) (2026-07-02)
 
 ### Bug Fixes
 
 * **deps:** adapt ttf2eot adapter for v3 Uint8Array API ([fb5316a](https://github.com/itgalaxy/webfont/commit/fb5316aa7dcf3b4549205df7feb2df6099402a5e)), closes [#646](https://github.com/itgalaxy/webfont/issues/646)
 
-### [11.5.10](https://github.com/itgalaxy/webfont/compare/v11.5.9...v11.5.10) (2026-07-02)
-
-### [11.5.9](https://github.com/itgalaxy/webfont/compare/v11.5.8...v11.5.9) (2026-07-02)
-
+### [11.5.9](https://github.com/itgalaxy/webfont/compare/v11.5.5...v11.5.9) (2026-07-02)
 
 ### Bug Fixes
 
 * **deps:** adapt p-limit v7 ESM for Jest and runtime ([77f669f](https://github.com/itgalaxy/webfont/commit/77f669f24be581f05fa27b308d0a9a045869f9f2)), closes [#640](https://github.com/itgalaxy/webfont/issues/640)
 
-### [11.5.8](https://github.com/itgalaxy/webfont/compare/v11.5.7...v11.5.8) (2026-07-02)
-
-### [11.5.7](https://github.com/itgalaxy/webfont/compare/v11.5.6...v11.5.7) (2026-07-02)
-
-### [11.5.6](https://github.com/itgalaxy/webfont/compare/v11.5.5...v11.5.6) (2026-07-02)
-
-### [11.5.5](https://github.com/itgalaxy/webfont/compare/v11.5.4...v11.5.5) (2026-07-02)
-
+### [11.5.5](https://github.com/itgalaxy/webfont/compare/v11.5.0...v11.5.5) (2026-07-02)
 
 ### Bug Fixes
 
 * **deps:** bump svgicons2svgfont to 16.0.0 ([c52d79c](https://github.com/itgalaxy/webfont/commit/c52d79ce703eaab07e0ea8997ad55ce098a4429a))
 
-### [11.5.4](https://github.com/itgalaxy/webfont/compare/v11.5.3...v11.5.4) (2026-07-02)
-
-### [11.5.3](https://github.com/itgalaxy/webfont/compare/v11.5.2...v11.5.3) (2026-07-02)
-
-### [11.5.2](https://github.com/itgalaxy/webfont/compare/v11.5.1...v11.5.2) (2026-07-02)
-
-### [11.5.1](https://github.com/itgalaxy/webfont/compare/v11.5.0...v11.5.1) (2026-07-01)
-
-## [11.5.0](https://github.com/itgalaxy/webfont/compare/v11.2.37...v11.5.0) (2026-07-01)
-
+## [11.5.0](https://github.com/itgalaxy/webfont/compare/v11.3.0...v11.5.0) (2026-07-01)
 
 ### Features
 
 * adding config option to prevent ligature unicode generation ([642deb9](https://github.com/itgalaxy/webfont/commit/642deb9235ca88c164e7faa9424aa8d895ecb862)), closes [#457](https://github.com/itgalaxy/webfont/issues/457)
 
-## [11.3.0](https://github.com/itgalaxy/webfont/compare/v11.2.37...v11.3.0) (2021-09-07)
-
+## [11.3.0](https://github.com/itgalaxy/webfont/compare/v11.2.17...v11.3.0) (2021-09-07)
 
 ### Features
 
 * adding config option to prevent ligature unicode generation ([642deb9](https://github.com/itgalaxy/webfont/commit/642deb9235ca88c164e7faa9424aa8d895ecb862)), closes [#457](https://github.com/itgalaxy/webfont/issues/457)
 
-### [11.2.37](https://github.com/itgalaxy/webfont/compare/v11.2.36...v11.2.37) (2021-09-06)
-
-### [11.2.36](https://github.com/itgalaxy/webfont/compare/v11.2.35...v11.2.36) (2021-09-04)
-
-### [11.2.35](https://github.com/itgalaxy/webfont/compare/v11.2.34...v11.2.35) (2021-09-04)
-
-### [11.2.34](https://github.com/itgalaxy/webfont/compare/v11.2.33...v11.2.34) (2021-09-04)
-
-### [11.2.33](https://github.com/itgalaxy/webfont/compare/v11.2.32...v11.2.33) (2021-08-28)
-
-### [11.2.32](https://github.com/itgalaxy/webfont/compare/v11.2.31...v11.2.32) (2021-08-27)
-
-### [11.2.31](https://github.com/itgalaxy/webfont/compare/v11.2.30...v11.2.31) (2021-08-24)
-
-### [11.2.30](https://github.com/itgalaxy/webfont/compare/v11.2.29...v11.2.30) (2021-08-24)
-
-### [11.2.29](https://github.com/itgalaxy/webfont/compare/v11.2.28...v11.2.29) (2021-08-17)
-
-### [11.2.28](https://github.com/itgalaxy/webfont/compare/v11.2.27...v11.2.28) (2021-08-17)
-
-### [11.2.27](https://github.com/itgalaxy/webfont/compare/v11.2.26...v11.2.27) (2021-08-10)
-
-### [11.2.26](https://github.com/itgalaxy/webfont/compare/v11.2.25...v11.2.26) (2021-08-07)
-
-### [11.2.25](https://github.com/itgalaxy/webfont/compare/v11.2.24...v11.2.25) (2021-08-03)
-
-### [11.2.24](https://github.com/itgalaxy/webfont/compare/v11.2.23...v11.2.24) (2021-08-01)
-
-### [11.2.23](https://github.com/itgalaxy/webfont/compare/v11.2.22...v11.2.23) (2021-07-31)
-
-### [11.2.21](https://github.com/itgalaxy/webfont/compare/v11.2.20...v11.2.21) (2021-07-31)
-
-### 11.2.20 (2021-07-31)
-
-### [11.2.22](https://github.com/itgalaxy/webfont/compare/v11.2.21...v11.2.22) (2021-07-31)
-
-### 11.2.20 (2021-07-31)
-
-### [11.2.21](https://github.com/itgalaxy/webfont/compare/v11.2.20...v11.2.21) (2021-07-31)
-
-### [11.2.20](https://github.com/itgalaxy/webfont/compare/v11.2.19...v11.2.20) (2021-07-31)
-
-### [11.2.19](https://github.com/itgalaxy/webfont/compare/v11.2.18...v11.2.19) (2021-07-27)
-
-### [11.2.18](https://github.com/itgalaxy/webfont/compare/v11.2.17...v11.2.18) (2021-07-27)
-
-### [11.2.17](https://github.com/itgalaxy/webfont/compare/v11.2.16...v11.2.17) (2021-07-27)
-
+### [11.2.17](https://github.com/itgalaxy/webfont/compare/v11.2.0...v11.2.17) (2021-07-27)
 
 ### Bug Fixes
 
 * **deps:** switch out from latest versions in dependencies ([67efe05](https://github.com/itgalaxy/webfont/commit/67efe057f109b6f02efd62dd84f091e1ed138a9f)), closes [#464](https://github.com/itgalaxy/webfont/issues/464)
 
-### [11.2.16](https://github.com/itgalaxy/webfont/compare/v11.2.15...v11.2.16) (2021-07-27)
-
-### [11.2.15](https://github.com/itgalaxy/webfont/compare/v11.2.14...v11.2.15) (2021-07-26)
-
-### [11.2.14](https://github.com/itgalaxy/webfont/compare/v11.2.13...v11.2.14) (2021-07-26)
-
-### [11.2.13](https://github.com/itgalaxy/webfont/compare/v11.2.12...v11.2.13) (2021-07-24)
-
-### [11.2.12](https://github.com/itgalaxy/webfont/compare/v11.2.11...v11.2.12) (2021-07-23)
-
-### [11.2.11](https://github.com/itgalaxy/webfont/compare/v11.2.10...v11.2.11) (2021-07-23)
-
-### [11.2.10](https://github.com/itgalaxy/webfont/compare/v11.2.8...v11.2.10) (2021-07-20)
-
-### [11.2.8](https://github.com/itgalaxy/webfont/compare/v11.2.7...v11.2.8) (2021-07-06)
-
-### [11.2.7](https://github.com/itgalaxy/webfont/compare/v11.2.6...v11.2.7) (2021-07-01)
-
-### [11.2.6](https://github.com/itgalaxy/webfont/compare/v11.2.5...v11.2.6) (2021-06-29)
-
-### [11.2.5](https://github.com/itgalaxy/webfont/compare/v11.2.4...v11.2.5) (2021-06-29)
-
-### [11.2.4](https://github.com/itgalaxy/webfont/compare/v11.2.3...v11.2.4) (2021-06-23)
-
-### [11.2.3](https://github.com/itgalaxy/webfont/compare/v11.2.2...v11.2.3) (2021-06-23)
-
-### [11.2.2](https://github.com/itgalaxy/webfont/compare/v11.2.1...v11.2.2) (2021-06-22)
-
-### [11.2.1](https://github.com/itgalaxy/webfont/compare/v11.2.0...v11.2.1) (2021-06-22)
-
 ## [11.2.0](https://github.com/itgalaxy/webfont/compare/v11.1.1...v11.2.0) (2021-06-22)
-
 
 ### Features
 
@@ -301,20 +180,17 @@ All notable changes to this project will be documented in this file. See [Conven
 
 ### [11.1.1](https://github.com/itgalaxy/webfont/compare/v11.1.0...v11.1.1) (2021-05-13)
 
-
 ### Bug Fixes
 
 * **deps:** upgrade `wawoff2` dependency ([69a8dfb](https://github.com/itgalaxy/webfont/commit/69a8dfb3a70456aaa3777a8734ccccc41397a26c))
 
 ## [11.1.0](https://github.com/itgalaxy/webfont/compare/v11.0.0...v11.1.0) (2021-05-12)
 
-
 ### Features
 
 * add support to base64 font strings on templates ([2a56338](https://github.com/itgalaxy/webfont/commit/2a56338c0eb74ec7c680ef80e99e5472d69919ab)), closes [#328](https://github.com/itgalaxy/webfont/issues/328) [#329](https://github.com/itgalaxy/webfont/issues/329)
 
 ## [11.0.0](https://github.com/itgalaxy/webfont/compare/v10.1.0...v11.0.0) (2021-05-12)
-
 
 ### ⚠ BREAKING CHANGES
 
@@ -324,8 +200,7 @@ All notable changes to this project will be documented in this file. See [Conven
 
 * remove Node.js 10 and 11 support ([0f0dbf6](https://github.com/itgalaxy/webfont/commit/0f0dbf64a2b7ce15519bb9ada86fdb2941251a08))
 
-## [10.1.0](https://github.com/itgalaxy/webfont/compare/v10.0.1...v10.1.0) (2021-05-12)
-
+## [10.1.0](https://github.com/itgalaxy/webfont/compare/v10.0.0...v10.1.0) (2021-05-12)
 
 ### Features
 
@@ -335,8 +210,6 @@ All notable changes to this project will be documented in this file. See [Conven
 ### Bug Fixes
 
 * **deps:** upgrade dependencies ([d623b06](https://github.com/itgalaxy/webfont/commit/d623b06dc8bd9afa5c83b27c5df57404c4b1a3f6))
-
-### [10.0.1](https://github.com/itgalaxy/webfont/compare/v10.0.0...v10.0.1) (2021-05-12)
 
 ## [10.0.0](https://github.com/itgalaxy/webfont/compare/v10.0.0-alpha.3...v10.0.0) (2021-04-08)
 

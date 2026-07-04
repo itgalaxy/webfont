@@ -13,7 +13,7 @@ name: npm publish
 # `npm publish --ignore-scripts`, so `prepublishOnly` does not rebuild or
 # re-validate on the publish runners (avoids the duplicated build in #742).
 #
-# Auth: `npm` uses the NPM_TOKEN repository secret; `github-packages` uses the
+# Auth: `npm` uses the NODE_AUTH_TOKEN repository secret; `github-packages` uses the
 # built-in GITHUB_TOKEN (`packages: write`). Environment deployment URLs link to
 # each published package page. See CONTRIBUTING.md → "npm publishing".
 on:
@@ -112,13 +112,13 @@ jobs:
       # CI is non-interactive (no `npm login`): write ~/.npmrc so `npm publish`
       # reads the token from NODE_AUTH_TOKEN at runtime (npm expands
       # ${NODE_AUTH_TOKEN}); the raw token never touches disk or the logs.
-      # NPM_TOKEN must be an npm access token (npmjs.com -> Access Tokens),
-      # not a GitHub PAT — npmjs.org does not accept GitHub tokens.
+      # The NODE_AUTH_TOKEN secret must be an npm access token (npmjs.com ->
+      # Access Tokens), not a GitHub PAT — npmjs.org rejects GitHub tokens.
       - name: Write ~/.npmrc for npmjs.org
         run: printf '%s\n' 'registry=https://registry.npmjs.org/' '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' > "$HOME/.npmrc"
       - run: npm publish --ignore-scripts --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
   publish-github-packages:
     needs: build

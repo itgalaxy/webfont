@@ -208,7 +208,7 @@ Do not run local `npm version` or push version tags manually unless coordinating
 
 #### npm publishing
 
-Publishing from GitHub Actions uses the **`NPM_TOKEN`** repository secret (Automation/publish token on npmjs.com). The [`npm-publish`](.github/workflows/npm-publish.yml) workflow passes it to `actions/setup-node` as `node-auth-token`.
+Publishing from GitHub Actions deploys the same validated build to **two environments** — `npm` (public registry, `webfont`) and `github-packages` (GitHub Packages, `@itgalaxy/webfont`). The `npm` deploy uses the **`NPM_TOKEN`** repository secret (Automation/publish token on npmjs.com), passed to `actions/setup-node` as `node-auth-token`; the `github-packages` deploy uses the built-in `GITHUB_TOKEN` (`packages: write`) and needs no extra secret.
 
 **One-time setup** (package maintainer):
 
@@ -218,6 +218,31 @@ Publishing from GitHub Actions uses the **`NPM_TOKEN`** repository secret (Autom
 **After merging a Release PR:** the [`npm-publish`](.github/workflows/npm-publish.yml) workflow listens for `release: published`, but releases created with the default `GITHUB_TOKEN` usually **do not** trigger downstream workflows — use **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.1.0`) if publish does not start automatically.
 
 **Future:** [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers) (OIDC) can replace `NPM_TOKEN` when a maintainer configures it on npmjs.com for workflow `npm-publish.yml`.
+
+##### Deployment environments and GitHub Packages
+
+The workflow runs two deploy jobs after `build`, each mapped to a GitHub **Environment** so every release appears under the repo's **Deployments** with a link to the published package:
+
+| Environment | Registry | Package | Auth | Deploy URL |
+|-------------|----------|---------|------|------------|
+| `npm` | `registry.npmjs.org` | `webfont` | `NPM_TOKEN` secret | `npmjs.com/package/webfont/v/<version>` |
+| `github-packages` | `npm.pkg.github.com` | `@itgalaxy/webfont` | `GITHUB_TOKEN` (`packages: write`) | repo **Packages** page |
+
+GitHub Packages requires a scope matching the repo owner, so the `publish-github-packages` job renames the package to `@itgalaxy/webfont` in the checkout only (via `npm pkg set name=…`, never committed) — the unscoped `webfont` on npmjs.org is unaffected.
+
+Add protection rules (required reviewers, wait timers) per environment in **Settings → Environments** if you want manual approval to gate a deploy.
+
+**Install from GitHub Packages** (needs a GitHub token with `read:packages`):
+
+```shell
+echo "@itgalaxy:registry=https://npm.pkg.github.com" >> .npmrc
+echo "//npm.pkg.github.com/:_authToken=\${GITHUB_TOKEN}" >> .npmrc
+npm install @itgalaxy/webfont
+```
+
+##### Release assets
+
+The `release-assets` job attaches two archives to each GitHub Release: the npm tarball **`webfont-<version>.tgz`** (the exact published package) and **`webfont-dist-<version>.zip`** (the built `dist/` only). It needs `contents: write` and uploads with `gh release upload "$RELEASE_TAG" --clobber`.
 
 **Manual publish** from a maintainer machine (browser/web auth or local npm login) is still supported:
 

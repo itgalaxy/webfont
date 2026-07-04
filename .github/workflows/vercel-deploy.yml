@@ -1,5 +1,8 @@
 name: Deploy docs to Vercel
 
+# Docs production deploy. Maps to the GitHub Environment `vercel` so each run
+# appears under the repo's Deployments tab with a link to the live site.
+# See CONTRIBUTING.md → "Vercel docs deployment".
 on:
   push:
     branches: [master]
@@ -24,6 +27,9 @@ jobs:
     runs-on: ubuntu-latest
     # Skip on forks: secrets are not available and the deploy would fail.
     if: github.repository == 'itgalaxy/webfont'
+    environment:
+      name: vercel
+      url: ${{ steps.deploy.outputs.url }}
     env:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
@@ -40,4 +46,8 @@ jobs:
       - name: Build with Vercel (runs npm run docs:build)
         run: vercel build --prod
       - name: Deploy prebuilt output to Vercel
-        run: vercel deploy --prebuilt --prod
+        id: deploy
+        run: |
+          url="$(vercel deploy --prebuilt --prod)"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed to $url"

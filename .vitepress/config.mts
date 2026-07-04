@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
@@ -7,24 +7,14 @@ const repo = "https://github.com/itgalaxy/webfont";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const migrationDir = resolve(root, "docs/migration");
 
-const firstHeading = (file: string): string => {
-  const match = readFileSync(file, "utf8").match(/^#\s+(.+?)\s*$/m);
-  return match ? match[1].replace(/`/g, "") : file;
-};
-
-const migrationFiles = readdirSync(migrationDir)
-  .filter((name) => name.endsWith(".md") && name !== "README.md")
-  .sort();
-
 // Read each migration doc in place (no copy) and expose it at /migrating/<name>.
+// They are not listed in the sidebar; the single "Migrating" page (MIGRATION.md)
+// links to them, so keeping the routes built keeps those links working.
 const migrationRewrites = Object.fromEntries(
-  migrationFiles.map((name) => [`docs/migration/${name}`, `migrating/${name}`]),
+  readdirSync(migrationDir)
+    .filter((name) => name.endsWith(".md") && name !== "README.md")
+    .map((name) => [`docs/migration/${name}`, `migrating/${name}`]),
 );
-
-const migrationSidebar = migrationFiles.map((name) => ({
-  text: firstHeading(resolve(migrationDir, name)),
-  link: `/migrating/${name.replace(/\.md$/, "")}`,
-}));
 
 export default defineConfig({
   lang: "en-US",
@@ -64,7 +54,6 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "Guide", link: "/introduction/getting-started" },
-      { text: "Migrating", link: "/migrating/" },
       { text: "What's New", link: "/introduction/whats-new" },
       { text: "npm", link: "https://www.npmjs.com/package/webfont" },
     ],
@@ -77,11 +66,8 @@ export default defineConfig({
           { text: "Features", link: "/introduction/features" },
           { text: "Troubleshooting", link: "/introduction/troubleshooting" },
           { text: "What's New", link: "/introduction/whats-new" },
+          { text: "Migrating", link: "/migrating/" },
         ],
-      },
-      {
-        text: "Migrating",
-        items: [{ text: "Overview", link: "/migrating/" }, ...migrationSidebar],
       },
       {
         text: "Contributing",

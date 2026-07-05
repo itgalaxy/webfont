@@ -2,6 +2,7 @@ import { readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
+import { applyMarkdownLinkRewrites } from "./rewriteMarkdownLinks.mts";
 
 const repo = "https://github.com/itgalaxy/webfont";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -16,6 +17,28 @@ const migrationRewrites = Object.fromEntries(
     .map((name) => [`docs/migration/${name}`, `migrating/${name}`]),
 );
 
+const pageRewrites = {
+  "README.md": "introduction/getting-started.md",
+  "FEATURES.md": "introduction/features.md",
+  "TROUBLESHOOTING.md": "introduction/troubleshooting.md",
+  "NOTICE.md": "introduction/licenses.md",
+  "packages/webfont/CHANGELOG.md": "introduction/whats-new.md",
+  "CONTRIBUTING.md": "contributing/guidelines.md",
+  "CODE_OF_CONDUCT.md": "contributing/code-of-conduct.md",
+  "docs/migration/README.md": "contributing/migration-guide.md",
+  "MIGRATION.md": "migrating/index.md",
+  "packages/webfont/docs/cli.md": "introduction/cli.md",
+  "packages/webfont/install.md": "introduction/install.md",
+  "packages/webfont/docs/configuration.md": "introduction/configuration.md",
+  "packages/webfont/NOTICE.md": "introduction/licenses.md",
+  ...migrationRewrites,
+} as const;
+
+const staticRepoLinks = {
+  LICENSE: `${repo}/blob/master/LICENSE`,
+  "packages/webfont/LICENSE": `${repo}/blob/master/packages/webfont/LICENSE`,
+} as const;
+
 export default defineConfig({
   lang: "en-US",
   title: "webfont",
@@ -23,28 +46,26 @@ export default defineConfig({
   cleanUrls: true,
   lastUpdated: true,
   ignoreDeadLinks: true,
-  // The repo root holds vite.config.ts for the library build; VitePress must not
+  // packages/webfont/vite.config.ts is for the library build; VitePress must not
   // load it as its own Vite config (it is ESM-only under "type":"commonjs").
   vite: { configFile: false },
   srcExclude: [
     "AGENTS.md",
+    "CLAUDE.md",
+    "MAINTAINERS.md",
     "docs/adr/**",
     "coverage/**",
-    "temp/**",
-    "demo/**",
+    "packages/webfont/temp/**",
+    "packages/webfont/demo/**",
+    "packages/webfont/src/**",
+    "packages/webfont/templates/**",
     "public/**",
   ],
-  rewrites: {
-    "README.md": "introduction/getting-started.md",
-    "FEATURES.md": "introduction/features.md",
-    "TROUBLESHOOTING.md": "introduction/troubleshooting.md",
-    "CHANGELOG.md": "introduction/whats-new.md",
-    "CONTRIBUTING.md": "contributing/guidelines.md",
-    "CODE_OF_CONDUCT.md": "contributing/code-of-conduct.md",
-    "docs/migration/README.md": "contributing/migration-guide.md",
-    "MIGRATION.md": "migrating/index.md",
-    "NOTICE.md": "introduction/licenses.md",
-    ...migrationRewrites,
+  rewrites: pageRewrites,
+  markdown: {
+    config(md) {
+      applyMarkdownLinkRewrites(md, pageRewrites, root, staticRepoLinks);
+    },
   },
   head: [
     ["meta", { name: "theme-color", content: "#0b0b0c" }],
@@ -54,6 +75,9 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: "Guide", link: "/introduction/getting-started" },
+      { text: "Install", link: "/introduction/install" },
+      { text: "Configuration", link: "/introduction/configuration" },
+      { text: "CLI", link: "/introduction/cli" },
       { text: "What's New", link: "/introduction/whats-new" },
       { text: "npm", link: "https://www.npmjs.com/package/webfont" },
     ],
@@ -62,6 +86,9 @@ export default defineConfig({
         text: "Introduction",
         items: [
           { text: "Getting Started", link: "/introduction/getting-started" },
+          { text: "Install", link: "/introduction/install" },
+          { text: "Configuration", link: "/introduction/configuration" },
+          { text: "CLI Reference", link: "/introduction/cli" },
           { text: "Demo", link: "/demo" },
           { text: "Features", link: "/introduction/features" },
           { text: "Troubleshooting", link: "/introduction/troubleshooting" },

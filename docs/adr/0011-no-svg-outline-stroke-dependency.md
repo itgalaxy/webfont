@@ -62,7 +62,7 @@ Issue **#144** already added **`glyphContentTransformFn`**: a hook that runs **b
 
 ## References
 
-- [README — `glyphContentTransformFn`](../../README.md#glyphcontenttransformfn)
-- [README — `svgTools` (alpha)](../../README.md#svgtools-alpha)
+- [Configuration — `glyphContentTransformFn`](../../packages/webfont/docs/configuration.md#glyphcontenttransformfn)
+- [Configuration — `svgTools` (alpha)](../../packages/webfont/docs/configuration.md#svgtools-alpha)
 - [svg-outline-stroke](https://github.com/elrumordelaluz/outline-stroke)
 - Issue [#144](https://github.com/itgalaxy/webfont/issues/144)

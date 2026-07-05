@@ -154,7 +154,7 @@
       }
     },
     {
-      "includes": ["*.js", "**/*.config.js", "src/fixtures/**/*.js"],
+      "includes": ["*.js", "**/*.config.js", "packages/webfont/src/fixtures/**/*.js"],
       "linter": {
         "rules": {
           "correctness": {

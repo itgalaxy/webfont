@@ -232,7 +232,7 @@ The same SVG looks correct in Inkscape, Illustrator, or Affinity Designer.
 
 Run with **`--verbose`** to log a warning when webfont detects `fill-rule: evenodd` in a source SVG.
 
-**Alpha — broader diagnostics:** use **`--svg-diagnose`** (CLI) or `svgTools: { diagnose: true }` (API) to also flag stroke-only SVGs, `<use>` symbol references ([#612](https://github.com/itgalaxy/webfont/issues/612)), and unsupported elements (`<line>`, `<polyline>`, `<clipPath>`). webfont does not auto-fix these — preprocess with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) when needed (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+**Alpha — broader diagnostics:** use **`--svg-diagnose`** (CLI) or `svgTools: { diagnose: true }` (API) to also flag stroke-only SVGs, `<use>` symbol references ([#612](https://github.com/itgalaxy/webfont/issues/612)), and unsupported elements (`<line>`, `<polyline>`, `<clipPath>`). webfont does not auto-fix these — preprocess with [`glyphContentTransformFn`](./packages/webfont/docs/configuration.md#glyphcontenttransformfn) when needed (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
 
 ### Steps to try to resolve
 
@@ -253,7 +253,7 @@ Run with **`--verbose`** to log a warning when webfont detects `fill-rule: eveno
    });
    ```
 
-4. **Preprocess difficult SVGs** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn) (for example retrace or flatten strokes with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer), installed in your project) before generating the font.
+4. **Preprocess difficult SVGs** with [`glyphContentTransformFn`](./packages/webfont/docs/configuration.md#glyphcontenttransformfn) (for example retrace or flatten strokes with [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer), installed in your project) before generating the font.
 
 5. **Remove percentage `width` / `height`** on the root `<svg>` if a preprocessor errors; keep a numeric `viewBox` instead.
 
@@ -283,7 +283,7 @@ On **older releases**, the command may exit successfully but the icon is **invis
 
 1. **Convert strokes to fills** in your design tool (Outline Stroke / Expand / Object to Path) before export.
 
-2. **Preprocess in your build** with [`glyphContentTransformFn`](./README.md#glyphcontenttransformfn). webfont **does not ship** stroke converters — install a tool in **your** project (for example [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer)) and call it from the hook (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
+2. **Preprocess in your build** with [`glyphContentTransformFn`](./packages/webfont/docs/configuration.md#glyphcontenttransformfn). webfont **does not ship** stroke converters — install a tool in **your** project (for example [`svg-outline-stroke`](https://github.com/elrumordelaluz/outline-stroke) or [svg-fixer](https://github.com/oslllo/svg-fixer)) and call it from the hook (see [ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)).
 
 3. **Scan sources before converting:** `webfont icons/*.svg --svg-diagnose` (or `svgTools: { diagnose: true }` in the API) logs stroke-only and unsupported-element warnings without changing files.
 
@@ -342,7 +342,7 @@ See also [`docs/migration/issue-0612-svg-use-transform.md`](./docs/migration/iss
 
 ### What error appeared
 
-There is often **no error**. Icons via **class + codepoint** (`.icon-phone::before`) still work. Typing **ligature names** (`phone_call`) shows fallback text or blank glyphs after you turned on [`unicodeRange`](./README.md#unicoderange) ([#322](https://github.com/itgalaxy/webfont/issues/322)).
+There is often **no error**. Icons via **class + codepoint** (`.icon-phone::before`) still work. Typing **ligature names** (`phone_call`) shows fallback text or blank glyphs after you turned on [`unicodeRange`](./packages/webfont/docs/configuration.md#unicoderange) ([#322](https://github.com/itgalaxy/webfont/issues/322)).
 
 ### Why it usually happens
 
@@ -398,7 +398,7 @@ There is often **no error**. The built-in **`html`** preview lists icon names un
 
 5. **Disable preview CSS** if you manage ligatures yourself: `templateFontLigatures: false` or `--no-template-font-ligatures`.
 
-6. Ensure [`ligatures`](./README.md#ligatures) is enabled when using ligature names (`--ligatures` adds ligature glyphs to the font).
+6. Ensure [`ligatures`](./packages/webfont/docs/configuration.md#ligatures) is enabled when using ligature names (`--ligatures` adds ligature glyphs to the font).
 
 ---
 

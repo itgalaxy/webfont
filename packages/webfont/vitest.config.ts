@@ -20,7 +20,7 @@ const esmNodeModules = [
 export default defineConfig({
   resolve: {
     alias: {
-      "@file-type/xml": path.resolve(__dirname, "node_modules/@file-type/xml/lib/index.js"),
+      "@file-type/xml": path.resolve(__dirname, "../../node_modules/@file-type/xml/lib/index.js"),
     },
   },
   test: {

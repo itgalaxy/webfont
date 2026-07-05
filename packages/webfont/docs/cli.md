@@ -1,25 +1,21 @@
-export const WEBFONT_CLI_HELP_MARKERS = [
-  "Usage: webfont [input] [options]",
-  "--config",
-  "--fontName",
-  "--formats",
-  "--dest-create",
-  "--no-sort",
-  "--ligatures",
-  "--unicode-range",
-  "--no-template-font-ligatures",
-  "--addHashInFontUrl",
-  "--optimize-svg",
-  "svg-diagnose",
-] as const;
+# Command Line Interface
 
-export const webfontCliHelpText = `
+The interface for command-line usage is fairly simplistic at this stage, as seen in the usage section below.
+
+Install the package and wire the CLI script first: [Install guide](https://webfont.js.org/introduction/install) ([source](../install.md)).
+
+## Usage
+
+<!-- cli-docs:generated -->
+> **Maintainers:** CLI help is generated from `packages/webfont/src/cli/meow/cliFlagCatalog.ts`. After editing flag metadata, run `npm run docs:cli` at the repo root (unit tests also guard drift).
+
+```shell
     Usage: webfont [input] [options]
 
     Input: File(s) or glob(s).
 
-        SVG icons: one or more \`.svg\` files (default pipeline).
-        Webfont decompression: one or more \`.woff\` / \`.woff2\` paths, globs, or http(s) URLs.
+        SVG icons: one or more `.svg` files (default pipeline).
+        Webfont decompression: one or more `.woff` / `.woff2` paths, globs, or http(s) URLs.
             You must have rights to any font file you process (see NOTICE.md).
 
         If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
@@ -30,13 +26,13 @@ export const webfontCliHelpText = `
         --config
 
             Path to a specific configuration file (JSON, YAML, or CommonJS)
-            or the name of a module in \`node_modules\` that points to one.
-            If no \`--config\` argument is provided, webfont will search for
+            or the name of a module in `node_modules` that points to one.
+            If no `--config` argument is provided, webfont will search for
             configuration  files in the following places, in this order:
-               - a \`webfont\` property in \`package.json\`
-               - a \`.webfontrc\` file (with or without filename extension:
-                   \`.json\`, \`.yaml\`, and \`.js\` are available)
-               - a \`webfont.config.js\` file exporting a JS object
+               - a `webfont` property in `package.json`
+               - a `.webfontrc` file (with or without filename extension:
+                   `.json`, `.yaml`, and `.js` are available)
+               - a `webfont.config.js` file exporting a JS object
             The search will begin in the working directory and move up the
             directory tree until a configuration file is found.
 
@@ -74,7 +70,7 @@ export const webfontCliHelpText = `
 
         -s, --destTemplate
 
-            Destination for generated template. If not passed used \`dest\` argument value.
+            Destination for generated template. If not passed used `dest` argument value.
 
         -c, --templateClassName
 
@@ -187,134 +183,12 @@ export const webfontCliHelpText = `
             Append an MD5 content hash to font URLs in built-in templates
             (?v=[hash]) while keeping output filenames stable (fontName.woff2, etc.).
             Use with a fixed fontName — do not randomize fontName for cache busting.
-`;
+```
 
-export const webfontMeowFlags = {
-  ascent: {
-    type: "string",
-  },
-  centerHorizontally: {
-    type: "boolean",
-  },
-  centerVertically: {
-    type: "boolean",
-  },
-  config: {
-    type: "string",
-  },
-  descent: {
-    type: "string",
-  },
-  dest: {
-    shortFlag: "d",
-    default: process.cwd(),
-    type: "string",
-  },
-  destCreate: {
-    shortFlag: "m",
-    default: false,
-    type: "boolean",
-  },
-  destTemplate: {
-    shortFlag: "s",
-    type: "string",
-  },
-  fixedWidth: {
-    type: "boolean",
-  },
-  fontHeight: {
-    type: "string",
-  },
-  fontId: {
-    type: "string",
-  },
-  fontName: {
-    shortFlag: "u",
-    type: "string",
-  },
-  fontStyle: {
-    type: "string",
-  },
-  fontWeight: {
-    type: "string",
-  },
-  formats: {
-    shortFlag: "f",
-    type: "string",
-  },
-  help: {
-    shortFlag: "h",
-    type: "boolean",
-  },
-  ligatures: {
-    default: false,
-    type: "boolean",
-  },
-  metadata: {
-    type: "string",
-  },
-  normalize: {
-    type: "boolean",
-  },
-  prependUnicode: {
-    type: "boolean",
-  },
-  round: {
-    type: "string",
-  },
-  sort: {
-    default: true,
-    type: "boolean",
-  },
-  startUnicode: {
-    type: "string",
-  },
-  template: {
-    shortFlag: "t",
-    type: "string",
-  },
-  templateClassName: {
-    shortFlag: "c",
-    type: "string",
-  },
-  templateFontName: {
-    shortFlag: "n",
-    type: "string",
-  },
-  addHashInFontUrl: {
-    default: false,
-    type: "boolean",
-  },
-  optimizeSvg: {
-    default: false,
-    type: "boolean",
-  },
-  templateFontPath: {
-    shortFlag: "p",
-    type: "string",
-  },
-  templateCacheString: {
-    default: "",
-    type: "string",
-  },
-  unicodeRange: {
-    default: false,
-    type: "boolean",
-  },
-  templateFontLigatures: {
-    default: true,
-    type: "boolean",
-  },
-  verbose: {
-    default: false,
-    type: "boolean",
-  },
-  svgDiagnose: {
-    default: false,
-    type: "boolean",
-  },
-  version: {
-    shortFlag: "v",
-    type: "boolean",
-  },
-} as const;
+## Exit codes
+
+The CLI can exit the process with the following exit codes:
+
+- **0** — All ok.
+- **1** — Something unknown went wrong.
+- **Other** — Related to using packages.

@@ -1,11 +1,21 @@
-// CLI `--help` text (single source for meow, README sync, and sync-readme-cli.mjs).
-export const webfontCliHelpText = `
+# Command Line Interface
+
+The interface for command-line usage is fairly simplistic at this stage, as seen in the usage section below.
+
+Install the package and wire the CLI script first: [Install guide](https://webfont.js.org/introduction/install) ([source](../packages/webfont/install.md)).
+
+## Usage
+
+<!-- cli-docs:generated -->
+> **Maintainers:** CLI help is generated from `packages/webfont/src/cli/meow/cliFlagCatalog.ts`. After editing flag metadata, run `npm run docs:cli` at the repo root (unit tests also guard drift).
+
+```shell
     Usage: webfont [input] [options]
 
     Input: File(s) or glob(s).
 
-        SVG icons: one or more \`.svg\` files (default pipeline).
-        Webfont decompression: one or more \`.woff\` / \`.woff2\` paths, globs, or http(s) URLs.
+        SVG icons: one or more `.svg` files (default pipeline).
+        Webfont decompression: one or more `.woff` / `.woff2` paths, globs, or http(s) URLs.
             You must have rights to any font file you process (see NOTICE.md).
 
         If an input argument is wrapped in quotation marks, it will be passed to "fast-glob"
@@ -16,13 +26,13 @@ export const webfontCliHelpText = `
         --config
 
             Path to a specific configuration file (JSON, YAML, or CommonJS)
-            or the name of a module in \`node_modules\` that points to one.
-            If no \`--config\` argument is provided, webfont will search for
+            or the name of a module in `node_modules` that points to one.
+            If no `--config` argument is provided, webfont will search for
             configuration  files in the following places, in this order:
-               - a \`webfont\` property in \`package.json\`
-               - a \`.webfontrc\` file (with or without filename extension:
-                   \`.json\`, \`.yaml\`, and \`.js\` are available)
-               - a \`webfont.config.js\` file exporting a JS object
+               - a `webfont` property in `package.json`
+               - a `.webfontrc` file (with or without filename extension:
+                   `.json`, `.yaml`, and `.js` are available)
+               - a `webfont.config.js` file exporting a JS object
             The search will begin in the working directory and move up the
             directory tree until a configuration file is found.
 
@@ -60,7 +70,7 @@ export const webfontCliHelpText = `
 
         -s, --destTemplate
 
-            Destination for generated template. If not passed used \`dest\` argument value.
+            Destination for generated template. If not passed used `dest` argument value.
 
         -c, --templateClassName
 
@@ -173,4 +183,12 @@ export const webfontCliHelpText = `
             Append an MD5 content hash to font URLs in built-in templates
             (?v=[hash]) while keeping output filenames stable (fontName.woff2, etc.).
             Use with a fixed fontName — do not randomize fontName for cache busting.
-`;
+```
+
+## Exit codes
+
+The CLI can exit the process with the following exit codes:
+
+- **0** — All ok.
+- **1** — Something unknown went wrong.
+- **Other** — Related to using packages.

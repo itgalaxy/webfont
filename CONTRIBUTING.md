@@ -84,8 +84,10 @@ When it does, update documentation in the same PR:
 
 | What changed | Update |
 |--------------|--------|
-| CLI flags, aliases, or accepted flag values | Edit `packages/webfont/src/cli/meow/cliHelpText.mjs`, run `npm run docs:cli`, and update [FEATURES.md](./FEATURES.md) when capability changes |
-| `webfont()` options, defaults, return shape, or supported inputs/outputs | [README.md](./README.md) Options / Result / Input modes, [FEATURES.md](./FEATURES.md) |
+| CLI flags, aliases, or accepted flag values | Edit `packages/webfont/src/cli/meow/cliFlagCatalog.ts`, run `npm run docs:cli`, and update [FEATURES.md](./FEATURES.md) when capability changes |
+| Install / setup steps (npm, CLI script, config, verification) | [packages/webfont/install.md](./packages/webfont/install.md) |
+| `webfont()` options, defaults, or svgicons2svgfont parameters | [packages/webfont/docs/configuration.md](./packages/webfont/docs/configuration.md) |
+| `webfont()` options, defaults, return shape, or supported inputs/outputs | [packages/webfont/docs/configuration.md](./packages/webfont/docs/configuration.md), [README.md](./README.md) Result / Input modes, [FEATURES.md](./FEATURES.md) |
 | New or removed public options or pipelines | README + [FEATURES.md](./FEATURES.md) + TypeScript types under `packages/webfont/src/types/` |
 | Bug fixes or recurring user-facing errors (especially from issues) | New `docs/migration/issue-NNNN-<slug>.md` ([workflow](./docs/migration/README.md)); [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) when the fix applies the same on all releases |
 | Legal notices, font licensing copy, attribution, or dependency license table | [packages/webfont/NOTICE.md](./packages/webfont/NOTICE.md); link from README as needed |

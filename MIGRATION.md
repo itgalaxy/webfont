@@ -69,4 +69,4 @@ webfont "fonts/*.ttf" -f woff2,woff,eot,svg -d dist --dest-create
 | SVG diagnostics | ✅ (alpha) | ❌ |
 | Grunt integration | ⏳ ([#771](https://github.com/itgalaxy/webfont/issues/771)) | ✅ (native) |
 
-If you only need the generation that grunt-webfont did, `webfont` is a maintained, FontForge-free replacement. If you specifically need BEM/Bootstrap CSS presets or `data:uri` embedding today, use a [custom template](./README.md#template) in README.
+If you only need the generation that grunt-webfont did, `webfont` is a maintained, FontForge-free replacement. If you specifically need BEM/Bootstrap CSS presets or `data:uri` embedding today, use a [custom template](../../packages/webfont/docs/configuration.md#template) in the configuration guide.

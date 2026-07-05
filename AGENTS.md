@@ -144,7 +144,7 @@ Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliL
 
 When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:
 
-1. **Check for user impact** before finishing — compare CLI help (`packages/webfont/src/cli/meow/cliHelpText.mjs` + `npm run docs:cli`), [README.md](./README.md) (Input modes, Options, CLI), [FEATURES.md](./FEATURES.md), and any examples or fixtures that show usage.
+1. **Check for user impact** before finishing — compare CLI help (`packages/webfont/src/cli/meow/cliFlagCatalog.ts` + `npm run docs:cli` → [docs/cli.md](./docs/cli.md)), [packages/webfont/docs/configuration.md](./packages/webfont/docs/configuration.md), [README.md](./README.md) (Input modes, Result, CLI), [FEATURES.md](./FEATURES.md), and any examples or fixtures that show usage.
 2. **Update README.md** when behavior, accepted input formats, or public options change. Keep CLI flag names and short aliases aligned with `meow` (`-f` / `--formats`, `-u` / `--fontName`, etc.).
 3. **Update [FEATURES.md](./FEATURES.md)** when capabilities, stability, properties, or test criteria change. Mark features `stable`, `in-progress`, or `planned`; tick test criteria when coverage exists.
 4. **Update [packages/webfont/NOTICE.md](./packages/webfont/NOTICE.md)** when legal notices, font licensing guidance, attribution rules, or runtime dependency licenses change.

@@ -63,7 +63,7 @@ On Windows-heavy teams, [cross-env](https://www.npmjs.com/package/cross-env) avo
 
 Run with `npm run webfont -- <flags>` (`--` forwards arguments to the CLI).
 
-All flags: [CLI reference](https://webfont.js.org/introduction/cli) · [source](../../docs/cli.md)
+All flags: [CLI reference](https://webfont.js.org/introduction/cli) · [source](./docs/cli.md)
 
 ## Use the programmatic API
 
@@ -160,7 +160,7 @@ You should see `my-icons.woff2` and, with `-t css`, `my-icons.css`.
 
 ## Tips
 
-- **Input modes** are mutually exclusive per run: `.svg` (icon font), `.ttf` (encode), or `.woff`/`.woff2` (decompress). See [Input modes](../../README.md#input-modes).
+- **Pipelines** are mutually exclusive per run: `.svg` (icon font), `.ttf` (encode), or `.woff`/`.woff2` (decompress). See [Capabilities at a glance](../../README.md#capabilities-at-a-glance).
 - **Font rights:** you must be allowed to process every input file. See [NOTICE.md](./NOTICE.md).
 - **Webpack:** prefer the [webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin) or call webfont from a Node build script, not from client bundles.
 

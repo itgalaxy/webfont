@@ -12,6 +12,8 @@
     "templates",
     "install.md",
     "docs/configuration.md",
+    "docs/cli.md",
+    "LICENSE",
     "!**/__tests__",
     "!**/__mocks__",
     "README.md",

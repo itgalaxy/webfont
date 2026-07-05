@@ -136,7 +136,7 @@ const CLI_DOCS_HEADER = `# Command Line Interface
 
 The interface for command-line usage is fairly simplistic at this stage, as seen in the usage section below.
 
-Install the package and wire the CLI script first: [Install guide](https://webfont.js.org/introduction/install) ([source](../packages/webfont/install.md)).
+Install the package and wire the CLI script first: [Install guide](https://webfont.js.org/introduction/install) ([source](../install.md)).
 
 ## Usage
 

@@ -1,6 +1,6 @@
 # Features
 
-Capabilities webfont provides — stability status, behavior details, and test-backed criteria for each feature.
+Capabilities webfont provides — stability status, behavior details, and test-backed criteria for each feature. Test criteria use ✅ when coverage exists; ⬜ when not yet covered.
 
 ## SVG icon font generation
 
@@ -12,9 +12,9 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Does **not** accept `.woff`, `.woff2`, `.ttf`, or `.otf` as input in the same run.
   - **Licensing:** you must have rights to the SVG icons you submit; generated fonts remain subject to those rights and any metadata you set. See [NOTICE.md](./NOTICE.md) §3.1.
 - **Test Criteria**:
-  - [x] SVG glob produces `svg`, `ttf`, `eot`, `woff`, and `woff2` with default `formats`
-  - [x] Empty or unsupported globs reject with a clear error
-  - [x] Mixed `.svg` + `.woff`/`.woff2` inputs reject
+  - ✅ SVG glob produces `svg`, `ttf`, `eot`, `woff`, and `woff2` with default `formats`
+  - ✅ Empty or unsupported globs reject with a clear error
+  - ✅ Mixed `.svg` + `.woff`/`.woff2` inputs reject
 
 ## SVG pipeline output formats
 
@@ -26,9 +26,9 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Requesting `otf` with SVG input fails early with an explicit error (no silent success, no empty `otf` buffer).
   - `eot`, `woff`, and `woff2` are generated from the intermediate TTF buffer.
 - **Test Criteria**:
-  - [x] `--formats` / `formats` option limits written outputs
-  - [x] SVG input with `formats: ['otf']` rejects
-  - [x] Built-in CSS template works with default SVG formats
+  - ✅ `--formats` / `formats` option limits written outputs
+  - ✅ SVG input with `formats: ['otf']` rejects
+  - ✅ Built-in CSS template works with default SVG formats
 
 ## TTF to webfont encoding
 
@@ -46,13 +46,13 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - **Licensing:** encoding does not grant rights to the font; users must comply with the font’s license. See [NOTICE.md](./NOTICE.md) §3.3.
   - **Architecture:** see [ADR 0009](docs/adr/0009-ttf-webfont-encoding-pipeline.md).
 - **Test Criteria**:
-  - [x] `.ttf` input with `formats: ['woff', 'woff2']` yields valid WOFF and WOFF2
-  - [x] `.ttf` input with `formats: ['svg']` yields a valid SVG font ([#764](https://github.com/itgalaxy/webfont/issues/764))
-  - [x] Default formats produce `woff` + `woff2` when SVG defaults are configured (no SVG font)
-  - [x] Multiple TTF files encode in one run (`transcodedFonts`), including `svg`
-  - [x] Mixed `.svg` + `.ttf` or `.ttf` + `.woff2` inputs reject
-  - [x] Template option in TTF mode rejects
-  - [x] CLI writes encoded outputs (incl. `svg`) for a single TTF input
+  - ✅ `.ttf` input with `formats: ['woff', 'woff2']` yields valid WOFF and WOFF2
+  - ✅ `.ttf` input with `formats: ['svg']` yields a valid SVG font ([#764](https://github.com/itgalaxy/webfont/issues/764))
+  - ✅ Default formats produce `woff` + `woff2` when SVG defaults are configured (no SVG font)
+  - ✅ Multiple TTF files encode in one run (`transcodedFonts`), including `svg`
+  - ✅ Mixed `.svg` + `.ttf` or `.ttf` + `.woff2` inputs reject
+  - ✅ Template option in TTF mode rejects
+  - ✅ CLI writes encoded outputs (incl. `svg`) for a single TTF input
 
 ## WOFF / WOFF2 container decompression
 
@@ -73,13 +73,13 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - **Licensing:** decompression does not grant rights to the font; users must comply with the font’s license for input and extracted output. Copyright/metadata in the SFNT is preserved. See [NOTICE.md](./NOTICE.md) §3.4.
   - **Architecture:** see [ADR 0007](docs/adr/0007-woff-woff2-decompression-pipeline.md).
 - **Test Criteria**:
-  - [x] `.woff2` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
-  - [x] `.woff` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
-  - [x] Multiple webfont files decompress in one run (`decompressedFonts`)
-  - [x] HTTPS URL input decompresses when fetch returns a valid WOFF2
-  - [x] Requesting `ttf` when the SFNT flavor is OTF rejects with a flavor hint
-  - [x] Requesting `otf` when the SFNT flavor is TTF rejects with a flavor hint
-  - [x] Template option in webfont conversion mode rejects
+  - ✅ `.woff2` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
+  - ✅ `.woff` input with `formats: ['ttf']` yields a valid TTF when the container holds TrueType
+  - ✅ Multiple webfont files decompress in one run (`decompressedFonts`)
+  - ✅ HTTPS URL input decompresses when fetch returns a valid WOFF2
+  - ✅ Requesting `ttf` when the SFNT flavor is OTF rejects with a flavor hint
+  - ✅ Requesting `otf` when the SFNT flavor is TTF rejects with a flavor hint
+  - ✅ Template option in webfont conversion mode rejects
 
 ## Supported input file classification
 
@@ -90,9 +90,9 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Extension-less paths (e.g. `LICENSE`, `.webfontrc`) are **not** treated as compatible wildcards; globs that match them alongside fonts fail as unsupported.
   - Unsupported extensions (e.g. `.txt`, `.json`) cause the run to fail with “did not match any supported files”.
 - **Test Criteria**:
-  - [x] Extension-less file + `.woff2` classifies as unsupported (error)
-  - [x] `.txt`-only input classifies as unsupported (error)
-  - [x] Pure `.svg` / pure `.ttf` / pure `.woff`/`.woff2` classify correctly
+  - ✅ Extension-less file + `.woff2` classifies as unsupported (error)
+  - ✅ `.txt`-only input classifies as unsupported (error)
+  - ✅ Pure `.svg` / pure `.ttf` / pure `.woff`/`.woff2` classify correctly
 
 ## Configuration file discovery
 
@@ -102,8 +102,8 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Search walks up from cwd when no explicit `configFile` / `--config` is set.
   - Discovered path is exposed on `result.config.filePath` (output metadata only).
 - **Test Criteria**:
-  - [x] Custom config `formats` are respected
-  - [x] Discovered `filePath` attached on conversion runs
+  - ✅ Custom config `formats` are respected
+  - ✅ Discovered `filePath` attached on conversion runs
 
 ## CSS / SCSS / Styl templates
 
@@ -117,11 +117,11 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - `addHashInFontUrl`: append MD5 `&v=<hash>` from SVG font content; **filenames stay** `fontName.*` ([#125](https://github.com/itgalaxy/webfont/issues/125)).
   - `unicodeRange`: opt-in `unicode-range` in built-in `@font-face` from glyph code points (default **off**); `unicodeRange: true`, `--unicode-range`, or a CSS string to enable ([#322](https://github.com/itgalaxy/webfont/issues/322)). Enabling may break ligature-by-name usage — see README / TROUBLESHOOTING.
 - **Test Criteria**:
-  - [x] Built-in `css` template snapshot / integration coverage
-  - [x] Subset `formats` with template omits unused format URLs
-  - [x] `addHashInFontUrl` on `css` and `scss` templates appends content hash to URLs
-  - [x] `unicodeRange: true` / `--unicode-range` adds computed `U+<min>-<max>` to built-in templates; default omits it
-  - [x] `templateFontName` sets CSS `font-family` (`fontFamily`); `fontName` stays on output file URLs ([#331](https://github.com/itgalaxy/webfont/issues/331))
+  - ✅ Built-in `css` template snapshot / integration coverage
+  - ✅ Subset `formats` with template omits unused format URLs
+  - ✅ `addHashInFontUrl` on `css` and `scss` templates appends content hash to URLs
+  - ✅ `unicodeRange: true` / `--unicode-range` adds computed `U+<min>-<max>` to built-in templates; default omits it
+  - ✅ `templateFontName` sets CSS `font-family` (`fontFamily`); `fontName` stays on output file URLs ([#331](https://github.com/itgalaxy/webfont/issues/331))
 
 ## Command-line interface (CLI)
 
@@ -133,9 +133,9 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Errors and verbose stacks go to **stdout**; **stderr** must stay empty (see integration tests).
   - Exit code `0` on success, `1` on handled errors.
 - **Test Criteria**:
-  - [x] CLI integration tests cover success, failure, and `--verbose`
-  - [x] `parseFormatsFlag` validates format names including `otf`
-  - [x] `validateWebfontOptions` rejects unknown `formats` from API and cosmiconfig (#133)
+  - ✅ CLI integration tests cover success, failure, and `--verbose`
+  - ✅ `parseFormatsFlag` validates format names including `otf`
+  - ✅ `validateWebfontOptions` rejects unknown `formats` from API and cosmiconfig (#133)
 
 ## Option validation
 
@@ -145,8 +145,8 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - `formats` must be a non-empty array of known format names (`svg`, `ttf`, `otf`, `eot`, `woff`, `woff2`).
   - `files`, `fontName`, `template`, and `templateFontPath` type-checked after cosmiconfig merge.
 - **Test Criteria**:
-  - [x] Unit tests in `validateWebfontOptions.test.ts`
-  - [x] Standalone and CLI integration tests for unknown format names (#133)
+  - ✅ Unit tests in `validateWebfontOptions.test.ts`
+  - ✅ Standalone and CLI integration tests for unknown format names (#133)
 
 ## Multiple templates
 
@@ -158,9 +158,9 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Built-in `html` preview: `templateFontLigatures` (default on) adds `font-feature-settings: "liga"` for the Ligature section; if `unicodeRange` is also enabled, HTML omits PUA-only `unicode-range` on `@font-face` so ASCII ligature names use the icon font.
   - `ligatures` default **off** (performance on large fonts, [#558](https://github.com/itgalaxy/webfont/issues/558)); opt in with `--ligatures`; runtime warning when >2k glyphs with ligatures enabled.
 - **Test Criteria**:
-  - [x] Standalone and CLI tests for `template: ['html', 'scss']` (#158)
-  - [x] HTML template enables `liga` CSS by default; omits `unicode-range` when both ligature preview and `unicodeRange` are enabled
-  - [x] Large-font ligature warning unit tests ([#558](https://github.com/itgalaxy/webfont/issues/558))
+  - ✅ Standalone and CLI tests for `template: ['html', 'scss']` (#158)
+  - ✅ HTML template enables `liga` CSS by default; omits `unicode-range` when both ligature preview and `unicodeRange` are enabled
+  - ✅ Large-font ligature warning unit tests ([#558](https://github.com/itgalaxy/webfont/issues/558))
 
 ## Glyph metadata hooks
 
@@ -173,24 +173,24 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - `optimizeSvg`: optional conservative SVGO pass before `glyphContentTransformFn` (default off; #724). Does not fix stroke-only SVGs alone (#327).
   - `svgoConfig`: optional SVGO `Config` when `optimizeSvg` is enabled.
 - **Test Criteria**:
-  - [x] `glyphTransformFn` applied before font generation
-  - [x] `glyphContentTransformFn` applied before font generation (#144)
-  - [x] `metadataProvider` error paths unit-tested (`glyphsData`)
-  - [x] `optimizeSvg` strips comments/metadata without breaking default fixtures (#724)
-  - [x] Empty SVG font glyph paths reject with guidance (#327)
+  - ✅ `glyphTransformFn` applied before font generation
+  - ✅ `glyphContentTransformFn` applied before font generation (#144)
+  - ✅ `metadataProvider` error paths unit-tested (`glyphsData`)
+  - ✅ `optimizeSvg` strips comments/metadata without breaking default fixtures (#724)
+  - ✅ Empty SVG font glyph paths reject with guidance (#327)
 
 ## TTF output hook (`ttfPostProcess`)
 
 - **Stability**: stable
-- **Description**: Caller-owned post-processing of the generated TTF buffer, before WOFF/WOFF2/EOT are derived from it (SVG pipeline only). Keeps optional/native steps (e.g. autohinting via `ttfautohint`) out of the core — same philosophy as `glyphContentTransformFn` ([ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)); enabling package for [#749](https://github.com/itgalaxy/webfont/issues/749). Recipe: [Autohinting](./README.md#autohinting).
+- **Description**: Caller-owned post-processing of the generated TTF buffer, before WOFF/WOFF2/EOT are derived from it (SVG pipeline only). Keeps optional/native steps (e.g. autohinting via `ttfautohint`) out of the core — same philosophy as `glyphContentTransformFn` ([ADR 0011](docs/adr/0011-no-svg-outline-stroke-dependency.md)); enabling package for [#749](https://github.com/itgalaxy/webfont/issues/749). See [`ttfPostProcess`](./packages/webfont/docs/configuration.md#ttfpostprocess) in the configuration reference.
 - **Properties**:
   - Signature `(ttf, { fontName, formats }) => Buffer | Uint8Array | Promise<…>`.
   - Runs once, after `toTtf`; all derived formats come from the returned buffer.
   - webfont bundles no hinting/native dependency; the hook is opt-in.
 - **Test Criteria**:
-  - [x] Called with the generated TTF and context; return value used as `result.ttf`
-  - [x] Derived `woff2` produced from the post-processed TTF
-  - [x] Async hook supported
+  - ✅ Called with the generated TTF and context; return value used as `result.ttf`
+  - ✅ Derived `woff2` produced from the post-processed TTF
+  - ✅ Async hook supported
 
 ## svgicons2svgfont options
 
@@ -200,7 +200,7 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Documented in [Configuration](./packages/webfont/docs/configuration.md#svgicons2svgfont).
   - SVG pipeline only.
 - **Test Criteria**:
-  - [x] Options forwarded via `getFontStreamOptions` / standalone integration tests
+  - ✅ Options forwarded via `getFontStreamOptions` / standalone integration tests
 
 ## SVG tools — diagnostics (alpha)
 
@@ -212,9 +212,9 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - `--verbose` still logs evenodd warnings for backward compatibility.
   - Programmatic helpers: `diagnoseSvgContents`, `diagnoseGlyphsData` exported from the package entry.
 - **Test Criteria**:
-  - [x] Unit tests for stroke/evenodd/element detection
-  - [x] `glyphContentTransformFn` applied before font generation (#144)
-  - [x] CLI integration tests for `--svg-diagnose`
+  - ✅ Unit tests for stroke/evenodd/element detection
+  - ✅ `glyphContentTransformFn` applied before font generation (#144)
+  - ✅ CLI integration tests for `--svg-diagnose`
 
 ## Arbitrary format transcoding
 
@@ -225,9 +225,9 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - **Out of scope today:** OTF input encoding, TTF ↔ OTF outline conversion.
   - External tools (FontForge, fontTools, etc.) are required for TTF → OTF today.
 - **Test Criteria**:
-  - [x] TTF input encoded to WOFF/WOFF2
-  - [ ] TTF input transcoded to OTF
-  - [ ] Documented public API for generic transcoding
+  - ✅ TTF input encoded to WOFF/WOFF2
+  - ⬜ TTF input transcoded to OTF
+  - ⬜ Documented public API for generic transcoding
 
 ## Are you a contributor?
 

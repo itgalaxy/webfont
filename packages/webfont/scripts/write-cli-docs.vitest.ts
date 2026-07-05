@@ -4,11 +4,11 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { renderCliMarkdownDoc } from "../src/cli/meow/renderCliHelp";
 
-const REPO_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "../../..");
-const CLI_DOCS_PATH = resolve(REPO_ROOT, "docs/cli.md");
+const PACKAGE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
+const CLI_DOCS_PATH = resolve(PACKAGE_ROOT, "docs/cli.md");
 
 describe("write-cli-docs", () => {
-  it("should write docs/cli.md from cliFlagCatalog metadata", () => {
+  it("should write packages/webfont/docs/cli.md from cliFlagCatalog metadata", () => {
     const next = renderCliMarkdownDoc();
     let current = "";
 

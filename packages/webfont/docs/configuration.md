@@ -1,6 +1,25 @@
 # Configuration
 
-Reference for `webfont()` options, cosmiconfig files, and svgicons2svgfont parameters. CLI flags map to the same names — see the [CLI reference](https://webfont.js.org/introduction/cli).
+Reference for `webfont()` options, cosmiconfig files, and svgicons2svgfont parameters. CLI flags map to the same names — see the [CLI reference](./cli.md).
+
+## Result
+
+`webfont()` resolves to an object with generated font buffers (and optional `template` output). The `config` property contains the **effective options** used for the run (defaults, discovered config, and any options you passed in), plus optional **output metadata** when a configuration file was found or loaded.
+
+`Result` and `ResultConfig` are exported from the package entry:
+
+```ts
+import { webfont, type Result, type ResultConfig } from "webfont";
+
+const result: Result = await webfont({ files: "src/svg-icons/**/*.svg" });
+const config: ResultConfig | undefined = result.config;
+```
+
+### `result.config.filePath`
+
+- Type: `string` | `undefined`
+- Description: Absolute path to the configuration file that was discovered or loaded. Omitted when no configuration file was found and defaults were used.
+- Note: Output-only metadata — not an input option. Do not set `filePath` in `.webfontrc`, `package.json`, or the `webfont()` call.
 
 ## files
 
@@ -8,7 +27,7 @@ Reference for `webfont()` options, cosmiconfig files, and svgicons2svgfont param
 - Description: A file glob, or array of file globs. Ultimately passed to [fast-glob](https://github.com/mrmlnc/fast-glob) to figure out what files you want to get.
 - **SVG mode**: one or more `.svg` icon paths or globs (default pipeline).
 - **TTF encoding mode**: one or more `.ttf` paths or globs.
-- **Webfont decompress mode**: one or more `.woff` / `.woff2` paths, globs, or `https://…` URLs (see [`formats`](#formats) and [Input modes](../../README.md#input-modes)).
+- **Webfont decompress mode**: one or more `.woff` / `.woff2` paths, globs, or `https://…` URLs (see [`formats`](#formats) and [Capabilities at a glance](../../README.md#capabilities-at-a-glance)).
 - Do not mix `.svg`, `.ttf`, and `.woff` / `.woff2` in the same run.
 - Every matched file must have a supported extension (`.svg`, `.ttf`, `.woff`, `.woff2`); extension-less files such as `LICENSE` are not ignored when matched by a broad glob.
 - `node_modules` and `bower_components` are always ignored.
@@ -22,7 +41,7 @@ Reference for `webfont()` options, cosmiconfig files, and svgicons2svgfont param
   2. a `.webfontrc` file (with or without filename extension: `.json`, `.yaml`, and `.js` are available)
   3. a `webfont.config.js` file exporting a JS `object`.
      The search will begin in the working directory and move up the directory tree until it finds a configuration file.
-- Note: When a configuration file is discovered or loaded, the resolved absolute path is available on `result.config.filePath` (see [Result](../../README.md#result)).
+- Note: When a configuration file is discovered or loaded, the resolved absolute path is available on `result.config.filePath` (see [Result](#result)).
 
 ## fontName
 
@@ -249,7 +268,7 @@ Do **not** use `Math.random()` in `fontName` — that renames both font files an
 
 - Type: `function`
 - Default: `undefined`
-- Description: Post-process the generated **TTF** buffer **after** it is built and **before** webfont derives WOFF/WOFF2/EOT from it (SVG pipeline only). The callback receives `(ttf, { fontName, formats })` and returns the new font bytes (`Buffer` or `Uint8Array`, sync or async). Every derived format is produced from the returned buffer. This is a **caller-owned** extension point — webfont bundles nothing here, so optional/native steps such as **autohinting** (`ttfautohint`) live in **your** project or a separate package, keeping the core free of native dependencies (same philosophy as [`glyphContentTransformFn`](#glyphcontenttransformfn) and [ADR 0011](../../../docs/adr/0011-no-svg-outline-stroke-dependency.md); see [#749](https://github.com/itgalaxy/webfont/issues/749)). See the [Autohinting](../../README.md#autohinting) recipe for npm-wrapper, system-binary, and CLI variants.
+- Description: Post-process the generated **TTF** buffer **after** it is built and **before** webfont derives WOFF/WOFF2/EOT from it (SVG pipeline only). The callback receives `(ttf, { fontName, formats })` and returns the new font bytes (`Buffer` or `Uint8Array`, sync or async). Every derived format is produced from the returned buffer. This is a **caller-owned** extension point — webfont bundles nothing here, so optional/native steps such as **autohinting** (`ttfautohint`) live in **your** project or a separate package, keeping the core free of native dependencies (same philosophy as [`glyphContentTransformFn`](#glyphcontenttransformfn) and [ADR 0011](../../../docs/adr/0011-no-svg-outline-stroke-dependency.md); see [#749](https://github.com/itgalaxy/webfont/issues/749)).
 - Example (autohinting — **install the hinting tool in your app**, not in webfont):
 
   ```js

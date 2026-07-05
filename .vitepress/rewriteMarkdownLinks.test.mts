@@ -19,7 +19,7 @@ const rewrites = {
   "packages/webfont/install.md": "introduction/install.md",
   "packages/webfont/docs/configuration.md": "introduction/configuration.md",
   "packages/webfont/CHANGELOG.md": "introduction/whats-new.md",
-  "docs/cli.md": "introduction/cli.md",
+  "packages/webfont/docs/cli.md": "introduction/cli.md",
   "docs/migration/issue-0618-esm-default-import.md": "migrating/issue-0618-esm-default-import.md",
 };
 

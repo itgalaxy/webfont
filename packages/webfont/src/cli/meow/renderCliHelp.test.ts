@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { renderCliMarkdownDoc, WEBFONT_CLI_HELP_MARKERS, webfontCliHelpText } from "./renderCliHelp";
 
-const REPO_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "../../../../../");
-const CLI_DOCS_PATH = resolve(REPO_ROOT, "docs/cli.md");
+const PACKAGE_ROOT = resolve(fileURLToPath(new URL(".", import.meta.url)), "../../..");
+const CLI_DOCS_PATH = resolve(PACKAGE_ROOT, "docs/cli.md");
 
 describe("renderCliHelp", () => {
   it("should keep help text markers in sync with the documented CLI options", () => {
@@ -14,7 +14,7 @@ describe("renderCliHelp", () => {
     }
   });
 
-  it("should keep docs/cli.md aligned with renderCliMarkdownDoc", () => {
+  it("should keep packages/webfont/docs/cli.md aligned with renderCliMarkdownDoc", () => {
     const expected = renderCliMarkdownDoc();
 
     expect(existsSync(CLI_DOCS_PATH)).toBe(true);

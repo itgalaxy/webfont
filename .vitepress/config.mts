@@ -27,7 +27,7 @@ const pageRewrites = {
   "CODE_OF_CONDUCT.md": "contributing/code-of-conduct.md",
   "docs/migration/README.md": "contributing/migration-guide.md",
   "MIGRATION.md": "migrating/index.md",
-  "docs/cli.md": "introduction/cli.md",
+  "packages/webfont/docs/cli.md": "introduction/cli.md",
   "packages/webfont/install.md": "introduction/install.md",
   "packages/webfont/docs/configuration.md": "introduction/configuration.md",
   "packages/webfont/NOTICE.md": "introduction/licenses.md",
@@ -36,6 +36,7 @@ const pageRewrites = {
 
 const staticRepoLinks = {
   LICENSE: `${repo}/blob/master/LICENSE`,
+  "packages/webfont/LICENSE": `${repo}/blob/master/packages/webfont/LICENSE`,
 } as const;
 
 export default defineConfig({

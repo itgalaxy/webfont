@@ -17,6 +17,16 @@ const SAMPLE_FORMULA = `# typed: strict
 class Webfont < Formula
   url "https://registry.npmjs.org/webfont/-/webfont-1.0.0.tgz"
   sha256 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  license "MIT"
+  depends_on "node"
+  def install
+    system "npm", "install", *std_npm_args
+    bin.install_symlink libexec.glob("bin/*")
+  end
+  test do
+    system bin/"webfont", testpath/"icon.svg", "-d", testpath, "-f", "woff2"
+    assert_path_exists testpath/"webfont.woff2"
+  end
 end
 `;
 
@@ -117,8 +127,10 @@ describe("syncHomebrewFormula", () => {
     expect(result.url).toBe("https://registry.npmjs.org/webfont/-/webfont-9.9.9.tgz");
 
     const formula = readFileSync(join(root, "HomebrewFormula/webfont.rb"), "utf8");
+    const core = readFileSync(join(root, "docs/homebrew-core/webfont.rb"), "utf8");
 
     expect(formula).toContain("webfont-9.9.9.tgz");
+    expect(core).toContain("webfont-9.9.9.tgz");
     expect(readlinkSync(join(root, "Aliases/webfonts"))).toBe("../HomebrewFormula/webfont.rb");
   });
 });

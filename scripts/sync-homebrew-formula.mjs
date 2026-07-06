@@ -15,10 +15,16 @@ import {
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {
+  assertFormulasInSync,
+  renderHomebrewCoreFormula,
+} from "./render-homebrew-core-formula.mjs";
+
 const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 export const PATHS = {
   formula: join(REPO_ROOT, "HomebrewFormula/webfont.rb"),
+  coreFormula: join(REPO_ROOT, "docs/homebrew-core/webfont.rb"),
   alias: join(REPO_ROOT, "Aliases/webfonts"),
   packageJson: join(REPO_ROOT, "packages/webfont/package.json"),
 };
@@ -95,6 +101,7 @@ export async function syncHomebrewFormula(options = {}) {
   const repoRoot = options.repoRoot ?? REPO_ROOT;
   const paths = {
     formula: join(repoRoot, "HomebrewFormula/webfont.rb"),
+    coreFormula: join(repoRoot, "docs/homebrew-core/webfont.rb"),
     alias: join(repoRoot, "Aliases/webfonts"),
     packageJson: join(repoRoot, "packages/webfont/package.json"),
   };
@@ -111,6 +118,11 @@ export async function syncHomebrewFormula(options = {}) {
   const current = readFileSync(paths.formula, "utf8");
   const updated = patchFormulaUrlAndSha256(current, { url, sha256 });
   writeFileSync(paths.formula, updated);
+
+  mkdirSync(dirname(paths.coreFormula), { recursive: true });
+  const coreFormula = renderHomebrewCoreFormula({ url, sha256 });
+  writeFileSync(paths.coreFormula, coreFormula);
+  assertFormulasInSync(updated, coreFormula);
 
   ensureSymlink(paths.alias, "../HomebrewFormula/webfont.rb");
 

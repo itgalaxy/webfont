@@ -57,14 +57,14 @@ jobs:
           npm pack --ignore-scripts --pack-destination artifacts -w webfont
           ( cd packages/webfont/dist && zip -r "../../../artifacts/webfont-dist-$version.zip" . )
       - name: Upload built dist/ for the deploy jobs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: packages/webfont/dist
           if-no-files-found: error
           retention-days: 1
       - name: Upload release archives (npm tarball + dist zip)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-artifacts
           path: artifacts

@@ -1,5 +1,8 @@
 # webfont
 
+[![NPM version](https://img.shields.io/npm/v/webfont.svg)](https://www.npmjs.org/package/webfont)
+[![pkg.pr.new](https://pkg.pr.new/badge/itgalaxy/webfont)](https://pkg.pr.new/~/itgalaxy/webfont)
+
 Generator of fonts from SVG icons; decompress WOFF/WOFF2 to embedded TTF/OTF (not TTF↔OTF transcoding).
 
 Requires **Node.js** >= 24.14.0. Use at **build time** only — do not import from browser or React client bundles ([#198](https://github.com/itgalaxy/webfont/issues/198)).

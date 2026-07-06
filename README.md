@@ -2,6 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/webfont.svg)](https://www.npmjs.org/package/webfont)
 [![Node.js CI](https://github.com/itgalaxy/webfont/actions/workflows/pr.yml/badge.svg)](https://github.com/itgalaxy/webfont/actions/workflows/pr.yml)
+[![pkg.pr.new](https://pkg.pr.new/badge/itgalaxy/webfont)](https://pkg.pr.new/~/itgalaxy/webfont)
 
 Generator of fonts from SVG icons, with separate modes to **encode** TTF to web formats and **decompress** WOFF/WOFF2 containers to the TTF or OTF inside.
 

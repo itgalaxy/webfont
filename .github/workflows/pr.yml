@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   build:
 
@@ -29,3 +33,6 @@ jobs:
       run: npm run docs:site
     - name: Validate published package surface (publint + attw + pack-smoke)
       run: npm run test:package
+    - name: Publish PR preview (pkg.pr.new)
+      if: matrix.node-version == '24.x'
+      run: npm exec pkg-pr-new publish './packages/webfont' --bin --comment=update

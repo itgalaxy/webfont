@@ -31,6 +31,24 @@ beforeAll(async () => {
 
 Calling `fs.mkdirSync` / `fs.rmSync` directly in an `async` `it(...)` block is acceptable. Vitest attributes synchronous failures to the test. Use `try/finally` for cleanup.
 
+### Clean up `mkdtempSync` directories in hooks
+
+When tests create temp trees with `mkdtempSync`, remove them in an **`async` `afterEach`** via `fs/promises` — do not only reset a tracking array. Clearing the array without `rm` leaks directories under the OS temp folder and skips cleanup when a test fails mid-run.
+
+```ts
+import { rm } from "node:fs/promises";
+
+const tempDirs: string[] = [];
+
+afterEach(async () => {
+  await Promise.all(
+    tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })),
+  );
+});
+```
+
+Use sync `mkdtempSync` / `mkdirSync` in the test body if convenient; keep **deletion async** in the hook (same rule as other async hooks — no sync-throwing `fs.rmSync` in `afterEach` callbacks).
+
 ### Promisify callback-only helpers once
 
 When a dependency only exposes callbacks (`rimraf`, legacy `fs.mkdir`), extract a small `promisify` helper and use it from `async` hooks instead of nesting callbacks.

@@ -78,7 +78,7 @@ jobs:
       contents: write
     steps:
       - name: Download release archives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: release-artifacts
           path: artifacts
@@ -105,7 +105,7 @@ jobs:
           node-version: 26.x
           package-manager-cache: false
       - name: Download dist/ built by the build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: packages/webfont/dist
@@ -138,7 +138,7 @@ jobs:
           node-version: 26.x
           package-manager-cache: false
       - name: Download dist/ built by the build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: packages/webfont/dist

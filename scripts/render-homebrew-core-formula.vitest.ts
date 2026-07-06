@@ -5,6 +5,7 @@ import {
   assertFormulasInSync,
   extractFormulaFields,
   renderHomebrewCoreFormula,
+  renderHomebrewCoreFromTap,
 } from "./render-homebrew-core-formula.mjs";
 
 const TAP_SAMPLE = `# typed: strict
@@ -58,12 +59,12 @@ describe("assertFormulasInSync", () => {
   });
 });
 
-describe("homebrew-core draft file", () => {
-  it("should stay in sync with HomebrewFormula/webfont.rb", () => {
-    const tap = readFileSync(join(process.cwd(), "HomebrewFormula/webfont.rb"), "utf8");
-    const core = readFileSync(join(process.cwd(), "docs/homebrew-core/webfont.rb"), "utf8");
+describe("renderHomebrewCoreFromTap", () => {
+  it("should render homebrew-core output from HomebrewFormula/webfont.rb", () => {
+    const tapPath = join(process.cwd(), "HomebrewFormula/webfont.rb");
+    const core = renderHomebrewCoreFromTap(tapPath);
 
-    assertFormulasInSync(tap, core);
+    assertFormulasInSync(readFileSync(tapPath, "utf8"), core);
 
     const fields = extractFormulaFields(core);
     expect(fields.url).toMatch(/^https:\/\/registry\.npmjs\.org\/webfont\/-/u);

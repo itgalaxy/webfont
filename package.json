@@ -21,6 +21,7 @@
     "depcheck": "npm run depcheck -w webfont",
     "prepare": "lefthook install",
     "prettify": "biome check --write .",
+    "render:homebrew-core": "node scripts/render-homebrew-core-formula.mjs",
     "sync:homebrew": "node scripts/sync-homebrew-formula.mjs",
     "test": "npm run test:scripts && npm run test -w webfont",
     "test:scripts": "vitest run --config vitest.scripts.config.ts",

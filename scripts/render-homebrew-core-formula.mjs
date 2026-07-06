@@ -1,7 +1,17 @@
+#!/usr/bin/env node
 /**
- * Render a homebrew-core submission for webfont from npm tarball metadata.
- * Kept in sync with HomebrewFormula/webfont.rb via scripts/sync-homebrew-formula.mjs.
+ * Render a homebrew-core Formula/w/webfont.rb from HomebrewFormula/webfont.rb.
+ *
+ * Usage:
+ *   node scripts/render-homebrew-core-formula.mjs              # stdout
+ *   node scripts/render-homebrew-core-formula.mjs > webfont.rb # save for core PR
  */
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const TAP_FORMULA = join(REPO_ROOT, "HomebrewFormula/webfont.rb");
 
 /** @param {{ url: string; sha256: string }} fields */
 export function renderHomebrewCoreFormula({ url, sha256 }) {
@@ -66,4 +76,21 @@ export function assertFormulasInSync(tapFormula, coreFormula) {
       throw new Error(`Missing expected Homebrew block: ${block}`);
     }
   }
+}
+
+/** @param {string} [tapFormulaPath] */
+export function renderHomebrewCoreFromTap(tapFormulaPath = TAP_FORMULA) {
+  const tapFormula = readFileSync(tapFormulaPath, "utf8");
+  const fields = extractFormulaFields(tapFormula);
+  const coreFormula = renderHomebrewCoreFormula(fields);
+  assertFormulasInSync(tapFormula, coreFormula);
+  return coreFormula;
+}
+
+const isMain =
+  process.argv[1] !== undefined &&
+  fileURLToPath(import.meta.url) === process.argv[1];
+
+if (isMain) {
+  process.stdout.write(renderHomebrewCoreFromTap());
 }

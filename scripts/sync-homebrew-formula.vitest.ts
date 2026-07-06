@@ -127,10 +127,8 @@ describe("syncHomebrewFormula", () => {
     expect(result.url).toBe("https://registry.npmjs.org/webfont/-/webfont-9.9.9.tgz");
 
     const formula = readFileSync(join(root, "HomebrewFormula/webfont.rb"), "utf8");
-    const core = readFileSync(join(root, "docs/homebrew-core/webfont.rb"), "utf8");
 
     expect(formula).toContain("webfont-9.9.9.tgz");
-    expect(core).toContain("webfont-9.9.9.tgz");
     expect(readlinkSync(join(root, "Aliases/webfonts"))).toBe("../HomebrewFormula/webfont.rb");
   });
 });

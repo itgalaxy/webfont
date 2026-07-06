@@ -9,7 +9,7 @@
 # On each npm release, bump url/sha256 with:
 #   node scripts/sync-homebrew-formula.mjs
 #
-# homebrew-core submission draft: docs/homebrew-core/webfont.rb (tracking #785)
+# homebrew-core copy: npm run render:homebrew-core (tracking #785)
 class Webfont < Formula
   desc "Generator of fonts from SVG icons, with TTF encoding and WOFF/WOFF2 decoding"
   homepage "https://webfont.js.org/"

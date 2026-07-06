@@ -88,6 +88,15 @@ export function ensureSymlink(linkPath, targetRelative) {
   symlinkSync(targetRelative, linkPath);
 }
 
+/** @param {unknown} version */
+export function assertValidVersion(version) {
+  if (typeof version !== "string" || version.trim().length === 0) {
+    throw new Error("Expected a non-empty npm version string");
+  }
+
+  return version;
+}
+
 /**
  * @param {{ version?: string; repoRoot?: string }} [options]
  */
@@ -104,6 +113,8 @@ export async function syncHomebrewFormula(options = {}) {
     const packageJson = JSON.parse(readFileSync(paths.packageJson, "utf8"));
     version = packageJson.version;
   }
+
+  assertValidVersion(version);
 
   const url = await resolveNpmTarballUrl(version);
   const sha256 = await fetchTarballSha256(url);

@@ -7,10 +7,16 @@ import {
   symlinkSync,
   writeFileSync,
 } from "node:fs";
+import { rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ensureSymlink, patchFormulaUrlAndSha256, syncHomebrewFormula } from "./sync-homebrew-formula.mjs";
+import {
+  assertValidVersion,
+  ensureSymlink,
+  patchFormulaUrlAndSha256,
+  syncHomebrewFormula,
+} from "./sync-homebrew-formula.mjs";
 
 const SAMPLE_FORMULA = `# typed: strict
 # frozen_string_literal: true
@@ -32,9 +38,21 @@ end
 
 const tempDirs: string[] = [];
 
-afterEach(() => {
+afterEach(async () => {
   vi.unstubAllGlobals();
-  tempDirs.length = 0;
+  await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
+});
+
+describe("assertValidVersion", () => {
+  it("should reject missing or empty version strings", () => {
+    expect(() => assertValidVersion(undefined)).toThrow(/non-empty npm version string/u);
+    expect(() => assertValidVersion("")).toThrow(/non-empty npm version string/u);
+    expect(() => assertValidVersion("   ")).toThrow(/non-empty npm version string/u);
+  });
+
+  it("should return a valid version string unchanged", () => {
+    expect(assertValidVersion("12.4.1")).toBe("12.4.1");
+  });
 });
 
 describe("patchFormulaUrlAndSha256", () => {

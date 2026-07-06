@@ -15,11 +15,30 @@ node --version
 
 ## Install
 
+### npm (recommended for projects)
+
 From your project root:
 
 ```shell
 npm install --save-dev webfont
 ```
+
+### Homebrew (macOS / Linux CLI)
+
+Install the `webfont` CLI globally via the monorepo tap in this repository:
+
+```shell
+brew tap itgalaxy/webfont https://github.com/itgalaxy/webfont
+brew install itgalaxy/webfont/webfont
+```
+
+The alias `webfonts` installs the same formula:
+
+```shell
+brew install itgalaxy/webfont/webfonts
+```
+
+Homebrew installs the published npm tarball and requires the `node` formula. For library use inside a Node project, prefer the npm dev dependency above.
 
 ## Verify
 

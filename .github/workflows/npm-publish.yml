@@ -156,3 +156,32 @@ jobs:
       - run: npm publish --ignore-scripts -w webfont
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update-homebrew-formula:
+    needs: [build, publish-npm]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: master
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 26.x
+          cache: npm
+      - run: npm ci
+      - name: Bump Homebrew formula url and sha256
+        run: node scripts/sync-homebrew-formula.mjs --version "${{ needs.build.outputs.version }}"
+      - name: Commit and push formula bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add HomebrewFormula/webfont.rb Aliases/webfonts
+          if git diff --staged --quiet; then
+            echo "Homebrew formula already up to date"
+            exit 0
+          fi
+          git commit -m "chore(homebrew): bump formula to webfont@${{ needs.build.outputs.version }} [skip ci]"
+          git push

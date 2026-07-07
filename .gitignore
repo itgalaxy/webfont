@@ -81,9 +81,6 @@ packages/webfont/src/**/*.d.ts
 # Generated font demo for the docs site (built by `npm run docs:demo`)
 public/font-demo
 
-# webfont Studio SPA for the docs site (built by `npm run studio:build`)
-public/demo
-
 # Vercel CLI local state (project link + pulled env)
 .vercel
 .env*.local

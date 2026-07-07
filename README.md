@@ -5,7 +5,7 @@
 
 Generator of fonts from SVG icons, with separate modes to **encode** TTF to web formats and **decompress** WOFF/WOFF2 containers to the TTF or OTF inside.
 
-**Documentation site:** [webfont.js.org](https://webfont.js.org) — install, configuration, CLI, **[Studio](/demo/)** (browser app), and guides.
+**Documentation site:** [webfont.js.org](https://webfont.js.org) — install, configuration, CLI, demos, and guides.
 
 | Topic | Where |
 |-------|--------|
@@ -70,7 +70,7 @@ Node.js only — do not import from client-side app code ([#198](https://github.
 
 ## Repository layout
 
-This is an **npm workspaces** monorepo. The published package lives in **`packages/webfont`** (`name: "webfont"` on npm). The browser **Studio** app lives in **`packages/webfont-studio`** (private) and ships on the docs site at `/demo/`. User-facing markdown for the docs site stays at the repo root; package-specific guides ship inside the tarball (`install.md`, `docs/configuration.md`, `docs/cli.md`, `NOTICE.md`, `LICENSE`).
+This is an **npm workspaces** monorepo. The published package lives in **`packages/webfont`** (`name: "webfont"` on npm). User-facing markdown for the docs site stays at the repo root; package-specific guides ship inside the tarball (`install.md`, `docs/configuration.md`, `docs/cli.md`, `NOTICE.md`, `LICENSE`).
 
 **Homebrew:** `HomebrewFormula/webfont.rb` and `Aliases/webfonts` at the repo root serve the monorepo tap ([#769](https://github.com/itgalaxy/webfont/issues/769)). Bump the formula on release with `node scripts/sync-homebrew-formula.mjs`.
 

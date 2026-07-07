@@ -25,33 +25,61 @@ npm install --save-dev webfont
 
 ### Homebrew (macOS / Linux CLI)
 
-**Today** — monorepo tap (requires the URL once):
+**Recommended** — [homebrew-core](https://github.com/Homebrew/homebrew-core) (no tap):
+
+```shell
+brew install webfont
+```
+
+If Homebrew reports that no formula named `webfont` exists, refresh the index first:
+
+```shell
+brew update
+brew install webfont
+```
+
+Homebrew installs the published npm tarball and requires the `node` formula. Verify the CLI:
+
+```shell
+webfont --version
+```
+
+**Monorepo tap (optional)** — use when you want the `webfonts` alias or a formula change before it lands in core ([#769](https://github.com/itgalaxy/webfont/issues/769)):
 
 ```shell
 brew tap itgalaxy/webfont https://github.com/itgalaxy/webfont
 brew install webfont
 ```
 
-The alias `webfonts` also works inside the tap:
+The alias `webfonts` works only in the tap:
 
 ```shell
 brew install webfonts
 ```
 
-**Planned** — after [homebrew-core acceptance](https://github.com/itgalaxy/webfont/issues/785), plain install with no tap:
+**Switching from tap to core** — if you already installed from `itgalaxy/webfont` and want the core formula:
 
 ```shell
+brew uninstall webfont
+brew untap itgalaxy/webfont
+brew update
 brew install webfont
 ```
 
-Homebrew installs the published npm tarball and requires the `node` formula. For library use inside a Node project, prefer the npm dev dependency above.
+For library use inside a Node project, prefer the npm dev dependency above.
 
 ## Verify
 
-**CLI**
+**CLI (npm project)**
 
 ```shell
 npx webfont --version
+```
+
+**CLI (Homebrew)**
+
+```shell
+webfont --version
 ```
 
 **Programmatic API** — prefer the named export:

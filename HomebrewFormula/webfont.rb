@@ -13,8 +13,8 @@
 class Webfont < Formula
   desc "Generator of fonts from SVG icons, with TTF encoding and WOFF/WOFF2 decoding"
   homepage "https://webfont.js.org/"
-  url "https://registry.npmjs.org/webfont/-/webfont-12.4.1.tgz"
-  sha256 "cc22a60186c0ec0d7367945bff513318ad736bb39b3705d4b00b70c18584eb28"
+  url "https://registry.npmjs.org/webfont/-/webfont-12.5.0.tgz"
+  sha256 "f024d129de480429e81668fa3821859af3784a5aa0f6714ebe236d8520c13ce3"
   license "MIT"
 
   depends_on "node"

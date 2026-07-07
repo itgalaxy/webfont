@@ -7,7 +7,7 @@
     "test": "grunt webfont"
   },
   "devDependencies": {
-    "grunt": "1.6.1",
+    "grunt": "1.6.2",
     "grunt-cli": "1.5.0",
     "webfont": "file:../webfont"
   }

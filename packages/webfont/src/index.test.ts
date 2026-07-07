@@ -1,4 +1,12 @@
-import index, { type Result, type ResultConfig, webfont, writeResultFiles } from ".";
+import index, {
+  buildWebfontOptionsReference,
+  CLI_FLAG_SECTIONS,
+  defaultWebfontOptions,
+  type Result,
+  type ResultConfig,
+  webfont,
+  writeResultFiles,
+} from ".";
 
 describe("index", () => {
   it("should be exported", () => {
@@ -17,5 +25,12 @@ describe("index", () => {
 
   it("should export writeResultFiles for programmatic disk writes", () => {
     expect(typeof writeResultFiles).toBe("function");
+  });
+
+  it("should export options reference helpers for tooling and agents", () => {
+    expect(CLI_FLAG_SECTIONS.length).toBeGreaterThan(0);
+    expect(defaultWebfontOptions().fontName).toBe("webfont");
+    expect(buildWebfontOptionsReference().defaults).toEqual(defaultWebfontOptions());
+    expect(buildWebfontOptionsReference().cliFlags.fontName.long).toBe("--fontName");
   });
 });

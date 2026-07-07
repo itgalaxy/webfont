@@ -7,7 +7,7 @@ Install the package and wire the CLI script first: [Install guide](https://webfo
 ## Usage
 
 <!-- cli-docs:generated -->
-> **Maintainers:** CLI help is generated from `packages/webfont/src/cli/meow/cliFlagCatalog.ts`. After editing flag metadata, run `npm run docs:cli` at the repo root (unit tests also guard drift).
+> **Maintainers:** CLI help is generated from `packages/webfont/src/optionsReference/cliFlagCatalog.ts`. After editing flag metadata, run `npm run docs:cli` at the repo root (unit tests also guard drift).
 
 ```shell
     Usage: webfont [input] [options]

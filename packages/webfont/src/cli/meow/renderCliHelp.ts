@@ -5,7 +5,7 @@ import {
   CLI_USAGE_LINE,
   type CliFlagCatalogEntry,
   type CliFlagSection,
-} from "./cliFlagCatalog";
+} from "../../optionsReference/cliFlagCatalog";
 
 const HELP_INDENT = "    ";
 const FLAG_INDENT = "        ";
@@ -156,7 +156,7 @@ The CLI can exit the process with the following exit codes:
 `;
 
 const GENERATED_NOTICE = `<!-- cli-docs:generated -->
-> **Maintainers:** CLI help is generated from \`packages/webfont/src/cli/meow/cliFlagCatalog.ts\`. After editing flag metadata, run \`npm run docs:cli\` at the repo root (unit tests also guard drift).
+> **Maintainers:** CLI help is generated from \`packages/webfont/src/optionsReference/cliFlagCatalog.ts\`. After editing flag metadata, run \`npm run docs:cli\` at the repo root (unit tests also guard drift).
 `;
 
 export const renderCliMarkdownDoc = (): string =>

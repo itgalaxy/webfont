@@ -1,0 +1,30 @@
+{
+  "name": "webfont-mcp",
+  "private": true,
+  "description": "Local MCP server wrapping webfont() for agents (not published)",
+  "type": "module",
+  "bin": {
+    "webfont-mcp": "./dist/main.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "pretest": "npm run build -w webfont && npm run build",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "globby": "16.2.1",
+    "webfont": "file:../webfont",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "5.9.3",
+    "vitest": "4.1.9"
+  },
+  "engines": {
+    "node": ">=24.14.0"
+  }
+}

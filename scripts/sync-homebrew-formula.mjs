@@ -4,6 +4,7 @@
  */
 import { createHash } from "node:crypto";
 import {
+  appendFileSync,
   lstatSync,
   mkdirSync,
   readFileSync,
@@ -97,6 +98,16 @@ export function assertValidVersion(version) {
   return version;
 }
 
+/** @param {string} version */
+export async function resolveNpmReleaseForVersion(version) {
+  assertValidVersion(version);
+
+  const url = await resolveNpmTarballUrl(version);
+  const sha256 = await fetchTarballSha256(url);
+
+  return { version, url, sha256 };
+}
+
 /**
  * @param {{ version?: string; repoRoot?: string }} [options]
  */
@@ -116,8 +127,7 @@ export async function syncHomebrewFormula(options = {}) {
 
   assertValidVersion(version);
 
-  const url = await resolveNpmTarballUrl(version);
-  const sha256 = await fetchTarballSha256(url);
+  const { url, sha256 } = await resolveNpmReleaseForVersion(version);
 
   const current = readFileSync(paths.formula, "utf8");
   const updated = patchFormulaUrlAndSha256(current, { url, sha256 });
@@ -142,12 +152,43 @@ function readVersionArg(argv) {
   return value;
 }
 
+/** @param {Record<string, string>} entries */
+export function writeGithubOutput(entries) {
+  const outputPath = process.env.GITHUB_OUTPUT;
+  if (!outputPath) {
+    throw new Error("GITHUB_OUTPUT is not set");
+  }
+
+  for (const [key, value] of Object.entries(entries)) {
+    appendFileSync(outputPath, `${key}=${value}\n`);
+  }
+}
+
 const isMain =
   process.argv[1] !== undefined &&
   fileURLToPath(import.meta.url) === process.argv[1];
 
 if (isMain) {
   const version = readVersionArg(process.argv);
+  const githubOutput = process.argv.includes("--github-output");
+
+  if (githubOutput) {
+    const result = await resolveNpmReleaseForVersion(
+      version ?? JSON.parse(readFileSync(PATHS.packageJson, "utf8")).version,
+    );
+    writeGithubOutput({
+      version: result.version,
+      url: result.url,
+      sha256: result.sha256,
+    });
+    process.stdout.write(
+      `Resolved npm release for webfont@${result.version}\n` +
+        `  url: ${result.url}\n` +
+        `  sha256: ${result.sha256}\n`,
+    );
+    process.exit(0);
+  }
+
   const result = await syncHomebrewFormula({ version });
   process.stdout.write(
     `Synced Homebrew formula to webfont@${result.version}\n` +

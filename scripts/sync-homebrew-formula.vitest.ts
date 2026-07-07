@@ -15,7 +15,9 @@ import {
   assertValidVersion,
   ensureSymlink,
   patchFormulaUrlAndSha256,
+  resolveNpmReleaseForVersion,
   syncHomebrewFormula,
+  writeGithubOutput,
 } from "./sync-homebrew-formula.mjs";
 
 const SAMPLE_FORMULA = `# typed: strict
@@ -104,6 +106,59 @@ describe("ensureSymlink", () => {
     ensureSymlink(aliasPath, "../HomebrewFormula/webfont.rb");
 
     expect(readlinkSync(aliasPath)).toBe("../HomebrewFormula/webfont.rb");
+  });
+});
+
+describe("resolveNpmReleaseForVersion", () => {
+  it("should resolve npm tarball url and sha256 without writing formula files", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: string | URL | Request) => {
+        const url = String(input);
+        if (url.endsWith("/webfont/3.2.1")) {
+          return new Response(
+            JSON.stringify({
+              dist: { tarball: "https://registry.npmjs.org/webfont/-/webfont-3.2.1.tgz" },
+            }),
+            { status: 200 },
+          );
+        }
+
+        if (url.endsWith("webfont-3.2.1.tgz")) {
+          return new Response(Buffer.from("fake-tarball"), { status: 200 });
+        }
+
+        return new Response("not found", { status: 404 });
+      }),
+    );
+
+    const result = await resolveNpmReleaseForVersion("3.2.1");
+
+    expect(result.version).toBe("3.2.1");
+    expect(result.url).toBe("https://registry.npmjs.org/webfont/-/webfont-3.2.1.tgz");
+    expect(result.sha256).toMatch(/^[a-f0-9]{64}$/u);
+  });
+});
+
+describe("writeGithubOutput", () => {
+  it("should append key=value lines to GITHUB_OUTPUT", () => {
+    const root = mkdtempSync(join(tmpdir(), "webfont-gh-output-"));
+    tempDirs.push(root);
+    const outputPath = join(root, "output.txt");
+
+    const previous = process.env.GITHUB_OUTPUT;
+    process.env.GITHUB_OUTPUT = outputPath;
+
+    try {
+      writeGithubOutput({ url: "https://example.test/pkg.tgz", sha256: "abc" });
+      expect(readFileSync(outputPath, "utf8")).toBe("url=https://example.test/pkg.tgz\nsha256=abc\n");
+    } finally {
+      if (previous === undefined) {
+        delete process.env.GITHUB_OUTPUT;
+      } else {
+        process.env.GITHUB_OUTPUT = previous;
+      }
+    }
   });
 });
 

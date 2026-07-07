@@ -224,6 +224,7 @@ Publishing from GitHub Actions deploys the same validated build to **two environ
 
 1. Create an npm **Automation** or **Granular** access token for the `webfont` package (npmjs.com → **Access Tokens**) with publish permission (OTP/2FA-for-writes disabled for automation, or use a token type that bypasses it).
 2. Add it as a GitHub repository secret named **`NODE_AUTH_TOKEN`** ([Settings → Secrets and variables → Actions](https://github.com/itgalaxy/webfont/settings/secrets/actions)). GitHub Packages needs no secret — it uses `GITHUB_TOKEN`.
+3. For automated **homebrew-core** bump PRs, add a classic GitHub PAT as **`HOMEBREW_COMMITTER_TOKEN`** with **`repo`** and **`workflow`** scopes ([token settings](https://github.com/settings/tokens)). The [`bump-homebrew-core`](.github/workflows/npm-publish.yml) job uses [mislav/bump-homebrew-formula-action](https://github.com/mislav/bump-homebrew-formula-action) to open a PR on `Homebrew/homebrew-core` after each successful npm publish. Homebrew maintainers still review and merge that PR.
 
 **After merging a Release PR:** the [Release Please](.github/workflows/release-please.yml) workflow cuts the GitHub Release and then dispatches [`npm-publish`](.github/workflows/npm-publish.yml) with the new tag automatically. (A `release: published` event from the default `GITHUB_TOKEN` does not start downstream workflows, so the dispatch is done explicitly — `workflow_dispatch` and `repository_dispatch` are the exceptions to that rule.) If publish does not start, run it manually: **Actions → npm publish → Run workflow** with the release tag (e.g. `v12.1.0`).
 
@@ -241,6 +242,17 @@ The workflow runs two deploy jobs after `build`, each mapped to a GitHub **Envir
 GitHub Packages requires a scope matching the repo owner, so the `publish-github-packages` job renames the package to `@itgalaxy/webfont` in the checkout only (via `npm pkg set name=…`, never committed) — the unscoped `webfont` on npmjs.org is unaffected.
 
 Add protection rules (required reviewers, wait timers) per environment in **Settings → Environments** if you want manual approval to gate a deploy.
+
+##### Homebrew (monorepo tap + homebrew-core)
+
+After `publish-npm` succeeds, the release workflow:
+
+| Job | Target | What it does |
+|-----|--------|--------------|
+| `update-homebrew-formula` | This repo (`HomebrewFormula/webfont.rb`) | Commits `url`/`sha256` bump to `master` |
+| `bump-homebrew-core` | `Homebrew/homebrew-core` | Opens a PR updating `Formula/w/webfont.rb` (needs `HOMEBREW_COMMITTER_TOKEN`) |
+
+The monorepo tap updates immediately; `brew install webfont` from **homebrew-core** picks up the new version after the core PR merges and users run `brew update`. Manual fallback: `npm run render:homebrew-core` and open a PR on homebrew-core yourself.
 
 ##### Vercel docs deployment
 

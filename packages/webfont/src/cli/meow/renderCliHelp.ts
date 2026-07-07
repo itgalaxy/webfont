@@ -5,7 +5,7 @@ import {
   CLI_USAGE_LINE,
   type CliFlagCatalogEntry,
   type CliFlagSection,
-} from "../../optionsReference/cliFlagCatalog";
+} from "./cliFlagCatalog";
 
 const HELP_INDENT = "    ";
 const FLAG_INDENT = "        ";

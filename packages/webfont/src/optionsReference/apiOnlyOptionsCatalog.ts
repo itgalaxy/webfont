@@ -24,5 +24,3 @@ export const API_ONLY_OPTION_DESCRIPTIONS = {
       "Node helper to persist a webfont() Result to disk; requires dest (and destCreate when the folder may not exist).",
   },
 } as const;
-
-export type ApiOnlyOptionKey = keyof typeof API_ONLY_OPTION_DESCRIPTIONS;

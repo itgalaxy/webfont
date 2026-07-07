@@ -14,7 +14,7 @@ pre-push:
         jobs:
           - run: npm run typecheck
           - run: npm run depcheck
-          - run: npm audit --audit-level=info
+          - run: npm run audit
     - group:
         piped: true
         jobs:

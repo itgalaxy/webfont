@@ -21,7 +21,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: npm
     - run: npm ci
-    - run: npm audit --audit-level=info
+    - run: npm run audit
     - run: npm run lint:suppressions
     - run: npm run typecheck
     - run: npm run depcheck

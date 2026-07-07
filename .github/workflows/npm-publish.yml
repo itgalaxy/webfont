@@ -46,7 +46,7 @@ jobs:
           node-version: 26.x
           cache: npm
       - run: npm ci
-      - run: npm audit --audit-level=info
+      - run: npm run audit
       - run: npm test
       - name: Validate published package surface (publint + attw + pack-smoke)
         run: npm run test:package

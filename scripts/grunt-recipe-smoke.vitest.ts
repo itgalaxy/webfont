@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { access, rm } from "node:fs/promises";
+import { access, readFile, rm } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
@@ -32,5 +32,13 @@ describe("grunt-webfont recipe smoke", () => {
 
     await expect(access(WOFF2_OUTPUT)).resolves.toBeUndefined();
     await expect(access(CSS_OUTPUT)).resolves.toBeUndefined();
+
+    const woff2 = await readFile(WOFF2_OUTPUT);
+    expect(woff2.subarray(0, 4).toString("ascii")).toBe("wOF2");
+    expect(woff2.length).toBeGreaterThan(100);
+
+    const css = await readFile(CSS_OUTPUT, "utf8");
+    expect(css).toMatch(/@font-face/u);
+    expect(css).toMatch(/icons\.woff2/u);
   }, 120_000);
 });

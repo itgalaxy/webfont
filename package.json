@@ -25,6 +25,7 @@
     "sync:homebrew": "node scripts/sync-homebrew-formula.mjs",
     "test": "npm run test:scripts && npm run test -w webfont",
     "test:scripts": "vitest run --config vitest.scripts.config.ts",
+    "audit": "npm audit --audit-level=moderate",
     "test:package": "npm run test:package -w webfont",
     "testc": "npm run testc -w webfont",
     "test-debug": "npm run test-debug -w webfont",
@@ -39,6 +40,10 @@
   },
   "overrides": {
     "minimatch": "10.2.5",
+    "grunt": {
+      "js-yaml": "3.15.0",
+      "minimatch": "3.1.5"
+    },
     "test-exclude": "7.0.2",
     "woff2sfnt-sfnt2woff": "1.0.0"
   },

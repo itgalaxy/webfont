@@ -1,4 +1,4 @@
-import index, { type Result, type ResultConfig, webfont } from ".";
+import index, { type Result, type ResultConfig, webfont, writeResultFiles } from ".";
 
 describe("index", () => {
   it("should be exported", () => {
@@ -13,5 +13,9 @@ describe("index", () => {
     expectTypeOf<Result["config"]>().toEqualTypeOf<ResultConfig | undefined>();
     expectTypeOf<ResultConfig>().toHaveProperty("filePath");
     expectTypeOf<ResultConfig["filePath"]>().toEqualTypeOf<string | undefined>();
+  });
+
+  it("should export writeResultFiles for programmatic disk writes", () => {
+    expect(typeof writeResultFiles).toBe("function");
   });
 });

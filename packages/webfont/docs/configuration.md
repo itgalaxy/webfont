@@ -21,6 +21,27 @@ const config: ResultConfig | undefined = result.config;
 - Description: Absolute path to the configuration file that was discovered or loaded. Omitted when no configuration file was found and defaults were used.
 - Note: Output-only metadata — not an input option. Do not set `filePath` in `.webfontrc`, `package.json`, or the `webfont()` call.
 
+### Writing results to disk
+
+The API does not write files by itself. Pass `dest` (and `destCreate: true` when the folder may not exist), then call `writeResultFiles` — the same helper the CLI uses:
+
+```ts
+import { webfont, writeResultFiles } from "webfont";
+
+const result = await webfont({
+  files: "src/icons/**/*.svg",
+  fontName: "icons",
+  formats: ["woff2"],
+  template: "css",
+  dest: "dist/fonts",
+  destCreate: true,
+});
+
+await writeResultFiles(result);
+```
+
+Grunt integration: [Grunt recipe](../../../docs/recipes/grunt-webfont/README.md).
+
 ## files
 
 - Type: `string` | `array`

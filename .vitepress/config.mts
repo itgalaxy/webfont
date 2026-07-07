@@ -54,6 +54,7 @@ export default defineConfig({
     "CLAUDE.md",
     "MAINTAINERS.md",
     "docs/adr/**",
+    "docs/recipes/**",
     "coverage/**",
     "packages/webfont/temp/**",
     "packages/webfont/demo/**",

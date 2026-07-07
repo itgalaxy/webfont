@@ -1,24 +1,21 @@
 import * as fs from "fs";
 import * as fsPromise from "fs/promises";
 import path from "path";
-import { webfont } from "../standalone";
-import type { Result } from "../types/Result";
-import type { ResultConfig } from "../types/ResultConfig";
 import {
-  buildOptionsBase,
-  type CliLike,
+  ensureDestExists,
   ensureResultConfig,
   getDecompressedFontOutputBasename,
-  getExitCode,
   getResultOutputPath,
   mergeCliDestIntoConfig,
   resolveDestTemplate,
-  runCli,
-  startCli,
   writeDecompressedFontFiles,
   writeResultFiles,
   writeTranscodedFontFiles,
-} from "./program";
+} from "../node/writeResultFiles";
+import { webfont } from "../standalone";
+import type { Result } from "../types/Result";
+import type { ResultConfig } from "../types/ResultConfig";
+import { buildOptionsBase, type CliLike, getExitCode, runCli, startCli } from "./program";
 
 vi.mock("../standalone", async (importOriginal) => {
   const actual = await importOriginal<typeof import("../standalone")>();
@@ -300,15 +297,11 @@ describe("cli program", () => {
     });
 
     it("should create the destination when destCreate is enabled", async () => {
-      const { ensureDestExists } = await import("./program");
-
       await ensureDestExists(destination, true);
       await fsPromise.access(destination);
     });
 
     it("should reject when destination is missing and destCreate is disabled", async () => {
-      const { ensureDestExists } = await import("./program");
-
       await expect(ensureDestExists(destination, false)).rejects.toThrow(
         `Destination directory "${destination}" does not exist. Use --dest-create (-m) to create it.`,
       );

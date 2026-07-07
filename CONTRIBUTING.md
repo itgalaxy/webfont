@@ -250,7 +250,7 @@ After `publish-npm` succeeds, the release workflow:
 | Job | Target | What it does |
 |-----|--------|--------------|
 | `update-homebrew-formula` | This repo (`HomebrewFormula/webfont.rb`) | Commits `url`/`sha256` bump to `master` |
-| `bump-homebrew-core` | `Homebrew/homebrew-core` | Opens a PR updating `Formula/w/webfont.rb` (needs `HOMEBREW_COMMITTER_TOKEN`) |
+| `bump-homebrew-core` | `Homebrew/homebrew-core` | Opens a PR updating `Formula/w/webfont.rb` (skipped when `HOMEBREW_COMMITTER_TOKEN` is unset) |
 
 The monorepo tap updates immediately; `brew install webfont` from **homebrew-core** picks up the new version after the core PR merges and users run `brew update`. Manual fallback: `npm run render:homebrew-core` and open a PR on homebrew-core yourself.
 

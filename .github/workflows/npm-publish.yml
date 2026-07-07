@@ -190,6 +190,7 @@ jobs:
           git push
 
   bump-homebrew-core:
+    if: ${{ secrets.HOMEBREW_COMMITTER_TOKEN != '' }}
     needs: [build, publish-npm]
     runs-on: ubuntu-latest
     permissions:
@@ -211,7 +212,7 @@ jobs:
           formula-path: Formula/w/webfont.rb
           homebrew-tap: Homebrew/homebrew-core
           base-branch: main
-          tag-name: ${{ needs.build.outputs.version }}
+          tag-name: ${{ env.RELEASE_TAG }}
           download-url: ${{ steps.npm.outputs.url }}
           download-sha256: ${{ steps.npm.outputs.sha256 }}
           create-pullrequest: true

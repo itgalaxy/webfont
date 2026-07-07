@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.5.0](https://github.com/itgalaxy/webfont/compare/v12.4.1...v12.5.0) (2026-07-07)
+
+
+### Features
+
+* add Grunt recipe and export writeResultFiles ([#791](https://github.com/itgalaxy/webfont/issues/791)) ([67e0cca](https://github.com/itgalaxy/webfont/commit/67e0ccaeb5fe2284e3467af410ca81e4b1d8cd0e))
+
 ## [12.4.1](https://github.com/itgalaxy/webfont/compare/v12.4.0...v12.4.1) (2026-07-04)
 
 

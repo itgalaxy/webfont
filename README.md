@@ -72,7 +72,7 @@ Node.js only — do not import from client-side app code ([#198](https://github.
 
 This is an **npm workspaces** monorepo. The published package lives in **`packages/webfont`** (`name: "webfont"` on npm). User-facing markdown for the docs site stays at the repo root; package-specific guides ship inside the tarball (`install.md`, `docs/configuration.md`, `docs/cli.md`, `NOTICE.md`, `LICENSE`).
 
-**Homebrew:** `brew install webfont` from [homebrew-core](https://github.com/Homebrew/homebrew-core/pull/291610). The monorepo tap (`HomebrewFormula/webfont.rb`, `Aliases/webfonts`) remains for early formula updates and the `webfonts` alias ([#769](https://github.com/itgalaxy/webfont/issues/769)). Bump both on release with `node scripts/sync-homebrew-formula.mjs`.
+**Homebrew:** `brew install webfont` from [homebrew-core](https://github.com/Homebrew/homebrew-core/pull/291610). The monorepo tap (`HomebrewFormula/webfont.rb`, `Aliases/webfonts`) is bumped automatically on release; a PR to homebrew-core is opened by CI when `HOMEBREW_COMMITTER_TOKEN` is configured (see [CONTRIBUTING.md](./CONTRIBUTING.md#homebrew-monorepo-tap--homebrew-core)).
 
 ## Contributing
 

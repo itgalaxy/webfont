@@ -5,6 +5,7 @@ name: npm publish
 #
 #   - `npm`             → public registry (https://registry.npmjs.org, `webfont`)
 #   - `github-packages` → GitHub Packages (https://npm.pkg.github.com, `@itgalaxy/webfont`)
+#   - `homebrew-core`   → PR on Homebrew/homebrew-core (`Formula/w/webfont.rb`)
 #
 # The `build` job is the single place that builds `dist/`, runs the full test
 # suite, and validates the published surface (publint + attw + pack-smoke). It
@@ -187,3 +188,37 @@ jobs:
           fi
           git commit -m "chore(homebrew): bump formula to webfont@${{ needs.build.outputs.version }} [skip ci]"
           git push
+
+  bump-homebrew-core:
+    if: ${{ secrets.HOMEBREW_COMMITTER_TOKEN != '' }}
+    needs: [build, publish-npm]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 26.x
+      - name: Resolve npm tarball url and sha256
+        id: npm
+        run: node scripts/sync-homebrew-formula.mjs --version "${{ needs.build.outputs.version }}" --github-output
+      - name: Open homebrew-core pull request
+        uses: mislav/bump-homebrew-formula-action@v4
+        with:
+          formula-name: webfont
+          formula-path: Formula/w/webfont.rb
+          homebrew-tap: Homebrew/homebrew-core
+          base-branch: main
+          tag-name: ${{ env.RELEASE_TAG }}
+          download-url: ${{ steps.npm.outputs.url }}
+          download-sha256: ${{ steps.npm.outputs.sha256 }}
+          create-pullrequest: true
+          commit-message: |
+            webfont {{version}}
+
+            Created by https://github.com/itgalaxy/webfont release workflow
+        env:
+          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_COMMITTER_TOKEN }}

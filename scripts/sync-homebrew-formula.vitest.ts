@@ -14,6 +14,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   assertValidVersion,
   ensureSymlink,
+  PATHS,
   patchFormulaUrlAndSha256,
   resolveNpmReleaseForVersion,
   syncHomebrewFormula,
@@ -111,6 +112,8 @@ describe("ensureSymlink", () => {
 
 describe("resolveNpmReleaseForVersion", () => {
   it("should resolve npm tarball url and sha256 without writing formula files", async () => {
+    const formulaBefore = readFileSync(PATHS.formula, "utf8");
+
     vi.stubGlobal(
       "fetch",
       vi.fn((input: string | URL | Request) => {
@@ -137,6 +140,7 @@ describe("resolveNpmReleaseForVersion", () => {
     expect(result.version).toBe("3.2.1");
     expect(result.url).toBe("https://registry.npmjs.org/webfont/-/webfont-3.2.1.tgz");
     expect(result.sha256).toMatch(/^[a-f0-9]{64}$/u);
+    expect(readFileSync(PATHS.formula, "utf8")).toBe(formulaBefore);
   });
 });
 
@@ -152,6 +156,25 @@ describe("writeGithubOutput", () => {
     try {
       writeGithubOutput({ url: "https://example.test/pkg.tgz", sha256: "abc" });
       expect(readFileSync(outputPath, "utf8")).toBe("url=https://example.test/pkg.tgz\nsha256=abc\n");
+    } finally {
+      if (previous === undefined) {
+        delete process.env.GITHUB_OUTPUT;
+      } else {
+        process.env.GITHUB_OUTPUT = previous;
+      }
+    }
+  });
+
+  it("should reject multiline GITHUB_OUTPUT values", () => {
+    const root = mkdtempSync(join(tmpdir(), "webfont-gh-output-"));
+    tempDirs.push(root);
+    const outputPath = join(root, "output.txt");
+
+    const previous = process.env.GITHUB_OUTPUT;
+    process.env.GITHUB_OUTPUT = outputPath;
+
+    try {
+      expect(() => writeGithubOutput({ url: "https://example.test/a\nb.tgz" })).toThrow(/single line/u);
     } finally {
       if (previous === undefined) {
         delete process.env.GITHUB_OUTPUT;

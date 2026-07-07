@@ -160,6 +160,12 @@ export function writeGithubOutput(entries) {
   }
 
   for (const [key, value] of Object.entries(entries)) {
+    if (key.includes("\n") || value.includes("\n")) {
+      throw new Error(
+        `GITHUB_OUTPUT entry "${key}" must be a single line (use the heredoc format for multiline values)`,
+      );
+    }
+
     appendFileSync(outputPath, `${key}=${value}\n`);
   }
 }

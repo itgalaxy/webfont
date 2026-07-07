@@ -153,7 +153,9 @@ jobs:
       # for a PAT secret with `write:packages` if you prefer a personal token.
       - name: Write ~/.npmrc for GitHub Packages
         run: printf '%s\n' '@itgalaxy:registry=https://npm.pkg.github.com/' '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' > "$HOME/.npmrc"
-      - run: npm publish --ignore-scripts -w webfont
+      # Publish by workspace path: `npm pkg set name=…` above renames the package to
+      # `@itgalaxy/webfont`, so `-w webfont` no longer resolves.
+      - run: npm publish --ignore-scripts -w packages/webfont
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

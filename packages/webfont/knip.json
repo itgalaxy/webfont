@@ -19,6 +19,7 @@
   "ignoreIssues": {
     "src/cli/meow/index.ts": ["exports"],
     "src/cli/program.ts": ["exports"],
+    "src/node/writeResultFiles.ts": ["exports"],
     "templates/index.ts": ["exports"],
     "src/index.ts": ["exports"],
     "src/standalone/index.ts": ["exports"],

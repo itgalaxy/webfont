@@ -229,6 +229,18 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - ⬜ TTF input transcoded to OTF
   - ⬜ Documented public API for generic transcoding
 
+## Grunt integration (recipe)
+
+- **Stability**: stable
+- **Description**: Run `webfont` from Grunt via a documented custom task — maintained replacement for archived [`grunt-webfont`](https://github.com/sapegin/grunt-webfont).
+- **Properties**:
+  - Recipe: [`packages/grunt-webfont-recipe`](./packages/grunt-webfont-recipe/README.md) — calls `webfont()` + `writeResultFiles()` (exported from the package entry).
+  - Alternative: shell out to the `webfont` CLI from `grunt.util.spawn`.
+  - No official `grunt-webfont` npm plugin unless demand warrants it ([#771](https://github.com/itgalaxy/webfont/issues/771)).
+  - Parity gaps vs grunt-webfont (BEM/Bootstrap presets, `embed`, `codepointsFile`, FontForge) documented in the recipe and [MIGRATION.md](./MIGRATION.md#comparison-with-grunt-webfont).
+- **Test Criteria**:
+  - ✅ Grunt recipe smoke test (`scripts/grunt-recipe-smoke.vitest.ts`)
+
 ## Are you a contributor?
 
 This file is the canonical capability list. **Update it in the same PR** whenever behavior, supported inputs/outputs, or public options change. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full documentation checklist.

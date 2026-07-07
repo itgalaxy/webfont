@@ -15,10 +15,7 @@ const TAP_FORMULA = join(REPO_ROOT, "HomebrewFormula/webfont.rb");
 
 /** @param {{ url: string; sha256: string }} fields */
 export function renderHomebrewCoreFormula({ url, sha256 }) {
-  return `# typed: strict
-# frozen_string_literal: true
-
-class Webfont < Formula
+  return `class Webfont < Formula
   desc "Generator of fonts from SVG icons, with TTF encoding and WOFF/WOFF2 decoding"
   homepage "https://webfont.js.org/"
   url "${url}"

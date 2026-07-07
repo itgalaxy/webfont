@@ -449,6 +449,67 @@ See [#558](https://github.com/itgalaxy/webfont/issues/558), [MaterialDesign#6519
 
 ---
 
+## Homebrew: formula not found or wrong source
+
+### What error appeared
+
+`brew install webfont` fails with:
+
+```text
+Warning: No available formula with the name "webfont". Did you mean webfs?
+```
+
+Or `brew info webfont` shows `Tap: itgalaxy/webfont` when you expected homebrew-core.
+
+### Why it usually happens
+
+- **Stale Homebrew index** — especially right after a new formula lands in homebrew-core. Run `brew update` before installing.
+- **Monorepo tap still tapped** — if you ran `brew tap itgalaxy/webfont`, Homebrew installs from the tap first. That still works, but it is not the same as the core formula.
+- **Tap removed but index not refreshed** — after `brew untap itgalaxy/webfont`, some setups need `brew update` before `brew install webfont` resolves homebrew-core.
+
+### Steps to try to resolve
+
+1. **Refresh and install from core:**
+
+   ```shell
+   brew update
+   brew install webfont
+   ```
+
+2. **Confirm which formula is installed:**
+
+   ```shell
+   brew info webfont
+   webfont --version
+   ```
+
+   Core shows `From: https://github.com/Homebrew/homebrew-core/...`. The tap shows `Tap: itgalaxy/webfont`.
+
+3. **Switch from tap to core:**
+
+   ```shell
+   brew uninstall webfont
+   brew untap itgalaxy/webfont
+   brew update
+   brew install webfont
+   ```
+
+4. **Smoke-test the CLI** (same as the Homebrew formula test):
+
+   ```shell
+   webfont path/to/icon.svg -d /tmp/webfont-test -f woff2 --dest-create
+   ls /tmp/webfont-test/webfont.woff2
+   ```
+
+5. **Optional tap** — for the `webfonts` alias or pre-core formula bumps, see [Install — Homebrew](./packages/webfont/install.md#homebrew-macos--linux-cli).
+
+### Related
+
+- [homebrew-core PR #291610](https://github.com/Homebrew/homebrew-core/pull/291610) — merged formula
+- [#785](https://github.com/itgalaxy/webfont/issues/785) — tracking issue
+
+---
+
 ## Can't resolve `fs` (webpack / React / Vite client bundle)
 
 ### What error appeared

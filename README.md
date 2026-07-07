@@ -53,7 +53,7 @@ Requires **Node.js** >= 24.14.0. Install as a dev dependency and run at **build 
 npm install --save-dev webfont
 ```
 
-On macOS or Linux you can also install the CLI with [Homebrew](https://brew.sh) (`brew tap itgalaxy/webfont https://github.com/itgalaxy/webfont` then `brew install itgalaxy/webfont/webfont`). See [install guide](./packages/webfont/install.md#homebrew-macos--linux-cli).
+On macOS or Linux you can also install the CLI with [Homebrew](https://brew.sh): `brew install webfont` ([homebrew-core](https://github.com/Homebrew/homebrew-core/pull/291610)). See [install guide](./packages/webfont/install.md#homebrew-macos--linux-cli).
 
 ```js
 import { webfont } from "webfont";
@@ -72,7 +72,7 @@ Node.js only — do not import from client-side app code ([#198](https://github.
 
 This is an **npm workspaces** monorepo. The published package lives in **`packages/webfont`** (`name: "webfont"` on npm). User-facing markdown for the docs site stays at the repo root; package-specific guides ship inside the tarball (`install.md`, `docs/configuration.md`, `docs/cli.md`, `NOTICE.md`, `LICENSE`).
 
-**Homebrew:** `HomebrewFormula/webfont.rb` and `Aliases/webfonts` at the repo root serve the monorepo tap ([#769](https://github.com/itgalaxy/webfont/issues/769)). Bump the formula on release with `node scripts/sync-homebrew-formula.mjs`.
+**Homebrew:** `brew install webfont` from [homebrew-core](https://github.com/Homebrew/homebrew-core/pull/291610). The monorepo tap (`HomebrewFormula/webfont.rb`, `Aliases/webfonts`) remains for early formula updates and the `webfonts` alias ([#769](https://github.com/itgalaxy/webfont/issues/769)). Bump both on release with `node scripts/sync-homebrew-formula.mjs`.
 
 ## Contributing
 

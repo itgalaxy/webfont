@@ -17,7 +17,9 @@ This repository is an **npm workspaces** monorepo ([ADR 0013](./docs/adr/0013-np
 
 Run **`npm ci`** at the **repo root**. Library commands (`npm test`, `npm run build`, `npm run test:package`) delegate to the `webfont` workspace. User-facing markdown (`README.md`, `FEATURES.md`, …) stays at the root for the docs site; VitePress rewrites `packages/webfont/CHANGELOG.md` and `packages/webfont/NOTICE.md`.
 
-Future workspaces (`webfont-studio`, optional CLI split, Homebrew assets) will live under `packages/*` without changing the public npm package name.
+Future workspaces (`webfont-studio`, optional CLI split, Homebrew assets) live under `packages/*` without changing the public npm package name.
+
+**webfont Studio** (`packages/webfont-studio`, private) ships on the docs site at `/demo/`. Build with `npm run studio:build` (output → `public/demo/`); local UI dev with `npm run studio:dev` (http://localhost:3333/demo/). `npm run docs:dev` and `npm run docs:site` build the Studio automatically via `predocs:dev` / `docs:site`.
 
 There are several ways to contribute, not just by writing code:
 

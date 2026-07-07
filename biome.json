@@ -177,6 +177,31 @@
       }
     },
     {
+      "includes": ["packages/webfont-studio/**"],
+      "javascript": {
+        "globals": ["DedicatedWorkerGlobalScope", "importScripts", "self"]
+      },
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noVoid": "off"
+          },
+          "performance": {
+            "noAwaitInLoops": "off"
+          },
+          "style": {
+            "noContinue": "off",
+            "noNestedTernary": "off",
+            "noTernary": "off"
+          },
+          "suspicious": {
+            "noAlert": "off",
+            "useAwait": "off"
+          }
+        }
+      }
+    },
+    {
       "includes": ["**/*.ts", "**/*.tsx"],
       "linter": {
         "rules": {

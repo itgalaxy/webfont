@@ -10,8 +10,8 @@ hero:
       text: Get Started
       link: /introduction/install
     - theme: alt
-      text: Demo
-      link: /demo
+      text: Studio
+      link: /demo/
     - theme: alt
       text: View on GitHub
       link: https://github.com/itgalaxy/webfont

@@ -81,10 +81,6 @@ packages/webfont/src/**/*.d.ts
 # Generated font demo for the docs site (built by `npm run docs:demo`)
 public/font-demo
 
-# Grunt recipe fixture (local npm install + dist output)
-docs/recipes/grunt-webfont/node_modules
-docs/recipes/grunt-webfont/dist
-
 # Vercel CLI local state (project link + pulled env)
 .vercel
 .env*.local

@@ -115,6 +115,6 @@ Not planned unless demand shows up ([#771](https://github.com/itgalaxy/webfont/i
 
 ## Related
 
-- [Install guide](../../packages/webfont/install.md)
-- [Configuration](../../packages/webfont/docs/configuration.md)
+- [Install guide](../webfont/install.md)
+- [Configuration](../webfont/docs/configuration.md)
 - [Troubleshooting](../../TROUBLESHOOTING.md)

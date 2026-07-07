@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 
 const execFileAsync = promisify(execFile);
 const REPO_ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "..");
-const RECIPE_DIR = join(REPO_ROOT, "docs/recipes/grunt-webfont");
+const RECIPE_DIR = join(REPO_ROOT, "packages/grunt-webfont-recipe");
 const OUTPUT_DIR = join(RECIPE_DIR, "dist/fonts");
 const WOFF2_OUTPUT = join(OUTPUT_DIR, "icons.woff2");
 const CSS_OUTPUT = join(OUTPUT_DIR, "icons.css");

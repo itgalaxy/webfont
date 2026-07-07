@@ -1,0 +1,14 @@
+{
+  "name": "grunt-webfont-recipe",
+  "private": true,
+  "description": "Reference Grunt task for webfont (not published to npm)",
+  "scripts": {
+    "grunt": "grunt",
+    "test": "grunt webfont"
+  },
+  "devDependencies": {
+    "grunt": "1.6.1",
+    "grunt-cli": "1.5.0",
+    "webfont": "file:../webfont"
+  }
+}

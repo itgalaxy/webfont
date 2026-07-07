@@ -70,7 +70,7 @@ For library use inside a Node project, prefer the npm dev dependency above.
 
 ### Grunt (legacy projects)
 
-[`grunt-webfont`](https://github.com/sapegin/grunt-webfont) is archived. Use a custom Grunt task that calls `webfont()` and `writeResultFiles()` — see the [Grunt recipe](../../docs/recipes/grunt-webfont/README.md) ([#771](https://github.com/itgalaxy/webfont/issues/771)).
+[`grunt-webfont`](https://github.com/sapegin/grunt-webfont) is archived. Use a custom Grunt task that calls `webfont()` and `writeResultFiles()` — see [`packages/grunt-webfont-recipe`](../../packages/grunt-webfont-recipe/README.md) ([#771](https://github.com/itgalaxy/webfont/issues/771)).
 
 ## Verify
 
@@ -220,7 +220,7 @@ You should see `my-icons.woff2` and, with `-t css`, `my-icons.css`.
 - **Pipelines** are mutually exclusive per run: `.svg` (icon font), `.ttf` (encode), or `.woff`/`.woff2` (decompress). See [Capabilities at a glance](../../README.md#capabilities-at-a-glance).
 - **Font rights:** you must be allowed to process every input file. See [NOTICE.md](./NOTICE.md).
 - **Webpack:** prefer the [webpack plugin](https://github.com/itgalaxy/webfont-webpack-plugin) or call webfont from a Node build script, not from client bundles.
-- **Grunt:** see the [Grunt recipe](../../docs/recipes/grunt-webfont/README.md) (replacement for archived `grunt-webfont`).
+- **Grunt:** see [`packages/grunt-webfont-recipe`](../../packages/grunt-webfont-recipe/README.md) (replacement for archived `grunt-webfont`).
 
 ## Related
 

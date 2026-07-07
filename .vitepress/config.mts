@@ -54,7 +54,7 @@ export default defineConfig({
     "CLAUDE.md",
     "MAINTAINERS.md",
     "docs/adr/**",
-    "docs/recipes/**",
+    "packages/grunt-webfont-recipe/**",
     "coverage/**",
     "packages/webfont/temp/**",
     "packages/webfont/demo/**",

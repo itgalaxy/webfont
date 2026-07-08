@@ -32,4 +32,34 @@ describe("mapWasConfigToWebfontOptions", () => {
     expect(options.templateClassName).toBe("brand-icon");
     expect(options.fontId).toBe("brand-icon");
   });
+
+  it("should not override webfont defaults when fixedWidth and fontHeight are omitted from .was", () => {
+    const options = mapWasConfigToWebfontOptions({
+      dest: "dist/fonts",
+      files: "icons/*.svg",
+      fontName: "my-icon",
+      formats: ["woff2"],
+      name: "MyAwesomeFont",
+      template: "css",
+    });
+
+    expect(options.fixedWidth).toBeUndefined();
+    expect(options.fontHeight).toBeUndefined();
+  });
+
+  it("should apply fixedWidth and fontHeight when explicitly set in .was", () => {
+    const options = mapWasConfigToWebfontOptions({
+      dest: "dist/fonts",
+      files: "icons/*.svg",
+      fixedWidth: true,
+      fontHeight: 1000,
+      formats: ["ttf"],
+      name: "MyAwesomeFont",
+      prefix: "my-icon",
+      template: "css",
+    });
+
+    expect(options.fixedWidth).toBe(true);
+    expect(options.fontHeight).toBe(1000);
+  });
 });

@@ -26,7 +26,7 @@ const pickFormats = async (): Promise<Format[]> => {
       { message: "woff2", name: "woff2" },
     ],
     limit: 6,
-    message: "Which font types you need?",
+    message: "Which font types do you need?",
     name: "formats",
   }).run();
 

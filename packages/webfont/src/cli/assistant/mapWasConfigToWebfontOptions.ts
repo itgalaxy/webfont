@@ -9,12 +9,10 @@ export const mapWasConfigToWebfontOptions = (was: WebfontAssistantWasConfig): In
     formats = ["ttf"];
   }
 
-  return {
+  const options: InitialOptions = {
     dest: was.dest,
     destCreate: true,
     files: was.files,
-    fixedWidth: was.fixedWidth ?? true,
-    fontHeight: was.fontHeight ?? 1000,
     fontId: was.fontId ?? classPrefix,
     fontName: displayName,
     formats,
@@ -22,4 +20,14 @@ export const mapWasConfigToWebfontOptions = (was: WebfontAssistantWasConfig): In
     templateClassName: classPrefix,
     templateFontName: was.templateFontName ?? displayName,
   };
+
+  if (was.fixedWidth !== undefined) {
+    options.fixedWidth = was.fixedWidth;
+  }
+
+  if (was.fontHeight !== undefined) {
+    options.fontHeight = was.fontHeight;
+  }
+
+  return options;
 };

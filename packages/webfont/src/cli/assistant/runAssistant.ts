@@ -16,6 +16,19 @@ const runWasConfig = async (was: WebfontAssistantWasConfig): Promise<Result> => 
   return result;
 };
 
+const runWasConfigsSequentially = (
+  configs: readonly WebfontAssistantWasConfig[],
+  emptyError: string,
+): Promise<Result> => {
+  const [head, ...tail] = configs;
+
+  if (!head) {
+    return Promise.reject(new Error(emptyError));
+  }
+
+  return tail.reduce<Promise<Result>>((chain, was) => chain.then(() => runWasConfig(was)), runWasConfig(head));
+};
+
 export type RunAssistantOptions = {
   configPath?: string;
 };
@@ -23,18 +36,7 @@ export type RunAssistantOptions = {
 export const runAssistant = async (options: RunAssistantOptions = {}): Promise<Result> => {
   if (options.configPath) {
     const configs = await loadWasConfigs(options.configPath);
-    let lastResult: Result | undefined;
-
-    for (const was of configs) {
-      // biome-ignore lint/performance/noAwaitInLoops: assistant batch configs run sequentially like webfont-assistant --config
-      lastResult = await runWasConfig(was);
-    }
-
-    if (!lastResult) {
-      throw new Error(`No assistant configs found in ${options.configPath}`);
-    }
-
-    return lastResult;
+    return runWasConfigsSequentially(configs, `No assistant configs found in ${options.configPath}`);
   }
 
   const was = await runAssistantWizard();

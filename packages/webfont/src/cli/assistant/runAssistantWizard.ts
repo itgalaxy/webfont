@@ -4,9 +4,17 @@ import type { AssistantWizardAnswers, WebfontAssistantWasConfig } from "./types"
 
 const DEFAULT_FORMATS: Format[] = ["ttf"];
 
-const loadEnquirer = async () => {
+type EnquirerStatic = {
+  Confirm: new (options: Record<string, unknown>) => { run: () => Promise<boolean> };
+  Form: new <T>(options: Record<string, unknown>) => { run: () => Promise<T> };
+  Input: new (options: Record<string, unknown>) => { run: () => Promise<string> };
+  MultiSelect: new <T>(options: Record<string, unknown>) => { run: () => Promise<T[]> };
+  Select: new <T>(options: Record<string, unknown>) => { run: () => Promise<T> };
+};
+
+const loadEnquirer = async (): Promise<EnquirerStatic> => {
   const module = await import("enquirer");
-  return module.default;
+  return module.default as unknown as EnquirerStatic;
 };
 
 const pickFormats = async (): Promise<Format[]> => {

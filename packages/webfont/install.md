@@ -122,6 +122,22 @@ Run with `npm run webfont -- <flags>` (`--` forwards arguments to the CLI).
 
 All flags: [CLI reference](https://webfont.js.org/introduction/cli) · [source](./docs/cli.md)
 
+### Interactive assistant
+
+For a guided flow (same idea as [webfont-assistant](https://github.com/kmorope/webfont-assistant)):
+
+```shell
+webfont --assistant
+```
+
+Rerun from a saved `.was` config:
+
+```shell
+webfont --assistant-config assets/fonts/MyAwesomeFont.was
+```
+
+`--assistant-config` is **not** the same as `--config` (cosmiconfig).
+
 ## Use the programmatic API
 
 ```js

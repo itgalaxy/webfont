@@ -137,6 +137,18 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - ✅ `parseFormatsFlag` validates format names including `otf`
   - ✅ `validateWebfontOptions` rejects unknown `formats` from API and cosmiconfig (#133)
 
+## Interactive CLI assistant
+
+- **Stability**: in-progress
+- **Description**: Guided wizard and `.was` config rerun (parity with [webfont-assistant](https://github.com/kmorope/webfont-assistant)): `--assistant`, `--assistant-config`.
+- **Properties**:
+  - Prompts for font name, icon prefix, glyph/output paths, formats, and css/scss/custom templates.
+  - Writes `{name}.was` beside generated fonts; `--assistant-config` reloads webfont-assistant-compatible JSON.
+  - Distinct from cosmiconfig `--config`.
+- **Test Criteria**:
+  - ✅ Unit tests for `.was` → `webfont()` option mapping
+  - ✅ CLI integration test for `--assistant-config`
+
 ## Option validation
 
 - **Stability**: stable

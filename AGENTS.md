@@ -248,6 +248,18 @@ Process open issues **oldest to newest** (`gh issue list --state open`, sort by 
 
 Skip PRs for duplicates, `wontfix`, or issues that only need a comment (already fixed in a recent release — verify with tests or changelog before closing).
 
+## Downstream: webfont-assistant
+
+[webfont-assistant](https://github.com/kmorope/webfont-assistant) is a third-party interactive CLI wrapper around `webfont`. When a change in **this** repository can affect that package (CLI/API/options defaults, `.was` config shape, `writeResultFiles` behavior, Node engine, breaking migrations), **open a PR to [kmorope/webfont-assistant](https://github.com/kmorope/webfont-assistant) in the same work session** — do not defer to a follow-up.
+
+| Trigger | Action |
+|---------|--------|
+| Breaking or additive CLI/API change | PR updating `webfont` dependency + mapping code; note minimum webfont version in README |
+| New built-in assistant flags (`--assistant`, `--assistant-config`) | Ensure parity docs mention migration from `webfont-assistant` |
+| `.was` format change | Update both our assistant module (`src/cli/assistant/`) and webfont-assistant |
+
+Fork via `gh repo fork kmorope/webfont-assistant`, branch from `master`, PR upstream with English title/body. Link the itgalaxy/webfont PR in the downstream PR description.
+
 ## Pull requests
 
 See **[MAINTAINERS.md](./MAINTAINERS.md)** for branch naming, opening PRs, squash merge, Copilot review threads, merged-branch rules, and template guidance. Agents must push and open PRs without asking when work is review-ready.

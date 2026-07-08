@@ -23,6 +23,16 @@ Install the package and wire the CLI script first: [Install guide](https://webfo
 
     Options:
 
+        --assistant
+
+            Interactive wizard (webfont-assistant style): prompts for font name, icon prefix,
+            glyph/output paths, formats, and built-in or custom templates; writes a `.was` config.
+
+        --assistant-config
+
+            Path to a `.was` config (webfont-assistant format) or JSON array of configs to regenerate fonts.
+            Distinct from `--config` (cosmiconfig).
+
         --config
 
             Path to a specific configuration file (JSON, YAML, or CommonJS)

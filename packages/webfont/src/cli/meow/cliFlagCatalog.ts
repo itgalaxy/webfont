@@ -37,6 +37,24 @@ export const CLI_FLAG_SECTIONS: readonly CliFlagSection[] = [
     title: "Options:",
     entries: [
       {
+        key: "assistant",
+        long: "--assistant",
+        type: "boolean",
+        description: [
+          "Interactive wizard (webfont-assistant style): prompts for font name, icon prefix,",
+          "glyph/output paths, formats, and built-in or custom templates; writes a `.was` config.",
+        ],
+      },
+      {
+        key: "assistantConfig",
+        long: "--assistant-config",
+        type: "string",
+        description: [
+          "Path to a `.was` config (webfont-assistant format) or JSON array of configs to regenerate fonts.",
+          "Distinct from `--config` (cosmiconfig).",
+        ],
+      },
+      {
         key: "config",
         long: "--config",
         type: "string",

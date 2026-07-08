@@ -120,6 +120,8 @@ const buildWebfontMeowFlags = (): AnyFlags => {
 export const WEBFONT_CLI_HELP_MARKERS = [
   CLI_USAGE_LINE,
   "--config",
+  "--assistant",
+  "--assistant-config",
   "--fontName",
   "--formats",
   "--dest-create",

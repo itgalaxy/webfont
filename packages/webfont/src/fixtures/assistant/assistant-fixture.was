@@ -1,0 +1,14 @@
+{
+  "dest": "temp/cli-assistant",
+  "files": "src/fixtures/svg-icons/*.svg",
+  "fixedWidth": true,
+  "fontHeight": 1000,
+  "fontId": "fixture-icon",
+  "fontName": "fixture-icon",
+  "formats": ["woff2"],
+  "name": "AssistantFixture",
+  "prefix": "fixture-icon",
+  "styleType": "css",
+  "template": "css",
+  "templateFontName": "AssistantFixture"
+}

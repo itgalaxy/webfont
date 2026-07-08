@@ -15,15 +15,34 @@ export const getWorkspaceRoot = (input?: string): string => {
 
 export const resolvePathWithinRoot = (inputPath: string, workspaceRoot: string): string => {
   const root = getWorkspaceRoot(workspaceRoot);
-  let target: string;
-  if (isAbsolute(inputPath)) {
-    target = resolve(inputPath);
-  } else {
-    target = resolve(root, inputPath);
-  }
-  const rel = relative(root, target);
+  const target = isAbsolute(inputPath) ? resolve(inputPath) : resolve(root, inputPath);
 
-  if (rel.startsWith("..") || isAbsolute(rel)) {
+  // Prevent sandbox escape via symlinks by resolving the nearest existing parent.
+  let probe = target;
+  while (true) {
+    try {
+      const realProbe = resolve(realpathSync.native(probe));
+      const relReal = relative(root, realProbe);
+      if (relReal.startsWith("..") || isAbsolute(relReal)) {
+        throw new PathSandboxError(`Path "${inputPath}" is outside workspace root "${root}"`);
+      }
+      break;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (code !== "ENOENT") {
+        throw error;
+      }
+
+      const parent = resolve(probe, "..");
+      if (parent === probe) {
+        break;
+      }
+      probe = parent;
+    }
+  }
+
+  const relTarget = relative(root, target);
+  if (relTarget.startsWith("..") || isAbsolute(relTarget)) {
     throw new PathSandboxError(`Path "${inputPath}" is outside workspace root "${root}"`);
   }
 

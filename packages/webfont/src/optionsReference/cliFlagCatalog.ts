@@ -63,7 +63,7 @@ export const CLI_FLAG_SECTIONS: readonly CliFlagSection[] = [
           "Path to a specific configuration file (JSON, YAML, or CommonJS)",
           "or the name of a module in `node_modules` that points to one.",
           "If no `--config` argument is provided, webfont will search for",
-          "configuration  files in the following places, in this order:",
+          "configuration files in the following places, in this order:",
           "   - a `webfont` property in `package.json`",
           "   - a `.webfontrc` file (with or without filename extension:",
           "       `.json`, `.yaml`, and `.js` are available)",
@@ -135,7 +135,7 @@ export const CLI_FLAG_SECTIONS: readonly CliFlagSection[] = [
         long: "--destTemplate",
         short: "s",
         type: "string",
-        description: "Destination for generated template. If not passed used `dest` argument value.",
+        description: "Destination for generated template. If not passed, uses the `dest` argument value.",
       },
       {
         key: "templateClassName",
@@ -216,7 +216,7 @@ export const CLI_FLAG_SECTIONS: readonly CliFlagSection[] = [
         long: "--verbose",
         type: "boolean",
         default: false,
-        description: "Tell me everything!.",
+        description: "Tell me everything!",
       },
       {
         key: "svgDiagnose",

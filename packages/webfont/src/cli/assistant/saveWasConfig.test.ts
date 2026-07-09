@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { saveWasConfig } from "./saveWasConfig";
 
 describe("saveWasConfig", () => {
-  it("should persist sanitized name and matching .was filename", async () => {
+  it("should persist cleaned name and matching .was filename", async () => {
     const dir = await mkdtemp(join(tmpdir(), "webfont-save-was-"));
     try {
       const configPath = await saveWasConfig({

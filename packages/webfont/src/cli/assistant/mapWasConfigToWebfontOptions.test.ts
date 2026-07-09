@@ -86,4 +86,19 @@ describe("mapWasConfigToWebfontOptions", () => {
       }).formats,
     ).toEqual(["ttf"]);
   });
+
+  it("should clean path segments from .was names used for font output", () => {
+    const options = mapWasConfigToWebfontOptions({
+      dest: "dist/fonts",
+      files: "icons/*.svg",
+      formats: ["woff2"],
+      name: "../EvilFont",
+      prefix: "../evil-prefix",
+      template: "css",
+    });
+
+    expect(options.fontName).toBe("EvilFont");
+    expect(options.templateClassName).toBe("evil-prefix");
+    expect(options.templateFontName).toBe("EvilFont");
+  });
 });

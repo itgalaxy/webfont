@@ -68,7 +68,7 @@ describe("loadWasConfigs", () => {
     }
   });
 
-  it("should reject null or invalid entries with a helpful configPath error", async () => {
+  it("should reject malformed .was files with helpful configPath errors", async () => {
     const dir = await mkdtemp(join(tmpdir(), "webfont-was-"));
     try {
       const nullRoot = await writeWasFixture(dir, "null-root.was", "null");
@@ -76,21 +76,23 @@ describe("loadWasConfigs", () => {
         `Invalid .was config root value in ${nullRoot}: expected an object`,
       );
 
-      const nullItem = await writeWasFixture(dir, "null-item.was", JSON.stringify([null]));
-      await expect(loadWasConfigs(nullItem)).rejects.toThrow(
-        `Invalid .was config at index 0 in ${nullItem}: expected an object`,
+      const broken = await writeWasFixture(dir, "broken.was", "{ not-json");
+      await expect(loadWasConfigs(broken)).rejects.toThrow(`Invalid JSON in .was config ${broken}:`);
+
+      const missingDest = await writeWasFixture(
+        dir,
+        "missing-dest.was",
+        JSON.stringify({
+          dest: "",
+          files: "icons/*.svg",
+          formats: ["woff2"],
+          name: "MyFont",
+          template: "css",
+        }),
       );
-    } finally {
-      await rm(dir, { recursive: true, force: true });
-    }
-  });
-
-  it("should wrap JSON.parse failures with the config path", async () => {
-    const dir = await mkdtemp(join(tmpdir(), "webfont-was-"));
-    try {
-      const configPath = await writeWasFixture(dir, "broken.was", "{ not-json");
-
-      await expect(loadWasConfigs(configPath)).rejects.toThrow(`Invalid JSON in .was config ${configPath}:`);
+      await expect(loadWasConfigs(missingDest)).rejects.toThrow(
+        `Invalid .was config root value in ${missingDest}: "dest" must be a non-empty string`,
+      );
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

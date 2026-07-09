@@ -1,17 +1,17 @@
 import { basename, join } from "node:path";
 import type { WebfontAssistantWasConfig } from "./types";
 
-export const sanitizeWasConfigBasename = (name: string): string => {
-  const safe = basename(name.trim());
+export const cleanWasConfigBasename = (name: string): string => {
+  const cleaned = basename(name.trim());
 
-  if (safe === "" || safe === "." || safe === "..") {
+  if (cleaned === "" || cleaned === "." || cleaned === "..") {
     throw new Error(`Invalid font name for .was config: "${name}"`);
   }
 
-  return safe;
+  return cleaned;
 };
 
 export const resolveWasConfigPath = (config: Pick<WebfontAssistantWasConfig, "dest" | "name">): string => {
-  const safeName = sanitizeWasConfigBasename(config.name);
-  return join(config.dest, `${safeName}.was`);
+  const cleanName = cleanWasConfigBasename(config.name);
+  return join(config.dest, `${cleanName}.was`);
 };

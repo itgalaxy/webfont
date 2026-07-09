@@ -284,7 +284,8 @@ Skip PRs for duplicates, `wontfix`, or issues that only need a comment (already 
 |---------|--------|
 | Breaking or additive CLI/API change | PR updating `webfont` dependency + mapping code; note minimum webfont version in README |
 | New built-in assistant flags (`--assistant`, `--assistant-config`) | Ensure parity docs mention migration from `webfont-assistant` |
-| `.was` format change | Update both our assistant module (`src/cli/assistant/`) and webfont-assistant |
+| `.was` format change | Update both our assistant module (`packages/webfont/src/cli/assistant/`) and webfont-assistant |
+| Deprecated `.was` `fontName` (icon prefix) → `prefix` | Downstream PR: read legacy `fontName`, write `prefix` only; link [issue-0797-was-prefix-field.md](./docs/migration/issue-0797-was-prefix-field.md) |
 
 Fork via `gh repo fork kmorope/webfont-assistant`, branch from `master`, PR upstream with English title/body. Link the itgalaxy/webfont PR in the downstream PR description.
 

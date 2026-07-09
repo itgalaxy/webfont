@@ -7,7 +7,10 @@ export type WebfontAssistantWasConfig = {
   fixedWidth?: boolean;
   fontHeight?: number;
   fontId?: string;
-  /** Legacy: icon class prefix in older `.was` files. */
+  /**
+   * @deprecated Icon class prefix stored under the wrong key in legacy `.was` files.
+   * Use `prefix`. Will be removed in the next breaking `.was` format change.
+   */
   fontName?: string;
   formats: Format[];
   isCustomTemplate?: boolean;

@@ -17,7 +17,6 @@ export const buildWasConfigFromWizard = (
   fixedWidth: true,
   fontHeight: 1000,
   fontId: answers.prefix,
-  fontName: answers.prefix,
   formats: completion.formats,
   isCustomTemplate: completion.isCustomTemplate,
   name: answers.name,

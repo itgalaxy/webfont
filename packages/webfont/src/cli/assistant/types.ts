@@ -13,7 +13,8 @@ export type WebfontAssistantWasConfig = {
    * `prefix` only. Will be removed in the next breaking `.was` format change.
    */
   fontName?: string;
-  formats: Format[];
+  /** Omitted or invalid on disk defaults to `["ttf"]` at map time. */
+  formats?: Format[];
   isCustomTemplate?: boolean;
   name: string;
   prefix?: string;

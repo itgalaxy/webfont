@@ -75,7 +75,13 @@ describe("mapWasConfigToWebfontOptions", () => {
     expect(
       mapWasConfigToWebfontOptions({
         ...base,
-        formats: undefined as unknown as WebfontAssistantWasConfig["formats"],
+      }).formats,
+    ).toEqual(["ttf"]);
+
+    expect(
+      mapWasConfigToWebfontOptions({
+        ...base,
+        formats: undefined,
       }).formats,
     ).toEqual(["ttf"]);
 

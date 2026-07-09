@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { mapWasConfigToWebfontOptions } from "./mapWasConfigToWebfontOptions";
+import type { WebfontAssistantWasConfig } from "./types";
 
 describe("mapWasConfigToWebfontOptions", () => {
   it("should map legacy .was configs that store the icon prefix in fontName", () => {
@@ -61,5 +62,28 @@ describe("mapWasConfigToWebfontOptions", () => {
 
     expect(options.fixedWidth).toBe(true);
     expect(options.fontHeight).toBe(1000);
+  });
+
+  it("should default formats when .was omits or provides invalid formats", () => {
+    const base = {
+      dest: "dist/fonts",
+      files: "icons/*.svg",
+      name: "MyAwesomeFont",
+      template: "css",
+    };
+
+    expect(
+      mapWasConfigToWebfontOptions({
+        ...base,
+        formats: undefined as unknown as WebfontAssistantWasConfig["formats"],
+      }).formats,
+    ).toEqual(["ttf"]);
+
+    expect(
+      mapWasConfigToWebfontOptions({
+        ...base,
+        formats: "woff2" as unknown as WebfontAssistantWasConfig["formats"],
+      }).formats,
+    ).toEqual(["ttf"]);
   });
 });

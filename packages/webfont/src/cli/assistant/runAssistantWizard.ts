@@ -100,7 +100,7 @@ export const runAssistantWizard = async (): Promise<WebfontAssistantWasConfig> =
   const answers = await new Form<AssistantWizardAnswers>({
     choices: [
       { initial: "MyAwesomeFont", message: "Font Name", name: "name" },
-      { initial: "my-icon", message: "Icons prefix", name: "prefix" },
+      { initial: "my-icon", message: "Icon class prefix", name: "prefix" },
       { initial: "assets/fonts", message: "Output Path", name: "output" },
       { initial: "assets/images/svg", message: "Glyphs Path", name: "glyphs" },
     ],

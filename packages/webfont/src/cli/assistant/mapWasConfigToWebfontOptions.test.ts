@@ -101,4 +101,56 @@ describe("mapWasConfigToWebfontOptions", () => {
     expect(options.templateClassName).toBe("evil-prefix");
     expect(options.templateFontName).toBe("EvilFont");
   });
+
+  it("should reject non-string optional .was basename fields with a clear error", () => {
+    const base = {
+      dest: "dist/fonts",
+      files: "icons/*.svg",
+      formats: ["ttf"] as WebfontAssistantWasConfig["formats"],
+      name: "MyAwesomeFont",
+      template: "css",
+    };
+
+    expect(() =>
+      mapWasConfigToWebfontOptions({
+        ...base,
+        prefix: 42 as unknown as WebfontAssistantWasConfig["prefix"],
+      }),
+    ).toThrow('Invalid .was config: "prefix" must be a string');
+
+    expect(() =>
+      mapWasConfigToWebfontOptions({
+        ...base,
+        fontId: { bad: true } as unknown as WebfontAssistantWasConfig["fontId"],
+      }),
+    ).toThrow('Invalid .was config: "fontId" must be a string');
+
+    expect(() =>
+      mapWasConfigToWebfontOptions({
+        ...base,
+        fontName: 99 as unknown as WebfontAssistantWasConfig["fontName"],
+      }),
+    ).toThrow('Invalid .was config: "fontName" must be a string');
+
+    expect(() =>
+      mapWasConfigToWebfontOptions({
+        ...base,
+        templateFontName: false as unknown as WebfontAssistantWasConfig["templateFontName"],
+      }),
+    ).toThrow('Invalid .was config: "templateFontName" must be a string');
+  });
+
+  it("should ignore blank optional prefix and fall back to the font display name", () => {
+    const options = mapWasConfigToWebfontOptions({
+      dest: "dist/fonts",
+      files: "icons/*.svg",
+      formats: ["woff2"],
+      name: "MyAwesomeFont",
+      prefix: "   ",
+      template: "css",
+    });
+
+    expect(options.templateClassName).toBe("MyAwesomeFont");
+    expect(options.fontId).toBe("MyAwesomeFont");
+  });
 });

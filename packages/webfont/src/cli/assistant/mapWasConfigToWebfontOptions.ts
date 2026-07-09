@@ -1,6 +1,6 @@
 import type { Format } from "../../types/Format";
 import type { InitialOptions } from "../../types/InitialOptions";
-import { cleanWasConfigBasename } from "./cleanWasConfigBasename";
+import { cleanOptionalWasBasename, cleanWasConfigBasename } from "./cleanWasConfigBasename";
 import type { WebfontAssistantWasConfig } from "./types";
 
 const DEFAULT_WAS_FORMATS: Format[] = ["ttf"];
@@ -14,18 +14,23 @@ const normalizeWasFormats = (formats: WebfontAssistantWasConfig["formats"] | unk
 };
 
 export const mapWasConfigToWebfontOptions = (was: WebfontAssistantWasConfig): InitialOptions => {
-  const displayName = cleanWasConfigBasename(was.name);
-  const classPrefix = cleanWasConfigBasename(was.prefix ?? was.fontName ?? displayName);
+  const displayName = cleanWasConfigBasename(was.name, "name");
+  const classPrefix =
+    cleanOptionalWasBasename(was.prefix, "prefix") ??
+    cleanOptionalWasBasename(was.fontName, "fontName") ??
+    displayName;
   const formats = normalizeWasFormats(was.formats);
 
   let fontId = classPrefix;
-  if (was.fontId) {
-    fontId = cleanWasConfigBasename(was.fontId);
+  const cleanedFontId = cleanOptionalWasBasename(was.fontId, "fontId");
+  if (cleanedFontId !== undefined) {
+    fontId = cleanedFontId;
   }
 
   let templateFontName = displayName;
-  if (was.templateFontName) {
-    templateFontName = cleanWasConfigBasename(was.templateFontName);
+  const cleanedTemplateFontName = cleanOptionalWasBasename(was.templateFontName, "templateFontName");
+  if (cleanedTemplateFontName !== undefined) {
+    templateFontName = cleanedTemplateFontName;
   }
 
   const options: InitialOptions = {

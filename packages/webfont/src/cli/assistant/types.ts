@@ -9,7 +9,8 @@ export type WebfontAssistantWasConfig = {
   fontId?: string;
   /**
    * @deprecated Icon class prefix stored under the wrong key in legacy `.was` files.
-   * Use `prefix`. Will be removed in the next breaking `.was` format change.
+   * Use `prefix`. Still read for backward compatibility; built-in `--assistant` writes
+   * `prefix` only. Will be removed in the next breaking `.was` format change.
    */
   fontName?: string;
   formats: Format[];

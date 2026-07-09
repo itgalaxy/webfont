@@ -50,7 +50,8 @@ export const CLI_FLAG_SECTIONS: readonly CliFlagSection[] = [
         long: "--assistant-config",
         type: "string",
         description: [
-          "Path to a `.was` config (webfont-assistant format) or JSON array of configs to regenerate fonts.",
+          "Path to a `.was` file (webfont-assistant format). The file contents may be a single",
+          "config object or a JSON array of configs; this flag is not inline JSON.",
           "Distinct from `--config` (cosmiconfig).",
         ],
       },

@@ -30,7 +30,8 @@ Install the package and wire the CLI script first: [Install guide](https://webfo
 
         --assistant-config
 
-            Path to a `.was` config (webfont-assistant format) or JSON array of configs to regenerate fonts.
+            Path to a `.was` file (webfont-assistant format). The file contents may be a single
+            config object or a JSON array of configs; this flag is not inline JSON.
             Distinct from `--config` (cosmiconfig).
 
         --config

@@ -47,6 +47,7 @@ Before finishing work on an open PR, **check for unresolved review threads** (Co
 |------|--------|
 | **List threads** | `gh api graphql` → `pullRequest(number: N) { reviewThreads { nodes { id isResolved comments { nodes { body author { login } } } } } } }` or the PR **Files changed** tab |
 | **Evaluate** | If the suggestion is valid for the **current** branch state, apply it (code, tests, or docs) in the same PR. If it is wrong or obsolete, explain why in a **reply in English** — cite code, tests, or AGENTS.md |
+| **Codify** | If the fix encodes a **reusable** pattern, add or extend a bullet in [AGENTS.md](./AGENTS.md) in the same PR (see [Codify review feedback in AGENTS.md](./AGENTS.md#codify-review-feedback-in-agentsmd)). Skip for one-off bugs or rejected suggestions. |
 | **Reply** | `gh api repos/{owner}/{repo}/pulls/{number}/comments` with `in_reply_to` set to the review comment `databaseId` |
 | **Resolve** | When addressed (fix merged in the branch **or** reply documents why not), resolve the thread: GraphQL `resolveReviewThread(input: { threadId: "PRRT_…" })` |
 

@@ -160,14 +160,31 @@ Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliL
 
 ### Config mapping, CLI bundles, and user input
 
-- **Do not override `webfont()` defaults when mapping external configs** (for example `.was` / cosmiconfig / MCP tool args) unless the source file **explicitly** sets the field. Omit optional keys so `defaultWebfontOptions()` and runtime validation apply — forcing values like `fixedWidth: true` or `fontHeight: 1000` on minimal legacy configs changes font output unexpectedly.
-- **Normalize untrusted JSON before property access.** Loaded configs (`.was`, MCP paths, user uploads) are parsed with `JSON.parse` — validate or defensively coerce required fields (for example `formats` must be a non-empty array) before reading `.length` or spreading; prefer falling back or `webfont` validation over `TypeError` at map time.
+Patterns below come from assistant/CLI review on [#797](https://github.com/itgalaxy/webfont/pull/797) and apply to **any** code that loads external config (`.was`, cosmiconfig, MCP tool args, wizard answers).
+
+- **Do not override `webfont()` defaults when mapping external configs** unless the source file **explicitly** sets the field. Omit optional keys so `defaultWebfontOptions()` and runtime validation apply — forcing values like `fixedWidth: true` or `fontHeight: 1000` on minimal legacy configs changes font output unexpectedly.
+- **Normalize untrusted JSON before property access.** Loaded configs are parsed with `JSON.parse` — validate or defensively coerce fields (for example `formats` must be a non-empty array) before reading `.length` or spreading; prefer falling back or `webfont` validation over `TypeError` at map time.
+- **Guard loaded config JSON in a dedicated module** (for example `guardWasConfigLoad.ts`) so parse/validation logic is reusable: wrap `JSON.parse`, require object shape, validate required string fields (`dest`, `files`, `name`, `template`, …), and include `configPath` (and array index when relevant) in every error.
+- **Use `clean`, not `sanitize`, in our identifiers and docs.** Helpers like `cleanWasConfigBasename` express intent; reserve “sanitize” for quoting third-party APIs only.
 - **Clean user-derived path segments** before building output filenames. Use `path.basename()` (or equivalent) on names that become `{name}.was`, font basenames, or other disk paths; reject empty, `.`, and `..` basenames. Wizard answers and loaded JSON configs are untrusted input.
-- **Guard loaded config JSON in a dedicated module** (for example `guardWasConfigLoad.ts`) so parse/validation logic is reusable: wrap `JSON.parse`, require object shape, validate required string fields, and include `configPath` in errors.
+- **Clean names before font output paths.** When mapping external configs to `InitialOptions`, clean every field that becomes `fontName`, `fontId`, `templateClassName`, or `templateFontName` before `writeResultFiles` — path traversal in `.was` `name` must not escape `dest` via font filenames.
+- **Reuse the same cleaned value for disk paths and persisted fields.** When saving config files, build `{name}.was` from the cleaned basename already written into the payload — do not re-derive the path from the raw input.
 - **Polish interactive CLI copy.** Wizard and `--help` strings shown to humans must use correct grammar and clear wording (review prompt `message` fields in enquirer/meow catalog entries).
 - **Sequential batch work without `biome-ignore`.** When order matters (for example multiple `.was` configs), prefer promise chaining (`reduce` + `.then()`) over `await` inside `for` loops — satisfies Biome `lint/performance/noAwaitInLoops` without suppressions.
 - **CJS dependencies in the ESM CLI bundle.** The CLI ships as `dist/cli.mjs` with dependencies **external** (not bundled). Dynamic `import("enquirer")` and similar must tolerate both default and namespace export shapes: `const lib = module.default ?? module` before destructuring constructors.
 - **No `biome-ignore` unless unavoidable.** Prefer a small refactor (see sequential batch note above) over silencing Biome rules; `lint:suppressions` blocks banned suppressions on pre-commit/CI.
+
+### Codify review feedback in AGENTS.md
+
+When Copilot, humans, or bots surface a **reusable** pattern (defensive guards, naming, CLI copy, test style), **update AGENTS.md in the same PR** once the fix lands — do not rely on resolved review threads alone.
+
+| Situation | Action |
+|-----------|--------|
+| Valid suggestion that could recur on similar code | Add or extend a bullet under the closest heading (Config mapping, Testing, CLI, …) |
+| One-off bug with no general rule | Test + review reply only; no AGENTS.md change |
+| Deliberately rejected suggestion | Reply citing AGENTS.md, tests, or code; no AGENTS.md change |
+
+Before resolving a review thread, ask: *if another agent shipped similar code next month, would AGENTS.md tell them the right pattern?* If not, document it here first (or in the same commit that applies the fix).
 
 ## Documentation
 
@@ -273,4 +290,4 @@ Fork via `gh repo fork kmorope/webfont-assistant`, branch from `master`, PR upst
 
 ## Pull requests
 
-See **[MAINTAINERS.md](./MAINTAINERS.md)** for branch naming, opening PRs, squash merge, Copilot review threads, merged-branch rules, and template guidance. Agents must push and open PRs without asking when work is review-ready.
+See **[MAINTAINERS.md](./MAINTAINERS.md)** for branch naming, opening PRs, squash merge, Copilot review threads (including **codifying reusable feedback in this file**), merged-branch rules, and template guidance. Agents must push and open PRs without asking when work is review-ready.

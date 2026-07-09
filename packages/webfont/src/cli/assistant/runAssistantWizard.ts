@@ -4,6 +4,8 @@ import type { AssistantWizardAnswers, WebfontAssistantWasConfig } from "./types"
 
 const DEFAULT_FORMATS: Format[] = ["ttf"];
 
+export const defaultCustomTemplatePath = (styleType: string): string => `../templates/template.${styleType}.njk`;
+
 type EnquirerStatic = {
   Confirm: new (options: Record<string, unknown>) => { run: () => Promise<boolean> };
   Form: new <T>(options: Record<string, unknown>) => { run: () => Promise<T> };
@@ -53,7 +55,7 @@ const pickStyleType = async (): Promise<{ isCustomTemplate: boolean; styleType: 
       name: "customType",
     }).run();
     const template = await new Input({
-      initial: "../templates/template.any",
+      initial: defaultCustomTemplatePath(customType),
       message: "What is your template path?",
       name: "template",
     }).run();
@@ -72,7 +74,7 @@ const pickStyleType = async (): Promise<{ isCustomTemplate: boolean; styleType: 
 
   if (useCustomTemplate) {
     const template = await new Input({
-      initial: "../templates/template.css.any",
+      initial: defaultCustomTemplatePath(styleType),
       message: "What is your template path?",
       name: "template",
     }).run();

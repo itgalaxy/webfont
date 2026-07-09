@@ -158,6 +158,15 @@ Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliL
 - **Await filesystem writes in async CLI flows.** Use `fs.promises.writeFile` (or promisified equivalents) inside `async` functions and `await Promise.all(...)`. Do not wrap callback-based `fs.writeFile` in `Promise.all` — the callback form returns `void`, so the CLI can exit before writes finish and write errors are lost.
 - **Model optional runtime hooks accurately.** If code supports an optional callback such as `metadataProvider`, type it as `metadataProvider?: MetadataProvider` — not `null` — so callers and `strictNullChecks` stay aligned.
 
+### Config mapping, CLI bundles, and user input
+
+- **Do not override `webfont()` defaults when mapping external configs** (for example `.was` / cosmiconfig / MCP tool args) unless the source file **explicitly** sets the field. Omit optional keys so `defaultWebfontOptions()` and runtime validation apply — forcing values like `fixedWidth: true` or `fontHeight: 1000` on minimal legacy configs changes font output unexpectedly.
+- **Sanitize user-derived path segments** before building output filenames. Use `path.basename()` (or equivalent) on names that become `{name}.was`, font basenames, or other disk paths; reject empty, `.`, and `..` basenames. Wizard answers and loaded JSON configs are untrusted input.
+- **Polish interactive CLI copy.** Wizard and `--help` strings shown to humans must use correct grammar and clear wording (review prompt `message` fields in enquirer/meow catalog entries).
+- **Sequential batch work without `biome-ignore`.** When order matters (for example multiple `.was` configs), prefer promise chaining (`reduce` + `.then()`) over `await` inside `for` loops — satisfies Biome `lint/performance/noAwaitInLoops` without suppressions.
+- **CJS dependencies in the ESM CLI bundle.** The CLI ships as `dist/cli.mjs` with dependencies **external** (not bundled). Dynamic `import("enquirer")` and similar must tolerate both default and namespace export shapes: `const lib = module.default ?? module` before destructuring constructors.
+- **No `biome-ignore` unless unavoidable.** Prefer a small refactor (see sequential batch note above) over silencing Biome rules; `lint:suppressions` blocks banned suppressions on pre-commit/CI.
+
 ## Documentation
 
 When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:

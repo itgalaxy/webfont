@@ -14,7 +14,8 @@ type EnquirerStatic = {
 
 const loadEnquirer = async (): Promise<EnquirerStatic> => {
   const module = await import("enquirer");
-  return module.default as unknown as EnquirerStatic;
+  const enquirer = module.default ?? module;
+  return enquirer as unknown as EnquirerStatic;
 };
 
 const pickFormats = async (): Promise<Format[]> => {

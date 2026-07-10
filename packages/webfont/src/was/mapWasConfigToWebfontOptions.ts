@@ -1,5 +1,5 @@
-import type { Format } from "../../types/Format";
-import type { InitialOptions } from "../../types/InitialOptions";
+import type { Format } from "../types/Format";
+import type { InitialOptions } from "../types/InitialOptions";
 import { cleanOptionalWasBasename, cleanWasConfigBasename } from "./cleanWasConfigBasename";
 import type { WebfontAssistantWasConfig } from "./types";
 

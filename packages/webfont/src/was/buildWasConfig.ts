@@ -1,4 +1,4 @@
-import type { Format } from "../../types/Format";
+import type { Format } from "../types/Format";
 import type { AssistantWizardAnswers, WebfontAssistantWasConfig } from "./types";
 
 export type AssistantWizardCompletion = {

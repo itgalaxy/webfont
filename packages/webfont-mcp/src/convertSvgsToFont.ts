@@ -1,5 +1,5 @@
 import { mkdir, rm } from "node:fs/promises";
-import { mergeCliDestIntoConfig, webfont, writeResultFiles } from "webfont";
+import { defaultWebfontOptions, mergeCliDestIntoConfig, webfont, writeResultFiles } from "webfont";
 import { getWorkspaceRoot, resolvePathWithinRoot } from "./pathSandbox.js";
 import { resolveSvgInputPaths } from "./resolveSvgInputs.js";
 import { serializeConversionResult } from "./serializeResult.js";
@@ -21,6 +21,7 @@ export type ConvertSvgsToFontInput = {
 };
 
 export const convertSvgsToFont = async (input: ConvertSvgsToFontInput) => {
+  const defaults = defaultWebfontOptions();
   const workspaceRoot = getWorkspaceRoot(input.workspaceRoot);
   const files = await resolveSvgInputPaths(input.files, workspaceRoot);
   const dest = resolvePathWithinRoot(input.dest, workspaceRoot);
@@ -35,14 +36,14 @@ export const convertSvgsToFont = async (input: ConvertSvgsToFontInput) => {
   }
 
   const result = await webfont({
-    centerHorizontally: input.centerHorizontally ?? false,
-    centerVertically: input.centerVertically ?? false,
+    centerHorizontally: input.centerHorizontally ?? defaults.centerHorizontally,
+    centerVertically: input.centerVertically ?? defaults.centerVertically,
     dest,
     destCreate: input.destCreate,
     files,
-    fontName: input.fontName ?? "webfont",
+    fontName: input.fontName ?? defaults.fontName,
     formats: input.formats ?? ["woff2"],
-    normalize: input.normalize ?? false,
+    normalize: input.normalize ?? defaults.normalize,
     svgTools,
     template: input.template,
   });

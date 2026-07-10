@@ -23,4 +23,13 @@ export type { Result } from "./types/Result";
 export type { ResultConfig } from "./types/ResultConfig";
 export type { SvgDiagnosticCode, SvgGlyphDiagnostic, SvgToolsOptions } from "./types/SvgToolsOptions";
 export type { WebfontOptions } from "./types/WebfontOptions";
+export {
+  type AssistantWizardCompletion,
+  buildWasConfigFromWizard,
+} from "./was/buildWasConfig";
+export { cleanOptionalWasBasename, cleanWasConfigBasename } from "./was/cleanWasConfigBasename";
+export { guardLoadedWasConfigs, parseWasConfigJson } from "./was/guardWasConfigLoad";
+export { loadWasConfigs } from "./was/loadWasConfigs";
+export { mapWasConfigToWebfontOptions } from "./was/mapWasConfigToWebfontOptions";
+export type { AssistantWizardAnswers, WebfontAssistantWasConfig } from "./was/types";
 export default webfont;

@@ -56,8 +56,10 @@ When `WEBFONT_MCP_WORKSPACE_ROOT` is omitted, the server sandboxes paths against
 | Tool | Description |
 |------|-------------|
 | `convert_svgs_to_font` | Run `webfont()` on sandboxed SVG globs and write outputs with `writeResultFiles()` |
+| `convert_from_was` | Load a `.was` config (path or inline JSON), map with `mapWasConfigToWebfontOptions`, run `webfont()`, and write outputs |
+| `validate_was_config` | Parse and guard a `.was` config without building a font; returns sandboxed configs and mapped `webfont()` options |
 | `diagnose_svgs` | Run `diagnoseSvgContents` on matched SVGs without building a font |
-| `list_webfont_options` | JSON reference of defaults and common `webfont()` options |
+| `list_webfont_options` | JSON reference of defaults, CLI flags, API-only options, and MCP tool summaries |
 
 Path arguments must stay inside `workspaceRoot`. The server returns file paths and metadata — not large base64 font payloads.
 

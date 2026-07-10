@@ -14,6 +14,10 @@ describe("buildMcpOptionsReference", () => {
     const reference = buildMcpOptionsReference();
 
     expect(reference.mcpTools.convert_svgs_to_font).toBeDefined();
-    expect(reference.notes.length).toBeGreaterThan(0);
+    expect(reference.mcpTools.validate_was_config).toBeDefined();
+    expect(reference.mcpTools.convert_from_was).toBeDefined();
+    expect(reference.cliFlags.assistant.long).toBe("--assistant");
+    expect(reference.apiOnly.wasConfig.cliEquivalent).toBe("assistantConfig");
+    expect(reference.notes.some((note) => note.includes(".was"))).toBe(true);
   });
 });

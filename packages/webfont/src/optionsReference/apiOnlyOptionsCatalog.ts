@@ -23,4 +23,9 @@ export const API_ONLY_OPTION_DESCRIPTIONS = {
     description:
       "Node helper to persist a webfont() Result to disk; requires dest (and destCreate when the folder may not exist).",
   },
+  wasConfig: {
+    cliEquivalent: "assistantConfig",
+    description:
+      "`.was` JSON format for webfont-assistant / `--assistant-config`. Validate with guardLoadedWasConfigs, map with mapWasConfigToWebfontOptions (exported from webfont).",
+  },
 } as const;

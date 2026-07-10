@@ -1,4 +1,4 @@
-import type { Format } from "../../types/Format";
+import type { Format } from "../types/Format";
 
 /** Saved `.was` format (compatible with webfont-assistant). */
 export type WebfontAssistantWasConfig = {

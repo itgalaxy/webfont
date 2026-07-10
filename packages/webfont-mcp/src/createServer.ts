@@ -1,9 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { convertFromWas } from "./convertFromWas.js";
 import { convertSvgsToFont } from "./convertSvgsToFont.js";
 import { diagnoseSvgs } from "./diagnoseSvgs.js";
 import { formatWebfontOptionsReference } from "./listWebfontOptionsContent.js";
 import { PathSandboxError } from "./pathSandbox.js";
+import { validateWasConfig } from "./validateWasConfig.js";
 
 const formatSchema = z.enum(["eot", "otf", "woff", "woff2", "svg", "ttf"]);
 
@@ -119,6 +121,74 @@ export const createWebfontMcpServer = (): McpServer => {
         },
       ],
     }),
+  );
+
+  server.registerTool(
+    "validate_was_config",
+    {
+      description:
+        "Parse and validate a webfont-assistant `.was` config (file path or inline JSON) without running the font pipeline.",
+      inputSchema: {
+        wasConfigJson: z
+          .string()
+          .optional()
+          .describe("Inline `.was` JSON (single object or array). Mutually exclusive with wasConfigPath."),
+        wasConfigPath: z
+          .string()
+          .optional()
+          .describe("Path to a `.was` file relative to workspaceRoot or absolute within it"),
+        workspaceRoot: z.string().optional().describe("Sandbox root for path resolution"),
+      },
+    },
+    async (input) => {
+      try {
+        const result = await validateWasConfig(input);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        return toolError(error);
+      }
+    },
+  );
+
+  server.registerTool(
+    "convert_from_was",
+    {
+      description:
+        "Convert SVG icons using a validated `.was` config (same mapping as `--assistant-config`), writing outputs to disk.",
+      inputSchema: {
+        wasConfigJson: z
+          .string()
+          .optional()
+          .describe("Inline `.was` JSON. Mutually exclusive with wasConfigPath."),
+        wasConfigPath: z
+          .string()
+          .optional()
+          .describe("Path to a `.was` file relative to workspaceRoot or absolute within it"),
+        workspaceRoot: z.string().optional().describe("Sandbox root for path resolution"),
+      },
+    },
+    async (input) => {
+      try {
+        const result = await convertFromWas(input);
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        return toolError(error);
+      }
+    },
   );
 
   return server;

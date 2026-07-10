@@ -1,6 +1,6 @@
 import type { Format } from "../../types/Format";
-import { buildWasConfigFromWizard } from "./buildWasConfig";
-import type { AssistantWizardAnswers, WebfontAssistantWasConfig } from "./types";
+import { buildWasConfigFromWizard } from "../../was/buildWasConfig";
+import type { AssistantWizardAnswers, WebfontAssistantWasConfig } from "../../was/types";
 
 const DEFAULT_FORMATS: Format[] = ["ttf"];
 

@@ -6,6 +6,8 @@ import { createMeowCli } from "./createMeowCli";
 const PROGRAM_CLI_FLAG_KEYS = [
   "addHashInFontUrl",
   "ascent",
+  "assistant",
+  "assistantConfig",
   "centerHorizontally",
   "centerVertically",
   "config",

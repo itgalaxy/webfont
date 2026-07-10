@@ -77,6 +77,7 @@
   "dependencies": {
     "cosmiconfig": "9.0.2",
     "deepmerge": "^4.2.2",
+    "enquirer": "2.4.1",
     "fonteditor-core": "2.6.3",
     "fontverter": "2.0.0",
     "globby": "16.2.1",

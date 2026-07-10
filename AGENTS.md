@@ -158,6 +158,34 @@ Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliL
 - **Await filesystem writes in async CLI flows.** Use `fs.promises.writeFile` (or promisified equivalents) inside `async` functions and `await Promise.all(...)`. Do not wrap callback-based `fs.writeFile` in `Promise.all` — the callback form returns `void`, so the CLI can exit before writes finish and write errors are lost.
 - **Model optional runtime hooks accurately.** If code supports an optional callback such as `metadataProvider`, type it as `metadataProvider?: MetadataProvider` — not `null` — so callers and `strictNullChecks` stay aligned.
 
+### Config mapping, CLI bundles, and user input
+
+Patterns below come from assistant/CLI review on [#797](https://github.com/itgalaxy/webfont/pull/797) and apply to **any** code that loads external config (`.was`, cosmiconfig, MCP tool args, wizard answers).
+
+- **Do not override `webfont()` defaults when mapping external configs** unless the source file **explicitly** sets the field. Omit optional keys so `defaultWebfontOptions()` and runtime validation apply — forcing values like `fixedWidth: true` or `fontHeight: 1000` on minimal legacy configs changes font output unexpectedly.
+- **Normalize untrusted JSON before property access.** Loaded configs are parsed with `JSON.parse` — validate or defensively coerce fields (for example `formats` must be a non-empty array) before reading `.length` or spreading; prefer falling back or `webfont` validation over `TypeError` at map time. Optional `.was` basename fields (`prefix`, legacy `fontName`, `fontId`, `templateFontName`) must be validated as strings before calling string methods — throw `Invalid .was config: "{field}" must be a string` rather than opaque errors like `trim is not a function`.
+- **Guard loaded config JSON in a dedicated module** (for example `guardWasConfigLoad.ts`) so parse/validation logic is reusable: wrap `JSON.parse`, require object shape, validate required string fields (`dest`, `files`, `name`, `template`, …), and include `configPath` (and array index when relevant) in every error.
+- **Use `clean`, not `sanitize`, in our identifiers and docs.** Helpers like `cleanWasConfigBasename` express intent; reserve “sanitize” for quoting third-party APIs only.
+- **Clean user-derived path segments** before building output filenames. Use `path.basename()` (or equivalent) on names that become `{name}.was`, font basenames, or other disk paths; reject empty, `.`, and `..` basenames. Wizard answers and loaded JSON configs are untrusted input.
+- **Clean names before font output paths.** When mapping external configs to `InitialOptions`, clean every field that becomes `fontName`, `fontId`, `templateClassName`, or `templateFontName` before `writeResultFiles` — path traversal in `.was` `name` must not escape `dest` via font filenames.
+- **Reuse the same cleaned value for disk paths and persisted fields.** When saving config files, build `{name}.was` from the cleaned basename already written into the payload — do not re-derive the path from the raw input.
+- **Polish interactive CLI copy.** Wizard and `--help` strings shown to humans must use correct grammar and clear wording (review prompt `message` fields in enquirer/meow catalog entries). Custom-template wizard defaults should follow `../templates/template.{styleType}.njk` so they match bundled templates and `writeResultFiles` output naming (only `.njk` is stripped from custom template basenames).
+- **Sequential batch work without `biome-ignore`.** When order matters (for example multiple `.was` configs), prefer promise chaining (`reduce` + `.then()`) over `await` inside `for` loops — satisfies Biome `lint/performance/noAwaitInLoops` without suppressions.
+- **CJS dependencies in the ESM CLI bundle.** The CLI ships as `dist/cli.mjs` with dependencies **external** (not bundled). Dynamic `import("enquirer")` and similar must tolerate both default and namespace export shapes: `const lib = module.default ?? module` before destructuring constructors.
+- **No `biome-ignore` unless unavoidable.** Prefer a small refactor (see sequential batch note above) over silencing Biome rules; `lint:suppressions` blocks banned suppressions on pre-commit/CI.
+
+### Codify review feedback in AGENTS.md
+
+When Copilot, humans, or bots surface a **reusable** pattern (defensive guards, naming, CLI copy, test style), **update AGENTS.md in the same PR** once the fix lands — do not rely on resolved review threads alone.
+
+| Situation | Action |
+|-----------|--------|
+| Valid suggestion that could recur on similar code | Add or extend a bullet under the closest heading (Config mapping, Testing, CLI, …) |
+| One-off bug with no general rule | Test + review reply only; no AGENTS.md change |
+| Deliberately rejected suggestion | Reply citing AGENTS.md, tests, or code; no AGENTS.md change |
+
+Before resolving a review thread, ask: *if another agent shipped similar code next month, would AGENTS.md tell them the right pattern?* If not, document it here first (or in the same commit that applies the fix).
+
 ## Documentation
 
 When a task changes **how users interact with webfont** (CLI flags, programmatic `webfont()` options, defaults, exit behavior, or config file semantics), update user-facing docs in the same change:
@@ -248,6 +276,19 @@ Process open issues **oldest to newest** (`gh issue list --state open`, sort by 
 
 Skip PRs for duplicates, `wontfix`, or issues that only need a comment (already fixed in a recent release — verify with tests or changelog before closing).
 
+## Downstream: webfont-assistant
+
+[webfont-assistant](https://github.com/kmorope/webfont-assistant) is a third-party interactive CLI wrapper around `webfont`. When a change in **this** repository can affect that package (CLI/API/options defaults, `.was` config shape, `writeResultFiles` behavior, Node engine, breaking migrations), **open a PR to [kmorope/webfont-assistant](https://github.com/kmorope/webfont-assistant) in the same work session** — do not defer to a follow-up.
+
+| Trigger | Action |
+|---------|--------|
+| Breaking or additive CLI/API change | PR updating `webfont` dependency + mapping code; note minimum webfont version in README |
+| New built-in assistant flags (`--assistant`, `--assistant-config`) | Ensure parity docs mention migration from `webfont-assistant` |
+| `.was` format change | Update both our assistant module (`packages/webfont/src/cli/assistant/`) and webfont-assistant |
+| Deprecated `.was` `fontName` (icon prefix) → `prefix` | Downstream PR: read legacy `fontName`, write `prefix` only; link [issue-0797-was-prefix-field.md](./docs/migration/issue-0797-was-prefix-field.md) |
+
+Fork via `gh repo fork kmorope/webfont-assistant`, branch from `master`, PR upstream with English title/body. Link the itgalaxy/webfont PR in the downstream PR description.
+
 ## Pull requests
 
-See **[MAINTAINERS.md](./MAINTAINERS.md)** for branch naming, opening PRs, squash merge, Copilot review threads, merged-branch rules, and template guidance. Agents must push and open PRs without asking when work is review-ready.
+See **[MAINTAINERS.md](./MAINTAINERS.md)** for branch naming, opening PRs, squash merge, Copilot review threads (including **codifying reusable feedback in this file**), merged-branch rules, and template guidance. Agents must push and open PRs without asking when work is review-ready.

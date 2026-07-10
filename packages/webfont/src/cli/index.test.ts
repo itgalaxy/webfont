@@ -694,4 +694,15 @@ describe("cli", () => {
     expect(woff.length).toBeGreaterThan(0);
     expect(woff2.length).toBeGreaterThan(0);
   });
+
+  it("should generate fonts from a webfont-assistant .was config via --assistant-config", async () => {
+    const assistantDest = "temp/cli-assistant";
+    await emptyDir(assistantDest);
+
+    const output = await execCLI("--assistant-config src/fixtures/assistant/assistant-fixture.was", assistantDest);
+
+    expect(output.code).toBe(0);
+    expect(output.stderr).toBe("");
+    expect(output.files).toEqual(expect.arrayContaining(["AssistantFixture.woff2", "AssistantFixture.was"]));
+  });
 });

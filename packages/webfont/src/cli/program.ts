@@ -4,6 +4,7 @@ import { mergeCliDestIntoConfig, writeResultFiles } from "../node/writeResultFil
 import { webfont } from "../standalone";
 import type { OptionsBase } from "../types/OptionsBase";
 import type { Result } from "../types/Result";
+import { runAssistant } from "./assistant/runAssistant";
 import { buildSvgToolsFromCliFlags } from "./buildSvgToolsFromCliFlags";
 import { parseFormatsFlag } from "./parseFormatsFlag";
 import { parseTemplateFlag } from "./parseTemplateFlag";
@@ -16,6 +17,8 @@ export type CliLike = {
   flags: {
     addHashInFontUrl?: boolean;
     ascent?: string;
+    assistant?: boolean;
+    assistantConfig?: string;
     centerHorizontally?: boolean;
     centerVertically?: boolean;
     config?: string;
@@ -221,6 +224,14 @@ export const runCli = async (cli: CliLike): Promise<Result> => {
 
   if (cli.flags.version) {
     cli.showVersion();
+  }
+
+  if (cli.flags.assistantConfig) {
+    return runAssistant({ configPath: cli.flags.assistantConfig });
+  }
+
+  if (cli.flags.assistant) {
+    return runAssistant();
   }
 
   const optionsBase = buildOptionsBase(cli);

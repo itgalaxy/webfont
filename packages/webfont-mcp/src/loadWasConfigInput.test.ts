@@ -29,6 +29,24 @@ describe("loadWasConfigsFromInput", () => {
     await expect(loadWasConfigsFromInput({ workspaceRoot: repoRoot })).rejects.toThrow(/exactly one/u);
   });
 
+  it("should reject an empty wasConfigPath with a clear field error instead of falling through to JSON parse", async () => {
+    await expect(
+      loadWasConfigsFromInput({
+        wasConfigPath: "",
+        workspaceRoot: repoRoot,
+      }),
+    ).rejects.toThrow(/wasConfigPath must be a non-empty string/u);
+  });
+
+  it("should reject an empty wasConfigJson with a clear field error", async () => {
+    await expect(
+      loadWasConfigsFromInput({
+        wasConfigJson: "   ",
+        workspaceRoot: repoRoot,
+      }),
+    ).rejects.toThrow(/wasConfigJson must be a non-empty string/u);
+  });
+
   it("should parse inline wasConfigJson and sandbox dest/files within workspaceRoot", async () => {
     const loaded = await loadWasConfigsFromInput({
       wasConfigJson: fixtureWasJson,

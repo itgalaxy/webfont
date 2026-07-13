@@ -26,7 +26,20 @@ export const sandboxWasConfigPaths = (
   files: resolvePathWithinRoot(was.files, workspaceRoot),
 });
 
+const assertNonEmptyStringField = (
+  value: string | undefined,
+  field: "wasConfigPath" | "wasConfigJson",
+): string => {
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new Error(`${field} must be a non-empty string`);
+  }
+
+  return value;
+};
+
 export const loadWasConfigsFromInput = async (input: WasConfigInput): Promise<LoadedWasConfigs> => {
+  // Presence (`!== undefined`) is not the same as truthiness — empty strings are "provided"
+  // for exclusivity, then rejected with a clear field error below.
   const hasPath = input.wasConfigPath !== undefined;
   const hasJson = input.wasConfigJson !== undefined;
 
@@ -36,8 +49,9 @@ export const loadWasConfigsFromInput = async (input: WasConfigInput): Promise<Lo
 
   const workspaceRoot = getWorkspaceRoot(input.workspaceRoot);
 
-  if (input.wasConfigPath) {
-    const configPath = resolvePathWithinRoot(input.wasConfigPath, workspaceRoot);
+  if (hasPath) {
+    const wasConfigPath = assertNonEmptyStringField(input.wasConfigPath, "wasConfigPath");
+    const configPath = resolvePathWithinRoot(wasConfigPath, workspaceRoot);
     const configs = await loadWasConfigs(configPath);
     return {
       configLabel: configPath,
@@ -45,8 +59,9 @@ export const loadWasConfigsFromInput = async (input: WasConfigInput): Promise<Lo
     };
   }
 
+  const wasConfigJson = assertNonEmptyStringField(input.wasConfigJson, "wasConfigJson");
   const configLabel = "<inline>";
-  const parsed = parseWasConfigJson(input.wasConfigJson as string, configLabel);
+  const parsed = parseWasConfigJson(wasConfigJson, configLabel);
   const configs = guardLoadedWasConfigs(parsed, configLabel);
 
   return {

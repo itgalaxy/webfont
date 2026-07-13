@@ -34,7 +34,7 @@
     "docs:cli": "npm run docs:cli -w webfont"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.2",
+    "@biomejs/biome": "2.5.3",
     "lefthook": "2.1.9",
     "vitepress": "2.0.0-alpha.18"
   },

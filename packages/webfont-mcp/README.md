@@ -33,7 +33,9 @@ node packages/webfont-mcp/dist/main.js
 
 ## Cursor configuration
 
-Add to your project or user MCP config (adjust the absolute path):
+This repository ships a portable project config at [`.cursor/mcp.json`](../../.cursor/mcp.json) using `${workspaceFolder}` (no machine-specific absolute paths). After building `webfont-mcp`, reload Cursor MCP servers.
+
+To wire the same server into another icons project, copy or adapt:
 
 ```json
 {
@@ -42,7 +44,7 @@ Add to your project or user MCP config (adjust the absolute path):
       "command": "node",
       "args": ["/absolute/path/to/webfont/packages/webfont-mcp/dist/main.js"],
       "env": {
-        "WEBFONT_MCP_WORKSPACE_ROOT": "/absolute/path/to/your/icons/project"
+        "WEBFONT_MCP_WORKSPACE_ROOT": "${workspaceFolder}"
       }
     }
   }

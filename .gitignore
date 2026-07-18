@@ -43,6 +43,9 @@ jspm_packages
 .idea
 *.iml
 
+#VSCode metadata
+.vscode
+
 # Mac files
 .DS_Store
 
@@ -58,29 +61,9 @@ dist
 # Store temp files
 temp
 
-# CLI output when run from repo root without --dest (default cwd)
-/webfont.svg
-packages/webfont/webfont.svg
-output/
-
 # Environment variables files
 .env
 
-# Lefthook local overrides (see ADR 0003)
-lefthook-local.yml
-
 # Don't commit JavaScript generated files
-packages/webfont/src/**/*.js
-!packages/webfont/src/fixtures/**/*.js
-packages/webfont/src/**/*.d.ts
-
-# VitePress docs site build output and cache (project root is the srcDir)
-.vitepress/dist
-.vitepress/cache
-
-# Generated font demo for the docs site (built by `npm run docs:demo`)
-public/font-demo
-
-# Vercel CLI local state (project link + pulled env)
-.vercel
-.env*.local
+src/**/*.js
+src/**/*.d.ts

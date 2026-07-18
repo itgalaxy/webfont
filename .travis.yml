@@ -1,0 +1,44 @@
+language: node_js
+sudo: false
+dist: trusty
+git:
+  depth: 1
+branches:
+  only:
+    - master
+    - next
+cache:
+  directories:
+    - $HOME/.npm
+    - node_modules
+matrix:
+  fast_finish: true
+  include:
+    - os: linux
+      node_js: "14"
+      script: npm run $JOB_PART
+      env: JOB_PART=test
+    - os: linux
+      node_js: "12"
+      script: npm run $JOB_PART
+      env: JOB_PART=test
+    - os: osx
+      node_js: "14"
+      script: npm run $JOB_PART
+      env: JOB_PART=test
+    - os: osx
+      node_js: "12"
+      script: npm run $JOB_PART
+      env: JOB_PART=test
+
+before_install:
+  - npm install -g npm@latest
+  - nvm --version
+  - node --version
+  - npm --version
+
+install:
+  - npm ci
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

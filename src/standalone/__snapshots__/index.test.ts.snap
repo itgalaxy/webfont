@@ -1,0 +1,1044 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`standalone should change unicode symbols in the result using async function 1`] = `
+"@font-face {
+  font-display: auto;
+  font-family: \\"webfont\\";
+  font-style: normal;
+  font-weight: 400;
+  src: url(\\"./webfont.eot?test\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
+}
+
+.webfont {
+  display: inline-block;
+  font-family: \\"webfont\\";
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.webfont-xs {
+  font-size: 0.75em;
+}
+
+.webfont-sm {
+  font-size: 0.875em;
+}
+
+.webfont-1x {
+  font-size: 1em;
+}
+
+.webfont-2x {
+  font-size: 2em;
+}
+
+.webfont-3x {
+  font-size: 3em;
+}
+
+.webfont-4x {
+  font-size: 4em;
+}
+
+.webfont-5x {
+  font-size: 5em;
+}
+
+.webfont-6x {
+  font-size: 6em;
+}
+
+.webfont-7x {
+  font-size: 7em;
+}
+
+.webfont-8x {
+  font-size: 8em;
+}
+
+.webfont-9x {
+  font-size: 9em;
+}
+
+.webfont-10x {
+  font-size: 10em;
+}
+
+.webfont-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.webfont-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.webfont-pull-left {
+  float: left;
+}
+
+.webfont-pull-right {
+  float: right;
+}
+
+.webfont.webfont-pull-left {
+  margin-right: 0.3em;
+}
+
+.webfont.webfont-pull-right {
+  margin-left: 0.3em;
+}
+
+
+.webfont-avatar::before {
+  content: \\"\\\\1\\";
+}
+
+.webfont-envelope::before {
+  content: \\"\\\\1\\";
+}
+
+.webfont-phone-call::before {
+  content: \\"\\\\1\\";
+}
+
+"
+`;
+
+exports[`standalone should change unicode symbols in the result using sync function 1`] = `
+"@font-face {
+  font-display: auto;
+  font-family: \\"webfont\\";
+  font-style: normal;
+  font-weight: 400;
+  src: url(\\"./webfont.eot?test\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
+}
+
+.webfont {
+  display: inline-block;
+  font-family: \\"webfont\\";
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.webfont-xs {
+  font-size: 0.75em;
+}
+
+.webfont-sm {
+  font-size: 0.875em;
+}
+
+.webfont-1x {
+  font-size: 1em;
+}
+
+.webfont-2x {
+  font-size: 2em;
+}
+
+.webfont-3x {
+  font-size: 3em;
+}
+
+.webfont-4x {
+  font-size: 4em;
+}
+
+.webfont-5x {
+  font-size: 5em;
+}
+
+.webfont-6x {
+  font-size: 6em;
+}
+
+.webfont-7x {
+  font-size: 7em;
+}
+
+.webfont-8x {
+  font-size: 8em;
+}
+
+.webfont-9x {
+  font-size: 9em;
+}
+
+.webfont-10x {
+  font-size: 10em;
+}
+
+.webfont-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.webfont-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.webfont-pull-left {
+  float: left;
+}
+
+.webfont-pull-right {
+  float: right;
+}
+
+.webfont.webfont-pull-left {
+  margin-right: 0.3em;
+}
+
+.webfont.webfont-pull-right {
+  margin-left: 0.3em;
+}
+
+
+.webfont-avatar::before {
+  content: \\"\\\\1\\";
+}
+
+.webfont-envelope::before {
+  content: \\"\\\\1\\";
+}
+
+.webfont-phone-call::before {
+  content: \\"\\\\1\\";
+}
+
+"
+`;
+
+exports[`standalone should create css selectors with transform titles through function 1`] = `
+"@font-face {
+  font-display: auto;
+  font-family: \\"webfont\\";
+  font-style: normal;
+  font-weight: 400;
+  src: url(\\"./webfont.eot?test\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"); 
+}
+
+.webfont {
+  display: inline-block;
+  font-family: \\"webfont\\";
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.webfont-xs {
+  font-size: 0.75em;
+}
+
+.webfont-sm {
+  font-size: 0.875em;
+}
+
+.webfont-1x {
+  font-size: 1em;
+}
+
+.webfont-2x {
+  font-size: 2em;
+}
+
+.webfont-3x {
+  font-size: 3em;
+}
+
+.webfont-4x {
+  font-size: 4em;
+}
+
+.webfont-5x {
+  font-size: 5em;
+}
+
+.webfont-6x {
+  font-size: 6em;
+}
+
+.webfont-7x {
+  font-size: 7em;
+}
+
+.webfont-8x {
+  font-size: 8em;
+}
+
+.webfont-9x {
+  font-size: 9em;
+}
+
+.webfont-10x {
+  font-size: 10em;
+}
+
+.webfont-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.webfont-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.webfont-pull-left {
+  float: left;
+}
+
+.webfont-pull-right {
+  float: right;
+}
+
+.webfont.webfont-pull-left {
+  margin-right: 0.3em;
+}
+
+.webfont.webfont-pull-right {
+  margin-left: 0.3em;
+}
+
+
+.webfont-avatar_transform::before {
+  content: \\"\\\\ea01\\";
+}
+
+.webfont-envelope_transform::before {
+  content: \\"\\\\ea02\\";
+}
+
+.webfont-phone-call_transform::before {
+  content: \\"\\\\ea03\\";
+}
+
+"
+`;
+
+exports[`standalone should generate all fonts with build-in template 1`] = `
+"@font-face {
+  font-display: auto;
+  font-family: \\"webfont\\";
+  font-style: normal;
+  font-weight: 400;
+  src: url(\\"./webfont.eot?test\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"), url(\\"./webfont.ttf?test\\") format(\\"truetype\\"), url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+}
+
+.webfont {
+  display: inline-block;
+  font-family: \\"webfont\\";
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.webfont-xs {
+  font-size: 0.75em;
+}
+
+.webfont-sm {
+  font-size: 0.875em;
+}
+
+.webfont-1x {
+  font-size: 1em;
+}
+
+.webfont-2x {
+  font-size: 2em;
+}
+
+.webfont-3x {
+  font-size: 3em;
+}
+
+.webfont-4x {
+  font-size: 4em;
+}
+
+.webfont-5x {
+  font-size: 5em;
+}
+
+.webfont-6x {
+  font-size: 6em;
+}
+
+.webfont-7x {
+  font-size: 7em;
+}
+
+.webfont-8x {
+  font-size: 8em;
+}
+
+.webfont-9x {
+  font-size: 9em;
+}
+
+.webfont-10x {
+  font-size: 10em;
+}
+
+.webfont-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.webfont-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.webfont-pull-left {
+  float: left;
+}
+
+.webfont-pull-right {
+  float: right;
+}
+
+.webfont.webfont-pull-left {
+  margin-right: 0.3em;
+}
+
+.webfont.webfont-pull-right {
+  margin-left: 0.3em;
+}
+
+
+.webfont-avatar::before {
+  content: \\"\\\\ea01\\";
+}
+
+.webfont-envelope::before {
+  content: \\"\\\\ea02\\";
+}
+
+.webfont-phone-call::before {
+  content: \\"\\\\ea03\\";
+}
+
+"
+`;
+
+exports[`standalone should generate all fonts with custom \`template\` with absolute path 1`] = `
+"/* custom template */
+@font-face {
+    font-family: webfont;
+    src: url(\\"./webfont.eot?test\\");
+    src:
+        url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
+        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
+        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
+        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
+        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+    font-style: normal;
+    font-weight: 400;
+}
+
+.webfont {
+    display: inline-block;
+    transform: translate(0, 0);
+    text-rendering: auto;
+    font: normal normal 400 14px/1 webfont;
+    font-size: inherit;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+    vertical-align: -15%;
+    line-height: 0.75em;
+    font-size: 1.33333333em;
+}
+
+.webfont-2x {
+    font-size: 2em;
+}
+
+.webfont-3x {
+    font-size: 3em;
+}
+
+.webfont-4x {
+    font-size: 4em;
+}
+
+.webfont-5x {
+    font-size: 5em;
+}
+
+.webfont-fw {
+    width: 1.28571429em;
+    text-align: center;
+}
+
+.webfont-avatar::before {
+    content: \\"\\\\ea01\\";
+}
+
+.webfont-envelope::before {
+    content: \\"\\\\ea02\\";
+}
+
+.webfont-phone-call::before {
+    content: \\"\\\\ea03\\";
+}
+"
+`;
+
+exports[`standalone should generate all fonts with custom \`template\` with relative path 1`] = `
+"/* custom template */
+@font-face {
+    font-family: webfont;
+    src: url(\\"./webfont.eot?test\\");
+    src:
+        url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
+        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
+        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
+        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
+        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+    font-style: normal;
+    font-weight: 400;
+}
+
+.webfont {
+    display: inline-block;
+    transform: translate(0, 0);
+    text-rendering: auto;
+    font: normal normal 400 14px/1 webfont;
+    font-size: inherit;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+    vertical-align: -15%;
+    line-height: 0.75em;
+    font-size: 1.33333333em;
+}
+
+.webfont-2x {
+    font-size: 2em;
+}
+
+.webfont-3x {
+    font-size: 3em;
+}
+
+.webfont-4x {
+    font-size: 4em;
+}
+
+.webfont-5x {
+    font-size: 5em;
+}
+
+.webfont-fw {
+    width: 1.28571429em;
+    text-align: center;
+}
+
+.webfont-avatar::before {
+    content: \\"\\\\ea01\\";
+}
+
+.webfont-envelope::before {
+    content: \\"\\\\ea02\\";
+}
+
+.webfont-phone-call::before {
+    content: \\"\\\\ea03\\";
+}
+"
+`;
+
+exports[`standalone should generate only \`woff\` and \`woff2\` fonts with build-in template 1`] = `
+"@font-face {
+  font-display: auto;
+  font-family: \\"webfont\\";
+  font-style: normal;
+  font-weight: 400;
+  
+  src: url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"); 
+}
+
+.webfont {
+  display: inline-block;
+  font-family: \\"webfont\\";
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.webfont-xs {
+  font-size: 0.75em;
+}
+
+.webfont-sm {
+  font-size: 0.875em;
+}
+
+.webfont-1x {
+  font-size: 1em;
+}
+
+.webfont-2x {
+  font-size: 2em;
+}
+
+.webfont-3x {
+  font-size: 3em;
+}
+
+.webfont-4x {
+  font-size: 4em;
+}
+
+.webfont-5x {
+  font-size: 5em;
+}
+
+.webfont-6x {
+  font-size: 6em;
+}
+
+.webfont-7x {
+  font-size: 7em;
+}
+
+.webfont-8x {
+  font-size: 8em;
+}
+
+.webfont-9x {
+  font-size: 9em;
+}
+
+.webfont-10x {
+  font-size: 10em;
+}
+
+.webfont-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.webfont-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.webfont-pull-left {
+  float: left;
+}
+
+.webfont-pull-right {
+  float: right;
+}
+
+.webfont.webfont-pull-left {
+  margin-right: 0.3em;
+}
+
+.webfont.webfont-pull-right {
+  margin-left: 0.3em;
+}
+
+
+.webfont-avatar::before {
+  content: \\"\\\\ea01\\";
+}
+
+.webfont-envelope::before {
+  content: \\"\\\\ea02\\";
+}
+
+.webfont-phone-call::before {
+  content: \\"\\\\ea03\\";
+}
+
+"
+`;
+
+exports[`standalone should load config and respect \`template\` option with build-in template value 1`] = `
+"
+  $webfont-avatar: \\"\\\\ea01\\";
+
+  $webfont-envelope: \\"\\\\ea02\\";
+
+  $webfont-phone-call: \\"\\\\ea03\\";
+
+
+@font-face {
+  font-display: block;
+  font-family: \\"webfont\\";
+  font-style: normal;
+  font-weight: 400;
+  src: url(\\"./webfont.eot?test\\");
+  src: url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./webfont.woff2?test\\") format(\\"woff2\\"), url(\\"./webfont.woff?test\\") format(\\"woff\\"), url(\\"./webfont.ttf?test\\") format(\\"truetype\\"), url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+}
+
+%webfont {
+display: inline-block;
+  font-family: \\"webfont\\";
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.webfont {
+  @extend %webfont;
+}
+
+.webfont-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.webfont-xs {
+  font-size: 0.75em;
+}
+
+.webfont-sm {
+  font-size: 0.875em;
+}
+
+.webfont-1x {
+  font-size: 1em;
+}
+
+.webfont-2x {
+  font-size: 2em;
+}
+
+.webfont-3x {
+  font-size: 3em;
+}
+
+.webfont-4x {
+  font-size: 4em;
+}
+
+.webfont-5x {
+  font-size: 5em;
+}
+
+.webfont-6x {
+  font-size: 6em;
+}
+
+.webfont-7x {
+  font-size: 7em;
+}
+
+.webfont-8x {
+  font-size: 8em;
+}
+
+.webfont-9x {
+  font-size: 9em;
+}
+
+.webfont-10x {
+  font-size: 10em;
+}
+
+.webfont-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.webfont-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.webfont-pull-left {
+  float: left;
+}
+
+.webfont-pull-right {
+  float: right;
+}
+
+.webfont.webfont-pull-left {
+  margin-right: 0.3em;
+}
+
+.webfont.webfont-pull-right {
+  margin-left: 0.3em;
+}
+
+
+.webfont-avatar::before {
+    content: \\"\\\\ea01\\";
+}
+
+.webfont-envelope::before {
+    content: \\"\\\\ea02\\";
+}
+
+.webfont-phone-call::before {
+    content: \\"\\\\ea03\\";
+}
+
+"
+`;
+
+exports[`standalone should load config and respect \`template\` option with external template value 1`] = `
+"/* custom template */
+@font-face {
+    font-family: webfont;
+    src: url(\\"./webfont.eot?test\\");
+    src:
+        url(\\"./webfont.eot?#iefix\\") format(\\"embedded-opentype\\"),
+        url(\\"./webfont.woff2?test\\") format(\\"woff2\\"),
+        url(\\"./webfont.woff?test\\") format(\\"woff\\"),
+        url(\\"./webfont.ttf?test\\") format(\\"truetype\\"),
+        url(\\"./webfont.svg?test#webfont\\") format(\\"svg\\");
+    font-style: normal;
+    font-weight: 400;
+}
+
+.webfont {
+    display: inline-block;
+    transform: translate(0, 0);
+    text-rendering: auto;
+    font: normal normal 400 14px/1 webfont;
+    font-size: inherit;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+}
+
+.webfont-lg {
+    vertical-align: -15%;
+    line-height: 0.75em;
+    font-size: 1.33333333em;
+}
+
+.webfont-2x {
+    font-size: 2em;
+}
+
+.webfont-3x {
+    font-size: 3em;
+}
+
+.webfont-4x {
+    font-size: 4em;
+}
+
+.webfont-5x {
+    font-size: 5em;
+}
+
+.webfont-fw {
+    width: 1.28571429em;
+    text-align: center;
+}
+
+.webfont-avatar::before {
+    content: \\"\\\\ea01\\";
+}
+
+.webfont-envelope::before {
+    content: \\"\\\\ea02\\";
+}
+
+.webfont-phone-call::before {
+    content: \\"\\\\ea03\\";
+}
+"
+`;
+
+exports[`standalone should respect \`template\` options 1`] = `
+"@font-face {
+  font-display: auto;
+  font-family: \\"bar\\";
+  font-style: normal;
+  font-weight: 400;
+  src: url(\\"./foo-bar/bar.eot?test\\");
+  src: url(\\"./foo-bar/bar.eot?#iefix\\") format(\\"embedded-opentype\\"), url(\\"./foo-bar/bar.woff2?test\\") format(\\"woff2\\"), url(\\"./foo-bar/bar.woff?test\\") format(\\"woff\\"), url(\\"./foo-bar/bar.ttf?test\\") format(\\"truetype\\"), url(\\"./foo-bar/bar.svg?test#bar\\") format(\\"svg\\");
+}
+
+.foo {
+  display: inline-block;
+  font-family: \\"bar\\";
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+.foo-lg {
+  font-size: 1.33333em;
+  line-height: 0.75em;
+  vertical-align: -0.0667em;
+}
+
+.foo-xs {
+  font-size: 0.75em;
+}
+
+.foo-sm {
+  font-size: 0.875em;
+}
+
+.foo-1x {
+  font-size: 1em;
+}
+
+.foo-2x {
+  font-size: 2em;
+}
+
+.foo-3x {
+  font-size: 3em;
+}
+
+.foo-4x {
+  font-size: 4em;
+}
+
+.foo-5x {
+  font-size: 5em;
+}
+
+.foo-6x {
+  font-size: 6em;
+}
+
+.foo-7x {
+  font-size: 7em;
+}
+
+.foo-8x {
+  font-size: 8em;
+}
+
+.foo-9x {
+  font-size: 9em;
+}
+
+.foo-10x {
+  font-size: 10em;
+}
+
+.foo-fw {
+  text-align: center;
+  width: 1.25em;
+}
+
+.foo-border {
+  border: solid 0.08em #eee;
+  border-radius: 0.1em;
+  padding: 0.2em 0.25em 0.15em;
+}
+
+.foo-pull-left {
+  float: left;
+}
+
+.foo-pull-right {
+  float: right;
+}
+
+.foo.foo-pull-left {
+  margin-right: 0.3em;
+}
+
+.foo.foo-pull-right {
+  margin-left: 0.3em;
+}
+
+
+.foo-avatar::before {
+  content: \\"\\\\ea01\\";
+}
+
+.foo-envelope::before {
+  content: \\"\\\\ea02\\";
+}
+
+.foo-phone-call::before {
+  content: \\"\\\\ea03\\";
+}
+
+"
+`;

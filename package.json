@@ -1,51 +1,91 @@
 {
-  "name": "webfont-workspace",
-  "private": true,
-  "description": "Monorepo for webfont — npm workspaces",
-  "workspaces": [
-    "packages/*"
+  "directories": {
+    "lib": "dist",
+    "source": "src"
+  },
+  "files": [
+    "dist",
+    "dist/src/index.d.ts",
+    "templates",
+    "!**/__tests__",
+    "!**/__mocks__",
+    "README.md"
   ],
+  "main": "dist/index.js",
+  "bin": "dist/cli.js",
+  "source": "src/index.ts",
+  "types": "dist/src/index.d.ts",
+  "typings": "dist/src/index.d.ts",
   "scripts": {
-    "build": "npm run build -w webfont",
-    "clean": "npm run clean -w webfont",
-    "demo": "npm run demo -w webfont",
-    "docs:build": "npm run build && npm run docs:site",
-    "docs:demo": "node packages/webfont/dist/cli.mjs './packages/webfont/src/fixtures/svg-icons/*.svg' -d public/font-demo -t html --normalize --center-horizontally --dest-create",
-    "predocs:site": "npm run docs:cli && node -e \"require('node:fs').existsSync('packages/webfont/dist/cli.mjs')||require('node:child_process').execSync('npm run build',{stdio:'inherit'})\"",
-    "docs:site": "npm run docs:demo && vitepress build",
-    "docs:dev": "vitepress dev",
-    "docs:preview": "vitepress preview",
-    "lint": "biome check .",
-    "lint:suppressions": "node scripts/check-no-suppressions.mjs",
-    "typecheck": "npm run typecheck -w webfont",
-    "depcheck": "npm run depcheck -w webfont",
-    "prepare": "lefthook install",
-    "prettify": "biome check --write .",
-    "render:homebrew-core": "node scripts/render-homebrew-core-formula.mjs",
-    "sync:homebrew": "node scripts/sync-homebrew-formula.mjs",
-    "test": "npm run test:scripts && npm run test -w webfont",
-    "test:scripts": "vitest run --config vitest.scripts.config.ts",
-    "audit": "npm audit --audit-level=info",
-    "test:package": "npm run test:package -w webfont",
-    "testc": "npm run testc -w webfont",
-    "test-debug": "npm run test-debug -w webfont",
-    "testu": "npm run testu -w webfont",
-    "deprecate-pre-12": "npm run deprecate-pre-12 -w webfont",
-    "docs:cli": "npm run docs:cli -w webfont"
+    "build": "rollup -c",
+    "clean": "rm -rf dist/ temp/",
+    "demo": "node dist/cli.js './src/fixtures/svg-icons/*.svg' -d demo -t html --normalize --center-horizontally",
+    "lint": "eslint .",
+    "postbuild": "tsc --declaration --declarationDir dist --emitDeclarationOnly",
+    "prebuild": "npm run clean && npm run lint",
+    "predemo": "npm run build",
+    "prepublishOnly": "npm run build",
+    "prerelease": "npm run test",
+    "pretest": "npm run build",
+    "prettify": "npm run lint --fix",
+    "preversion": "npm run test",
+    "push-tags": "git push origin --tags",
+    "release": "standard-version",
+    "release-alpha": "npm run release -- --prerelease alpha",
+    "test": "jest src",
+    "testc": "npm test -- --coverage",
+    "test-debug": "npm test --detectOpenHandles --runInBand",
+    "testu": "npm test -- -u"
+  },
+  "dependencies": {
+    "cosmiconfig": "^5.2.0",
+    "deepmerge": "^4.2.2",
+    "globby": "^11.0.0",
+    "meow": "^9.0.0",
+    "nunjucks": "^3.2.3",
+    "p-limit": "^3.1.0",
+    "parse-json": "^5.2.0",
+    "resolve-from": "^5.0.0",
+    "svg2ttf": "^6.0.2",
+    "svgicons2svgfont": "^10.0.3",
+    "ttf2eot": "^2.0.0",
+    "ttf2woff": "^3.0.0",
+    "wawoff2": "^2.0.0",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.2",
-    "lefthook": "2.1.9",
-    "vitepress": "2.0.0-alpha.18"
-  },
-  "overrides": {
-    "minimatch": "10.2.5",
-    "grunt": {
-      "js-yaml": "3.15.0",
-      "minimatch": "3.1.5"
-    },
-    "test-exclude": "7.0.2",
-    "woff2sfnt-sfnt2woff": "1.0.0"
+    "@babel/eslint-plugin": "latest",
+    "@babel/preset-env": "latest",
+    "@babel/preset-typescript": "latest",
+    "@rollup/plugin-commonjs": "latest",
+    "@rollup/plugin-typescript": "latest",
+    "@types/jest": "26.0.24",
+    "@types/node": "15.14.9",
+    "@types/nunjucks": "latest",
+    "@types/rimraf": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "babel-jest": "27.1.0",
+    "eslint": "latest",
+    "eslint-plugin-import": "latest",
+    "eslint-plugin-jest": "latest",
+    "eslint-plugin-node": "latest",
+    "eslint-plugin-promise": "latest",
+    "eslint-plugin-unicorn": "latest",
+    "husky": "latest",
+    "is-eot": "latest",
+    "is-svg": "latest",
+    "is-ttf": "latest",
+    "is-woff": "latest",
+    "is-woff2": "latest",
+    "jest": "27.1.0",
+    "lint-staged": "11.1.2",
+    "rimraf": "latest",
+    "rollup": "2.56.3",
+    "standard-version": "latest",
+    "ts-node": "latest",
+    "tslib": "latest",
+    "typescript": "latest"
   },
   "repository": {
     "type": "git",
@@ -53,11 +93,44 @@
   },
   "author": "itgalaxy <development@itgalaxy.company>",
   "license": "MIT",
-  "engines": {
-    "node": ">=24.14.0"
+  "contributors": [
+    {
+      "name": "Alexander Krasnoyarov",
+      "email": "alexander.krasnoyarov@itgalaxy.company",
+      "url": "https://vk.com/sterling_archer"
+    },
+    {
+      "name": "Jimmy Andrade",
+      "email": "webfont@jimmyandrade.com",
+      "url": "https://github.com/jimmyandrade"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/itgalaxy/webfont/issues"
   },
-  "allowScripts": {
-    "lefthook@2.1.9": true,
-    "fsevents@2.3.3": true
-  }
+  "homepage": "https://github.com/itgalaxy/webfont#readme",
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "keywords": [
+    "cli",
+    "standalone",
+    "font",
+    "fonts",
+    "webfont",
+    "webfonts",
+    "svg",
+    "ttf",
+    "woff",
+    "woff2",
+    "otf",
+    "ttf2eot",
+    "ttf2woff",
+    "ttf2svg",
+    "svg2ttf",
+    "css",
+    "scss",
+    "builder",
+    "generator"
+  ]
 }

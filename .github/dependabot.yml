@@ -1,50 +1,6 @@
 version: 2
-
-# Dependabot has two independent mechanisms:
-#
-# 1. Version updates  — configured below. They follow `schedule` (weekly here)
-#    and cover every new version (patch, minor, and MAJOR — we keep majors so
-#    we still see them; we just never auto-merge).
-# 2. Security updates — NOT scheduled here. They are event-driven: Dependabot
-#    opens them as soon as a GitHub advisory affects a dependency (faster than
-#    "daily"), so there is no `interval` for them. They must be enabled in
-#    Settings → Code security ("Dependabot security updates"). They inherit the
-#    labels, commit-message, and grouping below (but not the schedule).
-#
-# There is no literal "unlimited" pull-request cap: a high `open-pull-requests-limit`
-# effectively removes the version-update limit. Do NOT use 0 — that disables
-# version updates entirely. Security updates keep a fixed internal cap of 10.
-
 updates:
-  # ── npm: runtime + dev dependencies ──────────────────────────────────────
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 99
-    commit-message:
-      # Produces "chore(deps): …" for runtime deps and "chore(deps-dev): …"
-      # for devDependencies — both valid Conventional Commits for this repo.
-      prefix: "chore"
-      include: "scope"
-    groups:
-      # `node` (the runtime) is not an npm package, so in practice this groups
-      # @types/node into a single PR. The `node` pattern is kept to match the
-      # intent and any future literal `node` package.
-      node:
-        patterns:
-          - "node"
-          - "@types/node"
-
-  # ── GitHub Actions used in workflows (previously unmanaged) ───────────────
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 99
-    commit-message:
-      # CI tooling → "ci(deps): bump actions/checkout …"
-      prefix: "ci"
-      include: "scope"
+      interval: "daily"

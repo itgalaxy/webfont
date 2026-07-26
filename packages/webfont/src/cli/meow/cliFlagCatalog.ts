@@ -4,5 +4,4 @@ export {
   CLI_USAGE_LINE,
   type CliFlagCatalogEntry,
   type CliFlagSection,
-  type CliFlagType,
 } from "../../optionsReference/cliFlagCatalog";

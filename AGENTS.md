@@ -217,7 +217,7 @@ See also [CONTRIBUTING.md](./CONTRIBUTING.md) — “User-facing changes and doc
 ## General
 
 - Follow [CONTRIBUTING.md](./CONTRIBUTING.md) and existing ADRs under `docs/adr/`.
-- Run `npm run depcheck` (Knip) when changing imports or `package.json` dependencies; see [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md). The **pre-push** Lefthook runs `depcheck` before `npm test`.
+- Run `npm run depcheck` (Knip) when changing imports or `package.json` dependencies; see [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md). Keep the gate strict: fix `entry` / `project` and remove dead `export`s — do not exclude `exports`/`types` or grow `ignoreIssues` ([#822](https://github.com/itgalaxy/webfont/issues/822)). The **pre-push** Lefthook runs `depcheck` before `npm test`.
 - Use conventional commits (`feat`, `fix`, `test`, `docs`, `chore`, `refactor`, `ci`, `build`). Prefer **`chore(deps):`** when the PR changes `package.json` / lockfile dependencies (and **`ci(deps):`** for GitHub Actions bumps) — even if the diff is mostly tests or docs (see [Pull requests](#pull-requests)). This matches the prefixes Dependabot generates via [`.github/dependabot.yml`](./.github/dependabot.yml).
 - Releases are handled by Release Please on `master`; do not bump `package.json` version in feature PRs (see [ADR 0004](docs/adr/0004-release-please-instead-of-standard-version.md)). Release git tags use **`v{semver}`** (`v12.0.0`); `release-please-config.json` sets `include-component-in-tag: false` — do not use `webfont-v*` tags.
 - Keep changes focused; match surrounding code style and tooling (Biome, Vitest, Lefthook).

@@ -1,6 +1,6 @@
 # ADR 0008: Adopt Knip instead of depcheck for dependency and dead-code analysis
 
-- **Status:** Accepted
+- **Status:** Accepted (amended 2026-07-26 — [#822](https://github.com/itgalaxy/webfont/issues/822))
 - **Date:** 2026-07-02
 - **Related:** [ADR 0003](./0003-lefthook-instead-of-husky-lint-staged.md) (removed `lint-staged.config.js` leftover)
 
@@ -75,11 +75,39 @@ The project is a small Node library + CLI with Vitest tests, Vite builds, cosmic
 
 ### Follow-up
 
-- Revisit `ignoreIssues` when CLI modules stop re-exporting test-only symbols.
-- Consider `knip --production` in a separate job if we want stricter publish-surface analysis.
+- Prefer fixing **entry** globs and removing dead `export`s over adding `ignoreIssues`.
+- Consider `knip --production` in a separate job only after entry mapping makes it truthful (today it false-positives most runtime dependencies).
+- Optionally extend Knip to `webfont-mcp` / root workspaces when that package stabilizes.
+
+## Amendment (2026-07-26) — keep Knip and **tighten** configuration ([#822](https://github.com/itgalaxy/webfont/issues/822))
+
+### Context
+
+A large `ignoreIssues` map was papering over incomplete `entry` coverage and dead re-exports. Narrowing Knip by excluding `exports` / `types` would weaken the gate; that approach was rejected.
+
+### Decision
+
+**Keep Knip.** Do **not** drop it, replace it with classic depcheck-only, or exclude export/type issue classes from CI.
+
+Tighten instead:
+
+1. List real public and tooling entry files in `packages/webfont/knip.json` (`src/index.ts`, `src/standalone/index.ts`, `scripts/**`, fixtures, CLI, templates, browser).
+2. Expand `project` to include `scripts/**` so orphan script files are detectable.
+3. Remove the `ignoreIssues` map (public barrels are covered by complete `entry` globs; dead re-exports removed in source).
+4. Do **not** enable `includeEntryExports` — this is a published library; entry exports are the public API.
+5. Document the change here and in CONTRIBUTING / AGENTS / TROUBLESHOOTING.
+
+### Policy for future changes
+
+1. When Knip reports unused exports: **un-export** or **wire** them (entry / real import). Do not add `ignoreIssues` for public barrels.
+2. When Knip misses a file: add an **entry** or **project** glob.
+3. Use `ignoreDependencies` only for packages required dynamically by tools Knip cannot see; document why in TROUBLESHOOTING. (The former `@typescript/typescript6` exception was removed with [ADR 0016](./0016-tsc-declarations-typescript7.md) / [#824](https://github.com/itgalaxy/webfont/issues/824).)
+4. Reject PRs that exclude `exports` / `types` from the default Knip gate without a superseding ADR.
 
 ## References
 
 - [Knip documentation](https://knip.dev/)
 - [depcheck](https://github.com/depcheck/depcheck) — prior art, narrower scope
 - [ADR 0003: Lefthook instead of Husky / lint-staged](./0003-lefthook-instead-of-husky-lint-staged.md)
+- [#822](https://github.com/itgalaxy/webfont/issues/822) — investigate keep / narrow / replace / remove
+- [ADR 0016](./0016-tsc-declarations-typescript7.md) — TypeScript 7 `tsc` declarations; no `@typescript/typescript6`

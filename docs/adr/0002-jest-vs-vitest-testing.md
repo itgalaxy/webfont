@@ -66,6 +66,8 @@ The test suite grew to **17** files, **206** tests, and **21** snapshots. Jest w
 
 **Vitest 4.1.9** is now the test runner; `jest`, `@swc/jest`, and `@types/jest` were removed.
 
+Workspace Vitest suites enable **`test.globals: true`** (see [ADR 0015](./0015-vitest-globals-in-workspaces.md)).
+
 ## Consequences
 
 ### Positive

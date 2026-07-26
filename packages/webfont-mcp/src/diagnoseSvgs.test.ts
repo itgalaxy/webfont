@@ -1,5 +1,4 @@
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
 import { diagnoseSvgs } from "./diagnoseSvgs.js";
 import { getWorkspaceRoot } from "./pathSandbox.js";
 

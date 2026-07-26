@@ -7,7 +7,7 @@
     "webfont-mcp": "./dist/main.js"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "pretest": "npm run build -w webfont && npm run build",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",

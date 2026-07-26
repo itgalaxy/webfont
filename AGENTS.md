@@ -10,6 +10,10 @@ npm workspaces monorepo ([ADR 0013](./docs/adr/0013-npm-workspaces-monorepo.md))
 
 ## Testing (Vitest)
 
+### Vitest globals (all workspaces)
+
+Workspace Vitest configs use **`test.globals: true`** ([ADR 0015](./docs/adr/0015-vitest-globals-in-workspaces.md)). Typecheck configs include `"vitest/globals"` so `describe` / `it` / `expect` / `expectTypeOf` / `vi` / hooks need **not** be imported. Explicit `import { … } from "vitest"` is optional. Emit/build tsconfigs must exclude `*.test.ts` and must not require Vitest types on production sources.
+
 ### Do not mix sync-throwing `fs` calls inside async callbacks
 
 In `beforeAll`, `beforeEach`, `afterAll`, `afterEach`, or any `new Promise((resolve, reject) => { ... })` callback, avoid synchronous APIs that throw (`fs.mkdirSync`, `fs.symlinkSync`, `fs.unlinkSync`, bare `throw`, etc.).

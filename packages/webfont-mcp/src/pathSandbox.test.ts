@@ -1,5 +1,4 @@
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
 import { getWorkspaceRoot, PathSandboxError, resolvePathWithinRoot } from "./pathSandbox.js";
 
 const repoRoot = getWorkspaceRoot(join(import.meta.dirname, "../../.."));

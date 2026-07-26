@@ -1,6 +1,5 @@
 import { mkdir, mkdtemp } from "node:fs/promises";
 import { join } from "node:path";
-import { afterEach, describe, expect, it, vi } from "vitest";
 import { convertFromWas } from "./convertFromWas.js";
 import { resetConversionDest } from "./convertSvgsToFont.js";
 import { getWorkspaceRoot } from "./pathSandbox.js";

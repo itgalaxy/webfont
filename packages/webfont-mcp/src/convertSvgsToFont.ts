@@ -4,7 +4,8 @@ import { getWorkspaceRoot, resolvePathWithinRoot } from "./pathSandbox.js";
 import { resolveSvgInputPaths } from "./resolveSvgInputs.js";
 import { serializeConversionResult } from "./serializeResult.js";
 
-export type WebfontFormat = "eot" | "otf" | "woff" | "woff2" | "svg" | "ttf";
+/** SVG→font formats only — OTF is for WOFF/WOFF2 decompression, not convert_svgs_to_font. */
+export type WebfontFormat = "eot" | "woff" | "woff2" | "svg" | "ttf";
 
 export type ConvertSvgsToFontInput = {
   centerHorizontally?: boolean;

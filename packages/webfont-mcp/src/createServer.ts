@@ -7,7 +7,8 @@ import { formatWebfontOptionsReference } from "./listWebfontOptionsContent.js";
 import { PathSandboxError } from "./pathSandbox.js";
 import { validateWasConfig } from "./validateWasConfig.js";
 
-const formatSchema = z.enum(["eot", "otf", "woff", "woff2", "svg", "ttf"]);
+/** Matches `assertSvgPipelineFormats` — OTF is not valid for SVG icon conversion. */
+const svgPipelineFormatSchema = z.enum(["eot", "woff", "woff2", "svg", "ttf"]);
 
 const toolError = (error: unknown) => {
   let message: string;
@@ -53,7 +54,10 @@ export const createWebfontMcpServer = (): McpServer => {
         destCreate: z.boolean().optional().describe("Create dest when missing"),
         files: z.array(z.string()).min(1).describe("Glob patterns for SVG inputs, resolved within workspaceRoot"),
         fontName: z.string().optional().describe('Base font name (default "webfont")'),
-        formats: z.array(formatSchema).optional().describe('Output formats (default ["woff2"])'),
+        formats: z
+          .array(svgPipelineFormatSchema)
+          .optional()
+          .describe('SVG pipeline formats only — eot, woff, woff2, svg, ttf (default ["woff2"]; not otf)'),
         normalize: z.boolean().optional().describe("Normalize glyph height"),
         svgToolsDiagnose: z.boolean().optional().describe("Attach svgDiagnostics to the conversion result"),
         template: z.string().optional().describe('Built-in or custom template (for example "css")'),

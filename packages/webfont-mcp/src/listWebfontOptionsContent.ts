@@ -15,6 +15,8 @@ const MCP_NOTES = [
   "Stroke-only SVGs need glyphContentTransformFn preprocessing; webfont does not bundle svg-outline-stroke.",
   "Use diagnose_svgs or svgTools.diagnose before convert_svgs_to_font when icons look wrong in the font.",
   "Paths must stay inside workspaceRoot; absolute paths outside the root are rejected.",
+  "convert_svgs_to_font formats are SVG-pipeline only (eot, woff, woff2, svg, ttf) — not otf.",
+  "Conversion tools resolve globs with resolveSvgInputPaths (per-match sandbox) before webfont().",
   "`.was` configs use dest/files/name/template; map with mapWasConfigToWebfontOptions or validate_was_config before convert_from_was.",
   "Legacy `.was` files may store the icon prefix in fontName; prefer prefix for new configs (see docs/migration/issue-0797-was-prefix-field.md).",
 ] as const;

@@ -175,6 +175,14 @@ Patterns below come from assistant/CLI review on [#797](https://github.com/itgal
 - **CJS dependencies in the ESM CLI bundle.** The CLI ships as `dist/cli.mjs` with dependencies **external** (not bundled). Dynamic `import("enquirer")` and similar must tolerate both default and namespace export shapes: `const lib = module.default ?? module` before destructuring constructors.
 - **No `biome-ignore` unless unavoidable.** Prefer a small refactor (see sequential batch note above) over silencing Biome rules; `lint:suppressions` blocks banned suppressions on pre-commit/CI.
 
+### MCP tools (`packages/webfont-mcp`)
+
+Patterns from [#796](https://github.com/itgalaxy/webfont/pull/796). Apply whenever exposing `webfont()` (or `.was` configs) through MCP or other agent-facing wrappers.
+
+- **Align tool schemas and TypeScript unions with the runtime pipeline.** The SVG-icons path rejects `otf` (`assertSvgPipelineFormats`). Do not advertise `otf` on `convert_svgs_to_font` Zod schemas or `WebfontFormat` — agents will construct calls that always fail. Split schemas per tool when another tool later supports WOFF→OTF decompression.
+- **Resolve and sandbox every glob match before `webfont()`.** Lexical sandbox of the glob string alone is not enough (symlinks under `workspaceRoot` can point outside). Reuse `resolveSvgInputPaths` (globby + `assertPathWithinRoot` per match) for **all** conversion tools — including `convert_from_was` — then pass the resolved absolute file list to `webfont({ files })`. Do not rely on webfont’s internal globber for MCP security boundaries.
+- **Portable Cursor MCP config.** Commit `.cursor/mcp.json` with `${workspaceFolder}`, never machine-specific absolute paths under `/Users/...`.
+
 ### Codify review feedback in AGENTS.md
 
 When Copilot, humans, or bots surface a **reusable** pattern (defensive guards, naming, CLI copy, test style), **update AGENTS.md in the same PR** once the fix lands — do not rely on resolved review threads alone.

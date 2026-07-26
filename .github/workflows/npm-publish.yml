@@ -41,7 +41,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ env.RELEASE_TAG }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 26.x
           cache: npm
@@ -102,7 +102,7 @@ jobs:
       - name: Resolve published version
         id: meta
         run: echo "version=$(node -p 'require("./packages/webfont/package.json").version')" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 26.x
           package-manager-cache: false
@@ -135,7 +135,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: ${{ env.RELEASE_TAG }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 26.x
           package-manager-cache: false
@@ -171,7 +171,7 @@ jobs:
         with:
           ref: master
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: 26.x
           cache: npm
@@ -215,7 +215,7 @@ jobs:
         if: steps.gate.outputs.enabled == 'true'
         with:
           ref: ${{ env.RELEASE_TAG }}
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.gate.outputs.enabled == 'true'
         with:
           node-version: 26.x

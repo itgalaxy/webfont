@@ -1,7 +1,7 @@
 import { mkdir, mkdtemp } from "node:fs/promises";
 import { join } from "node:path";
 import { convertSvgsToFont, resetConversionDest } from "./convertSvgsToFont.js";
-import { getWorkspaceRoot } from "./pathSandbox.js";
+import { getWorkspaceRoot, PathSandboxError } from "./pathSandbox.js";
 
 const repoRoot = getWorkspaceRoot(join(import.meta.dirname, "../../.."));
 const fixtureGlob = "packages/webfont/src/fixtures/svg-icons/*.svg";
@@ -32,5 +32,22 @@ describe("convertSvgsToFont", () => {
 
     expect(result.glyphCount).toBeGreaterThan(0);
     expect(result.writtenFiles.some((file) => file.endsWith(".woff2"))).toBe(true);
+  });
+
+  it("should reject a custom template path outside workspaceRoot", async () => {
+    await mkdir(tempBase, { recursive: true });
+    outputDir = await mkdtemp(join(tempBase, "convert-template-"));
+
+    await expect(
+      convertSvgsToFont({
+        dest: outputDir,
+        destCreate: true,
+        files: [fixtureGlob],
+        fontName: "fixture-icons",
+        formats: ["woff2"],
+        template: "/etc/passwd",
+        workspaceRoot: repoRoot,
+      }),
+    ).rejects.toThrow(PathSandboxError);
   });
 });

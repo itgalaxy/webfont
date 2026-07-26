@@ -1,6 +1,6 @@
 import { join } from "node:path";
 import { loadWasConfigsFromInput } from "./loadWasConfigInput.js";
-import { getWorkspaceRoot } from "./pathSandbox.js";
+import { getWorkspaceRoot, PathSandboxError } from "./pathSandbox.js";
 
 const repoRoot = getWorkspaceRoot(join(import.meta.dirname, "../../.."));
 
@@ -56,5 +56,36 @@ describe("loadWasConfigsFromInput", () => {
     expect(loaded.configs).toHaveLength(1);
     expect(loaded.configs[0]?.dest).toContain("packages/webfont-mcp/.tmp/was-validate-dest");
     expect(loaded.configs[0]?.files).toContain("packages/webfont/src/fixtures/svg-icons/*.svg");
+    expect(loaded.configs[0]?.template).toBe("css");
+  });
+
+  it("should sandbox custom .was template paths and reject paths outside workspaceRoot", async () => {
+    const inside = await loadWasConfigsFromInput({
+      wasConfigJson: JSON.stringify({
+        dest: "packages/webfont-mcp/.tmp/was-validate-dest",
+        files: "packages/webfont/src/fixtures/svg-icons/*.svg",
+        name: "FixtureFont",
+        prefix: "fixture-icon",
+        formats: ["woff2"],
+        template: "packages/webfont/src/fixtures/templates/template.css",
+      }),
+      workspaceRoot: repoRoot,
+    });
+
+    expect(inside.configs[0]?.template).toContain("packages/webfont/src/fixtures/templates/template.css");
+
+    await expect(
+      loadWasConfigsFromInput({
+        wasConfigJson: JSON.stringify({
+          dest: "packages/webfont-mcp/.tmp/was-validate-dest",
+          files: "packages/webfont/src/fixtures/svg-icons/*.svg",
+          name: "FixtureFont",
+          prefix: "fixture-icon",
+          formats: ["woff2"],
+          template: "/etc/passwd",
+        }),
+        workspaceRoot: repoRoot,
+      }),
+    ).rejects.toThrow(PathSandboxError);
   });
 });

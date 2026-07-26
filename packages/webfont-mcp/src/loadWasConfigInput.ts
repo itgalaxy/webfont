@@ -5,6 +5,7 @@ import {
   type WebfontAssistantWasConfig,
 } from "webfont";
 import { getWorkspaceRoot, resolvePathWithinRoot } from "./pathSandbox.js";
+import { resolveTemplateWithinRoot } from "./resolveTemplateWithinRoot.js";
 
 export type WasConfigInput = {
   wasConfigJson?: string;
@@ -24,6 +25,7 @@ export const sandboxWasConfigPaths = (
   ...was,
   dest: resolvePathWithinRoot(was.dest, workspaceRoot),
   files: resolvePathWithinRoot(was.files, workspaceRoot),
+  template: resolveTemplateWithinRoot(was.template, workspaceRoot),
 });
 
 const assertNonEmptyStringField = (

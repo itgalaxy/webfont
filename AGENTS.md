@@ -185,6 +185,7 @@ Patterns from [#796](https://github.com/itgalaxy/webfont/pull/796). Apply whenev
 
 - **Align tool schemas and TypeScript unions with the runtime pipeline.** The SVG-icons path rejects `otf` (`assertSvgPipelineFormats`). Do not advertise `otf` on `convert_svgs_to_font` Zod schemas or `WebfontFormat` — agents will construct calls that always fail. Split schemas per tool when another tool later supports WOFF→OTF decompression.
 - **Resolve and sandbox every glob match before `webfont()`.** Lexical sandbox of the glob string alone is not enough (symlinks under `workspaceRoot` can point outside). Reuse `resolveSvgInputPaths` (globby + `assertPathWithinRoot` per match) for **all** conversion tools — including `convert_from_was` — then pass the resolved absolute file list to `webfont({ files })`. Do not rely on webfont’s internal globber for MCP security boundaries.
+- **Sandbox custom template paths; leave built-in template names alone.** Built-in ids (`css`, `scss`, `styl`, `html`, `json`) are not filesystem paths — pass them through. Any other `template` value (MCP `convert_svgs_to_font` or `.was` `template`) must go through `resolveTemplateWithinRoot` / `resolvePathWithinRoot` so agents cannot read templates outside `workspaceRoot`. Apply this in `sandboxWasConfigPaths` as well as direct conversion tools.
 - **Portable Cursor MCP config.** Commit `.cursor/mcp.json` with `${workspaceFolder}`, never machine-specific absolute paths under `/Users/...`.
 
 ### Codify review feedback in AGENTS.md

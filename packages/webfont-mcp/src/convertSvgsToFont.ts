@@ -2,6 +2,7 @@ import { mkdir, rm } from "node:fs/promises";
 import { defaultWebfontOptions, mergeCliDestIntoConfig, webfont, writeResultFiles } from "webfont";
 import { getWorkspaceRoot, resolvePathWithinRoot } from "./pathSandbox.js";
 import { resolveSvgInputPaths } from "./resolveSvgInputs.js";
+import { resolveTemplateWithinRoot } from "./resolveTemplateWithinRoot.js";
 import { serializeConversionResult } from "./serializeResult.js";
 
 /** SVG→font formats only — OTF is for WOFF/WOFF2 decompression, not convert_svgs_to_font. */
@@ -36,6 +37,11 @@ export const convertSvgsToFont = async (input: ConvertSvgsToFontInput) => {
     svgTools = { diagnose: true };
   }
 
+  let template: string | undefined;
+  if (input.template !== undefined) {
+    template = resolveTemplateWithinRoot(input.template, workspaceRoot);
+  }
+
   const result = await webfont({
     centerHorizontally: input.centerHorizontally ?? defaults.centerHorizontally,
     centerVertically: input.centerVertically ?? defaults.centerVertically,
@@ -46,7 +52,7 @@ export const convertSvgsToFont = async (input: ConvertSvgsToFontInput) => {
     formats: input.formats ?? ["woff2"],
     normalize: input.normalize ?? defaults.normalize,
     svgTools,
-    template: input.template,
+    template,
   });
 
   mergeCliDestIntoConfig(result, { dest });

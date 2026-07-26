@@ -39,11 +39,9 @@
     "vitepress": "2.0.0-alpha.18"
   },
   "overrides": {
+    "brace-expansion": "5.0.8",
     "minimatch": "10.2.5",
-    "grunt": {
-      "js-yaml": "3.15.0",
-      "minimatch": "3.1.5"
-    },
+    "postcss": "8.5.23",
     "test-exclude": "7.0.2",
     "woff2sfnt-sfnt2woff": "1.0.0"
   },

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://www.conventionalcommits.org/) and [Release Please](https://github.com/googleapis/release-please) (ADR [0004](docs/adr/0004-release-please-instead-of-standard-version.md)).
 
+## [12.6.0](https://github.com/itgalaxy/webfont/compare/v12.5.0...v12.6.0) (2026-07-26)
+
+
+### Features
+
+* **cli:** add interactive assistant and webfont-assistant .was support ([#797](https://github.com/itgalaxy/webfont/issues/797)) ([cecf9f9](https://github.com/itgalaxy/webfont/commit/cecf9f906009544d72a9ea43dd71d36ab965aa34))
+
 ## [12.5.0](https://github.com/itgalaxy/webfont/compare/v12.4.1...v12.5.0) (2026-07-07)
 
 

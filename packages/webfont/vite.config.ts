@@ -2,7 +2,6 @@ import { builtinModules } from "node:module";
 import { resolve } from "node:path";
 import { defineConfig, type PluginOption } from "vite";
 import checker from "vite-plugin-checker";
-import dts from "vite-plugin-dts";
 import { dependencies } from "./package.json";
 
 const nodeBuiltins = [...builtinModules, ...builtinModules.map((moduleName) => `node:${moduleName}`)];
@@ -19,12 +18,6 @@ const libraryPlugins: PluginOption[] = [
     typescript: {
       tsconfigPath: "tsconfig.build.json",
     },
-  }),
-  dts({
-    entryRoot: ".",
-    outDirs: "dist",
-    strictOutput: true,
-    tsconfigPath: "tsconfig.build.json",
   }),
 ];
 

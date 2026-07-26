@@ -599,33 +599,28 @@ Error: Cannot find package '@vitest/coverage-v8' imported from .../node_modules/
 
 ---
 
-## TypeScript 7+ breaks Vite/`unplugin-dts` build without `@typescript/typescript6`
+## TypeScript declaration emit uses `tsc`, not `vite-plugin-dts`
 
-### What error appeared
+### What changed
 
-`npm run build` (or Knip loading `vite.config.ts`) fails with:
+Declaration emit no longer goes through `vite-plugin-dts` / `unplugin-dts`. The build runs TypeScript 7:
 
-```text
-[unplugin-dts] The installed "typescript" package does not provide the JavaScript Compiler API (this happens with TypeScript 7+), and the fallback "@typescript/typescript6" was not found.
-Please install it alongside TypeScript 7:
-  npm install -D @typescript/typescript6
+```shell
+tsc -p tsconfig.build.json --emitDeclarationOnly
 ```
 
-### Why it usually happens
+then `packages/webfont/scripts/emit-mts-types.mjs` for `.d.mts` (see [ADR 0016](docs/adr/0016-tsc-declarations-typescript7.md)).
 
-TypeScript 7+ no longer ships the JavaScript Compiler API that `unplugin-dts` (and similar Vite plugins) use. Tooling expects a companion package `@typescript/typescript6` for that API while `typescript` stays on 7+ for typechecking.
+### Why the old `@typescript/typescript6` shim is gone
 
-### Steps to try to resolve
+TypeScript 7 removed the JavaScript Compiler API that `unplugin-dts` needed. The previous workaround installed `@typescript/typescript6` beside `typescript@7`. That shim is **removed** so the workspace does not pull a TypeScript 6 compiler for builds.
 
-1. Install the fallback next to TypeScript 7 in the affected workspace (for webfont: `packages/webfont`):
+### Steps if declarations are missing after build
 
-   ```shell
-   npm install -D @typescript/typescript6 -w webfont
-   ```
-
-2. Keep Knip from flagging it as unused (dynamic require from `unplugin-dts`) via `ignoreDependencies` in `packages/webfont/knip.json`.
-
-3. Re-run `npm run build` / `npm test` / `npm run depcheck`.
+1. Confirm `packages/webfont/package.json` `build` still includes `tsc -p tsconfig.build.json --emitDeclarationOnly` before `emit-mts-types.mjs`.
+2. Confirm `tsconfig.build.json` has `declaration: true` and `emitDeclarationOnly: true`.
+3. Re-run `npm run build -w webfont` and check `dist/src/index.d.ts` / `dist/src/index.d.mts`.
+4. Run `npm run test:package` (publint + attw + pack-smoke).
 
 ## Knip reports unused exported types after a Knip upgrade
 

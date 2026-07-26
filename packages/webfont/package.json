@@ -103,6 +103,7 @@
     "@types/ttf2woff": "2.0.4",
     "@types/wawoff2": "1.0.2",
     "@types/xml2js": "0.4.14",
+    "@typescript/typescript6": "6.0.2",
     "@vitest/coverage-v8": "4.1.10",
     "is-eot": "1.0.0",
     "is-svg": "6.1.0",

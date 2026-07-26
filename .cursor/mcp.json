@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "webfont": {
+      "command": "node",
+      "args": ["${workspaceFolder}/packages/webfont-mcp/dist/main.js"],
+      "env": {
+        "WEBFONT_MCP_WORKSPACE_ROOT": "${workspaceFolder}"
+      }
+    }
+  }
+}

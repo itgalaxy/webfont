@@ -1,4 +1,18 @@
-import index, { type Result, type ResultConfig, webfont, writeResultFiles } from ".";
+import index, {
+  buildWasConfigFromWizard,
+  buildWebfontOptionsReference,
+  CLI_FLAG_SECTIONS,
+  defaultWebfontOptions,
+  guardLoadedWasConfigs,
+  loadWasConfigs,
+  mapWasConfigToWebfontOptions,
+  parseWasConfigJson,
+  type Result,
+  type ResultConfig,
+  type WebfontAssistantWasConfig,
+  webfont,
+  writeResultFiles,
+} from ".";
 
 describe("index", () => {
   it("should be exported", () => {
@@ -17,5 +31,30 @@ describe("index", () => {
 
   it("should export writeResultFiles for programmatic disk writes", () => {
     expect(typeof writeResultFiles).toBe("function");
+  });
+
+  it("should export options reference helpers for tooling and agents", () => {
+    expect(CLI_FLAG_SECTIONS.length).toBeGreaterThan(0);
+    expect(defaultWebfontOptions().fontName).toBe("webfont");
+    expect(buildWebfontOptionsReference().defaults).toEqual(defaultWebfontOptions());
+    expect(buildWebfontOptionsReference().cliFlags.fontName.long).toBe("--fontName");
+    expect(buildWebfontOptionsReference().cliFlags.assistant.long).toBe("--assistant");
+  });
+
+  it("should export headless assistant helpers for .was configs", () => {
+    const was: WebfontAssistantWasConfig = {
+      dest: "dist/fonts",
+      files: "icons/*.svg",
+      name: "FixtureFont",
+      prefix: "fixture-icon",
+      template: "css",
+    };
+
+    expect(typeof loadWasConfigs).toBe("function");
+    expect(typeof parseWasConfigJson).toBe("function");
+    expect(typeof guardLoadedWasConfigs).toBe("function");
+    expect(typeof mapWasConfigToWebfontOptions).toBe("function");
+    expect(typeof buildWasConfigFromWizard).toBe("function");
+    expect(mapWasConfigToWebfontOptions(was).templateClassName).toBe("fixture-icon");
   });
 });

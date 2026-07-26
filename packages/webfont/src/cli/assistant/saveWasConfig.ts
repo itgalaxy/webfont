@@ -1,7 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { cleanWasConfigBasename } from "./cleanWasConfigBasename";
-import type { WebfontAssistantWasConfig } from "./types";
+import { cleanWasConfigBasename } from "../../was/cleanWasConfigBasename";
+import type { WebfontAssistantWasConfig } from "../../was/types";
 
 export const saveWasConfig = async (config: WebfontAssistantWasConfig): Promise<string> => {
   const cleanName = cleanWasConfigBasename(config.name);

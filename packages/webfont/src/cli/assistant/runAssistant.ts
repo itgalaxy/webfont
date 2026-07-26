@@ -1,11 +1,11 @@
 import { mergeCliDestIntoConfig, writeResultFiles } from "../../node/writeResultFiles";
 import { webfont } from "../../standalone";
 import type { Result } from "../../types/Result";
-import { loadWasConfigs } from "./loadWasConfigs";
-import { mapWasConfigToWebfontOptions } from "./mapWasConfigToWebfontOptions";
+import { loadWasConfigs } from "../../was/loadWasConfigs";
+import { mapWasConfigToWebfontOptions } from "../../was/mapWasConfigToWebfontOptions";
+import type { WebfontAssistantWasConfig } from "../../was/types";
 import { runAssistantWizard } from "./runAssistantWizard";
 import { saveWasConfig } from "./saveWasConfig";
-import type { WebfontAssistantWasConfig } from "./types";
 
 const runWasConfig = async (was: WebfontAssistantWasConfig): Promise<Result> => {
   const options = mapWasConfigToWebfontOptions(was);

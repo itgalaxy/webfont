@@ -10,6 +10,10 @@ npm workspaces monorepo ([ADR 0013](./docs/adr/0013-npm-workspaces-monorepo.md))
 
 ## Testing (Vitest)
 
+### Vitest globals (all workspaces)
+
+Workspace Vitest configs use **`test.globals: true`** ([ADR 0015](./docs/adr/0015-vitest-globals-in-workspaces.md)). Typecheck configs include `"vitest/globals"` so `describe` / `it` / `expect` / `expectTypeOf` / `vi` / hooks need **not** be imported. Explicit `import { … } from "vitest"` is optional. Emit/build tsconfigs must exclude `*.test.ts` and must not require Vitest types on production sources.
+
 ### Do not mix sync-throwing `fs` calls inside async callbacks
 
 In `beforeAll`, `beforeEach`, `afterAll`, `afterEach`, or any `new Promise((resolve, reject) => { ... })` callback, avoid synchronous APIs that throw (`fs.mkdirSync`, `fs.symlinkSync`, `fs.unlinkSync`, bare `throw`, etc.).
@@ -160,10 +164,11 @@ Example (`round`, [#569](https://github.com/itgalaxy/webfont/issues/569)): `CliL
 
 ### Config mapping, CLI bundles, and user input
 
-Patterns below come from assistant/CLI review on [#797](https://github.com/itgalaxy/webfont/pull/797) and apply to **any** code that loads external config (`.was`, cosmiconfig, MCP tool args, wizard answers).
+Patterns below come from assistant/CLI review on [#797](https://github.com/itgalaxy/webfont/pull/797) and MCP tool review on [#796](https://github.com/itgalaxy/webfont/pull/796). They apply to **any** code that loads external config (`.was`, cosmiconfig, MCP tool args, wizard answers).
 
 - **Do not override `webfont()` defaults when mapping external configs** unless the source file **explicitly** sets the field. Omit optional keys so `defaultWebfontOptions()` and runtime validation apply — forcing values like `fixedWidth: true` or `fontHeight: 1000` on minimal legacy configs changes font output unexpectedly.
 - **Normalize untrusted JSON before property access.** Loaded configs are parsed with `JSON.parse` — validate or defensively coerce fields (for example `formats` must be a non-empty array) before reading `.length` or spreading; prefer falling back or `webfont` validation over `TypeError` at map time. Optional `.was` basename fields (`prefix`, legacy `fontName`, `fontId`, `templateFontName`) must be validated as strings before calling string methods — throw `Invalid .was config: "{field}" must be a string` rather than opaque errors like `trim is not a function`.
+- **Distinguish presence from truthiness for mutually exclusive string inputs.** When callers must supply exactly one of two optional string fields (for example MCP `wasConfigPath` vs `wasConfigJson`), use `field !== undefined` for the exclusivity check — not `if (field)`. An empty string is “provided” for exclusivity; after that check, reject empty/whitespace with a clear `{field} must be a non-empty string` error instead of falling through to the other branch (`JSON.parse(undefined)`, cryptic parse errors). See `loadWasConfigsFromInput`.
 - **Guard loaded config JSON in a dedicated module** (for example `guardWasConfigLoad.ts`) so parse/validation logic is reusable: wrap `JSON.parse`, require object shape, validate required string fields (`dest`, `files`, `name`, `template`, …), and include `configPath` (and array index when relevant) in every error.
 - **Use `clean`, not `sanitize`, in our identifiers and docs.** Helpers like `cleanWasConfigBasename` express intent; reserve “sanitize” for quoting third-party APIs only.
 - **Clean user-derived path segments** before building output filenames. Use `path.basename()` (or equivalent) on names that become `{name}.was`, font basenames, or other disk paths; reject empty, `.`, and `..` basenames. Wizard answers and loaded JSON configs are untrusted input.
@@ -173,6 +178,15 @@ Patterns below come from assistant/CLI review on [#797](https://github.com/itgal
 - **Sequential batch work without `biome-ignore`.** When order matters (for example multiple `.was` configs), prefer promise chaining (`reduce` + `.then()`) over `await` inside `for` loops — satisfies Biome `lint/performance/noAwaitInLoops` without suppressions.
 - **CJS dependencies in the ESM CLI bundle.** The CLI ships as `dist/cli.mjs` with dependencies **external** (not bundled). Dynamic `import("enquirer")` and similar must tolerate both default and namespace export shapes: `const lib = module.default ?? module` before destructuring constructors.
 - **No `biome-ignore` unless unavoidable.** Prefer a small refactor (see sequential batch note above) over silencing Biome rules; `lint:suppressions` blocks banned suppressions on pre-commit/CI.
+
+### MCP tools (`packages/webfont-mcp`)
+
+Patterns from [#796](https://github.com/itgalaxy/webfont/pull/796). Apply whenever exposing `webfont()` (or `.was` configs) through MCP or other agent-facing wrappers.
+
+- **Align tool schemas and TypeScript unions with the runtime pipeline.** The SVG-icons path rejects `otf` (`assertSvgPipelineFormats`). Do not advertise `otf` on `convert_svgs_to_font` Zod schemas or `WebfontFormat` — agents will construct calls that always fail. Split schemas per tool when another tool later supports WOFF→OTF decompression.
+- **Resolve and sandbox every glob match before `webfont()`.** Lexical sandbox of the glob string alone is not enough (symlinks under `workspaceRoot` can point outside). Reuse `resolveSvgInputPaths` (globby + `assertPathWithinRoot` per match) for **all** conversion tools — including `convert_from_was` — then pass the resolved absolute file list to `webfont({ files })`. Do not rely on webfont’s internal globber for MCP security boundaries.
+- **Sandbox custom template paths; leave built-in template names alone.** Built-in ids (`css`, `scss`, `styl`, `html`, `json`) are not filesystem paths — pass them through. Any other `template` value (MCP `convert_svgs_to_font` or `.was` `template`) must go through `resolveTemplateWithinRoot` / `resolvePathWithinRoot` so agents cannot read templates outside `workspaceRoot`. Apply this in `sandboxWasConfigPaths` as well as direct conversion tools.
+- **Portable Cursor MCP config.** Commit `.cursor/mcp.json` with `${workspaceFolder}`, never machine-specific absolute paths under `/Users/...`.
 
 ### Codify review feedback in AGENTS.md
 

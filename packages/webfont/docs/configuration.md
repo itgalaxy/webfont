@@ -2,6 +2,20 @@
 
 Reference for `webfont()` options, cosmiconfig files, and svgicons2svgfont parameters. CLI flags map to the same names — see the [CLI reference](./cli.md).
 
+## Programmatic option reference
+
+For agents and tooling, the package exports structured metadata derived from runtime defaults and the CLI flag catalog:
+
+```ts
+import { buildWebfontOptionsReference } from "webfont";
+
+const { defaults, cliFlags, apiOnly } = buildWebfontOptionsReference();
+```
+
+- **`defaults`** — same object as `defaultWebfontOptions()` (without `files`).
+- **`cliFlags`** — descriptions and `--help` metadata from `cliFlagCatalog.ts` (single source for CLI docs).
+- **`apiOnly`** — options documented here but not exposed as CLI flags (for example `files`, `svgTools`).
+
 ## Result
 
 `webfont()` resolves to an object with generated font buffers (and optional `template` output). The `config` property contains the **effective options** used for the run (defaults, discovered config, and any options you passed in), plus optional **output metadata** when a configuration file was found or loaded.

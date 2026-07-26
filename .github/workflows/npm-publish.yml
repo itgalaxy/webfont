@@ -190,23 +190,41 @@ jobs:
           git commit -m "chore(homebrew): bump formula to webfont@${{ needs.build.outputs.version }} [skip ci]"
           git push
 
+  # Do not gate this job with `if: secrets.*` — `secrets` is unavailable in
+  # `jobs.<id>.if`, so GitHub rejects the whole workflow (HTTP 422 on
+  # workflow_dispatch from release-please). Map the secret to job `env` and
+  # skip steps when it is empty instead.
   bump-homebrew-core:
-    if: ${{ secrets.HOMEBREW_COMMITTER_TOKEN != '' }}
     needs: [build, publish-npm]
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      COMMITTER_TOKEN: ${{ secrets.HOMEBREW_COMMITTER_TOKEN }}
     steps:
+      - name: Decide whether to open a homebrew-core PR
+        id: gate
+        run: |
+          if [ -z "${COMMITTER_TOKEN}" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "HOMEBREW_COMMITTER_TOKEN is unset; skipping homebrew-core PR"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/checkout@v7
+        if: steps.gate.outputs.enabled == 'true'
         with:
           ref: ${{ env.RELEASE_TAG }}
       - uses: actions/setup-node@v6
+        if: steps.gate.outputs.enabled == 'true'
         with:
           node-version: 26.x
       - name: Resolve npm tarball url and sha256
+        if: steps.gate.outputs.enabled == 'true'
         id: npm
         run: node scripts/sync-homebrew-formula.mjs --version "${{ needs.build.outputs.version }}" --github-output
       - name: Open homebrew-core pull request
+        if: steps.gate.outputs.enabled == 'true'
         uses: mislav/bump-homebrew-formula-action@v4
         with:
           formula-name: webfont
@@ -222,4 +240,4 @@ jobs:
 
             Created by https://github.com/itgalaxy/webfont release workflow
         env:
-          COMMITTER_TOKEN: ${{ secrets.HOMEBREW_COMMITTER_TOKEN }}
+          COMMITTER_TOKEN: ${{ env.COMMITTER_TOKEN }}

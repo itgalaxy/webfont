@@ -1,6 +1,8 @@
-# Grunt recipe — webfont
+# Grunt integration
 
-Use [webfont](https://github.com/itgalaxy/webfont) from [Grunt](https://gruntjs.com/) as a replacement for the archived [`grunt-webfont`](https://github.com/sapegin/grunt-webfont) plugin. No separate npm package is required — register a small custom task that calls `webfont()` and `writeResultFiles()` (the same disk-write helper the CLI uses).
+Use [webfont](https://github.com/itgalaxy/webfont) from [Grunt](https://gruntjs.com/) as a replacement for the archived [`grunt-webfont`](https://github.com/sapegin/grunt-webfont) plugin. No separate webfont Grunt package is published — register a small custom task in **your** project that calls `webfont()` and `writeResultFiles()` (the same disk-write helper the CLI uses).
+
+This repository does **not** ship a Grunt workspace or install `grunt` as a dependency ([ADR 0014](../../../docs/adr/0014-no-grunt-webfont-recipe-workspace.md)).
 
 ## When to use this
 
@@ -11,13 +13,15 @@ For new projects, prefer **npm scripts**, **Vite**, or the [webpack plugin](http
 
 ## Install
 
+In the consumer project (not this monorepo):
+
 ```shell
 npm install --save-dev webfont grunt grunt-cli
 ```
 
 ## Custom task (recommended)
 
-`Gruntfile.cjs` in this folder is a minimal working example:
+Example `Gruntfile.cjs`:
 
 ```js
 "use strict";
@@ -65,7 +69,7 @@ Outputs `dist/fonts/icons.woff2` and `dist/fonts/icons.css` (built-in CSS templa
 
 ### Options
 
-Pass any [`webfont()` option](https://webfont.js.org/introduction/configuration) in the object above — `formats`, `template`, `normalize`, `ligatures`, `metadataProvider`, `ttfPostProcess`, and so on. Set `dest` and `destCreate: true` so `writeResultFiles` can create the output directory.
+Pass any [`webfont()` option](./configuration.md) in the object above — `formats`, `template`, `normalize`, `ligatures`, `metadataProvider`, `ttfPostProcess`, and so on. Set `dest` and `destCreate: true` so `writeResultFiles` can create the output directory.
 
 ## Alternative: shell out to the CLI
 
@@ -98,23 +102,24 @@ grunt.registerTask("webfont", "Generate icon fonts via CLI", function () {
 
 ## Parity gaps vs grunt-webfont
 
-| grunt-webfont | webfont recipe |
-|---------------|----------------|
+| grunt-webfont | webfont custom task |
+|---------------|---------------------|
 | Native Grunt task config | Custom task + `webfont()` options |
 | FontForge engine | Pure JS (`svg2ttf`) |
-| BEM / Bootstrap CSS presets | Custom [Nunjucks template](https://webfont.js.org/introduction/configuration#template) |
+| BEM / Bootstrap CSS presets | Custom [Nunjucks template](./configuration.md#template) |
 | `embed` (data:uri in CSS) | Not built-in — use a custom template |
 | `codepointsFile` | Use `metadataProvider` or manage codepoints in your own file |
 | `autoHint` | Opt-in via `ttfPostProcess` + external `ttfautohint` ([#749](https://github.com/itgalaxy/webfont/issues/749)) |
 
-Full comparison: [MIGRATION.md — grunt-webfont](../../MIGRATION.md#comparison-with-grunt-webfont).
+Full comparison: [MIGRATION.md — grunt-webfont](../../../MIGRATION.md#comparison-with-grunt-webfont).
 
 ## Official Grunt plugin?
 
-Not planned unless demand shows up ([#771](https://github.com/itgalaxy/webfont/issues/771)). This recipe keeps maintenance low while covering the common SVG → webfont workflow.
+Not planned unless demand shows up ([#771](https://github.com/itgalaxy/webfont/issues/771)). Copying the snippet above keeps maintenance low while covering the common SVG → webfont workflow.
 
 ## Related
 
-- [Install guide](../webfont/install.md)
-- [Configuration](../webfont/docs/configuration.md)
-- [Troubleshooting](../../TROUBLESHOOTING.md)
+- [Install guide](../install.md)
+- [Configuration](./configuration.md)
+- [Troubleshooting](../../../TROUBLESHOOTING.md)
+- [ADR 0014](../../../docs/adr/0014-no-grunt-webfont-recipe-workspace.md)

@@ -559,4 +559,41 @@ The stack trace often includes `globby`, `fast-glob`, `glob-parent`, `cosmiconfi
 
 5. **Browser-based generation** is not supported on the current release; see [#708](https://github.com/itgalaxy/webfont/issues/708) for a possible future Web Worker spike.
 
+---
+
+## Cannot find package `@vitest/coverage-v8` after a Vitest bump
+
+### What error appeared
+
+`npm test` (or Lefthook pre-push) fails while Vitest starts with coverage enabled:
+
+```text
+Error: Cannot find package '@vitest/coverage-v8' imported from .../node_modules/vitest/dist/chunks/coverage....js
+```
+
+`npm ls @vitest/coverage-v8` may still show the package under `packages/webfont/node_modules/@vitest/coverage-v8`.
+
+### Why it usually happens
+
+- **`@vitest/coverage-v8` and `vitest` versions drifted** (for example Dependabot bumped only coverage to `4.1.10` while `vitest` stayed on `4.1.9`). Coverage declares a peer on the matching Vitest release.
+- **npm nested the coverage package under the workspace** while `vitest` stayed at the monorepo root. Vitest resolves `@vitest/coverage-v8` from *its* install location, so a nested coverage install is invisible.
+
+### Steps to try to resolve
+
+1. Keep **`vitest` and `@vitest/coverage-v8` on the same version** in every workspace that uses them (today `packages/webfont` and `packages/webfont-mcp`).
+2. Regenerate the lockfile with a clean install so coverage hoists next to root `vitest`:
+
+   ```shell
+   rm -rf node_modules packages/*/node_modules
+   npm install
+   ls node_modules/@vitest/coverage-v8
+   ```
+
+3. Confirm resolve from Vitest’s location:
+
+   ```shell
+   node -e 'import { createRequire } from "module"; console.log(createRequire("./node_modules/vitest/package.json").resolve("@vitest/coverage-v8/package.json"))'
+   ```
+
+4. Re-run `npm test`.
 

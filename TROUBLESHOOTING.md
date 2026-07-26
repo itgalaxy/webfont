@@ -627,3 +627,18 @@ TypeScript 7+ no longer ships the JavaScript Compiler API that `unplugin-dts` (a
 
 3. Re-run `npm run build` / `npm test` / `npm run depcheck`.
 
+## Knip reports unused exported types after a Knip upgrade
+
+### What error appeared
+
+`npm run depcheck` (Knip) fails with `Unused exported types` for public API barrels such as `src/index.ts`, `src/cli/program.ts`, or `src/cli/meow/cliFlagCatalog.ts`, even though those types are intentional package exports.
+
+### Why it usually happens
+
+From Knip 6.29 onward, unused **type** exports are reported under the `types` issue class separately from value `exports`. Older `ignoreIssues` entries that only listed `"exports"` no longer cover those type-only exports.
+
+### Steps to try to resolve
+
+1. For intentional public / barrel type exports, add `"types"` alongside `"exports"` (or alone) in `packages/webfont/knip.json` `ignoreIssues` for the affected files.
+2. Re-run `npm run depcheck` and confirm pre-push Lefthook still passes.
+

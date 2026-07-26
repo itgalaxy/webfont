@@ -10,9 +10,6 @@ import { parseFormatsFlag } from "./parseFormatsFlag";
 import { parseTemplateFlag } from "./parseTemplateFlag";
 import { resolveCliFiles } from "./resolveCliFiles";
 
-export type { ResultFileKey } from "../node/writeResultFiles";
-export { mergeCliDestIntoConfig, writeResultFiles } from "../node/writeResultFiles";
-
 export type CliLike = {
   flags: {
     addHashInFontUrl?: boolean;

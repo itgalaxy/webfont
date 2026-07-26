@@ -1,32 +1,22 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": [
+    "src/index.ts",
     "src/browser.ts",
     "src/cli/index.ts",
+    "src/standalone/index.ts",
     "src/types/index.ts",
     "templates/index.ts",
+    "scripts/**/*.{js,mjs,ts}",
     "src/fixtures/config-discovery/js-config/webfont.config.js",
     "src/fixtures/configs/webfont.config-cli.js",
     "src/fixtures/config-discovery/js-rc/.webfontrc.js",
     "src/fixtures/config-package/index.js"
   ],
-  "project": ["src/**/*.{ts,js}", "templates/**/*.{ts,js}"],
+  "project": ["src/**/*.{ts,js}", "templates/**/*.{ts,js}", "scripts/**/*.{js,mjs,ts}"],
   "exclude": ["duplicates"],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true
-  },
-  "ignoreIssues": {
-    "src/cli/meow/index.ts": ["exports", "types"],
-    "src/cli/meow/cliFlagCatalog.ts": ["types"],
-    "src/cli/program.ts": ["exports", "types"],
-    "src/node/writeResultFiles.ts": ["exports", "types"],
-    "templates/index.ts": ["exports", "types"],
-    "src/index.ts": ["exports", "types"],
-    "src/standalone/index.ts": ["exports", "types"],
-    "src/lib/execCLI/index.ts": ["types"],
-    "src/standalone/toTtf.ts": ["types"],
-    "src/types/index.ts": ["types"],
-    "src/types/Result.ts": ["types"]
   }
 }

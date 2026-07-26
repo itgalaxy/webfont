@@ -622,18 +622,26 @@ TypeScript 7 removed the JavaScript Compiler API that `unplugin-dts` needed. The
 3. Re-run `npm run build -w webfont` and check `dist/src/index.d.ts` / `dist/src/index.d.mts`.
 4. Run `npm run test:package` (publint + attw + pack-smoke).
 
-## Knip reports unused exported types after a Knip upgrade
+## Knip reports unused exports or types
 
 ### What error appeared
 
-`npm run depcheck` (Knip) fails with `Unused exported types` for public API barrels such as `src/index.ts`, `src/cli/program.ts`, or `src/cli/meow/cliFlagCatalog.ts`, even though those types are intentional package exports.
+`npm run depcheck` (Knip) fails with `Unused exports` / `Unused exported types` (or a Knip upgrade starts failing on export-surface findings).
 
 ### Why it usually happens
 
-From Knip 6.29 onward, unused **type** exports are reported under the `types` issue class separately from value `exports`. Older `ignoreIssues` entries that only listed `"exports"` no longer cover those type-only exports.
+Usually one of:
+
+1. A symbol is `export`ed but only used inside the same module (should be module-private).
+2. A barrel re-exports something nothing imports.
+3. A public entry file is missing from `packages/webfont/knip.json` `entry` (Knip then treats intentional public exports as unused).
+
+Per [#822](https://github.com/itgalaxy/webfont/issues/822) / [ADR 0008](docs/adr/0008-knip-instead-of-depcheck.md), we **keep** export/type checks. Do not exclude those issue classes or paper over them with a large `ignoreIssues` map.
 
 ### Steps to try to resolve
 
-1. For intentional public / barrel type exports, add `"types"` alongside `"exports"` (or alone) in `packages/webfont/knip.json` `ignoreIssues` for the affected files.
-2. Re-run `npm run depcheck` and confirm pre-push Lefthook still passes.
+1. Prefer **removing the `export`** (or the dead re-export) when the symbol is not part of the public API.
+2. If it is public API, ensure the file is listed under `entry` in `packages/webfont/knip.json` (for example `src/index.ts`, `src/cli/index.ts`).
+3. Use `ignoreDependencies` only for dynamic tooling packages Knip cannot see (for example `@typescript/typescript6`); document why.
+4. Re-run `npm run depcheck` and confirm pre-push Lefthook still passes.
 

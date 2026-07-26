@@ -8,9 +8,9 @@ import type { Result } from "../types/Result";
 import type { ResultConfig } from "../types/ResultConfig";
 import type { TranscodedFont } from "../types/TranscodedFont";
 
-export type ResultFileKey = "eot" | "hash" | "otf" | "svg" | "template" | "ttf" | "woff" | "woff2";
+type ResultFileKey = "eot" | "hash" | "otf" | "svg" | "template" | "ttf" | "woff" | "woff2";
 
-export const resultFileKeys: ResultFileKey[] = ["svg", "ttf", "otf", "eot", "woff", "woff2", "hash", "template"];
+const resultFileKeys: ResultFileKey[] = ["svg", "ttf", "otf", "eot", "woff", "woff2", "hash", "template"];
 
 export const ensureResultConfig = (result: Result): ResultConfig => {
   if (!result.config) {
@@ -36,11 +36,7 @@ export const mergeCliDestIntoConfig = (
   return result;
 };
 
-export const resolveTemplateOutputPath = (
-  template: string,
-  config: ResultConfig,
-  usedBuiltIn: boolean,
-): string => {
+const resolveTemplateOutputPath = (template: string, config: ResultConfig, usedBuiltIn: boolean): string => {
   const dest = config.dest ?? process.cwd();
   let destTemplate = dest;
 
@@ -87,7 +83,7 @@ export const resolveDestTemplate = (result: Result, config: ResultConfig): strin
   return dest;
 };
 
-export const writeRenderedTemplates = async (
+const writeRenderedTemplates = async (
   templates: readonly RenderedTemplate[],
   config: ResultConfig,
 ): Promise<void> => {
@@ -121,7 +117,7 @@ export const getResultOutputPath = (
   return path.resolve(path.join(dest, `${fontName}.${type}`));
 };
 
-export const createMissingDestError = (dest: string): Error =>
+const createMissingDestError = (dest: string): Error =>
   new Error(`Destination directory "${dest}" does not exist. Use --dest-create (-m) to create it.`);
 
 export const ensureDestExists = async (dest: string, destCreate?: boolean): Promise<void> => {
@@ -175,7 +171,7 @@ export const writeDecompressedFontFiles = async (
   );
 };
 
-export const getTranscodedFontOutputBasename = (
+const getTranscodedFontOutputBasename = (
   fonts: readonly TranscodedFont[],
   font: TranscodedFont,
   config: ResultConfig,

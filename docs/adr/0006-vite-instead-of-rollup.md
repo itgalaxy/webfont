@@ -76,11 +76,11 @@ build: {
 
 - **New devDependency:** `vite` adds install size; acceptable for a build-only tool.
 - **Rolldown under the hood:** Vite 8 uses Rolldown; `build.rollupOptions` is an alias — prefer `rolldownOptions` in config.
-- **Declarations still via `tsc`:** Addressed in follow-up — `vite-plugin-dts` emits declarations during the library Vite pass; `vite-plugin-checker` runs full `tsc` diagnostics on build.
+- **Declarations via `tsc`:** Vite bundles JS; TypeScript 7 emits `.d.ts` (`tsc --emitDeclarationOnly`). See [ADR 0016](./0016-tsc-declarations-typescript7.md). `vite-plugin-checker` still runs diagnostics on the library pass.
 
 ### Follow-up
 
-- ~~If declaration emit moves under Vite, evaluate `vite-plugin-dts` and simplify `postbuild`.~~ Done: `vite-plugin-dts@5.0.3` + `vite-plugin-checker@0.14.4` on `--mode library`; `postbuild` `tsc` removed.
+- ~~If declaration emit moves under Vite, evaluate `vite-plugin-dts` and simplify `postbuild`.~~ Superseded by [ADR 0016](./0016-tsc-declarations-typescript7.md): declarations emit with TypeScript 7 `tsc --emitDeclarationOnly`; `vite-plugin-dts` / `@typescript/typescript6` removed ([#824](https://github.com/itgalaxy/webfont/issues/824)).
 - Re-run Dependabot `micromatch` / `picomatch` upgrades after merge to confirm CI stays green.
 
 ## References

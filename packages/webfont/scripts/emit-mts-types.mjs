@@ -1,22 +1,23 @@
 #!/usr/bin/env node
-// After the CJS library build emits `dist/**/*.d.ts`, duplicate every
-// declaration file to a matching `.d.mts` and rewrite each `.d.mts` so
+// After `tsc -p tsconfig.build.json --emitDeclarationOnly` emits `dist/**/*.d.ts`,
+// duplicate every declaration file to a matching `.d.mts` and rewrite each `.d.mts` so
 // every relative import specifier ends in an explicit `.mjs` extension.
 //
 // Why the extension rewrite:
 //   TypeScript's `nodenext` / `node16` module resolution rejects
-//   extension-less specifiers inside `.d.mts` files. Vite's dts plugin
-//   emits `.d.ts` with bare specifiers like `from "./standalone"`,
-//   which is fine for CJS (bundler / node10) but errors as
-//   `InternalResolutionError` under node16 (from ESM). The `.mjs`
-//   specifier tells TS to look for a matching `.d.mts` (and Node would
-//   look for a `.mjs` runtime file, but the runtime uses a single
-//   bundled `dist/index.mjs` reached via `package.json#exports`, so
+//   extension-less specifiers inside `.d.mts` files. `tsc` emits `.d.ts` with
+//   bare specifiers like `from "./standalone"`, which is fine for CJS
+//   (bundler / node10) but errors as `InternalResolutionError` under node16
+//   (from ESM). The `.mjs` specifier tells TS to look for a matching `.d.mts`
+//   (and Node would look for a `.mjs` runtime file, but the runtime uses a
+//   single bundled `dist/index.mjs` reached via `package.json#exports`, so
 //   the specifier is only used by TypeScript for type resolution).
 //
 // Why the sibling `.d.ts` files stay: the `require` and `default`
 // conditions in `package.json#exports` point at `dist/src/index.d.ts`
 // and consumers on CJS / bundler / node10 keep resolving those.
+//
+// See ADR 0016 (tsc declarations on TypeScript 7).
 
 import { copyFile, readFile, readdir, stat, writeFile } from "node:fs/promises";
 import { dirname, extname, join, resolve } from "node:path";

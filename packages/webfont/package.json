@@ -96,7 +96,7 @@
   "devDependencies": {
     "@arethetypeswrong/cli": "0.18.4",
     "@biomejs/biome": "2.5.2",
-    "@types/node": "26.1.0",
+    "@types/node": "26.1.1",
     "@types/nunjucks": "3.2.6",
     "@types/svg2ttf": "5.0.3",
     "@types/ttf2eot": "2.0.2",

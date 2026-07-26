@@ -48,7 +48,7 @@ webfont "fonts/*.ttf" -f woff2,woff,eot,svg -d dist --dest-create
 
 ### Comparison with `grunt-webfont`
 
-[`grunt-webfont`](https://github.com/sapegin/grunt-webfont) is the classic "SVG → webfont" **Grunt plugin** (~1.1k★, MIT). It is **archived** (read-only since 2021, last release `v1.2.0`), and its best-fidelity output relies on a native **FontForge** binary (its pure-`node` engine can't do ligatures). `webfont` is a framework-agnostic, actively maintained, pure-JS library **and** CLI: it does everything grunt-webfont *generated* — plus TTF encoding, WOFF/WOFF2 decompression, more templates, and programmatic hooks. For Grunt, use the documented [custom task recipe](../../packages/grunt-webfont-recipe/README.md) ([#771](https://github.com/itgalaxy/webfont/issues/771)).
+[`grunt-webfont`](https://github.com/sapegin/grunt-webfont) is the classic "SVG → webfont" **Grunt plugin** (~1.1k★, MIT). It is **archived** (read-only since 2021, last release `v1.2.0`), and its best-fidelity output relies on a native **FontForge** binary (its pure-`node` engine can't do ligatures). `webfont` is a framework-agnostic, actively maintained, pure-JS library **and** CLI: it does everything grunt-webfont *generated* — plus TTF encoding, WOFF/WOFF2 decompression, more templates, and programmatic hooks. For Grunt, copy the documented [custom task](./packages/webfont/docs/grunt.md) into your project ([#771](https://github.com/itgalaxy/webfont/issues/771), [ADR 0014](./docs/adr/0014-no-grunt-webfont-recipe-workspace.md)).
 
 | Capability | `webfont` (this project) | `grunt-webfont` ([sapegin/grunt-webfont](https://github.com/sapegin/grunt-webfont)) |
 |------------|:------------------------:|:----------------------------------------------------------------------------------:|
@@ -67,6 +67,6 @@ webfont "fonts/*.ttf" -f woff2,woff,eot,svg -d dist --dest-create
 | Codepoint map persistence | ❌ | ✅ (`codepointsFile`) |
 | Programmatic API | ✅ (`webfont()`) | ❌ (Grunt only) |
 | SVG diagnostics | ✅ (alpha) | ❌ |
-| Grunt integration | ✅ ([recipe](../../packages/grunt-webfont-recipe/README.md)) | ✅ (native) |
+| Grunt integration | ✅ ([docs](./packages/webfont/docs/grunt.md)) | ✅ (native) |
 
 If you only need the generation that grunt-webfont did, `webfont` is a maintained, FontForge-free replacement. If you specifically need BEM/Bootstrap CSS presets or `data:uri` embedding today, use a [custom template](../../packages/webfont/docs/configuration.md#template) in the configuration guide.

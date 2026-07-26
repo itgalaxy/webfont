@@ -242,17 +242,16 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - ⬜ TTF input transcoded to OTF
   - ⬜ Documented public API for generic transcoding
 
-## Grunt integration (recipe)
+## Grunt integration (docs)
 
 - **Stability**: stable
-- **Description**: Run `webfont` from Grunt via a documented custom task — maintained replacement for archived [`grunt-webfont`](https://github.com/sapegin/grunt-webfont).
+- **Description**: Run `webfont` from Grunt via a documented custom task — docs-only replacement for archived [`grunt-webfont`](https://github.com/sapegin/grunt-webfont). This monorepo does not ship a Grunt workspace or depend on `grunt` ([ADR 0014](./docs/adr/0014-no-grunt-webfont-recipe-workspace.md)).
 - **Properties**:
-  - Recipe: [`packages/grunt-webfont-recipe`](./packages/grunt-webfont-recipe/README.md) — calls `webfont()` + `writeResultFiles()` (exported from the package entry).
-  - Alternative: shell out to the `webfont` CLI from `grunt.util.spawn`.
+  - Guide: [`packages/webfont/docs/grunt.md`](./packages/webfont/docs/grunt.md) — `webfont()` + `writeResultFiles()` (or CLI via `grunt.util.spawn`) in the consumer project.
   - No official `grunt-webfont` npm plugin unless demand warrants it ([#771](https://github.com/itgalaxy/webfont/issues/771)).
-  - Parity gaps vs grunt-webfont (BEM/Bootstrap presets, `embed`, `codepointsFile`, FontForge) documented in the recipe and [MIGRATION.md](./MIGRATION.md#comparison-with-grunt-webfont).
+  - Parity gaps vs grunt-webfont (BEM/Bootstrap presets, `embed`, `codepointsFile`, FontForge) documented in the Grunt guide and [MIGRATION.md](./MIGRATION.md#comparison-with-grunt-webfont).
 - **Test Criteria**:
-  - ✅ Grunt recipe smoke test (`scripts/grunt-recipe-smoke.vitest.ts`)
+  - ⬜ N/A — docs-only; no in-repo Grunt smoke test (avoids installing `grunt` into the monorepo audit surface)
 
 ## Are you a contributor?
 

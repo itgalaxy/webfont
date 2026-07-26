@@ -30,6 +30,7 @@ const pageRewrites = {
   "packages/webfont/docs/cli.md": "introduction/cli.md",
   "packages/webfont/install.md": "introduction/install.md",
   "packages/webfont/docs/configuration.md": "introduction/configuration.md",
+  "packages/webfont/docs/grunt.md": "introduction/grunt.md",
   "packages/webfont/NOTICE.md": "introduction/licenses.md",
   ...migrationRewrites,
 } as const;
@@ -54,7 +55,6 @@ export default defineConfig({
     "CLAUDE.md",
     "MAINTAINERS.md",
     "docs/adr/**",
-    "packages/grunt-webfont-recipe/**",
     "coverage/**",
     "packages/webfont/temp/**",
     "packages/webfont/demo/**",
@@ -89,6 +89,7 @@ export default defineConfig({
           { text: "Getting Started", link: "/introduction/getting-started" },
           { text: "Install", link: "/introduction/install" },
           { text: "Configuration", link: "/introduction/configuration" },
+          { text: "Grunt", link: "/introduction/grunt" },
           { text: "CLI Reference", link: "/introduction/cli" },
           { text: "Demo", link: "/demo" },
           { text: "Features", link: "/introduction/features" },

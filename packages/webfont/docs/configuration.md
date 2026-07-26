@@ -40,7 +40,7 @@ const result = await webfont({
 await writeResultFiles(result);
 ```
 
-Grunt integration: [Grunt recipe](../../../packages/grunt-webfont-recipe/README.md).
+Grunt integration: [Grunt guide](./grunt.md).
 
 ## files
 

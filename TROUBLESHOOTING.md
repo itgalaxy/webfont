@@ -597,3 +597,33 @@ Error: Cannot find package '@vitest/coverage-v8' imported from .../node_modules/
 
 4. Re-run `npm test`.
 
+---
+
+## TypeScript 7+ breaks Vite/`unplugin-dts` build without `@typescript/typescript6`
+
+### What error appeared
+
+`npm run build` (or Knip loading `vite.config.ts`) fails with:
+
+```text
+[unplugin-dts] The installed "typescript" package does not provide the JavaScript Compiler API (this happens with TypeScript 7+), and the fallback "@typescript/typescript6" was not found.
+Please install it alongside TypeScript 7:
+  npm install -D @typescript/typescript6
+```
+
+### Why it usually happens
+
+TypeScript 7+ no longer ships the JavaScript Compiler API that `unplugin-dts` (and similar Vite plugins) use. Tooling expects a companion package `@typescript/typescript6` for that API while `typescript` stays on 7+ for typechecking.
+
+### Steps to try to resolve
+
+1. Install the fallback next to TypeScript 7 in the affected workspace (for webfont: `packages/webfont`):
+
+   ```shell
+   npm install -D @typescript/typescript6 -w webfont
+   ```
+
+2. Keep Knip from flagging it as unused (dynamic require from `unplugin-dts`) via `ignoreDependencies` in `packages/webfont/knip.json`.
+
+3. Re-run `npm run build` / `npm test` / `npm run depcheck`.
+

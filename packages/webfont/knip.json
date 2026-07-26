@@ -16,6 +16,7 @@
     "interface": true,
     "type": true
   },
+  "ignoreDependencies": ["@typescript/typescript6"],
   "ignoreIssues": {
     "src/cli/meow/index.ts": ["exports"],
     "src/cli/program.ts": ["exports"],

@@ -93,15 +93,15 @@ Tighten instead:
 
 1. List real public and tooling entry files in `packages/webfont/knip.json` (`src/index.ts`, `src/standalone/index.ts`, `scripts/**`, fixtures, CLI, templates, browser).
 2. Expand `project` to include `scripts/**` so orphan script files are detectable.
-3. Remove the `ignoreIssues` map; keep only `ignoreDependencies` for known dynamic tooling (`@typescript/typescript6`).
-4. Delete unused `export` / re-export surface in source (private helpers stay module-local; dead barrels trimmed).
-5. Do **not** enable `includeEntryExports` — this is a published library; entry exports are the public API.
+3. Remove the `ignoreIssues` map (public barrels are covered by complete `entry` globs; dead re-exports removed in source).
+4. Do **not** enable `includeEntryExports` — this is a published library; entry exports are the public API.
+5. Document the change here and in CONTRIBUTING / AGENTS / TROUBLESHOOTING.
 
 ### Policy for future changes
 
 1. When Knip reports unused exports: **un-export** or **wire** them (entry / real import). Do not add `ignoreIssues` for public barrels.
 2. When Knip misses a file: add an **entry** or **project** glob.
-3. Use `ignoreDependencies` only for packages required dynamically by tools Knip cannot see; document why in TROUBLESHOOTING.
+3. Use `ignoreDependencies` only for packages required dynamically by tools Knip cannot see; document why in TROUBLESHOOTING. (The former `@typescript/typescript6` exception was removed with [ADR 0016](./0016-tsc-declarations-typescript7.md) / [#824](https://github.com/itgalaxy/webfont/issues/824).)
 4. Reject PRs that exclude `exports` / `types` from the default Knip gate without a superseding ADR.
 
 ## References
@@ -110,3 +110,4 @@ Tighten instead:
 - [depcheck](https://github.com/depcheck/depcheck) — prior art, narrower scope
 - [ADR 0003: Lefthook instead of Husky / lint-staged](./0003-lefthook-instead-of-husky-lint-staged.md)
 - [#822](https://github.com/itgalaxy/webfont/issues/822) — investigate keep / narrow / replace / remove
+- [ADR 0016](./0016-tsc-declarations-typescript7.md) — TypeScript 7 `tsc` declarations; no `@typescript/typescript6`

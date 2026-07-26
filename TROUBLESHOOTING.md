@@ -642,6 +642,6 @@ Per [#822](https://github.com/itgalaxy/webfont/issues/822) / [ADR 0008](docs/adr
 
 1. Prefer **removing the `export`** (or the dead re-export) when the symbol is not part of the public API.
 2. If it is public API, ensure the file is listed under `entry` in `packages/webfont/knip.json` (for example `src/index.ts`, `src/cli/index.ts`).
-3. Use `ignoreDependencies` only for dynamic tooling packages Knip cannot see (for example `@typescript/typescript6`); document why.
+3. Use `ignoreDependencies` only for dynamic tooling packages Knip cannot see; document why in TROUBLESHOOTING (do not reintroduce `@typescript/typescript6` — see [ADR 0016](docs/adr/0016-tsc-declarations-typescript7.md)).
 4. Re-run `npm run depcheck` and confirm pre-push Lefthook still passes.
 

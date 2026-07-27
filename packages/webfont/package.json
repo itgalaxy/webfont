@@ -110,7 +110,7 @@
     "is-woff": "1.0.3",
     "is-woff2": "1.0.0",
     "knip": "6.29.0",
-    "publint": "0.3.21",
+    "publint": "0.3.22",
     "typescript": "7.0.2",
     "vite": "8.1.5",
     "vite-plugin-checker": "0.14.5",

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.29.0",
-    "globby": "16.2.1",
+    "globby": "16.2.2",
     "webfont": "file:../webfont",
     "zod": "4.4.3"
   },

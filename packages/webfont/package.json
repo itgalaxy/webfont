@@ -75,7 +75,7 @@
     "docs:cli": "vitest run scripts/write-cli-docs.vitest.ts --config vitest.write-docs.config.ts"
   },
   "dependencies": {
-    "cosmiconfig": "9.0.2",
+    "cosmiconfig": "10.0.0",
     "deepmerge": "^4.2.2",
     "enquirer": "2.4.1",
     "fonteditor-core": "2.6.3",

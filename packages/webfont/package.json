@@ -112,7 +112,7 @@
     "knip": "6.32.1",
     "publint": "0.3.22",
     "typescript": "7.0.2",
-    "vite": "8.1.5",
+    "vite": "8.2.1",
     "vite-plugin-checker": "0.14.5",
     "vitest": "4.1.10"
   },

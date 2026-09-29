@@ -41,8 +41,19 @@
   "overrides": {
     "@hono/node-server": "2.0.12",
     "brace-expansion": "5.0.9",
+    "fast-uri": "3.1.8",
+    "fonteditor-core": {
+      "@xmldom/xmldom": "0.8.15"
+    },
+    "hono": "4.13.11",
+    "ip-address": "10.7.2",
+    "js-yaml": "4.3.2",
     "minimatch": "10.2.6",
     "postcss": "8.5.23",
+    "qs": "6.16.0",
+    "svg2ttf": {
+      "@xmldom/xmldom": "0.9.12"
+    },
     "test-exclude": "7.0.2",
     "woff2sfnt-sfnt2woff": "1.0.0"
   },

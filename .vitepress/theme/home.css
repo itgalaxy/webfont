@@ -1,0 +1,93 @@
+/* Home atmosphere: soft plane behind the hero, no purple wash, no card chrome. */
+:root {
+  --wf-home-ink: #1a1f24;
+  --wf-home-mist: #e8eef2;
+  --wf-home-accent: #0d7377;
+  --wf-home-accent-soft: #14919b;
+}
+
+.dark {
+  --wf-home-ink: #e8eef2;
+  --wf-home-mist: #12161a;
+  --wf-home-accent: #2dd4bf;
+  --wf-home-accent-soft: #5eead4;
+}
+
+.VPHome {
+  --vp-c-brand-1: var(--wf-home-accent);
+  --vp-c-brand-2: var(--wf-home-accent-soft);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    120deg,
+    var(--wf-home-accent) 30%,
+    var(--wf-home-accent-soft)
+  );
+}
+
+.VPHome .VPHero {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHome .VPHero::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto;
+  height: min(70vh, 560px);
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 50% at 12% 30%, color-mix(in srgb, var(--wf-home-accent) 18%, transparent), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 88% 18%, color-mix(in srgb, var(--wf-home-accent-soft) 12%, transparent), transparent 68%),
+    repeating-linear-gradient(
+      -18deg,
+      transparent,
+      transparent 11px,
+      color-mix(in srgb, var(--wf-home-ink) 3.5%, transparent) 11px,
+      color-mix(in srgb, var(--wf-home-ink) 3.5%, transparent) 12px
+    );
+  mask-image: linear-gradient(to bottom, #000 40%, transparent 95%);
+}
+
+.VPHome .VPHero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.VPHome .VPHero .name {
+  letter-spacing: -0.03em;
+}
+
+.VPHome .VPHero .text {
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+
+.VPHome .VPHero .tagline {
+  max-width: 42ch;
+}
+
+/* Below-fold sections from index.md body */
+.VPHome .VPContent .vp-doc {
+  max-width: 720px;
+  margin-inline: auto;
+  padding-block: 24px 64px;
+}
+
+.VPHome .VPContent .vp-doc h2 {
+  margin-top: 2.75rem;
+  border-top: 1px solid var(--vp-c-divider);
+  padding-top: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.VPHome .VPContent .vp-doc h2:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .VPHome .VPHero::before {
+    animation: none;
+  }
+}

@@ -43,7 +43,8 @@ const staticRepoLinks = {
 export default defineConfig({
   lang: "en-US",
   title: "webfont",
-  description: "Generate fonts from SVG icons — with TTF encoding and WOFF/WOFF2 decoding.",
+  description:
+    "Ship icon sets as one font. SVG icons to WOFF2, WOFF, TTF, EOT, and SVG fonts at build time.",
   cleanUrls: true,
   lastUpdated: true,
   ignoreDeadLinks: true,
@@ -71,7 +72,22 @@ export default defineConfig({
   head: [
     ["meta", { name: "theme-color", content: "#0b0b0c" }],
     ["meta", { property: "og:title", content: "webfont" }],
-    ["meta", { property: "og:description", content: "Generate fonts from SVG icons." }],
+    [
+      "meta",
+      {
+        property: "og:description",
+        content:
+          "Ship icon sets as one font. SVG icons to WOFF2, WOFF, TTF, EOT, and SVG fonts at build time.",
+      },
+    ],
+    [
+      "meta",
+      {
+        name: "description",
+        content:
+          "Ship icon sets as one font. SVG icons to WOFF2, WOFF, TTF, EOT, and SVG fonts at build time.",
+      },
+    ],
   ],
   themeConfig: {
     nav: [

@@ -23,7 +23,8 @@ const glyphs = [
       </span>
     </div>
     <p class="hero-demo__caption">
-      Live WOFF2 from SVG fixtures: one font, many glyphs
+      Live font from SVG fixtures:<br />
+      one font, many glyphs
     </p>
   </div>
 </template>

@@ -130,7 +130,8 @@ export default defineConfig({
     search: { provider: "local" },
     footer: {
       message: "Released under the MIT License.",
-      copyright: "Copyright © itgalaxy",
+      copyright:
+        'Maintained by <a href="https://github.com/jimmyandrade?utm_source=webfont&utm_medium=referral&utm_campaign=docs_footer" target="_blank" rel="noreferrer">jimmyandrade</a>, <a href="https://github.com/itgalaxy?utm_source=webfont&utm_medium=referral&utm_campaign=docs_footer" target="_blank" rel="noreferrer">itgalaxy</a> and the Webfont community',
     },
   },
 });

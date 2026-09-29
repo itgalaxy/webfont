@@ -31,6 +31,7 @@ const pageRewrites = {
   "packages/webfont/install.md": "introduction/install.md",
   "packages/webfont/docs/configuration.md": "introduction/configuration.md",
   "packages/webfont/docs/grunt.md": "introduction/grunt.md",
+  "docs/fantasticon.md": "migrating/fantasticon.md",
   "packages/webfont/NOTICE.md": "introduction/licenses.md",
   ...migrationRewrites,
 } as const;
@@ -112,6 +113,7 @@ export default defineConfig({
           { text: "Troubleshooting", link: "/introduction/troubleshooting" },
           { text: "What's New", link: "/introduction/whats-new" },
           { text: "Migrating", link: "/migrating/" },
+          { text: "vs Fantasticon", link: "/migrating/fantasticon" },
           { text: "Legal Notices", link: "/introduction/licenses" },
         ],
       },

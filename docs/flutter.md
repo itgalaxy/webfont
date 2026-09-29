@@ -8,12 +8,116 @@ This page describes the **current format overlap**. Loading a webfont-generated 
 
 [Flutter’s custom-font guide](https://docs.flutter.dev/cookbook/design/fonts) loads `.ttf`, `.otf`, and `.ttc`. The [`TextStyle` docs](https://api.flutter.dev/flutter/painting/TextStyle-class.html) state that `.woff` and `.woff2` are not supported on every platform. `FontLoader` expects uncompressed SFNT (TTF or OTF). A `.woff2` listed under `flutter: fonts:` does not draw glyphs.
 
-| Format | SVG icon pipeline | Use under `flutter: fonts` |
-|--------|-------------------|----------------------------|
-| `ttf` | Yes. This is the file to ship. | Yes |
-| `otf` | Rejected. Outlines are TrueType via `svg2ttf`. | Flutter can load an OTF produced elsewhere (for example a decompressed CFF WOFF2). |
-| `ttc` | Not emitted. | Flutter can load a collection produced elsewhere. |
-| `woff`, `woff2`, `eot`, `svg` | Emitted by the default `formats` list. | Leave these out of the Flutter project. |
+Green marks are files the SVG icon pipeline already writes. Amber marks are formats we do not emit yet. Each of those links to the issue that tracks adding them.
+
+<table class="format-board">
+  <thead>
+    <tr>
+      <th>Format</th>
+      <th>webfont</th>
+      <th>Flutter <code>fonts:</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>.ttf</code></td>
+      <td><span class="fmt fmt-yes">Generated</span></td>
+      <td><span class="fmt fmt-yes">Ship this file</span></td>
+    </tr>
+    <tr>
+      <td><code>.woff2</code></td>
+      <td><span class="fmt fmt-yes">Generated</span></td>
+      <td><span class="fmt fmt-skip">Leave out of the app</span></td>
+    </tr>
+    <tr>
+      <td><code>.woff</code></td>
+      <td><span class="fmt fmt-yes">Generated</span></td>
+      <td><span class="fmt fmt-skip">Leave out of the app</span></td>
+    </tr>
+    <tr>
+      <td><code>.eot</code></td>
+      <td><span class="fmt fmt-yes">Generated</span></td>
+      <td><span class="fmt fmt-skip">Leave out of the app</span></td>
+    </tr>
+    <tr>
+      <td><code>.svg</code></td>
+      <td><span class="fmt fmt-yes">Generated</span></td>
+      <td><span class="fmt fmt-skip">Leave out of the app</span></td>
+    </tr>
+    <tr>
+      <td><code>.otf</code></td>
+      <td><a class="fmt fmt-plan" href="https://github.com/itgalaxy/webfont/issues/905">Planned · #905</a></td>
+      <td><span class="fmt fmt-yes">Flutter can load it</span></td>
+    </tr>
+    <tr>
+      <td><code>.ttc</code></td>
+      <td><a class="fmt fmt-plan" href="https://github.com/itgalaxy/webfont/issues/906">Planned · #906</a></td>
+      <td><span class="fmt fmt-yes">Flutter can load it</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+.format-board {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0 1.5rem;
+}
+.format-board th,
+.format-board td {
+  padding: 0.7rem 0.85rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--vp-c-divider);
+}
+.format-board th {
+  text-align: left;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+}
+.fmt {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 650;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.fmt-yes {
+  background: var(--vp-c-green-soft);
+  color: var(--vp-c-green-1);
+}
+.fmt-yes::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.45rem;
+  border-radius: 999px;
+  background: var(--vp-c-green-1);
+}
+.fmt-plan {
+  background: var(--vp-c-warning-soft);
+  color: var(--vp-c-warning-1);
+}
+.fmt-plan:hover {
+  text-decoration: underline;
+}
+.fmt-plan::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-right: 0.45rem;
+  border-radius: 999px;
+  background: var(--vp-c-warning-1);
+}
+.fmt-skip {
+  background: var(--vp-c-default-soft);
+  color: var(--vp-c-text-2);
+}
+</style>
 
 Ask for TTF only so the build matches what the app can load. Format rules: [Configuration → formats](../packages/webfont/docs/configuration.md#formats).
 

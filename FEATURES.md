@@ -235,7 +235,7 @@ Capabilities webfont provides — stability status, behavior details, and test-b
 - **Description**: Convert between outline/container formats beyond the current three pipelines (e.g. TTF ↔ OTF transcoding, OTF input encoding).
 - **Properties**:
   - **Partially supported:** TTF → `svg` (SVG font) / `eot` / `woff` / `woff2` (see TTF to webfont encoding). WOFF/WOFF2 → TTF/OTF decompression.
-  - **Out of scope today:** OTF input encoding, TTF ↔ OTF outline conversion.
+  - **Out of scope today:** OTF input encoding ([#767](https://github.com/itgalaxy/webfont/issues/767)), emitting `.otf` from SVG icons ([#905](https://github.com/itgalaxy/webfont/issues/905)), and TrueType collections (`.ttc`, [#906](https://github.com/itgalaxy/webfont/issues/906)).
   - External tools (FontForge, fontTools, etc.) are required for TTF → OTF today.
 - **Test Criteria**:
   - ✅ TTF input encoded to WOFF/WOFF2
@@ -261,7 +261,7 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Generate with `formats: ['ttf']` and the `json` template for Private Use Area code points.
   - Declare that `.ttf` under `flutter: fonts:`. `IconData.fontFamily` matches the `family` string.
   - Default `woff`, `woff2`, `eot`, and `svg` outputs are not Flutter font assets.
-  - `otf` stays rejected for SVG input. Flutter can load an OTF, but this pipeline does not emit one.
+  - `otf` stays rejected for SVG input ([#905](https://github.com/itgalaxy/webfont/issues/905)). `.ttc` is not emitted ([#906](https://github.com/itgalaxy/webfont/issues/906)). Flutter can load both once those outputs exist.
   - In-app rendering is not covered here yet ([#895](https://github.com/itgalaxy/webfont/issues/895)).
 - **Test Criteria**:
   - ⬜ A Flutter app renders a glyph from a webfont-generated TTF ([#895](https://github.com/itgalaxy/webfont/issues/895))

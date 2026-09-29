@@ -25,6 +25,10 @@ features:
     details: Reference glyphs by class name or codepoint. Drive icons from the backend or config without a network request per image URL.
   - title: CLI, API, and local MCP
     details: Run webfont in CI or scripts, call webfont() from Node, or use the private monorepo MCP so agents convert SVGs without shelling out by hand.
+  - title: Flutter
+    details: Generate a TrueType icon font for Flutter and map each glyph to IconData.
+    link: /introduction/flutter
+    linkText: Generate fonts for Flutter
 ---
 
 ## When SVG starts to hurt

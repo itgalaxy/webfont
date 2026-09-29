@@ -13,6 +13,7 @@ Generator of fonts from SVG icons, with separate modes to **encode** TTF to web 
 | **Install & first run** | [packages/webfont/install.md](./packages/webfont/install.md) · [webfont.js.org/introduction/install](https://webfont.js.org/introduction/install) |
 | **API & options** | [packages/webfont/docs/configuration.md](./packages/webfont/docs/configuration.md) · [webfont.js.org/introduction/configuration](https://webfont.js.org/introduction/configuration) |
 | **CLI reference** | [packages/webfont/docs/cli.md](./packages/webfont/docs/cli.md) · [webfont.js.org/introduction/cli](https://webfont.js.org/introduction/cli) |
+| **Flutter** (TTF icon fonts) | [docs/flutter.md](./docs/flutter.md) · [webfont.js.org/introduction/flutter](https://webfont.js.org/introduction/flutter) |
 | **Troubleshooting** | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) |
 | **Migration** | [MIGRATION.md](./MIGRATION.md) |
 | **Legal / licensing** | [packages/webfont/NOTICE.md](./packages/webfont/NOTICE.md) |

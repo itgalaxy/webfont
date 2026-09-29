@@ -31,6 +31,7 @@ const pageRewrites = {
   "packages/webfont/install.md": "introduction/install.md",
   "packages/webfont/docs/configuration.md": "introduction/configuration.md",
   "packages/webfont/docs/grunt.md": "introduction/grunt.md",
+  "docs/flutter.md": "introduction/flutter.md",
   "packages/webfont/NOTICE.md": "introduction/licenses.md",
   ...migrationRewrites,
 } as const;
@@ -109,6 +110,7 @@ export default defineConfig({
           { text: "CLI Reference", link: "/introduction/cli" },
           { text: "Demo", link: "/demo" },
           { text: "Features", link: "/introduction/features" },
+          { text: "Flutter", link: "/introduction/flutter" },
           { text: "Troubleshooting", link: "/introduction/troubleshooting" },
           { text: "What's New", link: "/introduction/whats-new" },
           { text: "Migrating", link: "/migrating/" },

@@ -253,6 +253,19 @@ Capabilities webfont provides — stability status, behavior details, and test-b
 - **Test Criteria**:
   - ⬜ N/A — docs-only; no in-repo Grunt smoke test (avoids installing `grunt` into the monorepo audit surface)
 
+## Flutter (TTF icon fonts)
+
+- **Stability**: in-progress
+- **Description**: Guidance for shipping an SVG-pipeline TTF to a Flutter app. Flutter loads `.ttf`, `.otf`, and `.ttc`. The compatible output of the SVG pipeline is TTF. Guide: [docs/flutter.md](./docs/flutter.md).
+- **Properties**:
+  - Generate with `formats: ['ttf']` and the `json` template for Private Use Area code points.
+  - Declare that `.ttf` under `flutter: fonts:`. `IconData.fontFamily` matches the `family` string.
+  - Default `woff`, `woff2`, `eot`, and `svg` outputs are not Flutter font assets.
+  - `otf` stays rejected for SVG input. Flutter can load an OTF, but this pipeline does not emit one.
+  - In-app rendering is not covered here yet ([#895](https://github.com/itgalaxy/webfont/issues/895)).
+- **Test Criteria**:
+  - ⬜ A Flutter app renders a glyph from a webfont-generated TTF ([#895](https://github.com/itgalaxy/webfont/issues/895))
+
 ## Are you a contributor?
 
 This file is the canonical capability list. **Update it in the same PR** whenever behavior, supported inputs/outputs, or public options change. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full documentation checklist.

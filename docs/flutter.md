@@ -2,7 +2,7 @@
 
 webfont runs in Node.js at build time. A Flutter app does not call `webfont()`. Copy the generated TrueType file into the app and declare it under `flutter: fonts:`.
 
-This page describes the **current format overlap**. Loading a webfont-generated TTF inside a Flutter app is still an open check — see [#895](https://github.com/itgalaxy/webfont/issues/895).
+This page describes the **current format overlap**. Loading a webfont-generated TTF inside a Flutter app is still an open check - see [#895](https://github.com/itgalaxy/webfont/issues/895).
 
 ## Formats
 
@@ -148,8 +148,8 @@ await writeResultFiles(result);
 
 That writes:
 
-- `fonts/MyIcons.ttf` — the font file Flutter loads
-- `fonts/MyIcons.json` — one entry per icon, including the Private Use Area code point
+- `fonts/MyIcons.ttf` - the font file Flutter loads
+- `fonts/MyIcons.json` - one entry per icon, including the Private Use Area code point
 
 `fontName` becomes the file name and the name stored in the font. The `family` string in `pubspec.yaml` is what `IconData.fontFamily` must match. Use the same name in both places (`MyIcons` above).
 

@@ -266,6 +266,21 @@ Capabilities webfont provides — stability status, behavior details, and test-b
 - **Test Criteria**:
   - ⬜ A Flutter app renders a glyph from a webfont-generated TTF ([#895](https://github.com/itgalaxy/webfont/issues/895))
 
+## Icon kit output (planned)
+
+- **Stability**: planned
+- **Description**: Closer control of names, code points, stylesheets, and where each file is written, on the SVG pipeline. Not in the current npm release. Comparison and workarounds: [webfont and Fantasticon](./docs/fantasticon.md).
+- **Properties**:
+  - TypeScript module of icon ids and code points ([#896](https://github.com/itgalaxy/webfont/issues/896)).
+  - Indented Sass template ([#897](https://github.com/itgalaxy/webfont/issues/897)).
+  - Declarative code point map ([#898](https://github.com/itgalaxy/webfont/issues/898)).
+  - Glyph ids from relative paths ([#899](https://github.com/itgalaxy/webfont/issues/899)).
+  - A separate output path per generated file ([#900](https://github.com/itgalaxy/webfont/issues/900)).
+  - Base tag and custom CSS selector ([#901](https://github.com/itgalaxy/webfont/issues/901)).
+  - WOFF extended metadata block ([#902](https://github.com/itgalaxy/webfont/issues/902)).
+- **Test Criteria**:
+  - ⬜ Each item above, when it ships
+
 ## Are you a contributor?
 
 This file is the canonical capability list. **Update it in the same PR** whenever behavior, supported inputs/outputs, or public options change. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full documentation checklist.

@@ -14,6 +14,10 @@ See also [packages/webfont/CHANGELOG.md](./packages/webfont/CHANGELOG.md) for th
 
 Comparisons with older or adjacent projects live here so [README.md](./README.md) stays focused on installing and using `webfont`.
 
+### Comparison with Fantasticon
+
+[Fantasticon](https://github.com/tancredi/fantasticon) builds an icon-font kit from an SVG directory (CSS, preview, JSON, and TypeScript types). The shared table, what webfont adds, and a short option map are in [webfont and Fantasticon](./docs/fantasticon.md).
+
 ### Comparison with `webfonts`
 
 `webfont` (this project) is sometimes confused with the older, **unmaintained** [`webfonts`](https://github.com/uipoet/webfonts) package (note the trailing `s`). `webfonts` last shipped around 2015 and requires a **Java** runtime (it bundles `batik-ttf2svg`, `sfnt2woff`, and `ttf2eot`). `webfont` is **pure JavaScript**, actively maintained, and does everything the *useful* parts of `webfonts` did — plus SVG-icon fonts, WOFF2, decompression, templates, and a Node.js API.

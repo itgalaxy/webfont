@@ -235,7 +235,7 @@ Capabilities webfont provides — stability status, behavior details, and test-b
 - **Description**: Convert between outline/container formats beyond the current three pipelines (e.g. TTF ↔ OTF transcoding, OTF input encoding).
 - **Properties**:
   - **Partially supported:** TTF → `svg` (SVG font) / `eot` / `woff` / `woff2` (see TTF to webfont encoding). WOFF/WOFF2 → TTF/OTF decompression.
-  - **Out of scope today:** OTF input encoding, TTF ↔ OTF outline conversion.
+  - **Out of scope today:** OTF input encoding ([#767](https://github.com/itgalaxy/webfont/issues/767)), emitting `.otf` from SVG icons ([#905](https://github.com/itgalaxy/webfont/issues/905)), and TrueType collections (`.ttc`, [#906](https://github.com/itgalaxy/webfont/issues/906)).
   - External tools (FontForge, fontTools, etc.) are required for TTF → OTF today.
 - **Test Criteria**:
   - ✅ TTF input encoded to WOFF/WOFF2
@@ -252,6 +252,19 @@ Capabilities webfont provides — stability status, behavior details, and test-b
   - Parity gaps vs grunt-webfont (BEM/Bootstrap presets, `embed`, `codepointsFile`, FontForge) documented in the Grunt guide and [MIGRATION.md](./MIGRATION.md#comparison-with-grunt-webfont).
 - **Test Criteria**:
   - ⬜ N/A — docs-only; no in-repo Grunt smoke test (avoids installing `grunt` into the monorepo audit surface)
+
+## Flutter (TTF icon fonts)
+
+- **Stability**: in-progress
+- **Description**: Guidance for shipping an SVG-pipeline TTF to a Flutter app. Flutter loads `.ttf`, `.otf`, and `.ttc`. The compatible output of the SVG pipeline is TTF. Guide: [docs/flutter.md](./docs/flutter.md).
+- **Properties**:
+  - Generate with `formats: ['ttf']` and the `json` template for Private Use Area code points.
+  - Declare that `.ttf` under `flutter: fonts:`. `IconData.fontFamily` matches the `family` string.
+  - Default `woff`, `woff2`, `eot`, and `svg` outputs are not Flutter font assets.
+  - `otf` stays rejected for SVG input ([#905](https://github.com/itgalaxy/webfont/issues/905)). `.ttc` is not emitted ([#906](https://github.com/itgalaxy/webfont/issues/906)). Flutter can load both once those outputs exist.
+  - In-app rendering is not covered here yet ([#895](https://github.com/itgalaxy/webfont/issues/895)).
+- **Test Criteria**:
+  - ⬜ A Flutter app renders a glyph from a webfont-generated TTF ([#895](https://github.com/itgalaxy/webfont/issues/895))
 
 ## Icon kit output (planned)
 

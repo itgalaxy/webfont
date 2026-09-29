@@ -1,5 +1,6 @@
 import DefaultTheme from "vitepress/theme";
 import Layout from "./Layout.vue";
+import "./home.css";
 
 // Extend the default theme and render the live font demo in the hero's image
 // slot (right side on large screens, stacked below the text on small ones).

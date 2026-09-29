@@ -1,0 +1,115 @@
+/* Home atmosphere: soft plane behind the hero, no purple wash, no card chrome.
+   Accent is shared by glyphs and the brand (primary) button.
+   Light: white text on teal >= 7:1 (WCAG AAA).
+   Dark: near-black text on bright teal >= 7:1 (WCAG AAA). */
+:root {
+  --wf-home-ink: #1a1f24;
+  --wf-home-mist: #e8eef2;
+  /* Deep teal: same hue as before, darkened for AAA on white (~7.75:1). */
+  --wf-home-accent: #0a5c5f;
+  --wf-home-accent-soft: #14919b;
+  --wf-home-accent-hover: #085a5d;
+  --wf-home-accent-active: #064e51;
+  --wf-home-on-accent: #ffffff;
+}
+
+.dark {
+  --wf-home-ink: #e8eef2;
+  --wf-home-mist: #12161a;
+  --wf-home-accent: #2dd4bf;
+  --wf-home-accent-soft: #5eead4;
+  --wf-home-accent-hover: #5eead4;
+  --wf-home-accent-active: #99f6e4;
+  --wf-home-on-accent: #042f2e;
+}
+
+.VPHome {
+  --vp-c-brand-1: var(--wf-home-accent);
+  --vp-c-brand-2: var(--wf-home-accent-hover);
+  --vp-c-brand-3: var(--wf-home-accent);
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(
+    120deg,
+    var(--wf-home-accent) 30%,
+    var(--wf-home-accent-soft)
+  );
+
+  /* Primary CTA: same accent as icon glyphs, AAA label contrast. */
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: var(--wf-home-on-accent);
+  --vp-button-brand-bg: var(--wf-home-accent);
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-hover-text: var(--wf-home-on-accent);
+  --vp-button-brand-hover-bg: var(--wf-home-accent-hover);
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-text: var(--wf-home-on-accent);
+  --vp-button-brand-active-bg: var(--wf-home-accent-active);
+}
+
+.VPHome .VPHero {
+  position: relative;
+  overflow: hidden;
+}
+
+.VPHome .VPHero::before {
+  content: "";
+  position: absolute;
+  inset: -20% -10% auto;
+  height: min(70vh, 560px);
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 50% at 12% 30%, color-mix(in srgb, var(--wf-home-accent) 18%, transparent), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 88% 18%, color-mix(in srgb, var(--wf-home-accent-soft) 12%, transparent), transparent 68%),
+    repeating-linear-gradient(
+      -18deg,
+      transparent,
+      transparent 11px,
+      color-mix(in srgb, var(--wf-home-ink) 3.5%, transparent) 11px,
+      color-mix(in srgb, var(--wf-home-ink) 3.5%, transparent) 12px
+    );
+  mask-image: linear-gradient(to bottom, #000 40%, transparent 95%);
+}
+
+.VPHome .VPHero .container {
+  position: relative;
+  z-index: 1;
+}
+
+.VPHome .VPHero .name {
+  letter-spacing: -0.03em;
+}
+
+.VPHome .VPHero .text {
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+}
+
+.VPHome .VPHero .tagline {
+  max-width: 42ch;
+}
+
+/* Below-fold sections from index.md body */
+.VPHome .VPContent .vp-doc {
+  max-width: 720px;
+  margin-inline: auto;
+  padding-block: 24px 64px;
+}
+
+.VPHome .VPContent .vp-doc h2 {
+  margin-top: 2.75rem;
+  border-top: 1px solid var(--vp-c-divider);
+  padding-top: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.VPHome .VPContent .vp-doc h2:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .VPHome .VPHero::before {
+    animation: none;
+  }
+}

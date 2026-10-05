@@ -40,7 +40,7 @@
   },
   "overrides": {
     "@hono/node-server": "2.0.12",
-    "brace-expansion": "5.0.9",
+    "brace-expansion": "5.0.12",
     "fast-uri": "3.1.8",
     "fonteditor-core": {
       "@xmldom/xmldom": "0.8.15"

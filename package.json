@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.5",
-    "lefthook": "2.1.10",
+    "lefthook": "2.1.16",
     "vitepress": "2.0.0-alpha.18"
   },
   "overrides": {

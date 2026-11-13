@@ -45,7 +45,7 @@
     "fonteditor-core": {
       "@xmldom/xmldom": "0.8.15"
     },
-    "hono": "4.13.11",
+    "hono": "4.13.18",
     "ip-address": "10.7.2",
     "js-yaml": "4.3.2",
     "minimatch": "10.2.6",
